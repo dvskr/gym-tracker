@@ -1,105 +1,101 @@
 import { create } from 'zustand';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/types/database';
-
-type Profile = Database['public']['Tables']['profiles']['Row'];
 
 interface AuthState {
   user: User | null;
   session: Session | null;
-  profile: Profile | null;
-  loading: boolean;
-  initialized: boolean;
+  isLoading: boolean;
+  isInitialized: boolean;
   
-  setUser: (user: User | null) => void;
-  setSession: (session: Session | null) => void;
-  setProfile: (profile: Profile | null) => void;
   initialize: () => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  fetchProfile: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: any }>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   session: null,
-  profile: null,
-  loading: true,
-  initialized: false,
-
-  setUser: (user) => set({ user }),
-  setSession: (session) => set({ session }),
-  setProfile: (profile) => set({ profile }),
+  isLoading: false,
+  isInitialized: false,
 
   initialize: async () => {
     try {
+      set({ isLoading: true });
+      
       const { data: { session } } = await supabase.auth.getSession();
       
-      if (session) {
-        set({ session, user: session.user });
-        await get().fetchProfile();
-      }
-      
-      // Listen for auth changes
-      supabase.auth.onAuthStateChange(async (_event, session) => {
-        set({ session, user: session?.user ?? null });
-        if (session?.user) {
-          await get().fetchProfile();
-        } else {
-          set({ profile: null });
-        }
+      set({ 
+        session, 
+        user: session?.user ?? null,
+        isInitialized: true,
+        isLoading: false 
       });
       
-      set({ initialized: true, loading: false });
+      // Listen for auth changes
+      supabase.auth.onAuthStateChange((_event, session) => {
+        set({ 
+          session, 
+          user: session?.user ?? null 
+        });
+      });
     } catch (error) {
       console.error('Error initializing auth:', error);
-      set({ loading: false, initialized: true });
+      set({ isInitialized: true, isLoading: false });
     }
   },
 
-  signIn: async (email, password) => {
-    set({ loading: true });
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    set({ loading: false });
-    return { error };
-  },
-
-  signUp: async (email, password, fullName) => {
-    set({ loading: true });
+  signUp: async (email, password, name) => {
+    set({ isLoading: true });
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          full_name: fullName,
+          full_name: name,
         },
       },
     });
-    set({ loading: false });
+    
+    set({ isLoading: false });
+    return { error };
+  },
+
+  signIn: async (email, password) => {
+    set({ isLoading: true });
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    set({ isLoading: false });
     return { error };
   },
 
   signOut: async () => {
-    set({ loading: true });
+    set({ isLoading: true });
+    
     await supabase.auth.signOut();
-    set({ user: null, session: null, profile: null, loading: false });
+    
+    set({ 
+      user: null, 
+      session: null, 
+      isLoading: false 
+    });
   },
 
-  fetchProfile: async () => {
-    const { user } = get();
-    if (!user) return;
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    if (data && !error) {
-      set({ profile: data });
-    }
+  resetPassword: async (email) => {
+    set({ isLoading: true });
+    
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    
+    set({ isLoading: false });
+    return { error };
   },
 }));
+
 
