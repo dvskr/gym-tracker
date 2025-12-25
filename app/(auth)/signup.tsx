@@ -202,11 +202,11 @@ export default function SignupScreen() {
         {/* Sign In Link */}
         <View className="flex-row justify-center">
           <Text className="text-gray-400">Already have an account? </Text>
-          <Link href="/(auth)/login" asChild>
-            <TouchableOpacity>
+          <TouchableOpacity>
+            <Link href="/(auth)/login">
               <Text className="text-primary-500 font-semibold">Sign In</Text>
-            </TouchableOpacity>
-          </Link>
+            </Link>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

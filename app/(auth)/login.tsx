@@ -111,11 +111,11 @@ export default function LoginScreen() {
 
         {/* Forgot Password Link */}
         <View className="items-end mb-6">
-          <Link href="/(auth)/forgot-password" asChild>
-            <TouchableOpacity>
+          <TouchableOpacity>
+            <Link href="/(auth)/forgot-password">
               <Text className="text-primary-500 font-medium">Forgot Password?</Text>
-            </TouchableOpacity>
-          </Link>
+            </Link>
+          </TouchableOpacity>
         </View>
 
         {/* Sign In Button */}
@@ -132,11 +132,11 @@ export default function LoginScreen() {
         {/* Sign Up Link */}
         <View className="flex-row justify-center">
           <Text className="text-gray-400">Don't have an account? </Text>
-          <Link href="/(auth)/signup" asChild>
-            <TouchableOpacity>
+          <TouchableOpacity>
+            <Link href="/(auth)/signup">
               <Text className="text-primary-500 font-semibold">Sign Up</Text>
-            </TouchableOpacity>
-          </Link>
+            </Link>
+          </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>

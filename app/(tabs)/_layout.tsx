@@ -1,17 +1,7 @@
-import { useEffect } from 'react';
-import { Tabs, router } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { Home, Dumbbell, History, TrendingUp, User } from 'lucide-react-native';
-import { useAuthStore } from '@/stores/authStore';
 
 export default function TabsLayout() {
-  const user = useAuthStore((state) => state.user);
-
-  useEffect(() => {
-    if (!user) {
-      router.replace('/(auth)/login');
-    }
-  }, [user]);
-
   return (
     <Tabs
       screenOptions={{
@@ -19,16 +9,9 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: '#1e293b',
           borderTopColor: '#334155',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
         },
         tabBarActiveTintColor: '#3b82f6',
-        tabBarInactiveTintColor: '#64748b',
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
-        },
+        tabBarInactiveTintColor: '#94a3b8',
       }}
     >
       <Tabs.Screen

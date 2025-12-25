@@ -1,4 +1,3 @@
-import '../global.css';
 import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
@@ -14,7 +13,7 @@ export default function RootLayout() {
 
   if (!isInitialized || isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-dark-950">
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#020617' }}>
         <ActivityIndicator size="large" color="#3b82f6" />
       </View>
     );

@@ -1,11 +1,25 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 export default function HistoryScreen() {
   return (
-    <View className="flex-1 bg-dark-950 items-center justify-center">
+    <View style={styles.container}>
       <StatusBar style="light" />
-      <Text className="text-white text-3xl font-bold">History</Text>
+      <Text style={styles.title}>History</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#020617',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+});
