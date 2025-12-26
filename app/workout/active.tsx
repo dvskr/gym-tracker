@@ -4,11 +4,13 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Keyboard,
   StyleSheet,
   Alert,
   Modal,
   Animated,
-  Vibration,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,6 +28,7 @@ import { ExerciseCard } from '@/components/workout';
 import { ExerciseSearch } from '@/components/exercise';
 import { Button } from '@/components/ui';
 import { ExerciseDBExercise } from '@/types/database';
+import { warningHaptic, successHaptic } from '@/lib/utils/haptics';
 
 // Default rest time in seconds
 const DEFAULT_REST_TIME = 90;
@@ -95,9 +98,9 @@ export default function ActiveWorkoutScreen() {
   // Vibrate when rest timer ends
   useEffect(() => {
     if (restTimer.remainingSeconds === 0 && restTimer.totalSeconds > 0) {
-      if (Platform.OS !== 'web') {
-        Vibration.vibrate([0, 200, 100, 200, 100, 200]);
-      }
+      // Warning haptic when timer ends
+      warningHaptic();
+      
       // Pulse animation
       Animated.sequence([
         Animated.timing(timerScale, {
@@ -178,6 +181,9 @@ export default function ActiveWorkoutScreen() {
             setIsFinishing(false);
 
             if (result.success) {
+              // Success haptic for finishing workout
+              successHaptic();
+              
               router.replace({
                 pathname: '/workout/complete',
                 params: { workoutId: result.workoutId },
@@ -278,51 +284,60 @@ export default function ActiveWorkoutScreen() {
         </View>
       </View>
 
-      {/* Exercise List */}
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      {/* KeyboardAvoidingView for input fields */}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoid}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
       >
-        {activeWorkout.exercises.map((workoutExercise) => (
-          <ExerciseCard
-            key={workoutExercise.id}
-            workoutExercise={workoutExercise}
-            onAddSet={() => addSet(workoutExercise.id)}
-            onUpdateSet={(setId, data) =>
-              updateSet(workoutExercise.id, setId, data)
-            }
-            onCompleteSet={(setId) =>
-              handleCompleteSet(workoutExercise.id, setId)
-            }
-            onDeleteSet={(setId) => deleteSet(workoutExercise.id, setId)}
-            onRemove={() => removeExercise(workoutExercise.id)}
-          />
-        ))}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {activeWorkout.exercises.map((workoutExercise) => (
+              <ExerciseCard
+                key={workoutExercise.id}
+                workoutExercise={workoutExercise}
+                onAddSet={() => addSet(workoutExercise.id)}
+                onUpdateSet={(setId, data) =>
+                  updateSet(workoutExercise.id, setId, data)
+                }
+                onCompleteSet={(setId) =>
+                  handleCompleteSet(workoutExercise.id, setId)
+                }
+                onDeleteSet={(setId) => deleteSet(workoutExercise.id, setId)}
+                onRemove={() => removeExercise(workoutExercise.id)}
+              />
+            ))}
 
-        {/* Add Exercise Button */}
-        <TouchableOpacity
-          style={styles.addExerciseButton}
-          onPress={() => setShowExerciseSearch(true)}
-          activeOpacity={0.7}
-        >
-          <Plus size={24} color="#3b82f6" />
-          <Text style={styles.addExerciseText}>Add Exercise</Text>
-        </TouchableOpacity>
+            {/* Add Exercise Button */}
+            <TouchableOpacity
+              style={styles.addExerciseButton}
+              onPress={() => setShowExerciseSearch(true)}
+              activeOpacity={0.7}
+            >
+              <Plus size={24} color="#3b82f6" />
+              <Text style={styles.addExerciseText}>Add Exercise</Text>
+            </TouchableOpacity>
 
-        {/* Empty State */}
-        {activeWorkout.exercises.length === 0 && (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>No exercises yet</Text>
-            <Text style={styles.emptySubtitle}>
-              Tap "Add Exercise" to get started
-            </Text>
-          </View>
-        )}
+            {/* Empty State */}
+            {activeWorkout.exercises.length === 0 && (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyTitle}>No exercises yet</Text>
+                <Text style={styles.emptySubtitle}>
+                  Tap "Add Exercise" to get started
+                </Text>
+              </View>
+            )}
 
-        {/* Bottom Spacing */}
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
+            {/* Bottom Spacing */}
+            <View style={styles.bottomSpacer} />
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
 
       {/* Rest Timer Overlay */}
       {restTimer.isRunning && (
@@ -494,6 +509,10 @@ const styles = StyleSheet.create({
     width: 1,
     height: 32,
     backgroundColor: '#334155',
+  },
+
+  keyboardAvoid: {
+    flex: 1,
   },
 
   scrollView: {

@@ -8,12 +8,12 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
   Keyboard,
 } from 'react-native';
 import { Search, X, Dumbbell } from 'lucide-react-native';
 import { ExerciseDBExercise, BodyPart } from '@/types/database';
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { ExerciseItemSkeleton } from '@/components/ui';
 
 interface ExerciseSearchProps {
   onSelectExercise: (exercise: ExerciseDBExercise) => void;
@@ -182,9 +182,13 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
   const ListEmptyComponent = useCallback(() => {
     if (isLoading) {
       return (
-        <View style={styles.emptyContainer}>
-          <ActivityIndicator size="large" color="#3b82f6" />
-          <Text style={styles.emptyText}>Loading exercises...</Text>
+        <View style={styles.skeletonContainer}>
+          <ExerciseItemSkeleton />
+          <ExerciseItemSkeleton />
+          <ExerciseItemSkeleton />
+          <ExerciseItemSkeleton />
+          <ExerciseItemSkeleton />
+          <ExerciseItemSkeleton />
         </View>
       );
     }
@@ -289,9 +293,6 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         <Text style={styles.resultsText}>
           {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
         </Text>
-        {isLoading && (
-          <ActivityIndicator size="small" color="#3b82f6" />
-        )}
       </View>
 
       {/* Exercise List */}
@@ -502,6 +503,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 60,
+    gap: 12,
+  },
+
+  skeletonContainer: {
+    padding: 16,
     gap: 12,
   },
 

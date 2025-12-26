@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Plus, X, ChevronDown, ChevronUp, MessageSquare } from 'lucide-react-native';
+import { Plus, X, MessageSquare } from 'lucide-react-native';
 import { WorkoutExercise, WorkoutSet } from '@/stores/workoutStore';
 import { SetRow } from './SetRow';
 import { Card } from '@/components/ui';
+import { usePreviousWorkout } from '@/hooks/usePreviousWorkout';
+import { lightHaptic } from '@/lib/utils/haptics';
 
 interface ExerciseCardProps {
   workoutExercise: WorkoutExercise;
@@ -26,7 +28,6 @@ interface ExerciseCardProps {
 
 const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   workoutExercise,
-  previousSets = [],
   onAddSet,
   onUpdateSet,
   onCompleteSet,
@@ -36,17 +37,18 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 }) => {
   const { exercise, sets, notes } = workoutExercise;
 
+  // Fetch previous workout data for this exercise
+  const previousWorkout = usePreviousWorkout(exercise.id);
+
   // Get completed sets count
   const completedSets = sets.filter((s) => s.isCompleted).length;
   const totalSets = sets.length;
 
-  // Get previous set for a given index
-  const getPreviousSet = useCallback(
-    (index: number) => {
-      return previousSets[index] || null;
-    },
-    [previousSets]
-  );
+  // Handle add set with haptic
+  const handleAddSet = useCallback(() => {
+    lightHaptic();
+    onAddSet();
+  }, [onAddSet]);
 
   return (
     <Card variant="default" style={styles.card}>
@@ -71,6 +73,17 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
               {exercise.bodyPart} • {exercise.equipment}
             </Text>
           </View>
+          
+          {/* Previous Workout Hint */}
+          {previousWorkout && (
+            <View style={styles.previousHintRow}>
+              <Text style={styles.previousHintText}>
+                Last: {previousWorkout.lastWeight} lbs × {previousWorkout.lastReps} reps
+                {previousWorkout.lastDate && ` (${previousWorkout.lastDate})`}
+              </Text>
+            </View>
+          )}
+          
           <View style={styles.progressRow}>
             <Text style={styles.progressText}>
               {completedSets}/{totalSets} sets
@@ -98,34 +111,39 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         </View>
       ) : null}
 
-      {/* Column Headers */}
-      <View style={styles.columnHeaders}>
-        <Text style={[styles.columnHeader, styles.columnSet]}>SET</Text>
-        <Text style={[styles.columnHeader, styles.columnPrevious]}>PREV</Text>
-        <Text style={[styles.columnHeader, styles.columnWeight]}>WEIGHT</Text>
-        <Text style={[styles.columnHeader, styles.columnReps]}>REPS</Text>
-        <View style={styles.columnCheck} />
-      </View>
-
       {/* Sets List */}
       <View style={styles.setsContainer}>
-        {sets.map((set, index) => (
-          <SetRow
-            key={set.id}
-            set={set}
-            previousSet={getPreviousSet(index)}
-            onUpdate={(data) => onUpdateSet(set.id, data)}
-            onComplete={() => onCompleteSet(set.id)}
-            onDelete={() => onDeleteSet(set.id)}
-            isOnly={sets.length === 1}
-          />
-        ))}
+        {sets.map((set, index) => {
+          // For first set, use previous workout data; for others, use previous set in current workout
+          const prevWeight = index === 0 
+            ? previousWorkout?.lastWeight?.toString() 
+            : sets[index - 1]?.weight?.toString();
+          const prevReps = index === 0 
+            ? previousWorkout?.lastReps?.toString() 
+            : sets[index - 1]?.reps?.toString();
+          
+          return (
+            <SetRow
+              key={set.id}
+              setNumber={set.setNumber}
+              weight={set.weight?.toString() ?? ''}
+              reps={set.reps?.toString() ?? ''}
+              previousWeight={prevWeight}
+              previousReps={prevReps}
+              isCompleted={set.isCompleted}
+              onWeightChange={(value) => onUpdateSet(set.id, { weight: parseFloat(value) || 0 })}
+              onRepsChange={(value) => onUpdateSet(set.id, { reps: parseInt(value) || 0 })}
+              onComplete={() => onCompleteSet(set.id)}
+              onDelete={sets.length > 1 ? () => onDeleteSet(set.id) : undefined}
+            />
+          );
+        })}
       </View>
 
       {/* Add Set Button */}
       <TouchableOpacity
         style={styles.addSetButton}
-        onPress={onAddSet}
+        onPress={handleAddSet}
         activeOpacity={0.7}
       >
         <Plus size={18} color="#3b82f6" />
@@ -211,6 +229,16 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
 
+  previousHintRow: {
+    marginTop: 4,
+  },
+
+  previousHintText: {
+    color: '#64748b',
+    fontSize: 11,
+    fontStyle: 'italic',
+  },
+
   progressRow: {
     marginTop: 4,
   },
@@ -244,42 +272,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 
-  columnHeaders: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: '#0f172a',
-    gap: 8,
-  },
-
-  columnHeader: {
-    color: '#64748b',
-    fontSize: 10,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-  columnSet: {
-    width: 32,
-  },
-
-  columnPrevious: {
-    width: 60,
-  },
-
-  columnWeight: {
-    flex: 1,
-  },
-
-  columnReps: {
-    flex: 1,
-  },
-
-  columnCheck: {
-    width: 48,
-  },
-
   setsContainer: {
     padding: 12,
     paddingTop: 8,
@@ -301,4 +293,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

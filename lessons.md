@@ -332,6 +332,43 @@ while (hasMore) {
 
 ---
 
+### 1.9 React Native Gesture Handler Setup
+**Problem:** Swipe gestures require proper configuration of react-native-gesture-handler and react-native-reanimated.
+
+**Setup Required:**
+1. Install packages: `npx expo install react-native-gesture-handler react-native-reanimated`
+2. Add Babel plugin for Reanimated:
+```javascript
+// babel.config.js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+    plugins: ['react-native-reanimated/plugin'], // Must be last
+  };
+};
+```
+3. Wrap root layout with GestureHandlerRootView:
+```javascript
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+export default function RootLayout() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* Your app content */}
+    </GestureHandlerRootView>
+  );
+}
+```
+
+**How to Avoid:**
+- Follow the official react-native-gesture-handler setup guide
+- Always place the Reanimated babel plugin **last** in the plugins array
+- Clear cache after babel config changes: `npx expo start --clear`
+- Test gestures on physical devices (simulators may have issues)
+
+---
+
 ## 4. Useful Commands
 
 ```bash

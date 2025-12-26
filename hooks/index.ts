@@ -1,0 +1,2 @@
+export { usePreviousWorkout } from './usePreviousWorkout';
+

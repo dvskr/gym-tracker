@@ -1,306 +1,246 @@
-import React, { memo, useCallback, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Vibration,
-  Platform,
-} from 'react-native';
-import { Check, Trash2 } from 'lucide-react-native';
-import { WorkoutSet } from '@/stores/workoutStore';
-
-interface PreviousSet {
-  weight: number | null;
-  reps: number | null;
-}
+import React, { useRef } from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet, Keyboard } from 'react-native';
+import { Check, X } from 'lucide-react-native';
 
 interface SetRowProps {
-  set: WorkoutSet;
-  previousSet: PreviousSet | null;
-  onUpdate: (data: Partial<WorkoutSet>) => void;
+  setNumber: number;
+  weight: string;
+  reps: string;
+  previousWeight?: string;
+  previousReps?: string;
+  isCompleted: boolean;
+  onWeightChange: (value: string) => void;
+  onRepsChange: (value: string) => void;
   onComplete: () => void;
-  onDelete: () => void;
-  isOnly?: boolean; // Prevent deletion if only set
+  onDelete?: () => void;
 }
 
-const SET_TYPE_LABELS: Record<string, string> = {
-  normal: '',
-  warmup: 'W',
-  dropset: 'D',
-  failure: 'F',
-};
-
-const SetRowComponent: React.FC<SetRowProps> = ({
-  set,
-  previousSet,
-  onUpdate,
+export function SetRow({
+  setNumber,
+  weight,
+  reps,
+  previousWeight,
+  previousReps,
+  isCompleted,
+  onWeightChange,
+  onRepsChange,
   onComplete,
   onDelete,
-  isOnly = false,
-}) => {
-  const weightInputRef = useRef<TextInput>(null);
+}: SetRowProps) {
   const repsInputRef = useRef<TextInput>(null);
+  
+  const adjustWeight = (delta: number) => {
+    const current = parseFloat(weight) || 0;
+    onWeightChange(Math.max(0, current + delta).toString());
+  };
+  
+  const adjustReps = (delta: number) => {
+    const current = parseInt(reps) || 0;
+    onRepsChange(Math.max(0, current + delta).toString());
+  };
 
-  // Pre-fill from previous set when focusing empty input
-  const handleWeightFocus = useCallback(() => {
-    if (set.weight === null && previousSet?.weight) {
-      onUpdate({ weight: previousSet.weight });
-    }
-  }, [set.weight, previousSet?.weight, onUpdate]);
-
-  const handleRepsFocus = useCallback(() => {
-    if (set.reps === null && previousSet?.reps) {
-      onUpdate({ reps: previousSet.reps });
-    }
-  }, [set.reps, previousSet?.reps, onUpdate]);
-
-  // Handle weight change
-  const handleWeightChange = useCallback(
-    (text: string) => {
-      const value = text === '' ? null : parseFloat(text) || 0;
-      onUpdate({ weight: value });
-    },
-    [onUpdate]
-  );
-
-  // Handle reps change
-  const handleRepsChange = useCallback(
-    (text: string) => {
-      const value = text === '' ? null : parseInt(text, 10) || 0;
-      onUpdate({ reps: value });
-    },
-    [onUpdate]
-  );
-
-  // Handle complete with haptic feedback
-  const handleComplete = useCallback(() => {
-    if (Platform.OS !== 'web') {
-      Vibration.vibrate(50);
-    }
-    onComplete();
-  }, [onComplete]);
-
-  // Move to reps input after weight
-  const handleWeightSubmit = useCallback(() => {
+  const handleWeightSubmit = () => {
+    // Focus reps input when "Next" is pressed
     repsInputRef.current?.focus();
-  }, []);
+  };
 
-  // Complete set after reps
-  const handleRepsSubmit = useCallback(() => {
-    if (set.weight !== null && set.reps !== null) {
-      handleComplete();
-    }
-  }, [set.weight, set.reps, handleComplete]);
+  const handleRepsSubmit = () => {
+    // Dismiss keyboard when "Done" is pressed
+    Keyboard.dismiss();
+  };
 
-  // Format previous set hint
-  const previousHint = previousSet
-    ? `${previousSet.weight ?? '-'} × ${previousSet.reps ?? '-'}`
-    : '-';
-
-  const setTypeLabel = SET_TYPE_LABELS[set.setType] || '';
+  const prevText = previousWeight && previousReps 
+    ? `Prev: ${previousWeight}×${previousReps}` 
+    : null;
 
   return (
-    <View style={[styles.container, set.isCompleted && styles.containerCompleted]}>
-      {/* Set Number */}
-      <View style={styles.setNumberContainer}>
-        <Text style={[styles.setNumber, set.isCompleted && styles.textCompleted]}>
-          {setTypeLabel || set.setNumber}
-        </Text>
-      </View>
+    <View style={[styles.container, isCompleted && styles.containerCompleted]}>
+      {/* Main Row */}
+      <View style={styles.mainRow}>
+        {/* Delete Button */}
+        {onDelete && (
+          <Pressable 
+            style={styles.deleteBtn} 
+            onPress={onDelete}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <X size={16} color="#ef4444" />
+          </Pressable>
+        )}
 
-      {/* Previous Set Hint */}
-      <View style={styles.previousContainer}>
-        <Text style={styles.previousText}>{previousHint}</Text>
-      </View>
+        <View style={styles.setNumber}>
+          <Text style={styles.setNumberText}>{setNumber}</Text>
+        </View>
 
-      {/* Weight Input */}
-      <View style={styles.inputContainer}>
         <TextInput
-          ref={weightInputRef}
-          style={[
-            styles.input,
-            set.isCompleted && styles.inputCompleted,
-          ]}
-          value={set.weight?.toString() ?? ''}
-          onChangeText={handleWeightChange}
-          onFocus={handleWeightFocus}
+          style={styles.weightInput}
+          value={weight}
+          onChangeText={onWeightChange}
           onSubmitEditing={handleWeightSubmit}
-          placeholder="-"
-          placeholderTextColor="#475569"
           keyboardType="decimal-pad"
           returnKeyType="next"
+          placeholder="0"
+          placeholderTextColor="#64748b"
           selectTextOnFocus
-          editable={!set.isCompleted}
+          blurOnSubmit={false}
         />
-        <Text style={styles.unitLabel}>{set.weightUnit}</Text>
-      </View>
-
-      {/* Reps Input */}
-      <View style={styles.inputContainer}>
+        
+        <Text style={styles.separator}>×</Text>
+        
         <TextInput
           ref={repsInputRef}
-          style={[
-            styles.input,
-            set.isCompleted && styles.inputCompleted,
-          ]}
-          value={set.reps?.toString() ?? ''}
-          onChangeText={handleRepsChange}
-          onFocus={handleRepsFocus}
+          style={styles.repsInput}
+          value={reps}
+          onChangeText={onRepsChange}
           onSubmitEditing={handleRepsSubmit}
-          placeholder="-"
-          placeholderTextColor="#475569"
           keyboardType="number-pad"
           returnKeyType="done"
+          placeholder="0"
+          placeholderTextColor="#64748b"
           selectTextOnFocus
-          editable={!set.isCompleted}
         />
-        <Text style={styles.unitLabel}>reps</Text>
+
+        <Pressable
+          style={[styles.checkButton, isCompleted && styles.checkButtonCompleted]}
+          onPress={onComplete}
+        >
+          <Check size={20} color={isCompleted ? '#fff' : '#64748b'} />
+        </Pressable>
       </View>
 
-      {/* Complete Button */}
-      <TouchableOpacity
-        style={[
-          styles.completeButton,
-          set.isCompleted && styles.completeButtonActive,
-        ]}
-        onPress={handleComplete}
-        activeOpacity={0.7}
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      >
-        <Check
-          size={20}
-          color={set.isCompleted ? '#ffffff' : '#64748b'}
-          strokeWidth={3}
-        />
-      </TouchableOpacity>
-
-      {/* Delete Button - Long press or swipe in future */}
-      {!isOnly && !set.isCompleted && (
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={onDelete}
-          activeOpacity={0.7}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <Trash2 size={16} color="#ef4444" />
-        </TouchableOpacity>
-      )}
+      {/* Adjustment Row */}
+      <View style={styles.adjustRow}>
+        {prevText && <Text style={styles.prevText}>{prevText}</Text>}
+        {!prevText && <View />}
+        <View style={styles.adjustButtons}>
+          <Pressable style={styles.adjustBtn} onPress={() => adjustWeight(-5)}>
+            <Text style={styles.adjustBtnText}>-5</Text>
+          </Pressable>
+          <Pressable style={styles.adjustBtn} onPress={() => adjustWeight(5)}>
+            <Text style={styles.adjustBtnText}>+5</Text>
+          </Pressable>
+          <View style={styles.divider} />
+          <Pressable style={styles.adjustBtn} onPress={() => adjustReps(-1)}>
+            <Text style={styles.adjustBtnText}>-1</Text>
+          </Pressable>
+          <Pressable style={styles.adjustBtn} onPress={() => adjustReps(1)}>
+            <Text style={styles.adjustBtnText}>+1</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
-};
-
-// Memoize to prevent unnecessary re-renders
-export const SetRow = memo(SetRowComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.set.id === nextProps.set.id &&
-    prevProps.set.weight === nextProps.set.weight &&
-    prevProps.set.reps === nextProps.set.reps &&
-    prevProps.set.isCompleted === nextProps.set.isCompleted &&
-    prevProps.set.setType === nextProps.set.setType &&
-    prevProps.previousSet?.weight === nextProps.previousSet?.weight &&
-    prevProps.previousSet?.reps === nextProps.previousSet?.reps &&
-    prevProps.isOnly === nextProps.isOnly
-  );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#1e293b',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+  },
+  containerCompleted: {
+    backgroundColor: '#14532d',
+  },
+  mainRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0f172a',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-    minHeight: 56,
     gap: 8,
   },
-
-  containerCompleted: {
-    backgroundColor: '#14532d20',
+  deleteBtn: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-
-  setNumberContainer: {
+  setNumber: {
     width: 32,
     height: 32,
-    borderRadius: 8,
-    backgroundColor: '#1e293b',
-    alignItems: 'center',
+    borderRadius: 16,
+    backgroundColor: '#475569',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-
-  setNumber: {
-    color: '#94a3b8',
+  setNumberText: {
+    color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',
   },
-
-  textCompleted: {
-    color: '#22c55e',
-  },
-
-  previousContainer: {
-    width: 60,
-    alignItems: 'center',
-  },
-
-  previousText: {
-    color: '#475569',
-    fontSize: 12,
-  },
-
-  inputContainer: {
+  weightInput: {
     flex: 1,
-    alignItems: 'center',
-  },
-
-  input: {
-    backgroundColor: '#1e293b',
+    height: 44,
+    backgroundColor: '#0f172a',
     borderRadius: 8,
-    color: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#334155',
+    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    width: '100%',
-    minHeight: 48,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
   },
-
-  inputCompleted: {
-    backgroundColor: '#14532d40',
-    color: '#22c55e',
-  },
-
-  unitLabel: {
+  separator: {
     color: '#64748b',
-    fontSize: 10,
-    marginTop: 2,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-
-  completeButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#1e293b',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
+  repsInput: {
+    width: 60,
+    height: 44,
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    borderWidth: 1,
     borderColor: '#334155',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-
-  completeButtonActive: {
+  checkButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: '#475569',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkButtonCompleted: {
     backgroundColor: '#22c55e',
     borderColor: '#22c55e',
   },
-
-  deleteButton: {
-    width: 32,
-    height: 32,
+  adjustRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+  },
+  prevText: {
+    color: '#64748b',
+    fontSize: 12,
+  },
+  adjustButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  adjustBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: '#334155',
+    borderRadius: 4,
+  },
+  adjustBtnText: {
+    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  divider: {
+    width: 1,
+    height: 16,
+    backgroundColor: '#475569',
+    marginHorizontal: 4,
   },
 });
-
