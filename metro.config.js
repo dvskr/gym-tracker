@@ -1,3 +1,8 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-module.exports = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname);
+
+// Ensure web compatibility
+config.resolver.sourceExts = [...config.resolver.sourceExts, 'mjs'];
+
+module.exports = config;

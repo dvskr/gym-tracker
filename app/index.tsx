@@ -1,22 +1,117 @@
-import { Redirect } from 'expo-router';
-import { useAuthStore } from '@/stores/authStore';
-import { View, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { useAuthStore } from '../stores/authStore';
+import { useEffect } from 'react';
 
 export default function Index() {
-  const { user, isInitialized, isLoading } = useAuthStore();
+  const { user, isInitialized, isLoading, initialize } = useAuthStore();
 
+  // Initialize auth on mount
+  useEffect(() => {
+    initialize();
+  }, []);
+
+  useEffect(() => {
+    if (isInitialized && !isLoading) {
+      if (user) {
+        router.replace('/(tabs)');
+      }
+    }
+  }, [user, isInitialized, isLoading]);
+
+  // Show loading while auth initializes
   if (!isInitialized || isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#020617' }}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>🏋️ Gym Tracker</Text>
+          <Text style={styles.subtitle}>Loading...</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
-  if (!user) {
-    return <Redirect href="/(auth)/login" />;
-  }
+  // Not logged in - show welcome screen
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>🏋️ Gym Tracker</Text>
+        <Text style={styles.subtitle}>Track your workouts, crush your goals</Text>
 
-  return <Redirect href="/(tabs)" />;
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => router.push('/(auth)/login')}
+          >
+            <Text style={styles.primaryButtonText}>Sign In</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => router.push('/(auth)/signup')}
+          >
+            <Text style={styles.secondaryButtonText}>Create Account</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#020617',
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#94a3b8',
+    marginBottom: 48,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    maxWidth: 300,
+    gap: 16,
+  },
+  primaryButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  primaryButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#3b82f6',
+    alignItems: 'center',
+  },
+  secondaryButtonText: {
+    color: '#3b82f6',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
