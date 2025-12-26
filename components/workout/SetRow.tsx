@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   setNumber: {
     color: '#94a3b8',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   textCompleted: {
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'bold',
     textAlign: 'center',
     width: '100%',
     minHeight: 48,

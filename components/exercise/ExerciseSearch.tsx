@@ -118,10 +118,11 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     clearError,
   } = useExerciseStore();
 
-  // Fetch exercises on mount
+  // Fetch exercises on mount - force refresh to get all exercises
   useEffect(() => {
-    fetchExercises();
-  }, [fetchExercises]);
+    // Force=true to refresh and get all 1300+ exercises (not cached 10)
+    fetchExercises(true);
+  }, []);
 
   // Get filtered exercises
   const exercises = getFilteredExercises();
@@ -335,7 +336,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#ffffff',
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   closeButton: {
@@ -393,7 +394,7 @@ const styles = StyleSheet.create({
   chipText: {
     color: '#94a3b8',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: 'normal',
     textTransform: 'capitalize',
   },
 
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
   chipClearText: {
     color: '#ef4444',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: 'normal',
   },
 
   resultsRow: {
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
   exerciseName: {
     color: '#ffffff',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: 'bold',
     textTransform: 'capitalize',
     marginBottom: 2,
   },
@@ -478,7 +479,7 @@ const styles = StyleSheet.create({
   exerciseBodyPart: {
     color: '#3b82f6',
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: 'normal',
     textTransform: 'capitalize',
   },
 
@@ -494,7 +495,7 @@ const styles = StyleSheet.create({
   chevronText: {
     color: '#ffffff',
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 
   emptyContainer: {
@@ -507,7 +508,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#94a3b8',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'normal',
   },
 
   emptySubtext: {
@@ -533,7 +534,7 @@ const styles = StyleSheet.create({
   retryText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });
 

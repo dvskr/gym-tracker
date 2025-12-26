@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: '#ffffff',
     marginBottom: 12,
   },
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#e2e8f0',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: 'normal',
     marginBottom: 8,
   },
 
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   loginContainer: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   loginLink: {
     color: '#3b82f6',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });
 

@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#ffffff',
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: 'bold',
     marginBottom: 8,
   },
 
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   statValue: {
     color: '#ffffff',
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   statLabel: {
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     color: '#e2e8f0',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginBottom: 10,
   },
 

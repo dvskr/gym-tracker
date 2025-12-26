@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#ffffff',
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: 'bold',
   },
 
   content: {
@@ -211,13 +211,13 @@ const styles = StyleSheet.create({
   activeBadgeText: {
     color: '#22c55e',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 
   activeWorkoutName: {
     color: '#ffffff',
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: 'bold',
     marginBottom: 16,
   },
 
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   discardText: {
     color: '#ef4444',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: 'normal',
   },
 
   // Start Workout Styles
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   startTitle: {
     color: '#ffffff',
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: 'bold',
     marginBottom: 8,
   },
 
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'bold',
     marginBottom: 4,
   },
 

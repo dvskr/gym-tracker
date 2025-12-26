@@ -134,15 +134,15 @@ const styles = StyleSheet.create({
   // Sizes - Text
   smText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   mdText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   lgText: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   text: {

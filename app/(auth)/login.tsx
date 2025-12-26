@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 42,
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: '#ffffff',
     marginBottom: 8,
   },
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#e2e8f0',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: 'normal',
     marginBottom: 8,
   },
 
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   forgotText: {
     color: '#3b82f6',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: 'normal',
   },
 
   button: {
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   signupContainer: {
@@ -276,6 +276,6 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#3b82f6',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });

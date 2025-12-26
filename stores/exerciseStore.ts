@@ -1,16 +1,36 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ExerciseDBExercise, BodyPart } from '@/types/database';
-import {
-  fetchAllExercises,
-  searchExercisesByName,
-  fetchExercisesByBodyPart,
-} from '@/lib/services/exercisedb';
+import { supabase } from '@/lib/supabase';
+import { Exercise } from '@/types/database';
+
+// Transform Supabase exercise to display format
+interface DisplayExercise {
+  id: string;
+  name: string;
+  bodyPart: string;
+  target: string;
+  equipment: string;
+  gifUrl: string;
+  secondaryMuscles: string[];
+  instructions: string[];
+}
+
+type BodyPart = 
+  | 'back'
+  | 'cardio'
+  | 'chest'
+  | 'lower arms'
+  | 'lower legs'
+  | 'neck'
+  | 'shoulders'
+  | 'upper arms'
+  | 'upper legs'
+  | 'waist';
 
 interface ExerciseState {
   // State
-  exercises: ExerciseDBExercise[];
+  exercises: DisplayExercise[];
   isLoading: boolean;
   searchQuery: string;
   selectedBodyPart: BodyPart | null;
@@ -20,14 +40,28 @@ interface ExerciseState {
   // Actions
   fetchExercises: (force?: boolean) => Promise<void>;
   searchExercises: (query: string) => void;
-  filterByBodyPart: (bodyPart: BodyPart | null) => Promise<void>;
-  getFilteredExercises: () => ExerciseDBExercise[];
+  filterByBodyPart: (bodyPart: BodyPart | null) => void;
+  getFilteredExercises: () => DisplayExercise[];
   clearFilters: () => void;
   clearError: () => void;
 }
 
 // Cache duration: 24 hours
 const CACHE_DURATION = 24 * 60 * 60 * 1000;
+
+// Transform Supabase exercise to display format
+function transformExercise(exercise: Exercise): DisplayExercise {
+  return {
+    id: exercise.external_id || exercise.id,
+    name: exercise.name,
+    bodyPart: exercise.category || '',
+    target: exercise.primary_muscles?.[0] || '',
+    equipment: exercise.equipment || '',
+    gifUrl: exercise.gif_url || '',
+    secondaryMuscles: exercise.secondary_muscles || [],
+    instructions: exercise.instructions || [],
+  };
+}
 
 export const useExerciseStore = create<ExerciseState>()(
   persist(
@@ -40,7 +74,7 @@ export const useExerciseStore = create<ExerciseState>()(
       lastFetched: null,
       error: null,
 
-      // Fetch all exercises with caching
+      // Fetch all exercises from Supabase
       fetchExercises: async (force = false) => {
         const { lastFetched, exercises, isLoading } = get();
 
@@ -51,7 +85,7 @@ export const useExerciseStore = create<ExerciseState>()(
         const isCacheValid =
           lastFetched &&
           Date.now() - lastFetched < CACHE_DURATION &&
-          exercises.length > 0;
+          exercises.length > 100; // Only use cache if we have substantial data
 
         if (isCacheValid && !force) {
           return;
@@ -60,31 +94,41 @@ export const useExerciseStore = create<ExerciseState>()(
         set({ isLoading: true, error: null });
 
         try {
-          // Fetch exercises in batches for better performance
-          const allExercises: ExerciseDBExercise[] = [];
+          // Supabase has a default limit of 1000 rows
+          // Fetch in batches to get all exercises
+          const allExercises: Exercise[] = [];
+          const batchSize = 1000;
           let offset = 0;
-          const limit = 100;
           let hasMore = true;
 
-          // Fetch up to 1000 exercises (10 batches)
-          while (hasMore && offset < 1000) {
-            const batch = await fetchAllExercises({ limit, offset });
-            
-            if (batch.length === 0) {
-              hasMore = false;
-            } else {
-              allExercises.push(...batch);
-              offset += limit;
+          while (hasMore) {
+            const { data, error } = await supabase
+              .from('exercises')
+              .select('*')
+              .order('name')
+              .range(offset, offset + batchSize - 1);
+
+            if (error) {
+              throw new Error(error.message);
+            }
+
+            if (data && data.length > 0) {
+              allExercises.push(...data);
+              offset += batchSize;
               
-              // If we got less than the limit, we've reached the end
-              if (batch.length < limit) {
+              // If we got less than batch size, we've reached the end
+              if (data.length < batchSize) {
                 hasMore = false;
               }
+            } else {
+              hasMore = false;
             }
           }
 
+          const transformedExercises = allExercises.map(transformExercise);
+
           set({
-            exercises: allExercises,
+            exercises: transformedExercises,
             lastFetched: Date.now(),
             isLoading: false,
             error: null,
@@ -102,34 +146,9 @@ export const useExerciseStore = create<ExerciseState>()(
         set({ searchQuery: query });
       },
 
-      // Filter by body part - fetches from API if not in cache
-      filterByBodyPart: async (bodyPart: BodyPart | null) => {
+      // Filter by body part
+      filterByBodyPart: (bodyPart: BodyPart | null) => {
         set({ selectedBodyPart: bodyPart });
-
-        // If clearing filter or exercises already loaded, no need to fetch
-        if (!bodyPart || get().exercises.length > 0) {
-          return;
-        }
-
-        // If no exercises cached, fetch the specific body part
-        set({ isLoading: true, error: null });
-
-        try {
-          const exercises = await fetchExercisesByBodyPart(bodyPart, { limit: 200 });
-          
-          set((state) => ({
-            exercises: [...state.exercises, ...exercises].filter(
-              (exercise, index, self) =>
-                index === self.findIndex((e) => e.id === exercise.id)
-            ),
-            isLoading: false,
-          }));
-        } catch (error) {
-          set({
-            isLoading: false,
-            error: error instanceof Error ? error.message : 'Failed to fetch exercises',
-          });
-        }
       },
 
       // Get filtered exercises based on search query and body part
@@ -190,4 +209,3 @@ export const useExerciseLoading = () => useExerciseStore((state) => state.isLoad
 export const useExerciseError = () => useExerciseStore((state) => state.error);
 export const useSearchQuery = () => useExerciseStore((state) => state.searchQuery);
 export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);
-

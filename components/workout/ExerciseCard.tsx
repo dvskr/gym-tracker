@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   exerciseName: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: 'bold',
     textTransform: 'capitalize',
     marginBottom: 4,
   },
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   progressText: {
     color: '#3b82f6',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 
   removeButton: {
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   columnHeader: {
     color: '#64748b',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   addSetText: {
     color: '#3b82f6',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });
 

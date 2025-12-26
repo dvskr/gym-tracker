@@ -53,7 +53,8 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
 export const fetchAllExercises = async (
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  const { limit = 50, offset = 0 } = options;
+  // limit=0 returns ALL exercises (1300+)
+  const { limit = 0, offset = 0 } = options;
 
   try {
     const response = await fetch(
@@ -85,7 +86,8 @@ export const searchExercisesByName = async (
   name: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  const { limit = 50, offset = 0 } = options;
+  // Default to 0 (all matching results)
+  const { limit = 0, offset = 0 } = options;
 
   if (!name.trim()) {
     return [];
@@ -122,7 +124,8 @@ export const fetchExercisesByBodyPart = async (
   bodyPart: BodyPart,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  const { limit = 50, offset = 0 } = options;
+  // Default to 0 (all exercises for this body part)
+  const { limit = 0, offset = 0 } = options;
 
   try {
     const encodedBodyPart = encodeURIComponent(bodyPart.toLowerCase());
@@ -155,7 +158,8 @@ export const fetchExercisesByEquipment = async (
   equipment: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  const { limit = 50, offset = 0 } = options;
+  // Default to 0 (all exercises for this equipment)
+  const { limit = 0, offset = 0 } = options;
 
   try {
     const encodedEquipment = encodeURIComponent(equipment.toLowerCase());
@@ -188,7 +192,8 @@ export const fetchExercisesByTarget = async (
   target: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  const { limit = 50, offset = 0 } = options;
+  // Default to 0 (all exercises for this target muscle)
+  const { limit = 0, offset = 0 } = options;
 
   try {
     const encodedTarget = encodeURIComponent(target.toLowerCase());

@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
   workoutName: {
     color: '#ffffff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   timerRow: {
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
   timerText: {
     color: '#3b82f6',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
   },
 
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
   finishButtonText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   statsBar: {
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   statValue: {
     color: '#ffffff',
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   statLabel: {
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   addExerciseText: {
     color: '#3b82f6',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 
   emptyState: {
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     color: '#94a3b8',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginBottom: 8,
   },
 
@@ -569,14 +569,14 @@ const styles = StyleSheet.create({
   restTimerLabel: {
     color: '#94a3b8',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: 'normal',
     marginBottom: 8,
   },
 
   restTimerTime: {
     color: '#ffffff',
     fontSize: 56,
-    fontWeight: '700',
+    fontWeight: 'bold',
     fontVariant: ['tabular-nums'],
   },
 
@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
   addTimeText: {
     color: '#ffffff',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 
   skipButton: {
@@ -627,6 +627,6 @@ const styles = StyleSheet.create({
   skipButtonText: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
 });
