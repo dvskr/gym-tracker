@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.4",
+    "@react-native-community/netinfo": "11.4.1",
     "@supabase/supabase-js": "^2.89.0",
     "babel-preset-expo": "^54.0.9",
     "base64-arraybuffer": "^1.0.2",
