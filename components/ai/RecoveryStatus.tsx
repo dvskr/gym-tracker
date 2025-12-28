@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
-import {
-  Battery,
-  BatteryMedium,
-  BatteryLow,
-  BatteryWarning,
-  Activity,
-  Calendar,
-  ChevronRight,
-} from 'lucide-react-native';
+import { ChevronRight } from 'lucide-react-native';
 import { recoveryService, RecoveryStatus as RecoveryStatusType } from '@/lib/ai/recoveryService';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -36,61 +28,43 @@ export function RecoveryStatus() {
     }
   };
 
-  const getStatusColor = () => {
-    if (!status) return '#94a3b8';
+  const getStatusEmoji = () => {
+    if (!status) return '💪';
     switch (status.overall) {
       case 'recovered':
-        return '#22c55e';
+        return '💪';
       case 'moderate':
-        return '#f59e0b';
+        return '😊';
       case 'fatigued':
-        return '#f97316';
+        return '😴';
       case 'overtrained':
-        return '#ef4444';
+        return '😴';
     }
   };
 
-  const getStatusLabel = () => {
+  const getStatusTitle = () => {
     if (!status) return 'Loading';
-    switch (status.overall) {
-      case 'recovered':
-        return 'Well Recovered';
-      case 'moderate':
-        return 'Moderate';
-      case 'fatigued':
-        return 'Fatigued';
-      case 'overtrained':
-        return 'Overtrained';
+    const isRestDay = status.suggestedAction === 'rest' || status.overall === 'overtrained';
+    
+    if (isRestDay) {
+      return 'Rest Day';
     }
+    return 'Ready to Train';
   };
 
-  const getStatusIcon = () => {
-    if (!status) return <Activity size={20} color="#94a3b8" />;
-    const color = getStatusColor();
-    switch (status.overall) {
-      case 'recovered':
-        return <Battery size={20} color={color} />;
-      case 'moderate':
-        return <BatteryMedium size={20} color={color} />;
-      case 'fatigued':
-        return <BatteryLow size={20} color={color} />;
-      case 'overtrained':
-        return <BatteryWarning size={20} color={color} />;
-    }
-  };
-
-  const getActionLabel = () => {
+  const getStatusMessage = () => {
     if (!status) return '';
-    switch (status.suggestedAction) {
-      case 'train_hard':
-        return 'Train Hard';
-      case 'train_light':
-        return 'Train Light';
-      case 'active_recovery':
-        return 'Active Recovery';
-      case 'rest':
-        return 'Rest Day';
+    
+    const isRestDay = status.suggestedAction === 'rest' || status.overall === 'overtrained';
+    
+    if (isRestDay) {
+      if (status.consecutiveDays >= 2) {
+        return `You've trained ${status.consecutiveDays} days in a row. Recovery is when muscles grow!`;
+      }
+      return 'Your body needs recovery. Rest is part of the training!';
     }
+    
+    return status.recommendation || 'You\'re well rested and ready to go.';
   };
 
   const getMuscleStatusColor = (muscleStatus: 'fresh' | 'recovering' | 'fatigued') => {
@@ -115,70 +89,31 @@ export function RecoveryStatus() {
   if (!status) return null;
 
   return (
-    <Pressable
-      style={[styles.container, { borderLeftColor: getStatusColor() }]}
-      onPress={() => setExpanded(!expanded)}
-    >
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          {getStatusIcon()}
-          <View style={styles.headerText}>
-            <Text style={styles.title}>Recovery Status</Text>
-            <Text style={[styles.statusLabel, { color: getStatusColor() }]}>
-              {getStatusLabel()}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.headerRight}>
-          <Text style={[styles.score, { color: getStatusColor() }]}>
-            {status.score}
-          </Text>
-          <Text style={styles.scoreLabel}>score</Text>
-        </View>
+    <View style={styles.container}>
+      {/* Simple label */}
+      <Text style={styles.label}>Your Status</Text>
+      
+      {/* Status with friendly emoji */}
+      <View style={styles.statusRow}>
+        <Text style={styles.emoji}>{getStatusEmoji()}</Text>
+        <Text style={styles.statusTitle}>{getStatusTitle()}</Text>
       </View>
-
-      {/* Progress Bar */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBarBg}>
-          <View
-            style={[
-              styles.progressBarFill,
-              {
-                width: `${status.score}%`,
-                backgroundColor: getStatusColor(),
-              },
-            ]}
-          />
-        </View>
-      </View>
-
-      {/* Recommendation */}
-      <Text style={styles.recommendation}>{status.recommendation}</Text>
-
-      {/* Stats Row */}
+      
+      {/* Helpful message - positive framing */}
+      <Text style={styles.message}>{getStatusMessage()}</Text>
+      
+      {/* Stats row - inline, with units */}
       <View style={styles.statsRow}>
         <View style={styles.stat}>
-          <Calendar size={14} color="#64748b" />
           <Text style={styles.statValue}>{status.consecutiveDays}</Text>
-          <Text style={styles.statLabel}>consecutive</Text>
+          <Text style={styles.statLabel}>days straight</Text>
         </View>
+        <View style={styles.statDivider} />
         <View style={styles.stat}>
-          <Activity size={14} color="#64748b" />
           <Text style={styles.statValue}>{status.workoutsThisWeek}</Text>
-          <Text style={styles.statLabel}>this week</Text>
-        </View>
-        <View style={styles.stat}>
-          <View
-            style={[
-              styles.actionBadge,
-              { backgroundColor: `${getStatusColor()}20` },
-            ]}
-          >
-            <Text style={[styles.actionText, { color: getStatusColor() }]}>
-              {getActionLabel()}
-            </Text>
-          </View>
+          <Text style={styles.statLabel}>
+            {status.workoutsThisWeek === 1 ? 'workout' : 'workouts'} this week
+          </Text>
         </View>
       </View>
 
@@ -224,139 +159,110 @@ export function RecoveryStatus() {
 
       {/* Expand Indicator */}
       {status.muscleGroups.length > 0 && (
-        <View style={styles.expandRow}>
+        <Pressable
+          style={styles.expandButton}
+          onPress={() => setExpanded(!expanded)}
+        >
           <Text style={styles.expandText}>
             {expanded ? 'Hide' : 'Show'} muscle breakdown
           </Text>
           <ChevronRight
-            size={14}
+            size={16}
             color="#64748b"
             style={{
               transform: [{ rotate: expanded ? '90deg' : '0deg' }],
             }}
           />
-        </View>
+        </Pressable>
       )}
-    </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   loadingContainer: {
-    backgroundColor: '#1e293b',
-    marginHorizontal: 16,
-    marginVertical: 12,
-    borderRadius: 12,
+    backgroundColor: '#111827',
+    marginHorizontal: 8,
+    marginTop: 24,
+    borderRadius: 16,
     padding: 20,
     alignItems: 'center',
   },
   container: {
-    backgroundColor: '#1e293b',
-    marginHorizontal: 16,
-    marginVertical: 12,
-    borderRadius: 12,
-    padding: 16,
-    borderLeftWidth: 4,
-    gap: 12,
+    backgroundColor: '#111827',
+    marginHorizontal: 8,
+    marginTop: 24,
+    marginBottom: 32,
+    borderRadius: 16,
+    padding: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  headerText: {
-    gap: 2,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#cbd5e1',
-  },
-  statusLabel: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  headerRight: {
-    alignItems: 'center',
-  },
-  score: {
-    fontSize: 28,
-    fontWeight: '700',
-  },
-  scoreLabel: {
-    fontSize: 11,
-    color: '#64748b',
+  label: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#6b7280',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
   },
-  progressBarContainer: {
-    marginVertical: 4,
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
   },
-  progressBarBg: {
-    height: 8,
-    backgroundColor: '#0f172a',
-    borderRadius: 4,
-    overflow: 'hidden',
+  emoji: {
+    fontSize: 28,
+    marginRight: 8,
   },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 4,
+  statusTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#ffffff',
   },
-  recommendation: {
+  message: {
     fontSize: 14,
-    color: '#e2e8f0',
+    color: '#9ca3af',
     lineHeight: 20,
+    marginTop: 8,
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    alignItems: 'center',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#1f2937',
   },
   stat: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 8,
-    gap: 4,
+  },
+  statDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: '#1f2937',
+    marginHorizontal: 16,
   },
   statValue: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#f1f5f9',
+    color: '#ffffff',
   },
   statLabel: {
-    fontSize: 10,
-    color: '#64748b',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  actionBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  actionText: {
     fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    color: '#6b7280',
+    marginTop: 2,
   },
   muscleSection: {
-    marginTop: 8,
-    gap: 12,
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#1f2937',
   },
   muscleSectionTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6b7280',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+    marginBottom: 12,
   },
   muscleGrid: {
     flexDirection: 'row',
@@ -367,16 +273,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#1f2937',
     borderRadius: 8,
-    padding: 8,
-    paddingHorizontal: 12,
-    minWidth: '45%',
+    padding: 10,
+    minWidth: '48%',
   },
   muscleDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   muscleInfo: {
     flex: 1,
@@ -384,18 +289,19 @@ const styles = StyleSheet.create({
   muscleName: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#f1f5f9',
+    color: '#f3f4f6',
     textTransform: 'capitalize',
   },
   muscleDays: {
     fontSize: 11,
-    color: '#64748b',
+    color: '#6b7280',
+    marginTop: 2,
   },
   legend: {
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 16,
-    marginTop: 8,
+    marginTop: 12,
   },
   legendItem: {
     flexDirection: 'row',
@@ -409,19 +315,19 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#9ca3af',
   },
-  expandRow: {
+  expandButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    marginTop: 4,
+    marginTop: 16,
+    paddingVertical: 8,
   },
   expandText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#64748b',
+    color: '#6b7280',
+    marginRight: 4,
   },
 });
 

@@ -272,8 +272,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    marginHorizontal: 16,
-    marginVertical: 12,
+    marginHorizontal: 8,
+    marginBottom: 32,
     gap: 12,
   },
   header: {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { Button, Card } from '@/components/ui';
 import { getWorkoutHistory } from '@/lib/api/workouts';
 import { lightHaptic } from '@/lib/utils/haptics';
+import { WorkoutSuggestion } from '@/components/ai';
 
 // ============================================
 // Types
@@ -152,7 +153,11 @@ export default function WorkoutScreen() {
         <Text style={styles.title}>Workout</Text>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         {isWorkoutActive && activeWorkout ? (
           // Active Workout State
           <View style={styles.activeWorkoutContainer}>
@@ -204,26 +209,21 @@ export default function WorkoutScreen() {
         ) : (
           // No Active Workout State
           <View style={styles.startContainer}>
-            {/* Start Empty Workout */}
-            <Card variant="elevated" style={styles.startCard}>
-              <View style={styles.startIconContainer}>
-                <Dumbbell size={40} color="#3b82f6" />
-              </View>
-              <Text style={styles.startTitle}>Ready to train?</Text>
-              <Text style={styles.startSubtitle}>
-                Track your sets, reps, and weights in real-time
-              </Text>
+            {/* AI Workout Suggestion - Primary Action */}
+            <View style={styles.aiSection}>
+              <WorkoutSuggestion />
+            </View>
 
-              <Button
-                title="Start Empty Workout"
-                variant="primary"
-                size="lg"
-                fullWidth={true}
-                leftIcon={<Play size={20} color="#ffffff" />}
-                onPress={handleStartWorkout}
-                style={styles.startButton}
-              />
-            </Card>
+            {/* Start Empty Workout - Secondary Action */}
+            <TouchableOpacity
+              style={styles.emptyWorkoutButton}
+              onPress={handleStartWorkout}
+              activeOpacity={0.7}
+            >
+              <Dumbbell size={20} color="#64748b" />
+              <Text style={styles.emptyWorkoutText}>Start Empty Workout</Text>
+              <ChevronRight size={20} color="#64748b" />
+            </TouchableOpacity>
 
             {/* Recent Activity Section */}
             <View style={styles.recentSection}>
@@ -266,7 +266,7 @@ export default function WorkoutScreen() {
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -288,15 +288,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  content: {
+  scrollView: {
     flex: 1,
+  },
+
+  content: {
     paddingHorizontal: 20,
+    paddingBottom: 32,
   },
 
   // Active Workout Styles
   activeWorkoutContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    paddingTop: 20,
   },
 
   activeCard: {
@@ -374,46 +377,39 @@ const styles = StyleSheet.create({
 
   // Start Workout Styles
   startContainer: {
-    flex: 1,
     paddingTop: 20,
   },
 
-  startCard: {
-    padding: 24,
-    alignItems: 'center',
-  },
-
-  startIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#1e3a5f',
-    alignItems: 'center',
-    justifyContent: 'center',
+  // AI Section - New Primary Action
+  aiSection: {
     marginBottom: 20,
   },
 
-  startTitle: {
-    color: '#ffffff',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  // Empty Workout Button - New Secondary Action
+  emptyWorkoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1e293b',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 10,
+    marginBottom: 32,
+    borderWidth: 1,
+    borderColor: '#334155',
   },
 
-  startSubtitle: {
-    color: '#64748b',
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-
-  startButton: {
-    marginTop: 8,
+  emptyWorkoutText: {
+    flex: 1,
+    color: '#94a3b8',
+    fontSize: 15,
+    fontWeight: '600',
   },
 
   // Recent Activity Section
   recentSection: {
-    marginTop: 32,
+    marginTop: 0,
   },
 
   sectionHeader: {

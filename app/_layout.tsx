@@ -99,9 +99,9 @@ export default function RootLayout() {
       console.log('🔔 Rest complete notification tapped - opening workout');
       router.push('/workout/active');
     } else if (data?.type === 'workout_reminder') {
-      // Workout reminder - navigate to start workout screen
-      console.log('🔔 Workout reminder tapped - opening workout start');
-      router.push('/workout/start');
+      // Workout reminder - navigate to home where user can start a workout
+      console.log('🔔 Workout reminder tapped - opening home');
+      router.push('/(tabs)');
     } else if (data?.type === 'pr') {
       // PR notification - navigate to history
       console.log('🔔 PR notification tapped - opening history');

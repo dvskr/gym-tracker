@@ -31,7 +31,7 @@ import { QuickWeightLog, WeightSparkline } from '@/components/home';
 import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
-import { WorkoutSuggestion, PlateauAlerts, RecoveryStatus } from '@/components/ai';
+import { PlateauAlerts, RecoveryStatus } from '@/components/ai';
 
 
 
@@ -420,9 +420,6 @@ export default function HomeScreen() {
         {/* Plateau Detection Alerts */}
         <PlateauAlerts />
 
-        {/* AI Workout Suggestion */}
-        <WorkoutSuggestion />
-
         {/* Quick Start Section */}
         {templates.length > 0 ? (
           <View style={styles.section}>
@@ -545,10 +542,10 @@ export default function HomeScreen() {
       <TouchableOpacity
         style={styles.coachFloatingButton}
         onPress={() => router.push('/coach')}
-        activeOpacity={0.9}
+        activeOpacity={0.8}
       >
-        <Sparkles size={24} color="#ffffff" />
-        <Text style={styles.coachButtonText}>Ask Coach</Text>
+        <Sparkles size={20} color="#f59e0b" />
+        <Text style={styles.coachButtonText}>Coach</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -575,7 +572,9 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    padding: 20,
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
 
   bottomSpacer: {
@@ -589,22 +588,24 @@ const styles = StyleSheet.create({
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#f59e0b',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 30,
-    shadowColor: '#f59e0b',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 8,
+    gap: 6,
+    backgroundColor: '#1e293b',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 
   coachButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#f59e0b',
   },
 
   // Greeting
@@ -694,7 +695,7 @@ const styles = StyleSheet.create({
 
   // Section
   section: {
-    marginBottom: 28,
+    marginBottom: 24,
   },
 
   sectionHeader: {
@@ -726,7 +727,7 @@ const styles = StyleSheet.create({
   // Quick Start Cards
   quickStartRow: {
     gap: 12,
-    paddingRight: 20,
+    paddingRight: 16, // Match the left padding for consistency
   },
 
   quickStartCard: {

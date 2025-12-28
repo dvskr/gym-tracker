@@ -189,6 +189,14 @@ export default function WorkoutDetailScreen() {
   // Fetch workout
   useEffect(() => {
     if (id) {
+      // Validate UUID format before fetching
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(id)) {
+        console.warn(`Invalid workout ID: ${id}`);
+        setIsLoading(false);
+        setWorkout(null);
+        return;
+      }
       fetchWorkout();
     }
   }, [id]);
