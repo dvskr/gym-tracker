@@ -14,14 +14,14 @@ serve(async (req: Request) => {
   }
 
   try {
-    // 1. Get environment variables (auto-available + secrets)
+    // 1. Get environment variables
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')!
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
-    const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
-    // 2. Authenticate user
+    // 2. Authenticate user using Service Role client
     const authHeader = req.headers.get('Authorization')
+    
     if (!authHeader) {
       return new Response(
         JSON.stringify({ error: 'Missing authorization' }),
@@ -29,21 +29,26 @@ serve(async (req: Request) => {
       )
     }
 
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    // Create admin client with service role key
+    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
       global: { headers: { Authorization: authHeader } },
     })
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser()
+    // Verify the JWT token using service role client
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser()
+    
     if (authError || !user) {
+      console.error('JWT verification failed:', authError)
       return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
+        JSON.stringify({ 
+          error: 'Invalid token',
+          details: authError?.message || 'No user found'
+        }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     // 3. Rate limiting (check user's daily usage)
-    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-    
     const { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('subscription_tier, ai_requests_today, ai_requests_today_date')
@@ -83,8 +88,6 @@ serve(async (req: Request) => {
     }
 
     // 5. Call OpenAI
-    console.log('Calling OpenAI API with model:', options.model || 'gpt-4o-mini')
-    
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -98,8 +101,6 @@ serve(async (req: Request) => {
         max_tokens: Math.min(options.maxTokens || 500, 1000),
       }),
     })
-
-    console.log('OpenAI response status:', openaiResponse.status)
 
     if (!openaiResponse.ok) {
       const errorData = await openaiResponse.json().catch(() => ({}))
@@ -119,7 +120,6 @@ serve(async (req: Request) => {
     }
 
     const data = await openaiResponse.json()
-    console.log('OpenAI response received, tokens:', data.usage?.total_tokens || 0)
 
     // 6. Update usage counter
     await supabaseAdmin

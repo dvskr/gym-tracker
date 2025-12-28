@@ -97,7 +97,6 @@ class AIService {
     // 1. Verify user is authenticated
     const user = useAuthStore.getState().user;
     if (!user) {
-      console.error('❌ No authenticated user found');
       throw new Error('Please log in to use AI features');
     }
 
@@ -116,11 +115,8 @@ class AIService {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        console.error('❌ No active Supabase session');
         throw new Error('Session expired. Please log in again.');
       }
-
-      console.log('✅ Auth check passed, calling Edge Function...');
 
       // 4. Call Edge Function
       const { data, error } = await supabase.functions.invoke('ai-complete', {
@@ -128,16 +124,6 @@ class AIService {
       });
 
       if (error) {
-        // Log detailed error information
-        console.error('❌ Edge Function Error Details:', {
-          message: error.message,
-          status: error.status,
-          statusText: error.statusText,
-          name: error.name,
-          context: error.context,
-          fullError: error,
-        });
-
         // Check if it's a rate limit error
         if (error.message?.includes('rate_limit') || error.status === 429) {
           try {
@@ -161,12 +147,6 @@ class AIService {
       }
 
       // Log successful response for debugging
-      console.log('✅ Edge Function Response:', {
-        hasContent: !!data?.content,
-        hasUsage: !!data?.usage,
-        hasLimits: !!data?.limits,
-      });
-
       // 3. Update cached limits
       if (data.limits) {
         this.cachedLimits = {

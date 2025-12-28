@@ -88,8 +88,9 @@ class EngagementNotificationService {
         'Streak Alert! 🔥',
         message,
         {
+          type: 'date' as const,
           date: time.getTime(),
-        } as any,
+        },
         {
           channelId: 'streaks',
           data: { 
@@ -141,8 +142,9 @@ class EngagementNotificationService {
             days <= 7 ? 'Missing You! 💪' : 'Ready to Restart? 🌟',
             message,
             {
+              type: 'date' as const,
               date: reminderDate.getTime(),
-            } as any,
+            },
             {
               channelId: 'general',
               data: { type: 'inactivity_reminder', daysSince: days },
