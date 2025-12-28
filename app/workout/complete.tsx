@@ -33,6 +33,7 @@ import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
 import { createTemplateFromWorkout } from '@/lib/api/templates';
 import { useAuthStore } from '@/stores/authStore';
+import { WorkoutAnalysis } from '@/components/ai';
 
 // ============================================
 // Types
@@ -534,6 +535,13 @@ export default function WorkoutCompleteScreen() {
                 })}
               </View>
             )}
+          </Animated.View>
+        )}
+
+        {/* AI Workout Analysis */}
+        {workout && (
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <WorkoutAnalysis workout={workout} />
           </Animated.View>
         )}
 

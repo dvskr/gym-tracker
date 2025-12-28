@@ -1,0 +1,469 @@
+import { supabase } from '@/lib/supabase';
+import { aiService } from './aiService';
+import { FITNESS_COACH_SYSTEM_PROMPT } from './prompts';
+import { buildWorkoutContext } from './contextBuilder';
+
+export interface WorkoutAnalysis {
+  summary: string;
+  highlights: string[];
+  improvements: string[];
+  nextWorkoutTip: string;
+  volumeComparison: 'higher' | 'same' | 'lower' | 'first';
+  estimatedCalories: number;
+  musclesWorked: string[];
+  totalVolume: number;
+  totalSets: number;
+  personalRecordsAchieved?: number;
+}
+
+interface WorkoutStats {
+  totalWorkouts: number;
+  streak: number;
+}
+
+class WorkoutAnalysisService {
+  /**
+   * Analyze completed workout and provide AI-powered feedback
+   */
+  async analyzeWorkout(
+    workout: any,
+    userId: string
+  ): Promise<WorkoutAnalysis> {
+    try {
+      // Get comparison data
+      const [previousWorkout, userStats, prCount] = await Promise.all([
+        this.getPreviousSimilarWorkout(userId, workout),
+        this.getUserStats(userId),
+        this.getNewPRCount(userId, workout),
+      ]);
+
+      // Calculate metrics
+      const currentVolume = this.calculateVolume(workout);
+      const previousVolume = previousWorkout ? this.calculateVolume(previousWorkout) : 0;
+      const totalSets = this.countTotalSets(workout);
+      const musclesWorked = this.getMusclesWorked(workout);
+
+      // Determine volume comparison
+      let volumeComparison: WorkoutAnalysis['volumeComparison'] = 'first';
+      if (previousWorkout) {
+        const diff = (currentVolume - previousVolume) / previousVolume;
+        volumeComparison = diff > 0.05 ? 'higher' : diff < -0.05 ? 'lower' : 'same';
+      }
+
+      // Try AI analysis
+      try {
+        const aiAnalysis = await this.getAIAnalysis(
+          workout,
+          previousWorkout,
+          userStats,
+          currentVolume,
+          previousVolume,
+          prCount
+        );
+
+        return {
+          ...aiAnalysis,
+          volumeComparison,
+          musclesWorked,
+          estimatedCalories: this.estimateCalories(workout),
+          totalVolume: currentVolume,
+          totalSets,
+          personalRecordsAchieved: prCount,
+        };
+      } catch (error) {
+        console.error('AI analysis failed, using rule-based:', error);
+        return this.getRuleBasedAnalysis(
+          workout,
+          volumeComparison,
+          musclesWorked,
+          currentVolume,
+          totalSets,
+          prCount
+        );
+      }
+    } catch (error) {
+      console.error('Workout analysis failed:', error);
+      return this.getDefaultAnalysis(workout);
+    }
+  }
+
+  /**
+   * Get AI-powered analysis
+   */
+  private async getAIAnalysis(
+    workout: any,
+    previousWorkout: any,
+    userStats: WorkoutStats,
+    currentVolume: number,
+    previousVolume: number,
+    prCount: number
+  ): Promise<Partial<WorkoutAnalysis>> {
+    const workoutContext = this.buildSimpleWorkoutContext(workout, currentVolume);
+    
+    const comparisonContext = previousWorkout
+      ? `\n\nPREVIOUS SIMILAR WORKOUT:
+Duration: ${Math.round(previousWorkout.duration_seconds / 60)} minutes
+Exercises: ${previousWorkout.exercises?.length || 0}
+Total Volume: ${previousVolume} lbs
+${previousVolume > 0 ? `Volume Change: ${((currentVolume - previousVolume) / previousVolume * 100).toFixed(1)}%` : ''}`
+      : '\n\nThis is their first workout of this type!';
+
+    const prContext = prCount > 0 ? `\n\n🏆 ${prCount} NEW PERSONAL RECORD${prCount > 1 ? 'S' : ''} SET!` : '';
+
+    const prompt = `Analyze this completed workout and provide encouraging feedback.
+
+${workoutContext}
+${comparisonContext}
+${prContext}
+
+USER STATS:
+- Total workouts completed: ${userStats.totalWorkouts}
+- Current streak: ${userStats.streak} days
+
+Provide:
+1. A brief 1-2 sentence summary (be encouraging!)
+2. 2-3 highlights (what went well, specific numbers)
+3. 1-2 suggestions for improvement (only if meaningful, can be empty)
+4. One actionable tip for their next workout
+
+Be specific, reference actual numbers, and keep it motivating!
+
+Respond in this exact JSON format:
+{
+  "summary": "...",
+  "highlights": ["...", "...", "..."],
+  "improvements": ["..."],
+  "nextWorkoutTip": "..."
+}`;
+
+    const response = await aiService.askWithContext(
+      FITNESS_COACH_SYSTEM_PROMPT,
+      prompt,
+      { temperature: 0.7, maxTokens: 500 }
+    );
+
+    try {
+      // Try to extract JSON from response
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return {
+          summary: parsed.summary || 'Great workout!',
+          highlights: Array.isArray(parsed.highlights) ? parsed.highlights : ['Strong performance!'],
+          improvements: Array.isArray(parsed.improvements) ? parsed.improvements : [],
+          nextWorkoutTip: parsed.nextWorkoutTip || 'Keep up the great work!',
+        };
+      }
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', parseError);
+    }
+
+    // Fallback: extract from text
+    return this.parseTextResponse(response);
+  }
+
+  /**
+   * Parse AI response as text (fallback)
+   */
+  private parseTextResponse(text: string): Partial<WorkoutAnalysis> {
+    const lines = text.split('\n').filter(l => l.trim());
+    
+    return {
+      summary: lines[0] || 'Solid workout completed!',
+      highlights: lines.slice(1, 4).filter(l => l.length > 10),
+      improvements: [],
+      nextWorkoutTip: lines[lines.length - 1] || 'Keep pushing forward!',
+    };
+  }
+
+  /**
+   * Rule-based analysis (fallback)
+   */
+  private getRuleBasedAnalysis(
+    workout: any,
+    volumeComparison: WorkoutAnalysis['volumeComparison'],
+    musclesWorked: string[],
+    totalVolume: number,
+    totalSets: number,
+    prCount: number
+  ): WorkoutAnalysis {
+    const durationMinutes = Math.round((workout.duration_seconds || 0) / 60);
+    const exerciseCount = workout.exercises?.length || 0;
+
+    // Dynamic summary based on comparison
+    let summary = '';
+    if (volumeComparison === 'higher') {
+      summary = `Excellent work! You increased your training volume by ${this.getVolumeChangePercent(workout)}%. ${totalSets} sets completed.`;
+    } else if (volumeComparison === 'lower') {
+      summary = `Solid session with ${totalSets} sets. Remember, recovery is part of progress!`;
+    } else if (volumeComparison === 'same') {
+      summary = `Consistent performance with ${totalSets} sets. Great job maintaining your training volume!`;
+    } else {
+      summary = `First ${workout.name || 'workout'} tracked! ${totalSets} sets completed. You're building your baseline.`;
+    }
+
+    // Add PR callout to summary
+    if (prCount > 0) {
+      summary += ` 🏆 ${prCount} new PR${prCount > 1 ? 's' : ''}!`;
+    }
+
+    // Build highlights
+    const highlights: string[] = [
+      `Completed ${totalSets} sets across ${exerciseCount} exercise${exerciseCount !== 1 ? 's' : ''}`,
+      `${durationMinutes} minutes of focused training`,
+    ];
+
+    if (musclesWorked.length > 0) {
+      highlights.push(`Trained ${musclesWorked.join(', ')}`);
+    }
+
+    if (totalVolume > 0) {
+      highlights.push(`Total volume: ${totalVolume.toLocaleString()} lbs`);
+    }
+
+    if (prCount > 0) {
+      highlights.push(`Set ${prCount} new personal record${prCount > 1 ? 's' : ''}!`);
+    }
+
+    // Build improvements (only if needed)
+    const improvements: string[] = [];
+    if (volumeComparison === 'lower' && totalSets < 15) {
+      improvements.push('Consider adding 1-2 more sets next time if energy allows');
+    }
+    if (durationMinutes < 30) {
+      improvements.push('Try to maintain intensity - short sessions are great, but ensure quality work');
+    }
+
+    // Next workout tip
+    let nextWorkoutTip = 'Focus on progressive overload - try to beat today\'s numbers!';
+    if (volumeComparison === 'higher') {
+      nextWorkoutTip = 'Great progress! Continue this momentum and aim for consistency.';
+    } else if (prCount > 0) {
+      nextWorkoutTip = 'You\'re on fire! Keep challenging yourself with those PRs.';
+    }
+
+    return {
+      summary,
+      highlights: highlights.slice(0, 4), // Limit to 4
+      improvements,
+      nextWorkoutTip,
+      volumeComparison,
+      estimatedCalories: this.estimateCalories(workout),
+      musclesWorked,
+      totalVolume,
+      totalSets,
+      personalRecordsAchieved: prCount,
+    };
+  }
+
+  /**
+   * Default analysis (error fallback)
+   */
+  private getDefaultAnalysis(workout: any): WorkoutAnalysis {
+    const totalSets = this.countTotalSets(workout);
+    const musclesWorked = this.getMusclesWorked(workout);
+
+    return {
+      summary: `Workout completed! ${totalSets} sets finished.`,
+      highlights: [
+        `${totalSets} total sets`,
+        `${Math.round((workout.duration_seconds || 0) / 60)} minutes`,
+      ],
+      improvements: [],
+      nextWorkoutTip: 'Keep up the consistency!',
+      volumeComparison: 'first',
+      estimatedCalories: this.estimateCalories(workout),
+      musclesWorked,
+      totalVolume: this.calculateVolume(workout),
+      totalSets,
+      personalRecordsAchieved: 0,
+    };
+  }
+
+  /**
+   * Build simplified workout context for AI
+   */
+  private buildSimpleWorkoutContext(workout: any, volume: number): string {
+    const exercises = workout.exercises || [];
+    const durationMinutes = Math.round((workout.duration_seconds || 0) / 60);
+
+    let context = `WORKOUT: ${workout.name || 'Training Session'}
+Duration: ${durationMinutes} minutes
+Total Volume: ${volume} lbs
+
+EXERCISES:`;
+
+    for (const ex of exercises) {
+      const sets = ex.sets || [];
+      const completedSets = sets.filter((s: any) => s.isCompleted);
+      context += `\n- ${ex.name}: ${completedSets.length} sets`;
+      
+      if (completedSets.length > 0) {
+        const topSet = completedSets.reduce((max: any, s: any) => 
+          (s.weight * s.reps > max.weight * max.reps) ? s : max
+        );
+        context += ` (top: ${topSet.weight}lbs × ${topSet.reps})`;
+      }
+    }
+
+    return context;
+  }
+
+  /**
+   * Calculate total volume (weight × reps)
+   */
+  private calculateVolume(workout: any): number {
+    let volume = 0;
+    for (const exercise of workout.exercises || []) {
+      for (const set of exercise.sets || []) {
+        if (set.isCompleted || set.completed_at) {
+          volume += (set.weight || 0) * (set.reps || 0);
+        }
+      }
+    }
+    return volume;
+  }
+
+  /**
+   * Count total sets
+   */
+  private countTotalSets(workout: any): number {
+    let count = 0;
+    for (const exercise of workout.exercises || []) {
+      count += (exercise.sets || []).filter((s: any) => s.isCompleted || s.completed_at).length;
+    }
+    return count;
+  }
+
+  /**
+   * Get muscles worked
+   */
+  private getMusclesWorked(workout: any): string[] {
+    const muscles = new Set<string>();
+    for (const exercise of workout.exercises || []) {
+      if (exercise.muscle_group) {
+        muscles.add(exercise.muscle_group);
+      }
+    }
+    return Array.from(muscles);
+  }
+
+  /**
+   * Estimate calories burned
+   */
+  private estimateCalories(workout: any): number {
+    // Rough estimate: 6 calories per set + 4 calories per minute
+    const totalSets = this.countTotalSets(workout);
+    const minutes = (workout.duration_seconds || 0) / 60;
+    return Math.round(totalSets * 6 + minutes * 4);
+  }
+
+  /**
+   * Get volume change percentage
+   */
+  private getVolumeChangePercent(workout: any): number {
+    // This would need previous workout data - placeholder
+    return 10;
+  }
+
+  /**
+   * Get previous similar workout
+   */
+  private async getPreviousSimilarWorkout(userId: string, currentWorkout: any) {
+    try {
+      // Get most recent workout before this one
+      const { data, error } = await supabase
+        .from('workouts')
+        .select(`
+          *,
+          workout_exercises (
+            *,
+            exercises (*),
+            workout_sets (*)
+          )
+        `)
+        .eq('user_id', userId)
+        .neq('id', currentWorkout.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) {
+        console.error('Error fetching previous workout:', error);
+        return null;
+      }
+
+      // Transform to match expected structure
+      if (data) {
+        return {
+          ...data,
+          exercises: data.workout_exercises?.map((we: any) => ({
+            ...we.exercises,
+            sets: we.workout_sets,
+          })),
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Failed to get previous workout:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get user stats
+   */
+  private async getUserStats(userId: string): Promise<WorkoutStats> {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('total_workouts, current_streak')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user stats:', error);
+        return { totalWorkouts: 0, streak: 0 };
+      }
+
+      return {
+        totalWorkouts: data?.total_workouts || 0,
+        streak: data?.current_streak || 0,
+      };
+    } catch (error) {
+      console.error('Failed to get user stats:', error);
+      return { totalWorkouts: 0, streak: 0 };
+    }
+  }
+
+  /**
+   * Get count of new PRs in this workout
+   */
+  private async getNewPRCount(userId: string, workout: any): Promise<number> {
+    try {
+      // Get PRs created today (or in last hour)
+      const oneHourAgo = new Date();
+      oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+
+      const { data, error } = await supabase
+        .from('personal_records')
+        .select('id')
+        .eq('user_id', userId)
+        .gte('created_at', oneHourAgo.toISOString());
+
+      if (error) {
+        console.error('Error fetching PR count:', error);
+        return 0;
+      }
+
+      return data?.length || 0;
+    } catch (error) {
+      console.error('Failed to get PR count:', error);
+      return 0;
+    }
+  }
+}
+
+export const workoutAnalysisService = new WorkoutAnalysisService();
+

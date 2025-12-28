@@ -1,14 +1,26 @@
-import { ExerciseDBExercise, BodyPart } from '@/types/database';
+/**
+ * ExerciseDB Service - Now uses Supabase Edge Function
+ * 
+ * This service wraps the exerciseApiService to maintain backward compatibility
+ * with existing code while leveraging the secure Edge Function for API calls.
+ * 
+ * All API calls now go through: supabase/functions/exercise-search
+ * Benefits:
+ * - API key hidden on server
+ * - User authentication required
+ * - Better error handling
+ * - Consistent with app architecture
+ */
 
-const EXERCISEDB_BASE_URL = 'https://exercisedb.p.rapidapi.com';
-const API_KEY = process.env.EXPO_PUBLIC_EXERCISEDB_API_KEY;
+import { exerciseApiService, Exercise } from '@/lib/exercises';
+import { ExerciseDBExercise, BodyPart } from '@/types/database';
 
 interface ExerciseDBOptions {
   limit?: number;
   offset?: number;
 }
 
-class ExerciseDBError extends Error {
+export class ExerciseDBError extends Error {
   constructor(
     message: string,
     public statusCode?: number
@@ -18,32 +30,19 @@ class ExerciseDBError extends Error {
   }
 }
 
-const getHeaders = (): HeadersInit => {
-  if (!API_KEY) {
-    throw new ExerciseDBError('ExerciseDB API key is not configured');
-  }
-
+// Map the Exercise type from API service to ExerciseDBExercise type
+function mapExercise(exercise: Exercise): ExerciseDBExercise {
   return {
-    'x-rapidapi-key': API_KEY,
-    'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
+    id: exercise.id,
+    name: exercise.name,
+    bodyPart: exercise.bodyPart as BodyPart,
+    target: exercise.target,
+    equipment: exercise.equipment,
+    gifUrl: exercise.gifUrl,
+    secondaryMuscles: exercise.secondaryMuscles,
+    instructions: exercise.instructions,
   };
-};
-
-const handleResponse = async <T>(response: Response): Promise<T> => {
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => 'Unknown error');
-    throw new ExerciseDBError(
-      `ExerciseDB API error: ${response.status} - ${errorText}`,
-      response.status
-    );
-  }
-
-  try {
-    return await response.json();
-  } catch {
-    throw new ExerciseDBError('Failed to parse ExerciseDB response');
-  }
-};
+}
 
 /**
  * Fetch all exercises from ExerciseDB
@@ -53,23 +52,12 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
 export const fetchAllExercises = async (
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  // limit=0 returns ALL exercises (1300+)
-  const { limit = 0, offset = 0 } = options;
+  const { limit = 20, offset = 0 } = options;
 
   try {
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<ExerciseDBExercise[]>(response);
+    const exercises = await exerciseApiService.getAll(limit, offset);
+    return exercises.map(mapExercise);
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -86,28 +74,14 @@ export const searchExercisesByName = async (
   name: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  // Default to 0 (all matching results)
-  const { limit = 0, offset = 0 } = options;
-
   if (!name.trim()) {
     return [];
   }
 
   try {
-    const encodedName = encodeURIComponent(name.toLowerCase().trim());
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/name/${encodedName}?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<ExerciseDBExercise[]>(response);
+    const exercises = await exerciseApiService.searchByName(name);
+    return exercises.map(mapExercise);
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to search exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -124,24 +98,10 @@ export const fetchExercisesByBodyPart = async (
   bodyPart: BodyPart,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  // Default to 0 (all exercises for this body part)
-  const { limit = 0, offset = 0 } = options;
-
   try {
-    const encodedBodyPart = encodeURIComponent(bodyPart.toLowerCase());
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/bodyPart/${encodedBodyPart}?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<ExerciseDBExercise[]>(response);
+    const exercises = await exerciseApiService.getByBodyPart(bodyPart);
+    return exercises.map(mapExercise);
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch exercises by body part: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -158,24 +118,10 @@ export const fetchExercisesByEquipment = async (
   equipment: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  // Default to 0 (all exercises for this equipment)
-  const { limit = 0, offset = 0 } = options;
-
   try {
-    const encodedEquipment = encodeURIComponent(equipment.toLowerCase());
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/equipment/${encodedEquipment}?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<ExerciseDBExercise[]>(response);
+    const exercises = await exerciseApiService.getByEquipment(equipment);
+    return exercises.map(mapExercise);
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch exercises by equipment: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -192,24 +138,10 @@ export const fetchExercisesByTarget = async (
   target: string,
   options: ExerciseDBOptions = {}
 ): Promise<ExerciseDBExercise[]> => {
-  // Default to 0 (all exercises for this target muscle)
-  const { limit = 0, offset = 0 } = options;
-
   try {
-    const encodedTarget = encodeURIComponent(target.toLowerCase());
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/target/${encodedTarget}?limit=${limit}&offset=${offset}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<ExerciseDBExercise[]>(response);
+    const exercises = await exerciseApiService.getByTarget(target);
+    return exercises.map(mapExercise);
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch exercises by target: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -225,23 +157,9 @@ export const fetchExerciseById = async (
   id: string
 ): Promise<ExerciseDBExercise | null> => {
   try {
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/exercise/${id}`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    if (response.status === 404) {
-      return null;
-    }
-
-    return handleResponse<ExerciseDBExercise>(response);
+    const exercise = await exerciseApiService.getById(id);
+    return exercise ? mapExercise(exercise) : null;
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch exercise: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -254,19 +172,8 @@ export const fetchExerciseById = async (
  */
 export const fetchBodyPartList = async (): Promise<string[]> => {
   try {
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/bodyPartList`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<string[]>(response);
+    return await exerciseApiService.getBodyPartList();
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch body part list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -279,19 +186,8 @@ export const fetchBodyPartList = async (): Promise<string[]> => {
  */
 export const fetchEquipmentList = async (): Promise<string[]> => {
   try {
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/equipmentList`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<string[]>(response);
+    return await exerciseApiService.getEquipmentList();
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch equipment list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -304,22 +200,10 @@ export const fetchEquipmentList = async (): Promise<string[]> => {
  */
 export const fetchTargetList = async (): Promise<string[]> => {
   try {
-    const response = await fetch(
-      `${EXERCISEDB_BASE_URL}/exercises/targetList`,
-      {
-        method: 'GET',
-        headers: getHeaders(),
-      }
-    );
-
-    return handleResponse<string[]>(response);
+    return await exerciseApiService.getTargetList();
   } catch (error) {
-    if (error instanceof ExerciseDBError) {
-      throw error;
-    }
     throw new ExerciseDBError(
       `Failed to fetch target list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 };
-

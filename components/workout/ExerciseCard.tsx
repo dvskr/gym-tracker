@@ -22,6 +22,7 @@ import { InlineRestTimer } from './InlineRestTimer';
 import { Card } from '@/components/ui';
 import { usePreviousWorkout } from '@/hooks/usePreviousWorkout';
 import { lightHaptic, mediumHaptic } from '@/lib/utils/haptics';
+import { FormTips } from '@/components/ai';
 
 // ============================================
 // Types
@@ -197,6 +198,11 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         <Text style={[styles.columnHeaderText, styles.colWeight]}>LBS</Text>
         <Text style={[styles.columnHeaderText, styles.colReps]}>REPS</Text>
         <View style={styles.colCheck} />
+      </View>
+
+      {/* Form Tips */}
+      <View style={styles.formTipsContainer}>
+        <FormTips exerciseName={exercise.name} />
       </View>
 
       {/* Sets List */}
@@ -495,6 +501,12 @@ const styles = StyleSheet.create({
 
   // Sets Container
   setsContainer: {},
+
+  // Form Tips Container
+  formTipsContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
 
   // Add Set Button
   addSetButton: {

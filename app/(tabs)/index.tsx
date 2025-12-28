@@ -20,6 +20,7 @@ import {
   Scale,
   Ruler,
   Camera,
+  Sparkles,
 } from 'lucide-react-native';
 import { useAuthStore } from '@/stores/authStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
@@ -30,6 +31,9 @@ import { QuickWeightLog, WeightSparkline } from '@/components/home';
 import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
+import { WorkoutSuggestion, PlateauAlerts, RecoveryStatus } from '@/components/ai';
+
+
 
 // ============================================
 // Helper Functions
@@ -410,6 +414,15 @@ export default function HomeScreen() {
           />
         )}
 
+        {/* Recovery Status */}
+        <RecoveryStatus />
+
+        {/* Plateau Detection Alerts */}
+        <PlateauAlerts />
+
+        {/* AI Workout Suggestion */}
+        <WorkoutSuggestion />
+
         {/* Quick Start Section */}
         {templates.length > 0 ? (
           <View style={styles.section}>
@@ -527,6 +540,16 @@ export default function HomeScreen() {
         {/* Bottom Spacer */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      {/* Floating Coach Button */}
+      <TouchableOpacity
+        style={styles.coachFloatingButton}
+        onPress={() => router.push('/coach')}
+        activeOpacity={0.9}
+      >
+        <Sparkles size={24} color="#ffffff" />
+        <Text style={styles.coachButtonText}>Ask Coach</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -557,6 +580,31 @@ const styles = StyleSheet.create({
 
   bottomSpacer: {
     height: 100,
+  },
+
+  // Floating Coach Button
+  coachFloatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#f59e0b',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 30,
+    shadowColor: '#f59e0b',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+
+  coachButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ffffff',
   },
 
   // Greeting

@@ -68,6 +68,14 @@ interface SettingsState {
   readSteps: boolean;
   readSleep: boolean;
 
+  // AI Features
+  aiEnabled: boolean;
+  aiApiKey: string | null;
+  showFormTips: boolean;
+  showWorkoutSuggestions: boolean;
+  showProgressiveOverload: boolean;
+  showWorkoutAnalysis: boolean;
+
   // Actions
   setUnitSystem: (system: UnitSystem) => void;
   setWeightUnit: (unit: WeightUnit) => void;
@@ -167,6 +175,14 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   readHeartRate: true,
   readSteps: true,
   readSleep: true,
+
+  // AI Features
+  aiEnabled: false,
+  aiApiKey: null,
+  showFormTips: true,
+  showWorkoutSuggestions: true,
+  showProgressiveOverload: true,
+  showWorkoutAnalysis: true,
 };
 
 // Debounce timer for syncing to Supabase

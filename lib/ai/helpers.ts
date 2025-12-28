@@ -1,0 +1,205 @@
+/**
+ * High-level AI helpers for common gym app use cases
+ * These wrap the aiService with domain-specific logic
+ */
+
+import { aiService } from './aiService';
+import {
+  FITNESS_COACH_SYSTEM_PROMPT,
+  WORKOUT_SUGGESTION_PROMPT,
+  FORM_CHECK_PROMPT,
+  PROGRESSION_PROMPT,
+  MOTIVATION_PROMPT,
+  WORKOUT_CRITIQUE_PROMPT,
+} from './prompts';
+import {
+  buildUserContext,
+  buildWorkoutContext,
+  buildExerciseHistory,
+  buildCompleteContext,
+} from './contextBuilder';
+
+/**
+ * Get AI workout suggestion for today
+ */
+export async function getWorkoutSuggestion(userData: any): Promise<string> {
+  const userContext = buildUserContext(userData);
+  
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    `${userContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`,
+    { temperature: 0.7, maxTokens: 400 }
+  );
+}
+
+/**
+ * Get exercise form tips
+ */
+export async function getFormTips(exerciseName: string): Promise<string> {
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    `${FORM_CHECK_PROMPT}\n\nExercise: ${exerciseName}`,
+    { temperature: 0.5, maxTokens: 300 }
+  );
+}
+
+/**
+ * Get progression advice for an exercise
+ */
+export async function getProgressionAdvice(
+  exerciseName: string,
+  history: any[]
+): Promise<string> {
+  const historyContext = buildExerciseHistory(exerciseName, history);
+  
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    `${historyContext}\n\n${PROGRESSION_PROMPT}`,
+    { temperature: 0.6, maxTokens: 250 }
+  );
+}
+
+/**
+ * Critique a completed workout
+ */
+export async function critiqueWorkout(
+  workout: any,
+  userData: any
+): Promise<string> {
+  const context = buildCompleteContext({
+    user: userData,
+    workout: workout,
+  });
+  
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    `${context}\n\n${WORKOUT_CRITIQUE_PROMPT}`,
+    { temperature: 0.7, maxTokens: 350 }
+  );
+}
+
+/**
+ * Get motivational message
+ */
+export async function getMotivation(userData: any): Promise<string> {
+  const userContext = buildUserContext(userData);
+  
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    `${userContext}\n\n${MOTIVATION_PROMPT}`,
+    { temperature: 0.9, maxTokens: 150 }
+  );
+}
+
+/**
+ * Ask the AI coach a custom question
+ */
+export async function askCoach(
+  question: string,
+  userData?: any
+): Promise<string> {
+  const context = userData ? buildUserContext(userData) : '';
+  const fullPrompt = context 
+    ? `${context}\n\nUser Question: ${question}`
+    : question;
+  
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    fullPrompt,
+    { temperature: 0.7, maxTokens: 400 }
+  );
+}
+
+/**
+ * Get rest time recommendation
+ */
+export async function getRestTimeAdvice(
+  exerciseName: string,
+  weight: number,
+  goal: 'strength' | 'hypertrophy' | 'endurance'
+): Promise<string> {
+  const prompt = `Exercise: ${exerciseName}
+Weight: ${weight}lbs
+Training Goal: ${goal}
+
+Suggest appropriate rest time between sets with brief reasoning.`;
+
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    prompt,
+    { temperature: 0.5, maxTokens: 200 }
+  );
+}
+
+/**
+ * Get exercise substitutions
+ */
+export async function getExerciseSubstitutes(
+  exerciseName: string,
+  reason?: string
+): Promise<string> {
+  const prompt = `Suggest 3-4 alternative exercises for: ${exerciseName}
+${reason ? `Reason for substitution: ${reason}` : ''}
+
+For each alternative, explain:
+- Equipment needed
+- Why it's a good substitute
+- Key differences`;
+
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    prompt,
+    { temperature: 0.6, maxTokens: 400 }
+  );
+}
+
+/**
+ * Analyze workout split
+ */
+export async function analyzeWorkoutSplit(
+  recentWorkouts: any[]
+): Promise<string> {
+  const workoutsList = recentWorkouts.map((w, i) => 
+    `${i + 1}. ${w.name} (${new Date(w.date).toLocaleDateString()}) - ${w.exercises?.map((e: any) => e.name).join(', ')}`
+  ).join('\n');
+
+  const prompt = `Recent workouts:\n${workoutsList}\n\nAnalyze this training pattern:
+1. Is there good muscle group balance?
+2. Are rest days appropriate?
+3. Any concerns about overtraining?
+4. Suggestions for improvement?`;
+
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    prompt,
+    { temperature: 0.7, maxTokens: 400 }
+  );
+}
+
+/**
+ * Generate workout plan
+ */
+export async function generateWorkoutPlan(
+  goal: string,
+  daysPerWeek: number,
+  experience: string,
+  preferences?: string
+): Promise<string> {
+  const prompt = `Create a ${daysPerWeek}-day per week workout plan for:
+- Goal: ${goal}
+- Experience: ${experience}
+${preferences ? `- Preferences: ${preferences}` : ''}
+
+Include:
+1. Weekly split structure
+2. Sample workout for each day
+3. Sets/reps guidance
+4. Progression strategy`;
+
+  return await aiService.askWithContext(
+    FITNESS_COACH_SYSTEM_PROMPT,
+    prompt,
+    { temperature: 0.7, maxTokens: 600 }
+  );
+}
+

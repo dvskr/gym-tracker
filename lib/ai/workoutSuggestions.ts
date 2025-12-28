@@ -1,0 +1,424 @@
+import { supabase } from '@/lib/supabase';
+import { aiService } from './aiService';
+import { buildUserContext } from './contextBuilder';
+import { FITNESS_COACH_SYSTEM_PROMPT, WORKOUT_SUGGESTION_PROMPT } from './prompts';
+
+export interface WorkoutSuggestion {
+  type: string;
+  reason: string;
+  exercises: {
+    name: string;
+    sets: number;
+    reps: string;
+  }[];
+  confidence: 'high' | 'medium' | 'low';
+}
+
+class WorkoutSuggestionService {
+  /**
+   * Get AI-powered workout suggestion for today
+   */
+  async getSuggestion(userId: string): Promise<WorkoutSuggestion> {
+    try {
+      // Gather user data
+      const [recentWorkouts, personalRecords, profile] = await Promise.all([
+        this.getRecentWorkouts(userId, 14), // Last 2 weeks
+        this.getPersonalRecords(userId),
+        this.getUserProfile(userId),
+      ]);
+
+      // If not enough data, return rule-based default
+      if (recentWorkouts.length < 2) {
+        console.log('Not enough workout history, using default');
+        return this.getDefaultSuggestion(recentWorkouts);
+      }
+
+      // Try AI suggestion first
+      try {
+        return await this.getAISuggestion({
+          recentWorkouts,
+          personalRecords,
+          profile,
+        });
+      } catch (aiError) {
+        console.warn('AI suggestion failed, falling back to rule-based:', aiError);
+        return this.getRuleBasedSuggestion(recentWorkouts);
+      }
+    } catch (error) {
+      console.error('Failed to get workout suggestion:', error);
+      return this.getDefaultSuggestion([]);
+    }
+  }
+
+  /**
+   * Get AI-powered suggestion
+   */
+  private async getAISuggestion(data: {
+    recentWorkouts: any[];
+    personalRecords: any[];
+    profile: any;
+  }): Promise<WorkoutSuggestion> {
+    const { recentWorkouts, personalRecords, profile } = data;
+
+    try {
+      // Build context for AI
+      const userContext = buildUserContext({
+        recentWorkouts: recentWorkouts.map(w => ({
+          name: w.name,
+          created_at: w.created_at,
+          duration_seconds: w.duration_seconds,
+          exercises: w.workout_exercises?.map((we: any) => ({
+            name: we.exercises?.name,
+            primary_muscles: we.exercises?.primary_muscles || [],
+            secondary_muscles: we.exercises?.secondary_muscles || [],
+          })),
+        })),
+        personalRecords: personalRecords.map(pr => ({
+          exercise_name: pr.exercises?.name || 'Unknown',
+          weight: pr.weight,
+          reps: pr.reps,
+        })),
+        currentStreak: profile.current_streak || 0,
+        totalWorkouts: recentWorkouts.length,
+        preferredUnits: profile.weight_unit || 'lbs',
+        goals: profile.fitness_goals,
+        experienceLevel: profile.experience_level || 'intermediate',
+      });
+
+      // Get AI suggestion with detailed error logging
+      const prompt = `${userContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`;
+      
+      console.log('🤖 Calling AI service for workout suggestion...');
+      
+      const response = await aiService.askWithContext(
+        FITNESS_COACH_SYSTEM_PROMPT,
+        prompt,
+        { 
+          temperature: 0.7, 
+          maxTokens: 500,
+          requestType: 'workout_suggestion',
+        }
+      );
+
+      console.log('✅ AI service responded successfully');
+      return this.parseAISuggestion(response);
+
+    } catch (error: any) {
+      console.error('❌ AI service failed:', {
+        message: error.message,
+        status: error.status,
+        details: error.details || error,
+      });
+      
+      // If it's a rate limit error, throw it up so the UI can handle it
+      if (error.name === 'AILimitError' || error.message?.includes('limit')) {
+        throw error;
+      }
+      
+      // For other errors, fall back to rule-based
+      console.log('⚠️ Falling back to rule-based suggestion');
+      throw new Error('AI service unavailable, using fallback');
+    }
+  }
+
+  /**
+   * Rule-based suggestion when AI unavailable
+   */
+  private getRuleBasedSuggestion(recentWorkouts: any[]): WorkoutSuggestion {
+    const muscleMap = this.analyzeRecentMuscles(recentWorkouts);
+    const now = new Date();
+    
+    // Define muscle groups for each workout type
+    const workoutTypes = [
+      { 
+        type: 'Push', 
+        muscles: ['chest', 'shoulders', 'triceps'],
+        description: 'chest, shoulders, and triceps',
+      },
+      { 
+        type: 'Pull', 
+        muscles: ['back', 'biceps', 'lats'],
+        description: 'back and biceps',
+      },
+      { 
+        type: 'Legs', 
+        muscles: ['quadriceps', 'hamstrings', 'glutes', 'calves'],
+        description: 'legs',
+      },
+    ];
+
+    // Find least recently trained muscle group
+    let bestSuggestion = workoutTypes[0];
+    let longestRest = 0;
+
+    for (const workoutType of workoutTypes) {
+      let minDays = Infinity;
+      
+      for (const muscle of workoutType.muscles) {
+        const lastTrained = muscleMap.get(muscle);
+        if (lastTrained) {
+          const days = (now.getTime() - lastTrained.getTime()) / (1000 * 60 * 60 * 24);
+          minDays = Math.min(minDays, days);
+        } else {
+          minDays = 7; // Never trained = 7 days ago
+        }
+      }
+      
+      if (minDays > longestRest) {
+        longestRest = minDays;
+        bestSuggestion = workoutType;
+      }
+    }
+
+    const daysSince = Math.floor(longestRest);
+    const reason = daysSince >= 7
+      ? `You haven't trained ${bestSuggestion.description} in over a week. Perfect time to hit them!`
+      : `Your ${bestSuggestion.description} have had ${daysSince} days of rest. Time to train!`;
+
+    return {
+      type: `${bestSuggestion.type} Day`,
+      reason,
+      exercises: this.getDefaultExercises(bestSuggestion.type),
+      confidence: 'medium',
+    };
+  }
+
+  /**
+   * Analyze recent workouts to find when muscles were last trained
+   */
+  private analyzeRecentMuscles(workouts: any[]): Map<string, Date> {
+    const muscleLastTrained = new Map<string, Date>();
+    
+    for (const workout of workouts) {
+      const date = new Date(workout.created_at);
+      
+      for (const workoutExercise of workout.workout_exercises || []) {
+        const exercise = workoutExercise.exercises;
+        if (!exercise) continue;
+        
+        // Get muscles from both primary and secondary arrays
+        const muscles = [
+          ...(exercise.primary_muscles || []),
+          ...(exercise.secondary_muscles || []),
+        ];
+        
+        for (const muscle of muscles) {
+          const muscleKey = muscle.toLowerCase();
+          const existing = muscleLastTrained.get(muscleKey);
+          
+          if (!existing || date > existing) {
+            muscleLastTrained.set(muscleKey, date);
+          }
+        }
+      }
+    }
+    
+    return muscleLastTrained;
+  }
+
+  /**
+   * Default suggestion when no data available
+   */
+  private getDefaultSuggestion(recentWorkouts: any[]): WorkoutSuggestion {
+    // If user has never worked out, suggest full body
+    if (recentWorkouts.length === 0) {
+      return {
+        type: 'Full Body Workout',
+        reason: 'Start with a balanced full-body routine to build a foundation.',
+        exercises: [
+          { name: 'Squats', sets: 3, reps: '8-12' },
+          { name: 'Bench Press', sets: 3, reps: '8-12' },
+          { name: 'Barbell Rows', sets: 3, reps: '8-12' },
+          { name: 'Overhead Press', sets: 3, reps: '8-10' },
+          { name: 'Romanian Deadlifts', sets: 3, reps: '8-10' },
+        ],
+        confidence: 'low',
+      };
+    }
+
+    // Otherwise use rule-based
+    return this.getRuleBasedSuggestion(recentWorkouts);
+  }
+
+  /**
+   * Get default exercises for each workout type
+   */
+  private getDefaultExercises(type: string) {
+    const defaults: Record<string, any[]> = {
+      Push: [
+        { name: 'Bench Press', sets: 4, reps: '8-10' },
+        { name: 'Overhead Press', sets: 3, reps: '8-10' },
+        { name: 'Incline Dumbbell Press', sets: 3, reps: '10-12' },
+        { name: 'Lateral Raises', sets: 3, reps: '12-15' },
+        { name: 'Tricep Pushdowns', sets: 3, reps: '12-15' },
+      ],
+      Pull: [
+        { name: 'Barbell Rows', sets: 4, reps: '8-10' },
+        { name: 'Pull-ups', sets: 3, reps: '8-12' },
+        { name: 'Lat Pulldowns', sets: 3, reps: '10-12' },
+        { name: 'Face Pulls', sets: 3, reps: '15-20' },
+        { name: 'Barbell Curls', sets: 3, reps: '10-12' },
+      ],
+      Legs: [
+        { name: 'Squats', sets: 4, reps: '6-8' },
+        { name: 'Romanian Deadlifts', sets: 3, reps: '8-10' },
+        { name: 'Leg Press', sets: 3, reps: '10-12' },
+        { name: 'Leg Curls', sets: 3, reps: '10-12' },
+        { name: 'Calf Raises', sets: 4, reps: '12-15' },
+      ],
+    };
+    
+    return defaults[type] || defaults.Push;
+  }
+
+  /**
+   * Parse AI response into structured suggestion
+   */
+  private parseAISuggestion(response: string): WorkoutSuggestion {
+    try {
+      // AI might return JSON or text - handle both
+      if (response.trim().startsWith('{')) {
+        return JSON.parse(response);
+      }
+
+      // Parse text response
+      const lines = response.split('\n').filter(l => l.trim());
+      
+      // Extract workout type (usually in first line with ** or #)
+      let type = 'Full Body';
+      const typeMatch = lines[0]?.match(/\*\*(.+?)\*\*|#\s*(.+?)$/);
+      if (typeMatch) {
+        type = (typeMatch[1] || typeMatch[2]).trim();
+      }
+      
+      // Extract reason (usually next 2-3 lines)
+      const reasonLines: string[] = [];
+      let exerciseStartIndex = 1;
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        // Stop when we hit exercises (numbered or bulleted list)
+        if (/^\d+\.|^[-•*]/.test(line.trim())) {
+          exerciseStartIndex = i;
+          break;
+        }
+        if (line.trim() && !line.toLowerCase().includes('exercise')) {
+          reasonLines.push(line);
+        }
+      }
+      
+      const reason = reasonLines.join(' ').substring(0, 250) || 
+                     'Based on your recent training patterns.';
+      
+      // Extract exercises
+      const exercises: any[] = [];
+      for (let i = exerciseStartIndex; i < lines.length; i++) {
+        const line = lines[i];
+        // Match patterns like:
+        // 1. Bench Press - 4 x 6-8
+        // - Squats - 3 x 8-10
+        // • Deadlifts: 4 sets of 6-8 reps
+        const match = line.match(/[-•*\d.]\s*(.+?)[-:–]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-–~]\d+|\d+)/i);
+        
+        if (match && exercises.length < 5) {
+          exercises.push({
+            name: match[1].trim(),
+            sets: parseInt(match[2]),
+            reps: match[3],
+          });
+        }
+      }
+
+      // If no exercises found, use defaults
+      if (exercises.length === 0) {
+        const typeKey = type.includes('Push') ? 'Push' : 
+                       type.includes('Pull') ? 'Pull' : 
+                       type.includes('Leg') ? 'Legs' : 'Push';
+        return {
+          type,
+          reason,
+          exercises: this.getDefaultExercises(typeKey),
+          confidence: 'medium',
+        };
+      }
+
+      return {
+        type,
+        reason,
+        exercises,
+        confidence: 'high',
+      };
+    } catch (error) {
+      console.error('Failed to parse AI suggestion:', error);
+      return this.getDefaultSuggestion([]);
+    }
+  }
+
+  /**
+   * Get recent workouts for user
+   */
+  private async getRecentWorkouts(userId: string, days: number) {
+    const since = new Date();
+    since.setDate(since.getDate() - days);
+    
+    const { data, error } = await supabase
+      .from('workouts')
+      .select(`
+        *,
+        workout_exercises (
+          *,
+          exercises (*)
+        )
+      `)
+      .eq('user_id', userId)
+      .gte('created_at', since.toISOString())
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching workouts:', error);
+      return [];
+    }
+    
+    return data || [];
+  }
+
+  /**
+   * Get personal records for user
+   */
+  private async getPersonalRecords(userId: string) {
+    const { data, error } = await supabase
+      .from('personal_records')
+      .select('*, exercises(name)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    
+    if (error) {
+      console.error('Error fetching PRs:', error);
+      return [];
+    }
+    
+    return data || [];
+  }
+
+  /**
+   * Get user profile
+   */
+  private async getUserProfile(userId: string) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    
+    if (error) {
+      console.error('Error fetching profile:', error);
+      return {};
+    }
+    
+    return data || {};
+  }
+}
+
+export const workoutSuggestionService = new WorkoutSuggestionService();
+
