@@ -1,258 +1,180 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
   Switch,
+  Pressable,
   Alert,
-  Linking,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Bell, Clock, TrendingUp, Trophy, Moon } from 'lucide-react-native';
-import { useSettingsStore } from '../../stores/settingsStore';
 import {
-  requestPermissions,
-  checkPermissions,
-  scheduleWorkoutReminders,
-  cancelWorkoutReminders,
-  cancelAllNotifications,
-  scheduleWeeklySummary,
-} from '../../lib/services/notifications';
+  Bell,
+  BellOff,
+  Calendar,
+  Timer,
+  Volume2,
+  Vibrate,
+  Flame,
+  Clock,
+  Trophy,
+  Award,
+  CloudUpload,
+  ChevronRight,
+  Send,
+} from 'lucide-react-native';
+import { useSettingsStore } from '../../stores/settingsStore';
+import { useNotificationPermissions } from '../../hooks/useNotificationPermissions';
+import { NotificationPermissionBanner } from '../../components/notifications';
+import { Button } from '../../components/ui';
+import { notificationService } from '@/lib/notifications/notificationService';
 
 interface SettingRowProps {
   icon: React.ReactNode;
-  label: string;
-  description?: string;
-  toggle?: boolean;
-  toggleValue?: boolean;
-  onToggleChange?: (value: boolean) => void;
+  title: string;
+  subtitle?: string;
+  value?: boolean;
+  onValueChange?: (value: boolean) => void;
   disabled?: boolean;
+  onPress?: () => void;
+  showChevron?: boolean;
 }
 
 const SettingRow: React.FC<SettingRowProps> = ({
   icon,
-  label,
-  description,
-  toggle,
-  toggleValue,
-  onToggleChange,
+  title,
+  subtitle,
+  value,
+  onValueChange,
   disabled,
+  onPress,
+  showChevron,
 }) => {
-  return (
+  const content = (
     <View style={[styles.settingRow, disabled && styles.settingRowDisabled]}>
       <View style={styles.settingRowLeft}>
         <View style={styles.iconContainer}>{icon}</View>
         <View style={styles.settingTextContainer}>
           <Text style={[styles.settingLabel, disabled && styles.settingLabelDisabled]}>
-            {label}
+            {title}
           </Text>
-          {description && <Text style={styles.settingDescription}>{description}</Text>}
+          {subtitle && (
+            <Text style={styles.settingSubtitle}>{subtitle}</Text>
+          )}
         </View>
       </View>
-      {toggle && (
+      {onValueChange !== undefined && (
         <Switch
-          value={toggleValue}
-          onValueChange={onToggleChange}
+          value={value}
+          onValueChange={onValueChange}
           disabled={disabled}
           trackColor={{ false: '#374151', true: '#22c55e' }}
-          thumbColor={toggleValue ? '#fff' : '#9ca3af'}
+          thumbColor={value ? '#fff' : '#9ca3af'}
         />
+      )}
+      {showChevron && (
+        <ChevronRight size={20} color="#64748b" />
       )}
     </View>
   );
-};
 
-interface DaySelectorProps {
-  selectedDays: number[];
-  onDaysChange: (days: number[]) => void;
-  disabled?: boolean;
-}
+  if (onPress) {
+    return (
+      <Pressable onPress={onPress} disabled={disabled}>
+        {content}
+      </Pressable>
+    );
+  }
 
-const DaySelector: React.FC<DaySelectorProps> = ({ selectedDays, onDaysChange, disabled }) => {
-  const days = [
-    { label: 'S', value: 1, name: 'Sun' },
-    { label: 'M', value: 2, name: 'Mon' },
-    { label: 'T', value: 3, name: 'Tue' },
-    { label: 'W', value: 4, name: 'Wed' },
-    { label: 'T', value: 5, name: 'Thu' },
-    { label: 'F', value: 6, name: 'Fri' },
-    { label: 'S', value: 7, name: 'Sat' },
-  ];
-
-  const toggleDay = (day: number) => {
-    if (disabled) return;
-    
-    if (selectedDays.includes(day)) {
-      onDaysChange(selectedDays.filter((d) => d !== day));
-    } else {
-      onDaysChange([...selectedDays, day].sort());
-    }
-  };
-
-  return (
-    <View style={styles.daySelector}>
-      {days.map((day) => (
-        <TouchableOpacity
-          key={day.value}
-          style={[
-            styles.dayButton,
-            selectedDays.includes(day.value) && styles.dayButtonSelected,
-            disabled && styles.dayButtonDisabled,
-          ]}
-          onPress={() => toggleDay(day.value)}
-          disabled={disabled}
-        >
-          <Text
-            style={[
-              styles.dayButtonText,
-              selectedDays.includes(day.value) && styles.dayButtonTextSelected,
-            ]}
-          >
-            {day.label}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+  return content;
 };
 
 interface SectionHeaderProps {
   title: string;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
-  return (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-    </View>
-  );
-};
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
+  <View style={styles.sectionHeader}>
+    <Text style={styles.sectionTitle}>{title}</Text>
+  </View>
+);
 
-export default function NotificationsSettingsScreen() {
+const Divider: React.FC = () => <View style={styles.divider} />;
+
+export default function NotificationSettingsScreen() {
   const router = useRouter();
+  const settings = useSettingsStore();
   const {
-    notificationsEnabled,
-    workoutReminders,
-    streakReminders,
-    setNotificationsEnabled,
-    setWorkoutReminders,
-    setStreakReminders,
-  } = useSettingsStore();
+    isGranted,
+    openSettings: openSystemSettings,
+  } = useNotificationPermissions();
 
-  const [hasPermission, setHasPermission] = useState(false);
-  const [selectedDays, setSelectedDays] = useState<number[]>([2, 4, 6]); // Mon, Wed, Fri
-  const [reminderTime, setReminderTime] = useState(new Date());
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [weeklySummary, setWeeklySummary] = useState(true);
-  const [prNotifications, setPrNotifications] = useState(true);
-  const [milestoneAlerts, setMilestoneAlerts] = useState(true);
-  const [enableQuietHours, setEnableQuietHours] = useState(false);
-  const [quietStart, setQuietStart] = useState(new Date(2024, 0, 1, 22, 0)); // 10 PM
-  const [quietEnd, setQuietEnd] = useState(new Date(2024, 0, 1, 7, 0)); // 7 AM
-  const [showQuietStartPicker, setShowQuietStartPicker] = useState(false);
-  const [showQuietEndPicker, setShowQuietEndPicker] = useState(false);
-
-  useEffect(() => {
-    checkNotificationPermissions();
-    
-    // Set default reminder time to 9 AM
-    const defaultTime = new Date();
-    defaultTime.setHours(9, 0, 0, 0);
-    setReminderTime(defaultTime);
-  }, []);
-
-  const checkNotificationPermissions = async () => {
-    const granted = await checkPermissions();
-    setHasPermission(granted);
-  };
-
-  const handleToggleNotifications = async (enabled: boolean) => {
-    if (enabled) {
-      // Request permissions
-      const granted = await requestPermissions();
+  const handleSendTestNotification = async () => {
+    try {
+      await notificationService.scheduleNotification(
+        'Test Notification 🎉',
+        'Notifications are working perfectly!',
+        {
+          seconds: 1,
+        },
+        {
+          channelId: 'general',
+          data: { type: 'test' },
+        }
+      );
       
-      if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'Please enable notifications in your device settings to receive workout reminders.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => Linking.openSettings() },
-          ]
-        );
-        return;
-      }
-      
-      setHasPermission(true);
-      setNotificationsEnabled(true);
-    } else {
-      // Cancel all notifications
-      await cancelAllNotifications();
-      setNotificationsEnabled(false);
+      Alert.alert(
+        'Test Sent!',
+        'You should receive a notification in 1 second.',
+        [{ text: 'OK' }]
+      );
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'Failed to send test notification. Make sure notifications are enabled.',
+        [{ text: 'OK' }]
+      );
     }
   };
 
-  const handleToggleWorkoutReminders = async (enabled: boolean) => {
-    setWorkoutReminders(enabled);
-    
-    if (enabled && hasPermission) {
-      await scheduleWorkoutReminders(selectedDays, {
-        hour: reminderTime.getHours(),
-        minute: reminderTime.getMinutes(),
-      });
-    } else {
-      await cancelWorkoutReminders();
-    }
-  };
+  // If system permissions not granted, show permission prompt
+  if (!isGranted) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <Stack.Screen
+          options={{
+            title: 'Notifications',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#1e293b' },
+            headerTintColor: '#f1f5f9',
+            headerTitleStyle: { fontWeight: '600' },
+          }}
+        />
+        
+        <View style={styles.permissionContainer}>
+          <View style={styles.permissionCard}>
+            <BellOff size={64} color="#6b7280" />
+            <Text style={styles.permissionTitle}>
+              Notifications Disabled
+            </Text>
+            <Text style={styles.permissionText}>
+              Enable notifications in your device settings to receive 
+              workout reminders, PR celebrations, and achievement alerts.
+            </Text>
+            <Button 
+              title="Open Device Settings" 
+              onPress={openSystemSettings}
+              style={styles.permissionButton}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
-  const handleDaysChange = async (days: number[]) => {
-    setSelectedDays(days);
-    
-    if (workoutReminders && hasPermission) {
-      await scheduleWorkoutReminders(days, {
-        hour: reminderTime.getHours(),
-        minute: reminderTime.getMinutes(),
-      });
-    }
-  };
-
-  const handleTimeChange = async (event: any, selectedTime?: Date) => {
-    setShowTimePicker(Platform.OS === 'ios');
-    
-    if (selectedTime) {
-      setReminderTime(selectedTime);
-      
-      if (workoutReminders && hasPermission) {
-        await scheduleWorkoutReminders(selectedDays, {
-          hour: selectedTime.getHours(),
-          minute: selectedTime.getMinutes(),
-        });
-      }
-    }
-  };
-
-  const handleToggleWeeklySummary = async (enabled: boolean) => {
-    setWeeklySummary(enabled);
-    
-    if (enabled && hasPermission) {
-      await scheduleWeeklySummary();
-    }
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-
-  const isDisabled = !notificationsEnabled || !hasPermission;
+  const isDisabled = !settings.notificationsEnabled;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -266,201 +188,159 @@ export default function NotificationsSettingsScreen() {
         }}
       />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Permission Banner */}
+        <NotificationPermissionBanner />
+
         {/* Master Toggle */}
         <SectionHeader title="MASTER CONTROL" />
         <View style={styles.section}>
           <SettingRow
-            icon={<Bell size={24} color="#3b82f6" />}
-            label="Enable Notifications"
-            toggle
-            toggleValue={notificationsEnabled}
-            onToggleChange={handleToggleNotifications}
+            icon={<Bell size={20} color="#3b82f6" />}
+            title="Enable All Notifications"
+            subtitle="Turn all notifications on/off"
+            value={settings.notificationsEnabled}
+            onValueChange={(v) => settings.updateSettings({ notificationsEnabled: v })}
           />
         </View>
-
-        {!hasPermission && notificationsEnabled && (
-          <View style={styles.warningCard}>
-            <Text style={styles.warningText}>
-              ⚠️ Notification permission denied. Please enable in device settings.
-            </Text>
-            <TouchableOpacity
-              style={styles.settingsButton}
-              onPress={() => Linking.openSettings()}
-            >
-              <Text style={styles.settingsButtonText}>Open Settings</Text>
-            </TouchableOpacity>
-          </View>
-        )}
 
         {/* Workout Reminders */}
         <SectionHeader title="WORKOUT REMINDERS" />
         <View style={styles.section}>
           <SettingRow
-            icon={<Bell size={24} color="#3b82f6" />}
-            label="Workout Reminders"
-            toggle
-            toggleValue={workoutReminders}
-            onToggleChange={handleToggleWorkoutReminders}
+            icon={<Calendar size={20} color="#22c55e" />}
+            title="Scheduled Reminders"
+            subtitle="Remind me on workout days"
+            value={settings.workoutReminders}
+            onValueChange={(v) => settings.updateSettings({ workoutReminders: v })}
             disabled={isDisabled}
           />
-        </View>
-
-        {/* Day Selector */}
-        <View style={styles.daysSectionContainer}>
-          <Text style={styles.daysLabel}>Reminder Days</Text>
-          <DaySelector
-            selectedDays={selectedDays}
-            onDaysChange={handleDaysChange}
-            disabled={isDisabled || !workoutReminders}
+          
+          <Divider />
+          
+          <SettingRow
+            icon={<ChevronRight size={20} color="#94a3b8" />}
+            title="Configure Schedule"
+            subtitle="Set your workout days and times"
+            onPress={() => router.push('/settings/reminders' as any)}
+            disabled={isDisabled || !settings.workoutReminders}
+            showChevron
           />
         </View>
 
-        {/* Time Picker */}
-        <View style={styles.timeContainer}>
-          <Text style={styles.timeLabel}>Reminder Time</Text>
-          <TouchableOpacity
-            style={[
-              styles.timeButton,
-              (isDisabled || !workoutReminders) && styles.timeButtonDisabled,
-            ]}
-            onPress={() => setShowTimePicker(true)}
-            disabled={isDisabled || !workoutReminders}
-          >
-            <Clock size={20} color="#3b82f6" />
-            <Text style={styles.timeText}>{formatTime(reminderTime)}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {showTimePicker && (
-          <DateTimePicker
-            value={reminderTime}
-            mode="time"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={handleTimeChange}
-          />
-        )}
-
-        {/* Motivation */}
-        <SectionHeader title="MOTIVATION" />
+        {/* During Workout */}
+        <SectionHeader title="DURING WORKOUT" />
         <View style={styles.section}>
           <SettingRow
-            icon={<TrendingUp size={24} color="#3b82f6" />}
-            label="Streak Reminders"
-            description="Remind me when my streak is at risk"
-            toggle
-            toggleValue={streakReminders}
-            onToggleChange={setStreakReminders}
+            icon={<Timer size={20} color="#f59e0b" />}
+            title="Rest Timer Alerts"
+            subtitle="Notify when rest period ends"
+            value={settings.restTimerAlerts}
+            onValueChange={(v) => settings.updateSettings({ restTimerAlerts: v })}
             disabled={isDisabled}
           />
-          <View style={styles.divider} />
+          
+          <Divider />
+          
           <SettingRow
-            icon={<TrendingUp size={24} color="#3b82f6" />}
-            label="Weekly Summary"
-            description="Send weekly progress summary"
-            toggle
-            toggleValue={weeklySummary}
-            onToggleChange={handleToggleWeeklySummary}
-            disabled={isDisabled}
+            icon={<Volume2 size={20} color="#94a3b8" />}
+            title="Sound"
+            subtitle="Play sound on rest complete"
+            value={settings.restTimerSound}
+            onValueChange={(v) => settings.updateSettings({ restTimerSound: v })}
+            disabled={isDisabled || !settings.restTimerAlerts}
+          />
+          
+          <Divider />
+          
+          <SettingRow
+            icon={<Vibrate size={20} color="#94a3b8" />}
+            title="Vibration"
+            subtitle="Vibrate on rest complete"
+            value={settings.restTimerVibration}
+            onValueChange={(v) => settings.updateSettings({ restTimerVibration: v })}
+            disabled={isDisabled || !settings.restTimerAlerts}
           />
         </View>
 
-        {/* Achievements */}
-        <SectionHeader title="ACHIEVEMENTS" />
+        {/* Stay Motivated */}
+        <SectionHeader title="STAY MOTIVATED" />
         <View style={styles.section}>
           <SettingRow
-            icon={<Trophy size={24} color="#3b82f6" />}
-            label="PR Notifications"
-            description="Notify when I hit a personal record"
-            toggle
-            toggleValue={prNotifications}
-            onToggleChange={setPrNotifications}
+            icon={<Flame size={20} color="#ef4444" />}
+            title="Streak Reminders"
+            subtitle="Don't break your streak!"
+            value={settings.streakReminders}
+            onValueChange={(v) => settings.updateSettings({ streakReminders: v })}
             disabled={isDisabled}
           />
-          <View style={styles.divider} />
+          
+          <Divider />
+          
           <SettingRow
-            icon={<Trophy size={24} color="#3b82f6" />}
-            label="Milestone Alerts"
-            description="Celebrate workout count milestones"
-            toggle
-            toggleValue={milestoneAlerts}
-            onToggleChange={setMilestoneAlerts}
+            icon={<Clock size={20} color="#8b5cf6" />}
+            title="Inactivity Reminders"
+            subtitle="Gentle nudge after days off"
+            value={settings.inactivityReminders}
+            onValueChange={(v) => settings.updateSettings({ inactivityReminders: v })}
             disabled={isDisabled}
           />
         </View>
 
-        {/* Quiet Hours */}
-        <SectionHeader title="QUIET HOURS" />
+        {/* Celebrations */}
+        <SectionHeader title="CELEBRATIONS" />
         <View style={styles.section}>
           <SettingRow
-            icon={<Moon size={24} color="#3b82f6" />}
-            label="Enable Quiet Hours"
-            toggle
-            toggleValue={enableQuietHours}
-            onToggleChange={setEnableQuietHours}
+            icon={<Trophy size={20} color="#f59e0b" />}
+            title="Personal Records"
+            subtitle="Celebrate new PRs"
+            value={settings.prNotifications}
+            onValueChange={(v) => settings.updateSettings({ prNotifications: v })}
+            disabled={isDisabled}
+          />
+          
+          <Divider />
+          
+          <SettingRow
+            icon={<Award size={20} color="#8b5cf6" />}
+            title="Achievements"
+            subtitle="Milestone notifications"
+            value={settings.achievementNotifications}
+            onValueChange={(v) => settings.updateSettings({ achievementNotifications: v })}
             disabled={isDisabled}
           />
         </View>
 
-        <View style={styles.quietHoursContainer}>
-          <View style={styles.quietHourRow}>
-            <Text style={[styles.quietLabel, (isDisabled || !enableQuietHours) && styles.quietLabelDisabled]}>
-              Start Time
-            </Text>
-            <TouchableOpacity
-              style={[
-                styles.timeButton,
-                (isDisabled || !enableQuietHours) && styles.timeButtonDisabled,
-              ]}
-              onPress={() => setShowQuietStartPicker(true)}
-              disabled={isDisabled || !enableQuietHours}
-            >
-              <Clock size={20} color="#3b82f6" />
-              <Text style={styles.timeText}>{formatTime(quietStart)}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.quietHourRow}>
-            <Text style={[styles.quietLabel, (isDisabled || !enableQuietHours) && styles.quietLabelDisabled]}>
-              End Time
-            </Text>
-            <TouchableOpacity
-              style={[
-                styles.timeButton,
-                (isDisabled || !enableQuietHours) && styles.timeButtonDisabled,
-              ]}
-              onPress={() => setShowQuietEndPicker(true)}
-              disabled={isDisabled || !enableQuietHours}
-            >
-              <Clock size={20} color="#3b82f6" />
-              <Text style={styles.timeText}>{formatTime(quietEnd)}</Text>
-            </TouchableOpacity>
-          </View>
+        {/* System */}
+        <SectionHeader title="SYSTEM" />
+        <View style={styles.section}>
+          <SettingRow
+            icon={<CloudUpload size={20} color="#06b6d4" />}
+            title="Backup Reminders"
+            subtitle="Weekly backup reminders"
+            value={settings.backupReminders}
+            onValueChange={(v) => settings.updateSettings({ backupReminders: v })}
+            disabled={isDisabled}
+          />
         </View>
 
-        {showQuietStartPicker && (
-          <DateTimePicker
-            value={quietStart}
-            mode="time"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={(event, time) => {
-              setShowQuietStartPicker(Platform.OS === 'ios');
-              if (time) setQuietStart(time);
-            }}
+        {/* Test Notification */}
+        <View style={styles.testSection}>
+          <Button
+            title="Send Test Notification"
+            variant="secondary"
+            onPress={handleSendTestNotification}
+            icon={<Send size={20} color="#f1f5f9" />}
+            disabled={isDisabled}
           />
-        )}
-
-        {showQuietEndPicker && (
-          <DateTimePicker
-            value={quietEnd}
-            mode="time"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={(event, time) => {
-              setShowQuietEndPicker(Platform.OS === 'ios');
-              if (time) setQuietEnd(time);
-            }}
-          />
-        )}
+          <Text style={styles.testHint}>
+            Test if notifications are working on this device
+          </Text>
+        </View>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -476,6 +356,46 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: 24,
+  },
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  permissionCard: {
+    backgroundColor: '#1e293b',
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  permissionTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#f1f5f9',
+    marginTop: 20,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  permissionText: {
+    fontSize: 15,
+    color: '#94a3b8',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  permissionButton: {
+    minWidth: 200,
+  },
   sectionHeader: {
     paddingHorizontal: 16,
     paddingTop: 24,
@@ -483,7 +403,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#64748b',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -508,9 +428,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    marginRight: 12,
   },
   iconContainer: {
-    width: 32,
+    width: 28,
     alignItems: 'center',
     marginRight: 12,
   },
@@ -519,141 +440,35 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     fontSize: 16,
+    fontWeight: '600',
     color: '#f1f5f9',
-    marginBottom: 2,
   },
   settingLabelDisabled: {
     color: '#64748b',
   },
-  settingDescription: {
+  settingSubtitle: {
     fontSize: 13,
-    color: '#64748b',
-    lineHeight: 18,
+    color: '#94a3b8',
     marginTop: 2,
+    lineHeight: 18,
   },
   divider: {
     height: 1,
     backgroundColor: '#334155',
-    marginLeft: 60,
+    marginLeft: 56,
   },
-  warningCard: {
-    backgroundColor: '#451a03',
+  testSection: {
+    marginTop: 24,
     marginHorizontal: 16,
-    marginTop: 8,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#78350f',
   },
-  warningText: {
-    fontSize: 14,
-    color: '#fbbf24',
-    lineHeight: 20,
-    marginBottom: 12,
-  },
-  settingsButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: '#f59e0b',
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
-  settingsButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
-  },
-  daysSectionContainer: {
-    backgroundColor: '#1e293b',
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 16,
-    borderRadius: 12,
-  },
-  daysLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f1f5f9',
-    marginBottom: 12,
-  },
-  daySelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  dayButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#334155',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayButtonSelected: {
-    backgroundColor: '#3b82f6',
-  },
-  dayButtonDisabled: {
-    opacity: 0.5,
-  },
-  dayButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#94a3b8',
-  },
-  dayButtonTextSelected: {
-    color: '#ffffff',
-  },
-  timeContainer: {
-    backgroundColor: '#1e293b',
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 16,
-    borderRadius: 12,
-  },
-  timeLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f1f5f9',
-    marginBottom: 12,
-  },
-  timeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#334155',
-    padding: 16,
-    borderRadius: 8,
-    gap: 12,
-  },
-  timeButtonDisabled: {
-    opacity: 0.5,
-  },
-  timeText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#f1f5f9',
-  },
-  quietHoursContainer: {
-    backgroundColor: '#1e293b',
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 16,
-    borderRadius: 12,
-    gap: 16,
-  },
-  quietHourRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  quietLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f1f5f9',
-  },
-  quietLabelDisabled: {
+  testHint: {
+    fontSize: 13,
     color: '#64748b',
+    textAlign: 'center',
+    marginTop: 12,
+    lineHeight: 18,
   },
   bottomSpacer: {
     height: 32,
   },
 });
-

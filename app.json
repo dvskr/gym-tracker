@@ -15,9 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.gymtracker.app",
       "infoPlist": {
         "NSHealthShareUsageDescription": "We read your heart rate and steps to show your daily activity.",
-        "NSHealthUpdateUsageDescription": "We save your workouts and body weight to Apple Health."
+        "NSHealthUpdateUsageDescription": "We save your workouts and body weight to Apple Health.",
+        "UIBackgroundModes": ["remote-notification"]
       },
       "entitlements": {
         "com.apple.developer.healthkit": true,
@@ -25,6 +27,7 @@
       }
     },
     "android": {
+      "package": "com.gymtracker.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,7 +39,9 @@
         "android.permission.health.READ_WEIGHT",
         "android.permission.health.WRITE_EXERCISE",
         "android.permission.health.WRITE_ACTIVE_CALORIES_BURNED",
-        "android.permission.health.WRITE_WEIGHT"
+        "android.permission.health.WRITE_WEIGHT",
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
       ]
     },
     "web": {
@@ -48,7 +53,14 @@
       "expo-router",
       "expo-secure-store",
       "@react-native-community/datetimepicker",
-      "expo-health-connect"
+      "expo-health-connect",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#3b82f6"
+        }
+      ]
     ]
   }
 }

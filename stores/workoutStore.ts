@@ -3,6 +3,12 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
+import { restTimerNotificationService } from '@/lib/notifications/restTimerNotifications';
+import { engagementNotificationService } from '@/lib/notifications/engagementNotifications';
+import { achievementNotificationService } from '@/lib/notifications/achievementNotifications';
+import { smartTimingService } from '@/lib/notifications/smartTiming';
+import { calculateStreak } from '@/lib/utils/streakCalculation';
+import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 
 // ============================================
 // Types
@@ -283,6 +289,9 @@ export const useWorkoutStore = create<WorkoutState>()(
             activeWorkout: get().activeWorkout,
             isWorkoutActive: get().isWorkoutActive,
           });
+
+          // Trigger engagement notifications in background
+          triggerEngagementNotifications(user.id, workout.ended_at);
 
           return { success: true, workoutId: workout.id };
         } catch (error) {
@@ -654,9 +663,15 @@ export const useWorkoutStore = create<WorkoutState>()(
       // ==========================================
 
       startRestTimer: (exerciseId: string, seconds?: number) => {
-        const { exerciseRestTimes } = get();
+        const { exerciseRestTimes, activeWorkout } = get();
         const defaultSeconds = 90; // Default 90 seconds
         const duration = seconds ?? exerciseRestTimes[exerciseId] ?? defaultSeconds;
+        
+        // Get next exercise name for notification
+        const exerciseIndex = activeWorkout?.exercises.findIndex(e => e.id === exerciseId);
+        const nextExercise = exerciseIndex !== undefined && exerciseIndex < (activeWorkout?.exercises.length ?? 0) - 1
+          ? activeWorkout?.exercises[exerciseIndex + 1]?.exercise.name
+          : undefined;
         
         set({
           restTimer: {
@@ -666,9 +681,15 @@ export const useWorkoutStore = create<WorkoutState>()(
             totalSeconds: duration,
           },
         });
+
+        // Schedule notification for rest completion
+        restTimerNotificationService.scheduleRestComplete(duration, nextExercise);
       },
 
       skipRestTimer: () => {
+        // Cancel the notification when skipping
+        restTimerNotificationService.cancelRestNotification();
+        
         set({
           restTimer: {
             exerciseId: null,
@@ -685,7 +706,16 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           const newRemaining = state.restTimer.remainingSeconds - 1;
 
+          // Trigger warning haptic at 10 seconds
+          if (newRemaining === 10) {
+            restTimerNotificationService.triggerWarning();
+          }
+
+          // Timer complete
           if (newRemaining <= 0) {
+            // Trigger completion haptics
+            restTimerNotificationService.triggerRestComplete();
+            
             return {
               restTimer: {
                 ...state.restTimer,
@@ -800,4 +830,57 @@ export const useWorkoutStore = create<WorkoutState>()(
 export const useActiveWorkout = () => useWorkoutStore((state) => state.activeWorkout);
 export const useIsWorkoutActive = () => useWorkoutStore((state) => state.isWorkoutActive);
 export const useRestTimer = () => useWorkoutStore((state) => state.restTimer);
+
+/**
+ * Trigger engagement notifications after workout completion
+ * Runs in background without blocking
+ */
+async function triggerEngagementNotifications(userId: string, workoutEndedAt: string) {
+  // Run in background - don't block UI
+  setTimeout(async () => {
+    try {
+      // Calculate streak
+      const streakData = await calculateStreak(userId);
+      
+      // Celebrate milestone streaks
+      await engagementNotificationService.celebrateStreak(streakData.currentStreak);
+      
+      // Reschedule inactivity reminders (resets the clock)
+      await engagementNotificationService.scheduleInactivityReminders(workoutEndedAt);
+      
+      // Get workout stats for achievements
+      const workoutCount = await getWorkoutCount(userId);
+      
+      // Get total stats from Supabase
+      const { data: stats } = await supabase
+        .from('workouts')
+        .select('total_volume, total_sets, total_reps')
+        .eq('user_id', userId);
+      
+      const totalVolume = stats?.reduce((sum, w) => sum + (w.total_volume || 0), 0) || 0;
+      const totalSets = stats?.reduce((sum, w) => sum + (w.total_sets || 0), 0) || 0;
+      const totalReps = stats?.reduce((sum, w) => sum + (w.total_reps || 0), 0) || 0;
+      
+      // Check for achievements
+      await achievementNotificationService.checkWorkoutAchievements({
+        totalWorkouts: workoutCount,
+        totalSets,
+        totalVolume,
+        totalReps,
+        streak: streakData.currentStreak,
+        userId,
+      });
+      
+      // Record workout time for smart timing suggestions
+      await smartTimingService.recordWorkoutTime(
+        new Date(workoutStartedAt),
+        Math.floor((Date.now() - new Date(workoutStartedAt).getTime()) / 60000) // Duration in minutes
+      );
+      
+      console.log('✅ Engagement notifications triggered');
+    } catch (error) {
+      console.error('Failed to trigger engagement notifications:', error);
+    }
+  }, 1000); // Small delay to let workout save settle
+}
 

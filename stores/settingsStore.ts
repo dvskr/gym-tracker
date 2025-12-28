@@ -49,6 +49,15 @@ interface SettingsState {
   quietHoursEnabled: boolean;
   quietHoursStart: string;
   quietHoursEnd: string;
+  
+  // Notification Details
+  restTimerAlerts: boolean;
+  restTimerSound: boolean;
+  restTimerVibration: boolean;
+  inactivityReminders: boolean;
+  achievementNotifications: boolean;
+  backupReminders: boolean;
+  updateNotifications: boolean;
 
   // Health Connect
   healthSyncEnabled: boolean;
@@ -140,6 +149,15 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   quietHoursEnabled: false,
   quietHoursStart: '22:00',
   quietHoursEnd: '07:00',
+  
+  // Notification Details
+  restTimerAlerts: true,
+  restTimerSound: true,
+  restTimerVibration: true,
+  inactivityReminders: true,
+  achievementNotifications: true,
+  backupReminders: true,
+  updateNotifications: false,
 
   // Health Connect
   healthSyncEnabled: false,

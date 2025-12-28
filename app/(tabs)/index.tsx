@@ -29,6 +29,7 @@ import { lightHaptic, successHaptic } from '@/lib/utils/haptics';
 import { QuickWeightLog, WeightSparkline } from '@/components/home';
 import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
+import { NotificationBell } from '@/components/NotificationBell';
 
 // ============================================
 // Helper Functions
@@ -388,12 +389,15 @@ export default function HomeScreen() {
       >
         {/* Greeting */}
         <View style={styles.greetingSection}>
-          <Text style={styles.greeting}>
-            {getGreeting()}{userName ? `, ${userName}` : ''}! 👋
-          </Text>
-          <Text style={styles.greetingSubtext}>
-            {isWorkoutActive ? "You have a workout in progress" : "Ready to crush your workout?"}
-          </Text>
+          <View>
+            <Text style={styles.greeting}>
+              {getGreeting()}{userName ? `, ${userName}` : ''}! 👋
+            </Text>
+            <Text style={styles.greetingSubtext}>
+              {isWorkoutActive ? "You have a workout in progress" : "Ready to crush your workout?"}
+            </Text>
+          </View>
+          <NotificationBell />
         </View>
 
         {/* Continue Workout Banner */}
@@ -558,6 +562,9 @@ const styles = StyleSheet.create({
   // Greeting
   greetingSection: {
     marginBottom: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
 
   greeting: {

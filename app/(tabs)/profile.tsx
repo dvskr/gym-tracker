@@ -108,6 +108,7 @@ export default function ProfileScreen() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hapticEnabled, setHapticEnabled] = useState(true);
   const [showPreviousWorkout, setShowPreviousWorkout] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [workoutReminders, setWorkoutReminders] = useState(true);
   const [streakReminders, setStreakReminders] = useState(true);
   const [prCelebrations, setPrCelebrations] = useState(true);
@@ -283,22 +284,15 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <SettingItem
             icon={<Bell size={24} color="#60a5fa" />}
-            label="Workout Reminders"
-            toggle
-            toggleValue={workoutReminders}
-            onToggleChange={(value) => {
-              setWorkoutReminders(value);
-              if (value) {
-                handleReminderSchedule();
-              }
-            }}
+            label="Notifications"
+            value={notificationsEnabled ? 'On' : 'Off'}
+            onPress={() => router.push('/settings/notifications')}
           />
           <SettingItem
-            icon={<Target size={24} color="#60a5fa" />}
-            label="Streak Reminders"
-            toggle
-            toggleValue={streakReminders}
-            onToggleChange={setStreakReminders}
+            icon={<Bell size={24} color="#60a5fa" />}
+            label="Workout Reminders"
+            value="Set schedule"
+            onPress={() => router.push('/settings/reminders')}
           />
           <SettingItem
             icon={<Trophy size={24} color="#60a5fa" />}
