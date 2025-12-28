@@ -4,3 +4,4 @@ export * from './templateShare';
 export * from './calculations';
 export * from './streaks';
 export * from './export';
+export * from './unitConversion';

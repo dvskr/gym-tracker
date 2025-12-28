@@ -1,5 +1,5 @@
 -- Body Weight Log
-CREATE TABLE body_weight_log (
+CREATE TABLE IF NOT EXISTS body_weight_log (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   logged_at DATE NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE body_weight_log (
 );
 
 -- Body Measurements
-CREATE TABLE body_measurements (
+CREATE TABLE IF NOT EXISTS body_measurements (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   measured_at DATE NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE body_measurements (
 );
 
 -- Progress Photos
-CREATE TABLE progress_photos (
+CREATE TABLE IF NOT EXISTS progress_photos (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   taken_at DATE NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE progress_photos (
 );
 
 -- Weight Goals
-CREATE TABLE weight_goals (
+CREATE TABLE IF NOT EXISTS weight_goals (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   target_weight DECIMAL(5,2) NOT NULL,
@@ -64,9 +64,9 @@ CREATE TABLE weight_goals (
 );
 
 -- Indexes
-CREATE INDEX idx_weight_log_user ON body_weight_log(user_id, logged_at DESC);
-CREATE INDEX idx_measurements_user ON body_measurements(user_id, measured_at DESC);
-CREATE INDEX idx_photos_user ON progress_photos(user_id, taken_at DESC);
+CREATE INDEX IF NOT EXISTS idx_weight_log_user ON body_weight_log(user_id, logged_at DESC);
+CREATE INDEX IF NOT EXISTS idx_measurements_user ON body_measurements(user_id, measured_at DESC);
+CREATE INDEX IF NOT EXISTS idx_photos_user ON progress_photos(user_id, taken_at DESC);
 
 -- RLS Policies
 ALTER TABLE body_weight_log ENABLE ROW LEVEL SECURITY;
@@ -74,8 +74,22 @@ ALTER TABLE body_measurements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE progress_photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE weight_goals ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users own weight logs" ON body_weight_log FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users own measurements" ON body_measurements FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users own photos" ON progress_photos FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Users own goals" ON weight_goals FOR ALL USING (auth.uid() = user_id);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'body_weight_log' AND policyname = 'Users own weight logs') THEN
+    CREATE POLICY "Users own weight logs" ON body_weight_log FOR ALL USING (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'body_measurements' AND policyname = 'Users own measurements') THEN
+    CREATE POLICY "Users own measurements" ON body_measurements FOR ALL USING (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'progress_photos' AND policyname = 'Users own photos') THEN
+    CREATE POLICY "Users own photos" ON progress_photos FOR ALL USING (auth.uid() = user_id);
+  END IF;
+  
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'weight_goals' AND policyname = 'Users own goals') THEN
+    CREATE POLICY "Users own goals" ON weight_goals FOR ALL USING (auth.uid() = user_id);
+  END IF;
+END $$;
 

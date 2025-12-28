@@ -17,13 +17,22 @@ CREATE INDEX IF NOT EXISTS idx_template_sets_exercise_id ON template_sets(templa
 ALTER TABLE template_sets ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can access sets for their template exercises
-CREATE POLICY "Users access template sets" ON template_sets FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM template_exercises te
-      JOIN workout_templates wt ON wt.id = te.template_id
-      WHERE te.id = template_sets.template_exercise_id
-      AND wt.user_id = auth.uid()
-    )
-  );
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE tablename = 'template_sets' 
+    AND policyname = 'Users access template sets'
+  ) THEN
+    CREATE POLICY "Users access template sets" ON template_sets FOR ALL
+      USING (
+        EXISTS (
+          SELECT 1 FROM template_exercises te
+          JOIN workout_templates wt ON wt.id = te.template_id
+          WHERE te.id = template_sets.template_exercise_id
+          AND wt.user_id = auth.uid()
+        )
+      );
+  END IF;
+END $$;
 

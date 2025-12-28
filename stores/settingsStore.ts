@@ -1,0 +1,408 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '../lib/supabase';
+
+export type UnitSystem = 'imperial' | 'metric';
+export type WeightUnit = 'lbs' | 'kg';
+export type MeasurementUnit = 'in' | 'cm';
+export type Theme = 'dark' | 'light' | 'system';
+
+interface SettingsState {
+  // Units
+  unitSystem: UnitSystem;
+  weightUnit: WeightUnit;
+  measurementUnit: MeasurementUnit;
+
+  // Theme
+  theme: Theme;
+
+  // Workout
+  restTimerDefault: number;
+  autoStartTimer: boolean;
+  soundEnabled: boolean;
+  hapticEnabled: boolean;
+  showPreviousWorkout: boolean;
+  askForRPE: boolean;
+  autoFillSets: boolean;
+
+  // Plate Calculator
+  barbellWeight: number;
+  defaultPlates: string; // 'standard' or 'custom'
+  availablePlates: number[];
+  showPlateCalculator: boolean;
+
+  // PRs
+  prCelebrations: boolean;
+  prSound: boolean;
+  prConfetti: boolean;
+
+  // Notifications
+  notificationsEnabled: boolean;
+  workoutReminders: boolean;
+  reminderDays: number[]; // 1-7 (Sunday-Saturday)
+  reminderTime: string;
+  streakReminders: boolean;
+  weeklySummary: boolean;
+  prNotifications: boolean;
+  milestoneAlerts: boolean;
+  quietHoursEnabled: boolean;
+  quietHoursStart: string;
+  quietHoursEnd: string;
+
+  // Actions
+  setUnitSystem: (system: UnitSystem) => void;
+  setWeightUnit: (unit: WeightUnit) => void;
+  setMeasurementUnit: (unit: MeasurementUnit) => void;
+  setTheme: (theme: Theme) => void;
+  setRestTimerDefault: (seconds: number) => void;
+  setAutoStartTimer: (enabled: boolean) => void;
+  setSoundEnabled: (enabled: boolean) => void;
+  setHapticEnabled: (enabled: boolean) => void;
+  setShowPreviousWorkout: (enabled: boolean) => void;
+  setAskForRPE: (enabled: boolean) => void;
+  setAutoFillSets: (enabled: boolean) => void;
+  setBarbellWeight: (weight: number) => void;
+  setDefaultPlates: (plates: string) => void;
+  setAvailablePlates: (plates: number[]) => void;
+  setShowPlateCalculator: (enabled: boolean) => void;
+  setPrCelebrations: (enabled: boolean) => void;
+  setPrSound: (enabled: boolean) => void;
+  setPrConfetti: (enabled: boolean) => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
+  setWorkoutReminders: (enabled: boolean) => void;
+  setReminderDays: (days: number[]) => void;
+  setReminderTime: (time: string) => void;
+  setStreakReminders: (enabled: boolean) => void;
+  setWeeklySummary: (enabled: boolean) => void;
+  setPrNotifications: (enabled: boolean) => void;
+  setMilestoneAlerts: (enabled: boolean) => void;
+  setQuietHoursEnabled: (enabled: boolean) => void;
+  setQuietHoursStart: (time: string) => void;
+  setQuietHoursEnd: (time: string) => void;
+  updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'>>) => void;
+  resetToDefaults: () => void;
+  syncFromProfile: (profile: any) => void;
+  syncToProfile: (userId: string) => Promise<void>;
+}
+
+const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAskForRPE' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'> = {
+  // Units
+  unitSystem: 'imperial',
+  weightUnit: 'lbs',
+  measurementUnit: 'in',
+
+  // Theme
+  theme: 'dark',
+
+  // Workout
+  restTimerDefault: 90,
+  autoStartTimer: true,
+  soundEnabled: true,
+  hapticEnabled: true,
+  showPreviousWorkout: true,
+  askForRPE: false,
+  autoFillSets: true,
+
+  // Plate Calculator
+  barbellWeight: 45,
+  defaultPlates: 'standard',
+  availablePlates: [45, 35, 25, 10, 5, 2.5],
+  showPlateCalculator: true,
+
+  // PRs
+  prCelebrations: true,
+  prSound: true,
+  prConfetti: true,
+
+  // Notifications
+  notificationsEnabled: true,
+  workoutReminders: true,
+  reminderDays: [2, 4, 6], // Monday, Wednesday, Friday
+  reminderTime: '09:00',
+  streakReminders: true,
+  weeklySummary: true,
+  prNotifications: true,
+  milestoneAlerts: true,
+  quietHoursEnabled: false,
+  quietHoursStart: '22:00',
+  quietHoursEnd: '07:00',
+};
+
+// Debounce timer for syncing to Supabase
+let syncTimeout: NodeJS.Timeout | null = null;
+
+export const useSettingsStore = create<SettingsState>()(
+  persist(
+    (set, get) => ({
+      ...DEFAULT_SETTINGS,
+
+      setUnitSystem: (system) => {
+        const updates: Partial<SettingsState> = {
+          unitSystem: system,
+          weightUnit: system === 'metric' ? 'kg' : 'lbs',
+          measurementUnit: system === 'metric' ? 'cm' : 'in',
+          barbellWeight: system === 'metric' ? 20 : 45,
+          availablePlates: system === 'metric' ? [20, 15, 10, 5, 2.5, 1.25] : [45, 35, 25, 10, 5, 2.5],
+        };
+        set(updates);
+        debounceSyncToProfile();
+      },
+
+      setWeightUnit: (unit) => {
+        set({ weightUnit: unit });
+        debounceSyncToProfile();
+      },
+
+      setMeasurementUnit: (unit) => {
+        set({ measurementUnit: unit });
+        debounceSyncToProfile();
+      },
+
+      setTheme: (theme) => {
+        set({ theme });
+        debounceSyncToProfile();
+      },
+
+      setRestTimerDefault: (seconds) => {
+        set({ restTimerDefault: seconds });
+        debounceSyncToProfile();
+      },
+
+      setAutoStartTimer: (enabled) => {
+        set({ autoStartTimer: enabled });
+        debounceSyncToProfile();
+      },
+
+      setSoundEnabled: (enabled) => {
+        set({ soundEnabled: enabled });
+        debounceSyncToProfile();
+      },
+
+      setHapticEnabled: (enabled) => {
+        set({ hapticEnabled: enabled });
+        debounceSyncToProfile();
+      },
+
+      setShowPreviousWorkout: (enabled) => {
+        set({ showPreviousWorkout: enabled });
+        debounceSyncToProfile();
+      },
+
+      setAskForRPE: (enabled) => {
+        set({ askForRPE: enabled });
+        debounceSyncToProfile();
+      },
+
+      setAutoFillSets: (enabled) => {
+        set({ autoFillSets: enabled });
+        debounceSyncToProfile();
+      },
+
+      setBarbellWeight: (weight) => {
+        set({ barbellWeight: weight });
+        debounceSyncToProfile();
+      },
+
+      setDefaultPlates: (plates) => {
+        set({ defaultPlates: plates });
+        debounceSyncToProfile();
+      },
+
+      setAvailablePlates: (plates) => {
+        set({ availablePlates: plates });
+        debounceSyncToProfile();
+      },
+
+      setShowPlateCalculator: (enabled) => {
+        set({ showPlateCalculator: enabled });
+        debounceSyncToProfile();
+      },
+
+      setPrCelebrations: (enabled) => {
+        set({ prCelebrations: enabled });
+        debounceSyncToProfile();
+      },
+
+      setPrSound: (enabled) => {
+        set({ prSound: enabled });
+        debounceSyncToProfile();
+      },
+
+      setPrConfetti: (enabled) => {
+        set({ prConfetti: enabled });
+        debounceSyncToProfile();
+      },
+
+      setNotificationsEnabled: (enabled) => {
+        set({ notificationsEnabled: enabled });
+        debounceSyncToProfile();
+      },
+
+      setWorkoutReminders: (enabled) => {
+        set({ workoutReminders: enabled });
+        debounceSyncToProfile();
+      },
+
+      setReminderDays: (days) => {
+        set({ reminderDays: days });
+        debounceSyncToProfile();
+      },
+
+      setReminderTime: (time) => {
+        set({ reminderTime: time });
+        debounceSyncToProfile();
+      },
+
+      setStreakReminders: (enabled) => {
+        set({ streakReminders: enabled });
+        debounceSyncToProfile();
+      },
+
+      setWeeklySummary: (enabled) => {
+        set({ weeklySummary: enabled });
+        debounceSyncToProfile();
+      },
+
+      setPrNotifications: (enabled) => {
+        set({ prNotifications: enabled });
+        debounceSyncToProfile();
+      },
+
+      setMilestoneAlerts: (enabled) => {
+        set({ milestoneAlerts: enabled });
+        debounceSyncToProfile();
+      },
+
+      setQuietHoursEnabled: (enabled) => {
+        set({ quietHoursEnabled: enabled });
+        debounceSyncToProfile();
+      },
+
+      setQuietHoursStart: (time) => {
+        set({ quietHoursStart: time });
+        debounceSyncToProfile();
+      },
+
+      setQuietHoursEnd: (time) => {
+        set({ quietHoursEnd: time });
+        debounceSyncToProfile();
+      },
+
+      updateSettings: (settings) => {
+        set(settings);
+        debounceSyncToProfile();
+      },
+
+      resetToDefaults: () => {
+        set(DEFAULT_SETTINGS);
+        debounceSyncToProfile();
+      },
+
+      syncFromProfile: (profile) => {
+        if (!profile) return;
+
+        set({
+          unitSystem: profile.unit_system || DEFAULT_SETTINGS.unitSystem,
+          weightUnit: profile.weight_unit || (profile.unit_system === 'metric' ? 'kg' : 'lbs'),
+          measurementUnit: profile.measurement_unit || (profile.unit_system === 'metric' ? 'cm' : 'in'),
+          theme: profile.theme || DEFAULT_SETTINGS.theme,
+          restTimerDefault: profile.rest_timer_default ?? DEFAULT_SETTINGS.restTimerDefault,
+          autoStartTimer: profile.auto_start_timer ?? DEFAULT_SETTINGS.autoStartTimer,
+          soundEnabled: profile.sound_enabled ?? DEFAULT_SETTINGS.soundEnabled,
+          hapticEnabled: profile.haptic_enabled ?? DEFAULT_SETTINGS.hapticEnabled,
+          showPreviousWorkout: profile.show_previous_workout ?? DEFAULT_SETTINGS.showPreviousWorkout,
+          barbellWeight: profile.barbell_weight ?? DEFAULT_SETTINGS.barbellWeight,
+          defaultPlates: profile.default_plates || DEFAULT_SETTINGS.defaultPlates,
+          prCelebrations: profile.pr_celebrations ?? DEFAULT_SETTINGS.prCelebrations,
+          notificationsEnabled: profile.notifications_enabled ?? DEFAULT_SETTINGS.notificationsEnabled,
+          workoutReminders: profile.workout_reminders ?? DEFAULT_SETTINGS.workoutReminders,
+          streakReminders: profile.streak_reminders ?? DEFAULT_SETTINGS.streakReminders,
+        });
+      },
+
+      syncToProfile: async (userId) => {
+        try {
+          const state = get();
+
+          const { error } = await supabase
+            .from('profiles')
+            .update({
+              unit_system: state.unitSystem,
+              weight_unit: state.weightUnit,
+              measurement_unit: state.measurementUnit,
+              theme: state.theme,
+              rest_timer_default: state.restTimerDefault,
+              auto_start_timer: state.autoStartTimer,
+              sound_enabled: state.soundEnabled,
+              haptic_enabled: state.hapticEnabled,
+              show_previous_workout: state.showPreviousWorkout,
+              barbell_weight: state.barbellWeight,
+              default_plates: state.defaultPlates,
+              pr_celebrations: state.prCelebrations,
+              notifications_enabled: state.notificationsEnabled,
+              workout_reminders: state.workoutReminders,
+              streak_reminders: state.streakReminders,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', userId);
+
+          if (error) {
+            console.error('Error syncing settings to profile:', error);
+          }
+        } catch (error) {
+          console.error('Error syncing settings:', error);
+        }
+      },
+    }),
+    {
+      name: 'settings-storage',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
+
+/**
+ * Debounce sync to Supabase to avoid excessive API calls
+ */
+function debounceSyncToProfile() {
+  if (syncTimeout) {
+    clearTimeout(syncTimeout);
+  }
+
+  syncTimeout = setTimeout(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await useSettingsStore.getState().syncToProfile(user.id);
+      }
+    } catch (error) {
+      console.error('Error in debounced sync:', error);
+    }
+  }, 500);
+}
+
+/**
+ * Initialize settings from Supabase profile
+ * Call this after user logs in
+ */
+export async function initializeSettings(userId: string) {
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error loading profile settings:', error);
+      return;
+    }
+
+    if (profile) {
+      useSettingsStore.getState().syncFromProfile(profile);
+    }
+  } catch (error) {
+    console.error('Error initializing settings:', error);
+  }
+}
