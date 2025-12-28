@@ -50,6 +50,15 @@ interface SettingsState {
   quietHoursStart: string;
   quietHoursEnd: string;
 
+  // Health Connect
+  healthSyncEnabled: boolean;
+  healthAutoSync: boolean;
+  syncWeight: boolean;
+  syncBodyMeasurements: boolean;
+  readHeartRate: boolean;
+  readSteps: boolean;
+  readSleep: boolean;
+
   // Actions
   setUnitSystem: (system: UnitSystem) => void;
   setWeightUnit: (unit: WeightUnit) => void;
@@ -80,6 +89,10 @@ interface SettingsState {
   setQuietHoursEnabled: (enabled: boolean) => void;
   setQuietHoursStart: (time: string) => void;
   setQuietHoursEnd: (time: string) => void;
+  setHealthSyncEnabled: (enabled: boolean) => void;
+  setHealthAutoSync: (enabled: boolean) => void;
+  setSyncWeight: (enabled: boolean) => void;
+  setSyncBodyMeasurements: (enabled: boolean) => void;
   updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'>>) => void;
   resetToDefaults: () => void;
   syncFromProfile: (profile: any) => void;
@@ -127,6 +140,15 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   quietHoursEnabled: false,
   quietHoursStart: '22:00',
   quietHoursEnd: '07:00',
+
+  // Health Connect
+  healthSyncEnabled: false,
+  healthAutoSync: true,
+  syncWeight: true,
+  syncBodyMeasurements: true,
+  readHeartRate: true,
+  readSteps: true,
+  readSleep: true,
 };
 
 // Debounce timer for syncing to Supabase
@@ -286,6 +308,26 @@ export const useSettingsStore = create<SettingsState>()(
 
       setQuietHoursEnd: (time) => {
         set({ quietHoursEnd: time });
+        debounceSyncToProfile();
+      },
+
+      setHealthSyncEnabled: (enabled) => {
+        set({ healthSyncEnabled: enabled });
+        debounceSyncToProfile();
+      },
+
+      setHealthAutoSync: (enabled) => {
+        set({ healthAutoSync: enabled });
+        debounceSyncToProfile();
+      },
+
+      setSyncWeight: (enabled) => {
+        set({ syncWeight: enabled });
+        debounceSyncToProfile();
+      },
+
+      setSyncBodyMeasurements: (enabled) => {
+        set({ syncBodyMeasurements: enabled });
         debounceSyncToProfile();
       },
 

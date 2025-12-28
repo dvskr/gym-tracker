@@ -32,4 +32,13 @@ export {
   useConflictDetection,
   useEvent,
 } from './useRealtime';
+export { useHealthConnect } from './useHealthConnect';
+export {
+  useHeartRate,
+  useRestingHeartRate,
+  useTodayHeartRate,
+  useHeartRateZones,
+  useHeartRateZone,
+} from './useHeartRate';
+export { useHealthSync } from './useHealthSync';
 
