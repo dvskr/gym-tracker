@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { seedDefaultTemplates } from '@/lib/data/defaultTemplates';
 
 interface AuthState {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
   isInitialized: boolean;
+  hasSeededTemplates: boolean;
   
   initialize: () => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
@@ -15,11 +17,32 @@ interface AuthState {
   resetPassword: (email: string) => Promise<{ error: any }>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+// Track if we've already attempted to seed for this session
+let seedingAttempted = false;
+
+/**
+ * Seed default templates in background (non-blocking)
+ */
+async function seedTemplatesInBackground(userId: string) {
+  if (seedingAttempted) return;
+  seedingAttempted = true;
+  
+  // Run in background - don't await
+  setTimeout(async () => {
+    try {
+      await seedDefaultTemplates(userId);
+    } catch (error) {
+      console.error('Background template seeding failed:', error);
+    }
+  }, 1000); // Small delay to let app settle
+}
+
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   session: null,
   isLoading: false,
   isInitialized: false,
+  hasSeededTemplates: false,
 
   initialize: async () => {
     try {
@@ -34,12 +57,28 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false 
       });
       
+      // Seed templates for existing user on app open
+      if (session?.user?.id) {
+        seedTemplatesInBackground(session.user.id);
+      }
+      
       // Listen for auth changes
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange((event, session) => {
         set({ 
           session, 
           user: session?.user ?? null 
         });
+        
+        // Seed templates on sign in (for new or returning users)
+        if (event === 'SIGNED_IN' && session?.user?.id) {
+          seedTemplatesInBackground(session.user.id);
+        }
+        
+        // Reset seeding flag on sign out
+        if (event === 'SIGNED_OUT') {
+          seedingAttempted = false;
+          set({ hasSeededTemplates: false });
+        }
       });
     } catch (error) {
       console.error('Error initializing auth:', error);
@@ -60,6 +99,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       },
     });
     
+    // Seed templates for new user (will also be triggered by auth state change)
+    if (!error && data.user?.id) {
+      seedTemplatesInBackground(data.user.id);
+    }
+    
     set({ isLoading: false });
     return { error };
   },
@@ -71,6 +115,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       email,
       password,
     });
+    
+    // Seed templates on sign in (in case user never got them)
+    if (!error && data.user?.id) {
+      seedTemplatesInBackground(data.user.id);
+    }
     
     set({ isLoading: false });
     return { error };

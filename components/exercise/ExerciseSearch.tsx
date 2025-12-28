@@ -261,7 +261,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
       {/* Body Part Filter Chips */}
       <View style={styles.filtersContainer}>
         <ScrollView
-          horizontal
+          horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chipsContent}
         >
@@ -307,7 +307,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         initialNumToRender={15}
         maxToRenderPerBatch={10}
         windowSize={10}
-        removeClippedSubviews
+        removeClippedSubviews={true}
         getItemLayout={(_, index) => ({
           length: 80,
           offset: 80 * index,

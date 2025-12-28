@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  TextInput,
+  Modal,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -16,18 +19,172 @@ import {
   Clock,
   Dumbbell,
   TrendingUp,
-  Trash2,
   Star,
+  MoreVertical,
+  ChevronDown,
+  ChevronUp,
+  Play,
+  Trash2,
+  Share2,
+  FileText,
+  Edit3,
+  Trophy,
+  Repeat,
 } from 'lucide-react-native';
 import { format } from 'date-fns';
-import { getWorkoutById, deleteWorkout, WorkoutDetail } from '@/lib/api/workouts';
-import { Card, LoadingSpinner } from '@/components/ui';
+import {
+  getWorkoutById,
+  deleteWorkout,
+  updateWorkout,
+  WorkoutDetail,
+} from '@/lib/api/workouts';
+import { LoadingSpinner } from '@/components/ui';
+import { useWorkoutStore } from '@/stores/workoutStore';
+import { lightHaptic, successHaptic, mediumHaptic } from '@/lib/utils/haptics';
+import {
+  exportWorkout,
+  shareWorkout,
+  convertToExportable,
+} from '@/lib/utils/export';
+
+// ============================================
+// Types
+// ============================================
+
+interface ExerciseCardProps {
+  exercise: WorkoutDetail['workout_exercises'][0];
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+}
+
+// ============================================
+// Exercise Card Component
+// ============================================
+
+const ExerciseCard: React.FC<ExerciseCardProps> = ({
+  exercise,
+  index,
+  isExpanded,
+  onToggle,
+}) => {
+  const [heightAnim] = useState(new Animated.Value(isExpanded ? 1 : 0));
+
+  useEffect(() => {
+    Animated.timing(heightAnim, {
+      toValue: isExpanded ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [isExpanded]);
+
+  const completedSets = exercise.workout_sets?.filter((s) => s.is_completed) || [];
+  const totalVolume = completedSets.reduce(
+    (sum, set) => sum + (set.weight || 0) * (set.reps || 0),
+    0
+  );
+
+  return (
+    <View style={styles.exerciseCard}>
+      <TouchableOpacity
+        style={styles.exerciseHeader}
+        onPress={onToggle}
+        activeOpacity={0.7}
+      >
+        <View style={styles.exerciseNumberBadge}>
+          <Text style={styles.exerciseNumber}>{index + 1}</Text>
+        </View>
+
+        <View style={styles.exerciseInfo}>
+          <Text style={styles.exerciseName} numberOfLines={1}>
+            {exercise.exercises?.name || 'Unknown Exercise'}
+          </Text>
+          <Text style={styles.exerciseMeta}>
+            {exercise.exercises?.equipment || 'No equipment'} •{' '}
+            {completedSets.length} sets • {totalVolume.toLocaleString()} lbs
+          </Text>
+        </View>
+
+        {isExpanded ? (
+          <ChevronUp size={20} color="#64748b" />
+        ) : (
+          <ChevronDown size={20} color="#64748b" />
+        )}
+      </TouchableOpacity>
+
+      {isExpanded && (
+        <View style={styles.exerciseContent}>
+          {/* Sets Table */}
+          <View style={styles.setsContainer}>
+            <View style={styles.setsHeader}>
+              <Text style={[styles.setHeaderText, styles.setColumn]}>SET</Text>
+              <Text style={[styles.setHeaderText, styles.weightColumn]}>WEIGHT</Text>
+              <Text style={[styles.setHeaderText, styles.repsColumn]}>REPS</Text>
+            </View>
+
+            {completedSets
+              .sort((a, b) => a.set_number - b.set_number)
+              .map((set) => (
+                <View key={set.id} style={styles.setRow}>
+                  <View style={[styles.setColumn, styles.setNumberCell]}>
+                    <Text style={styles.setNumberText}>{set.set_number}</Text>
+                    {set.set_type && set.set_type !== 'normal' && (
+                      <View
+                        style={[
+                          styles.setTypeBadge,
+                          set.set_type === 'warmup' && styles.warmupBadge,
+                          set.set_type === 'failure' && styles.failureBadge,
+                          set.set_type === 'dropset' && styles.dropsetBadge,
+                        ]}
+                      >
+                        <Text style={styles.setTypeText}>
+                          {set.set_type === 'warmup'
+                            ? 'W'
+                            : set.set_type === 'failure'
+                            ? 'F'
+                            : 'D'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={[styles.setValue, styles.weightColumn]}>
+                    {set.weight || 0} {set.weight_unit}
+                  </Text>
+                  <Text style={[styles.setValue, styles.repsColumn]}>
+                    {set.reps || 0}
+                  </Text>
+                </View>
+              ))}
+          </View>
+
+          {/* Notes */}
+          {exercise.notes && (
+            <View style={styles.exerciseNotes}>
+              <Text style={styles.exerciseNotesText}>{exercise.notes}</Text>
+            </View>
+          )}
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================
+// Main Component
+// ============================================
 
 export default function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { startWorkout, addExerciseWithSets } = useWorkoutStore();
+
+  // State
   const [workout, setWorkout] = useState<WorkoutDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [expandedExercises, setExpandedExercises] = useState<Set<string>>(new Set());
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState('');
 
   // Fetch workout
   useEffect(() => {
@@ -40,6 +197,13 @@ export default function WorkoutDetailScreen() {
     try {
       const data = await getWorkoutById(id!);
       setWorkout(data);
+      if (data) {
+        setEditedName(data.name || 'Workout');
+        // Expand first exercise by default
+        if (data.workout_exercises?.length > 0) {
+          setExpandedExercises(new Set([data.workout_exercises[0].id]));
+        }
+      }
     } catch (error) {
       console.error('Failed to fetch workout:', error);
       Alert.alert('Error', 'Failed to load workout');
@@ -59,8 +223,38 @@ export default function WorkoutDetailScreen() {
     return `${mins} min`;
   };
 
+  // Toggle exercise expansion
+  const toggleExercise = (exerciseId: string) => {
+    lightHaptic();
+    setExpandedExercises((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(exerciseId)) {
+        newSet.delete(exerciseId);
+      } else {
+        newSet.add(exerciseId);
+      }
+      return newSet;
+    });
+  };
+
+  // Handle name edit
+  const handleSaveName = async () => {
+    if (!workout || !editedName.trim()) return;
+
+    try {
+      await updateWorkout(id!, { name: editedName.trim() });
+      setWorkout({ ...workout, name: editedName.trim() });
+      setIsEditingName(false);
+      successHaptic();
+    } catch (error) {
+      console.error('Failed to update name:', error);
+      Alert.alert('Error', 'Failed to update workout name');
+    }
+  };
+
   // Handle delete
   const handleDelete = () => {
+    setShowMenu(false);
     Alert.alert(
       'Delete Workout',
       'Are you sure you want to delete this workout? This cannot be undone.',
@@ -71,6 +265,7 @@ export default function WorkoutDetailScreen() {
           style: 'destructive',
           onPress: async () => {
             setIsDeleting(true);
+            mediumHaptic();
             try {
               await deleteWorkout(id!);
               router.back();
@@ -86,6 +281,73 @@ export default function WorkoutDetailScreen() {
     );
   };
 
+  // Handle repeat workout
+  const handleRepeatWorkout = () => {
+    if (!workout) return;
+
+    successHaptic();
+    startWorkout(workout.name || 'Workout');
+
+    // Add all exercises with their sets
+    workout.workout_exercises
+      ?.sort((a, b) => a.order_index - b.order_index)
+      .forEach((we) => {
+        if (we.exercises) {
+          const prefillSets = we.workout_sets
+            ?.filter((s) => s.is_completed)
+            .sort((a, b) => a.set_number - b.set_number)
+            .map((s) => ({
+              weight: s.weight || undefined,
+              reps: s.reps || undefined,
+            })) || [];
+
+          addExerciseWithSets(
+            {
+              id: we.exercises.id,
+              name: we.exercises.name,
+              bodyPart: '',
+              equipment: we.exercises.equipment || '',
+              gifUrl: we.exercises.gif_url || undefined,
+              target: '',
+            },
+            prefillSets,
+            prefillSets.length || 3
+          );
+        }
+      });
+
+    router.push('/workout/active');
+  };
+
+  // Handle share
+  const handleShare = async () => {
+    if (!workout) return;
+    setShowMenu(false);
+
+    try {
+      const exportable = convertToExportable(workout);
+      await shareWorkout(exportable, 'text');
+    } catch (error) {
+      console.error('Error sharing:', error);
+      Alert.alert('Error', 'Failed to share workout');
+    }
+  };
+
+  // Handle export CSV
+  const handleExportCSV = async () => {
+    if (!workout) return;
+    setShowMenu(false);
+
+    try {
+      const exportable = convertToExportable(workout);
+      await exportWorkout(exportable, 'csv');
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      Alert.alert('Error', 'Failed to export workout');
+    }
+  };
+
+  // Loading state
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -95,13 +357,14 @@ export default function WorkoutDetailScreen() {
     );
   }
 
+  // Not found state
   if (!workout) {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Workout not found</Text>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButtonLarge} onPress={() => router.back()}>
             <Text style={styles.backButtonText}>Go Back</Text>
           </TouchableOpacity>
         </View>
@@ -122,21 +385,32 @@ export default function WorkoutDetailScreen() {
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
 
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle} numberOfLines={1}>
-            {workout.name || 'Workout'}
-          </Text>
+        <TouchableOpacity
+          style={styles.headerCenter}
+          onPress={() => {
+            lightHaptic();
+            setIsEditingName(true);
+          }}
+        >
+          <View style={styles.titleRow}>
+            <Text style={styles.headerTitle} numberOfLines={1}>
+              {workout.name || 'Workout'}
+            </Text>
+            <Edit3 size={14} color="#64748b" />
+          </View>
           <Text style={styles.headerDate}>
             {format(new Date(workout.started_at), 'EEEE, MMMM d, yyyy')}
           </Text>
-        </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.headerButton}
-          onPress={handleDelete}
-          disabled={isDeleting}
+          onPress={() => {
+            lightHaptic();
+            setShowMenu(true);
+          }}
         >
-          <Trash2 size={22} color="#ef4444" />
+          <MoreVertical size={24} color="#ffffff" />
         </TouchableOpacity>
       </View>
 
@@ -145,119 +419,204 @@ export default function WorkoutDetailScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Stats Cards */}
-        <View style={styles.statsGrid}>
-          <Card style={styles.statCard}>
-            <Clock size={20} color="#3b82f6" />
-            <Text style={styles.statValue}>
-              {formatDuration(workout.duration_seconds)}
-            </Text>
-            <Text style={styles.statLabel}>Duration</Text>
-          </Card>
+        {/* Summary Card */}
+        <View style={styles.summaryCard}>
+          <Text style={styles.summaryTitle}>WORKOUT SUMMARY</Text>
 
-          <Card style={styles.statCard}>
-            <Dumbbell size={20} color="#22c55e" />
-            <Text style={styles.statValue}>
-              {workout.workout_exercises?.length || 0}
-            </Text>
-            <Text style={styles.statLabel}>Exercises</Text>
-          </Card>
+          <View style={styles.summaryGrid}>
+            <View style={styles.summaryItem}>
+              <Calendar size={18} color="#3b82f6" />
+              <Text style={styles.summaryValue}>
+                {format(new Date(workout.started_at), 'MMM d, yyyy')}
+              </Text>
+              <Text style={styles.summaryLabel}>Date</Text>
+            </View>
 
-          <Card style={styles.statCard}>
-            <TrendingUp size={20} color="#a855f7" />
-            <Text style={styles.statValue}>
-              {workout.total_volume.toLocaleString()}
-            </Text>
-            <Text style={styles.statLabel}>Volume (lbs)</Text>
-          </Card>
+            <View style={styles.summaryItem}>
+              <Clock size={18} color="#22c55e" />
+              <Text style={styles.summaryValue}>
+                {formatDuration(workout.duration_seconds)}
+              </Text>
+              <Text style={styles.summaryLabel}>Duration</Text>
+            </View>
 
-          <Card style={styles.statCard}>
-            <Star size={20} color="#fbbf24" />
-            <Text style={styles.statValue}>{workout.total_sets}</Text>
-            <Text style={styles.statLabel}>Total Sets</Text>
-          </Card>
-        </View>
+            <View style={styles.summaryItem}>
+              <TrendingUp size={18} color="#a855f7" />
+              <Text style={styles.summaryValue}>
+                {workout.total_volume.toLocaleString()}
+              </Text>
+              <Text style={styles.summaryLabel}>Volume (lbs)</Text>
+            </View>
 
-        {/* Rating */}
-        {workout.rating && workout.rating > 0 && (
-          <View style={styles.ratingSection}>
-            <Text style={styles.sectionTitle}>Rating</Text>
-            <View style={styles.ratingStars}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={24}
-                  color={star <= workout.rating! ? '#fbbf24' : '#334155'}
-                  fill={star <= workout.rating! ? '#fbbf24' : 'transparent'}
-                />
-              ))}
+            <View style={styles.summaryItem}>
+              <Dumbbell size={18} color="#f59e0b" />
+              <Text style={styles.summaryValue}>{workout.total_sets}</Text>
+              <Text style={styles.summaryLabel}>Total Sets</Text>
             </View>
           </View>
-        )}
 
-        {/* Exercises */}
+          {/* Rating */}
+          {workout.rating && workout.rating > 0 && (
+            <View style={styles.ratingRow}>
+              <Text style={styles.ratingLabel}>Rating:</Text>
+              <View style={styles.ratingStars}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={18}
+                    color={star <= workout.rating! ? '#fbbf24' : '#334155'}
+                    fill={star <= workout.rating! ? '#fbbf24' : 'transparent'}
+                  />
+                ))}
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* Exercises Section */}
         <View style={styles.exercisesSection}>
-          <Text style={styles.sectionTitle}>Exercises</Text>
+          <Text style={styles.sectionTitle}>
+            EXERCISES ({workout.workout_exercises?.length || 0})
+          </Text>
 
           {workout.workout_exercises
             ?.sort((a, b) => a.order_index - b.order_index)
             .map((we, index) => (
-              <Card key={we.id} style={styles.exerciseCard}>
-                <View style={styles.exerciseHeader}>
-                  <Text style={styles.exerciseNumber}>{index + 1}</Text>
-                  <View style={styles.exerciseInfo}>
-                    <Text style={styles.exerciseName}>
-                      {we.exercises?.name || 'Unknown Exercise'}
-                    </Text>
-                    <Text style={styles.exerciseEquipment}>
-                      {we.exercises?.equipment || ''}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Sets */}
-                <View style={styles.setsContainer}>
-                  <View style={styles.setsHeader}>
-                    <Text style={styles.setHeaderText}>SET</Text>
-                    <Text style={styles.setHeaderText}>WEIGHT</Text>
-                    <Text style={styles.setHeaderText}>REPS</Text>
-                  </View>
-
-                  {we.workout_sets
-                    ?.sort((a, b) => a.set_number - b.set_number)
-                    .map((set) => (
-                      <View key={set.id} style={styles.setRow}>
-                        <Text style={styles.setNumber}>{set.set_number}</Text>
-                        <Text style={styles.setValue}>
-                          {set.weight || 0} {set.weight_unit}
-                        </Text>
-                        <Text style={styles.setValue}>{set.reps || 0}</Text>
-                      </View>
-                    ))}
-                </View>
-
-                {we.notes && (
-                  <Text style={styles.exerciseNotes}>{we.notes}</Text>
-                )}
-              </Card>
+              <ExerciseCard
+                key={we.id}
+                exercise={we}
+                index={index}
+                isExpanded={expandedExercises.has(we.id)}
+                onToggle={() => toggleExercise(we.id)}
+              />
             ))}
         </View>
 
         {/* Notes */}
         {workout.notes && (
           <View style={styles.notesSection}>
-            <Text style={styles.sectionTitle}>Notes</Text>
-            <Card style={styles.notesCard}>
+            <Text style={styles.sectionTitle}>NOTES</Text>
+            <View style={styles.notesCard}>
               <Text style={styles.notesText}>{workout.notes}</Text>
-            </Card>
+            </View>
           </View>
         )}
 
+        {/* Bottom Spacer for button */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      {/* Bottom Action Button */}
+      <View style={styles.bottomActions}>
+        <TouchableOpacity
+          style={styles.repeatButton}
+          onPress={handleRepeatWorkout}
+          activeOpacity={0.8}
+        >
+          <Repeat size={20} color="#ffffff" />
+          <Text style={styles.repeatButtonText}>Repeat Workout</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Edit Name Modal */}
+      <Modal
+        visible={isEditingName}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsEditingName(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setIsEditingName(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Workout Name</Text>
+
+            <TextInput
+              style={styles.modalInput}
+              value={editedName}
+              onChangeText={setEditedName}
+              placeholder="Workout name"
+              placeholderTextColor="#64748b"
+              autoFocus={true}
+              selectTextOnFocus={true}
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalCancelButton}
+                onPress={() => setIsEditingName(false)}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalSaveButton}
+                onPress={handleSaveName}
+              >
+                <Text style={styles.modalSaveText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Menu Modal */}
+      <Modal
+        visible={showMenu}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowMenu(false)}
+      >
+        <TouchableOpacity
+          style={styles.menuOverlay}
+          activeOpacity={1}
+          onPress={() => setShowMenu(false)}
+        >
+          <View style={styles.menuContent}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setShowMenu(false);
+                setIsEditingName(true);
+              }}
+            >
+              <Edit3 size={20} color="#f1f5f9" />
+              <Text style={styles.menuItemText}>Edit Workout</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={handleShare}>
+              <Share2 size={20} color="#f1f5f9" />
+              <Text style={styles.menuItemText}>Share Workout</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={handleExportCSV}>
+              <FileText size={20} color="#f1f5f9" />
+              <Text style={styles.menuItemText}>Export to CSV</Text>
+            </TouchableOpacity>
+
+            <View style={styles.menuDivider} />
+
+            <TouchableOpacity
+              style={[styles.menuItem, styles.menuItemDestructive]}
+              onPress={handleDelete}
+            >
+              <Trash2 size={20} color="#ef4444" />
+              <Text style={[styles.menuItemText, styles.menuItemTextDestructive]}>
+                Delete Workout
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
+
+// ============================================
+// Styles
+// ============================================
 
 const styles = StyleSheet.create({
   container: {
@@ -265,10 +624,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#020617',
   },
 
+  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#1e293b',
@@ -286,6 +646,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
   headerTitle: {
     color: '#ffffff',
     fontSize: 18,
@@ -298,48 +664,72 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
+  // Scroll
   scrollView: {
     flex: 1,
   },
 
   scrollContent: {
     padding: 16,
+    paddingBottom: 100,
   },
 
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+  // Summary Card
+  summaryCard: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 24,
   },
 
-  statCard: {
-    width: '47%',
-    alignItems: 'center',
-    padding: 16,
-    gap: 8,
-  },
-
-  statValue: {
-    color: '#ffffff',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-
-  statLabel: {
+  summaryTitle: {
     color: '#64748b',
     fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginBottom: 16,
   },
 
-  ratingSection: {
-    marginBottom: 24,
+  summaryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
   },
 
-  sectionTitle: {
+  summaryItem: {
+    width: '45%',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    gap: 6,
+  },
+
+  summaryValue: {
     color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 12,
+  },
+
+  summaryLabel: {
+    color: '#64748b',
+    fontSize: 11,
+  },
+
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+    gap: 12,
+  },
+
+  ratingLabel: {
+    color: '#94a3b8',
+    fontSize: 14,
   },
 
   ratingStars: {
@@ -347,32 +737,47 @@ const styles = StyleSheet.create({
     gap: 4,
   },
 
+  // Exercises Section
   exercisesSection: {
     marginBottom: 24,
   },
 
-  exerciseCard: {
-    padding: 16,
+  sectionTitle: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: 'bold',
+    letterSpacing: 1,
     marginBottom: 12,
+  },
+
+  // Exercise Card
+  exerciseCard: {
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    marginBottom: 12,
+    overflow: 'hidden',
   },
 
   exerciseHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    padding: 16,
     gap: 12,
   },
 
-  exerciseNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  exerciseNumberBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: '#3b82f6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  exerciseNumber: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
-    lineHeight: 28,
   },
 
   exerciseInfo: {
@@ -380,72 +785,135 @@ const styles = StyleSheet.create({
   },
 
   exerciseName: {
-    color: '#ffffff',
+    color: '#f1f5f9',
     fontSize: 16,
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },
 
-  exerciseEquipment: {
+  exerciseMeta: {
     color: '#64748b',
     fontSize: 12,
+    marginTop: 2,
     textTransform: 'capitalize',
   },
 
+  exerciseContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+
+  // Sets Table
   setsContainer: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#1e293b',
     borderRadius: 8,
-    padding: 12,
+    overflow: 'hidden',
   },
 
   setsHeader: {
     flexDirection: 'row',
-    marginBottom: 8,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: '#334155',
   },
 
   setHeaderText: {
-    flex: 1,
-    color: '#64748b',
+    color: '#94a3b8',
     fontSize: 11,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+
+  setColumn: {
+    width: 60,
+    textAlign: 'center',
+  },
+
+  weightColumn: {
+    flex: 1,
+    textAlign: 'center',
+  },
+
+  repsColumn: {
+    width: 60,
     textAlign: 'center',
   },
 
   setRow: {
     flexDirection: 'row',
-    paddingVertical: 6,
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
   },
 
-  setNumber: {
-    flex: 1,
+  setNumberCell: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+
+  setNumberText: {
     color: '#94a3b8',
     fontSize: 14,
-    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+
+  setTypeBadge: {
+    width: 18,
+    height: 18,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  warmupBadge: {
+    backgroundColor: '#f59e0b',
+  },
+
+  failureBadge: {
+    backgroundColor: '#ef4444',
+  },
+
+  dropsetBadge: {
+    backgroundColor: '#a855f7',
+  },
+
+  setTypeText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 
   setValue: {
-    flex: 1,
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
 
   exerciseNotes: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontStyle: 'italic',
     marginTop: 12,
+    padding: 12,
+    backgroundColor: '#1e293b',
+    borderRadius: 8,
   },
 
+  exerciseNotesText: {
+    color: '#94a3b8',
+    fontSize: 13,
+    fontStyle: 'italic',
+  },
+
+  // Notes Section
   notesSection: {
     marginBottom: 24,
   },
 
   notesCard: {
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
     padding: 16,
   },
 
@@ -456,9 +924,150 @@ const styles = StyleSheet.create({
   },
 
   bottomSpacer: {
-    height: 40,
+    height: 80,
   },
 
+  // Bottom Actions
+  bottomActions: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    paddingBottom: 32,
+    backgroundColor: '#020617',
+    borderTopWidth: 1,
+    borderTopColor: '#1e293b',
+  },
+
+  repeatButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3b82f6',
+    paddingVertical: 16,
+    borderRadius: 12,
+    gap: 8,
+  },
+
+  repeatButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  // Edit Name Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modalContent: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 24,
+    width: '85%',
+    maxWidth: 400,
+  },
+
+  modalTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+
+  modalInput: {
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    color: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#334155',
+    marginBottom: 20,
+  },
+
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#334155',
+    alignItems: 'center',
+  },
+
+  modalCancelText: {
+    color: '#94a3b8',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  modalSaveButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#3b82f6',
+    alignItems: 'center',
+  },
+
+  modalSaveText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  // Menu Modal
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'flex-end',
+  },
+
+  menuContent: {
+    backgroundColor: '#1e293b',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 8,
+    paddingBottom: 40,
+  },
+
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    gap: 16,
+    borderRadius: 12,
+  },
+
+  menuItemText: {
+    color: '#f1f5f9',
+    fontSize: 16,
+  },
+
+  menuItemDestructive: {
+    marginTop: 4,
+  },
+
+  menuItemTextDestructive: {
+    color: '#ef4444',
+  },
+
+  menuDivider: {
+    height: 1,
+    backgroundColor: '#334155',
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+
+  // Error State
   errorContainer: {
     flex: 1,
     alignItems: 'center',
@@ -471,7 +1080,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  backButton: {
+  backButtonLarge: {
     backgroundColor: '#3b82f6',
     paddingHorizontal: 24,
     paddingVertical: 12,
@@ -484,4 +1093,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

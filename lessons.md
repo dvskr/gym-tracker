@@ -413,3 +413,110 @@ npx supabase gen types typescript --linked > types/supabase.ts
 
 **Always log counts during development** - `console.log('Fetched:', data.length)` catches truncation early.
 
+---
+
+### 1.10 Shorthand Boolean Props on Android
+**Problem:** JSX shorthand boolean props (e.g., `autoFocus` instead of `autoFocus={true}`) can cause the "java.lang.String cannot be cast to java.lang.Boolean" error on Android.
+
+**Example of broken code:**
+```javascript
+// ❌ Crashes on Android
+<TextInput
+  autoFocus
+  selectTextOnFocus
+  multiline
+/>
+
+<LineChart
+  bezier
+  withDots
+/>
+```
+
+**Fix:**
+```javascript
+// ✅ Works on Android
+<TextInput
+  autoFocus={true}
+  selectTextOnFocus={true}
+  multiline={true}
+/>
+
+<LineChart
+  bezier={true}
+  withDots={true}
+/>
+```
+
+**Common shorthand props to watch for:**
+- TextInput: `autoFocus`, `selectTextOnFocus`, `multiline`, `secureTextEntry`, `editable`
+- LineChart (react-native-chart-kit): `bezier`, `withDots`, `withShadow`, `fromZero`
+- ScrollView: `horizontal`, `bounces`, `scrollEnabled`
+- Modal: `visible`, `transparent`, `animationType`
+- StatusBar: `translucent`
+
+**How to Avoid:**
+- Always use explicit `={true}` for boolean props
+- Search for shorthand booleans: `grep -E "^\s+[a-z][a-zA-Z]+$" --include="*.tsx"`
+- Add ESLint rule `react/jsx-boolean-value` to enforce explicit booleans
+
+---
+
+### 1.11 Stack Component in Nested Layouts Causes Crash
+**Problem:** Using `Stack` from expo-router in nested layout files (e.g., `app/body/_layout.tsx`, `app/body/photos/_layout.tsx`) causes the "java.lang.String cannot be cast to java.lang.Boolean" crash on Android.
+
+**Example of broken code:**
+```javascript
+// ❌ Crashes on Android in app/body/_layout.tsx
+import { Stack } from 'expo-router';
+
+export default function BodyLayout() {
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: '#020617' },
+        animation: 'slide_from_right',
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="weight" />
+    </Stack>
+  );
+}
+```
+
+**Fix:**
+```javascript
+// ✅ Works on Android
+import { Slot } from 'expo-router';
+import { View, StyleSheet } from 'react-native';
+
+export default function BodyLayout() {
+  return (
+    <View style={styles.container}>
+      <Slot />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#020617',
+  },
+});
+```
+
+**Files commonly affected:** Any `_layout.tsx` file in nested folders like:
+- `app/body/_layout.tsx`
+- `app/body/photos/_layout.tsx`
+- `app/workout/_layout.tsx`
+- `app/template/_layout.tsx`
+- `app/exercise/_layout.tsx`
+
+**How to Avoid:**
+- Use `Slot` instead of `Stack` in all layout files
+- If you need navigation headers, handle them in individual screens
+- Check all `_layout.tsx` files when adding new feature folders
+

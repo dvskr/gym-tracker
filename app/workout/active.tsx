@@ -10,13 +10,13 @@ import {
   StyleSheet,
   Alert,
   Modal,
-  Animated,
   Platform,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Plus, X, Clock, Pause, Play, RotateCcw } from 'lucide-react-native';
+import { Plus, X, Clock, Trophy } from 'lucide-react-native';
 import {
   useWorkoutStore,
   useActiveWorkout,
@@ -28,10 +28,21 @@ import { ExerciseCard } from '@/components/workout';
 import { ExerciseSearch } from '@/components/exercise';
 import { Button } from '@/components/ui';
 import { ExerciseDBExercise } from '@/types/database';
-import { warningHaptic, successHaptic } from '@/lib/utils/haptics';
+import { successHaptic } from '@/lib/utils/haptics';
+import { supabase } from '@/lib/supabase';
+import {
+  checkForPR,
+  savePR,
+  PRType,
+  getPRTypeLabel,
+  celebratePR,
+} from '@/lib/utils/prDetection';
 
 // Default rest time in seconds
 const DEFAULT_REST_TIME = 90;
+
+// PR Toast duration in ms
+const PR_TOAST_DURATION = 3000;
 
 export default function ActiveWorkoutScreen() {
   const activeWorkout = useActiveWorkout();
@@ -44,14 +55,14 @@ export default function ActiveWorkoutScreen() {
     discardWorkout,
     addExercise,
     removeExercise,
+    reorderExercises,
     addSet,
     updateSet,
     completeSet,
     deleteSet,
+    markSetAsPR,
     startRestTimer,
-    skipRestTimer,
     tickRestTimer,
-    resetRestTimer,
     getTotalVolume,
     getTotalSets,
     getWorkoutDuration,
@@ -61,15 +72,22 @@ export default function ActiveWorkoutScreen() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
 
-  // Animation for rest timer
-  const timerScale = useRef(new Animated.Value(1)).current;
+  // PR Toast state
+  const [prToast, setPrToast] = useState<{
+    visible: boolean;
+    exerciseName: string;
+    prType: PRType;
+    value: number;
+    weight: number;
+    reps: number;
+  } | null>(null);
+  const prToastAnim = useRef(new Animated.Value(0)).current;
+  const prToastTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Start workout if not active
-  useEffect(() => {
-    if (!isWorkoutActive) {
-      startWorkout();
-    }
-  }, [isWorkoutActive, startWorkout]);
+  // NOTE: Removed auto-start useEffect that was causing bug
+  // The useEffect was calling startWorkout() whenever isWorkoutActive became false,
+  // which happened after endWorkout/discardWorkout, immediately restarting the workout.
+  // Workouts should only be started explicitly via buttons/templates.
 
   // Elapsed time counter
   useEffect(() => {
@@ -95,28 +113,6 @@ export default function ActiveWorkoutScreen() {
     return () => clearInterval(interval);
   }, [restTimer.isRunning, tickRestTimer]);
 
-  // Vibrate when rest timer ends
-  useEffect(() => {
-    if (restTimer.remainingSeconds === 0 && restTimer.totalSeconds > 0) {
-      // Warning haptic when timer ends
-      warningHaptic();
-      
-      // Pulse animation
-      Animated.sequence([
-        Animated.timing(timerScale, {
-          toValue: 1.2,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(timerScale, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [restTimer.remainingSeconds, restTimer.totalSeconds, timerScale]);
-
   // Format time (seconds to MM:SS or HH:MM:SS)
   const formatTime = useCallback((seconds: number): string => {
     const hrs = Math.floor(seconds / 3600);
@@ -138,20 +134,138 @@ export default function ActiveWorkoutScreen() {
     [addExercise]
   );
 
-  // Handle completing a set - auto-start rest timer
+  // Show PR toast
+  const showPRToast = useCallback(
+    (exerciseName: string, prType: PRType, value: number, weight: number, reps: number) => {
+      // Clear any existing timeout
+      if (prToastTimeout.current) {
+        clearTimeout(prToastTimeout.current);
+      }
+
+      setPrToast({ visible: true, exerciseName, prType, value, weight, reps });
+      celebratePR();
+
+      // Animate in
+      Animated.spring(prToastAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }).start();
+
+      // Auto-hide after duration
+      prToastTimeout.current = setTimeout(() => {
+        Animated.timing(prToastAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          setPrToast(null);
+        });
+      }, PR_TOAST_DURATION);
+    },
+    [prToastAnim]
+  );
+
+  // Handle completing a set - auto-start rest timer and check for PRs
   const handleCompleteSet = useCallback(
-    (exerciseId: string, setId: string) => {
+    async (exerciseId: string, setId: string) => {
       const exercise = activeWorkout?.exercises.find((e) => e.id === exerciseId);
       const set = exercise?.sets.find((s) => s.id === setId);
 
+      if (!set || !exercise) return;
+
+      // Check if we're completing (not uncompleting) BEFORE calling completeSet
+      const isCompleting = !set.isCompleted;
+
+      // Complete the set (toggles isCompleted)
       completeSet(exerciseId, setId);
 
-      // Start rest timer if completing (not uncompleting)
-      if (set && !set.isCompleted) {
-        startRestTimer(DEFAULT_REST_TIME);
+      // If completing (not uncompleting), start rest timer and check for PRs
+      if (isCompleting) {
+        // Start rest timer - works for ALL workouts (empty or template)
+        startRestTimer(exerciseId);
+
+        // Check for PRs only if we have weight and reps
+        if (!set.weight || !set.reps) return;
+        
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user && exercise.exercise.id) {
+            // First, get the exercise's Supabase ID
+            const { data: exerciseData } = await supabase
+              .from('exercises')
+              .select('id')
+              .eq('external_id', exercise.exercise.id)
+              .single();
+
+            if (exerciseData) {
+              const prResults = await checkForPR(
+                user.id,
+                exerciseData.id,
+                set.weight,
+                set.reps,
+                exercise.exercise.name
+              );
+
+              // If we have PRs, mark the first one and show toast
+              if (prResults.length > 0) {
+                // Prefer max_weight PR for display, otherwise use first PR
+                const displayPR = prResults.find(pr => pr.prType === 'max_weight') || prResults[0];
+                
+                if (displayPR.prType) {
+                  // Mark set as PR in store
+                  markSetAsPR(exerciseId, setId, displayPR.prType);
+
+                  // Save the PR to database
+                  await savePR(
+                    user.id,
+                    exerciseData.id,
+                    displayPR.prType,
+                    displayPR.newRecord || 0,
+                    set.weight,
+                    set.reps
+                  );
+
+                  // Show celebration
+                  showPRToast(
+                    exercise.exercise.name,
+                    displayPR.prType,
+                    displayPR.newRecord || 0,
+                    set.weight,
+                    set.reps
+                  );
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error checking for PR:', error);
+          // Don't fail the set completion due to PR check error
+        }
       }
     },
-    [activeWorkout, completeSet, startRestTimer]
+    [activeWorkout, completeSet, startRestTimer, markSetAsPR, showPRToast]
+  );
+
+  // Handle move exercise up
+  const handleMoveUp = useCallback(
+    (index: number) => {
+      if (index > 0) {
+        reorderExercises(index, index - 1);
+      }
+    },
+    [reorderExercises]
+  );
+
+  // Handle move exercise down
+  const handleMoveDown = useCallback(
+    (index: number) => {
+      if (activeWorkout && index < activeWorkout.exercises.length - 1) {
+        reorderExercises(index, index + 1);
+      }
+    },
+    [activeWorkout, reorderExercises]
   );
 
   // Handle finish workout
@@ -181,9 +295,7 @@ export default function ActiveWorkoutScreen() {
             setIsFinishing(false);
 
             if (result.success) {
-              // Success haptic for finishing workout
               successHaptic();
-              
               router.replace({
                 pathname: '/workout/complete',
                 params: { workoutId: result.workoutId },
@@ -216,11 +328,6 @@ export default function ActiveWorkoutScreen() {
     );
   }, [discardWorkout]);
 
-  // Rest timer progress
-  const restProgress = restTimer.totalSeconds > 0
-    ? restTimer.remainingSeconds / restTimer.totalSeconds
-    : 0;
-
   if (!activeWorkout) {
     return (
       <SafeAreaView style={styles.container}>
@@ -231,6 +338,8 @@ export default function ActiveWorkoutScreen() {
       </SafeAreaView>
     );
   }
+
+  const totalExercises = activeWorkout.exercises.length;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -267,7 +376,7 @@ export default function ActiveWorkoutScreen() {
       {/* Stats Bar */}
       <View style={styles.statsBar}>
         <View style={styles.statItem}>
-          <Text style={styles.statValue}>{activeWorkout.exercises.length}</Text>
+          <Text style={styles.statValue}>{totalExercises}</Text>
           <Text style={styles.statLabel}>Exercises</Text>
         </View>
         <View style={styles.statDivider} />
@@ -297,10 +406,12 @@ export default function ActiveWorkoutScreen() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
-            {activeWorkout.exercises.map((workoutExercise) => (
+            {activeWorkout.exercises.map((workoutExercise, index) => (
               <ExerciseCard
                 key={workoutExercise.id}
                 workoutExercise={workoutExercise}
+                index={index}
+                totalExercises={totalExercises}
                 onAddSet={() => addSet(workoutExercise.id)}
                 onUpdateSet={(setId, data) =>
                   updateSet(workoutExercise.id, setId, data)
@@ -310,6 +421,8 @@ export default function ActiveWorkoutScreen() {
                 }
                 onDeleteSet={(setId) => deleteSet(workoutExercise.id, setId)}
                 onRemove={() => removeExercise(workoutExercise.id)}
+                onMoveUp={() => handleMoveUp(index)}
+                onMoveDown={() => handleMoveDown(index)}
               />
             ))}
 
@@ -324,7 +437,7 @@ export default function ActiveWorkoutScreen() {
             </TouchableOpacity>
 
             {/* Empty State */}
-            {activeWorkout.exercises.length === 0 && (
+            {totalExercises === 0 && (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyTitle}>No exercises yet</Text>
                 <Text style={styles.emptySubtitle}>
@@ -339,52 +452,44 @@ export default function ActiveWorkoutScreen() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
-      {/* Rest Timer Overlay */}
-      {restTimer.isRunning && (
+      {/* PR Toast */}
+      {prToast && (
         <Animated.View
           style={[
-            styles.restTimerOverlay,
-            { transform: [{ scale: timerScale }] },
+            styles.prToast,
+            {
+              opacity: prToastAnim,
+              transform: [
+                {
+                  translateY: prToastAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [-100, 0],
+                  }),
+                },
+                {
+                  scale: prToastAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.8, 1],
+                  }),
+                },
+              ],
+            },
           ]}
         >
-          <View style={styles.restTimerContent}>
-            <Text style={styles.restTimerLabel}>Rest Timer</Text>
-            <Text style={styles.restTimerTime}>
-              {formatTime(restTimer.remainingSeconds)}
-            </Text>
-
-            {/* Progress Bar */}
-            <View style={styles.progressBarContainer}>
-              <View
-                style={[
-                  styles.progressBar,
-                  { width: `${restProgress * 100}%` },
-                ]}
-              />
+          <View style={styles.prToastContent}>
+            <View style={styles.prToastIcon}>
+              <Trophy size={24} color="#fbbf24" />
             </View>
-
-            {/* Timer Controls */}
-            <View style={styles.restTimerControls}>
-              <TouchableOpacity
-                style={styles.timerControlButton}
-                onPress={resetRestTimer}
-              >
-                <RotateCcw size={20} color="#ffffff" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.skipButton}
-                onPress={skipRestTimer}
-              >
-                <Text style={styles.skipButtonText}>Skip</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.timerControlButton}
-                onPress={() => startRestTimer(restTimer.remainingSeconds + 30)}
-              >
-                <Text style={styles.addTimeText}>+30s</Text>
-              </TouchableOpacity>
+            <View style={styles.prToastText}>
+              <Text style={styles.prToastTitle}>🏆 NEW PR!</Text>
+              <Text style={styles.prToastExercise} numberOfLines={1}>
+                {prToast.exerciseName}
+              </Text>
+              <Text style={styles.prToastValue}>
+                {prToast.prType === 'max_weight' && `${prToast.weight} lbs × ${prToast.reps}`}
+                {prToast.prType === 'max_reps' && `${prToast.reps} reps @ ${prToast.weight} lbs`}
+                {prToast.prType === 'max_volume' && `${(prToast.weight * prToast.reps).toLocaleString()} lbs volume`}
+              </Text>
             </View>
           </View>
         </Animated.View>
@@ -564,88 +669,62 @@ const styles = StyleSheet.create({
     height: 100,
   },
 
-  // Rest Timer Overlay
-  restTimerOverlay: {
+  // PR Toast
+  prToast: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#1e293b',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 20,
+    top: 100,
+    left: 16,
+    right: 16,
+    zIndex: 1000,
   },
 
-  restTimerContent: {
-    alignItems: 'center',
-  },
-
-  restTimerLabel: {
-    color: '#94a3b8',
-    fontSize: 14,
-    fontWeight: 'normal',
-    marginBottom: 8,
-  },
-
-  restTimerTime: {
-    color: '#ffffff',
-    fontSize: 56,
-    fontWeight: 'bold',
-    fontVariant: ['tabular-nums'],
-  },
-
-  progressBarContainer: {
-    width: '100%',
-    height: 6,
-    backgroundColor: '#334155',
-    borderRadius: 3,
-    marginTop: 16,
-    marginBottom: 20,
-    overflow: 'hidden',
-  },
-
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#3b82f6',
-    borderRadius: 3,
-  },
-
-  restTimerControls: {
+  prToastContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    backgroundColor: '#422006',
+    borderWidth: 2,
+    borderColor: '#fbbf24',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
 
-  timerControlButton: {
+  prToastIcon: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#334155',
+    backgroundColor: 'rgba(251, 191, 36, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12,
   },
 
-  addTimeText: {
-    color: '#ffffff',
-    fontSize: 12,
+  prToastText: {
+    flex: 1,
+  },
+
+  prToastTitle: {
+    color: '#fbbf24',
+    fontSize: 14,
     fontWeight: 'bold',
+    letterSpacing: 1,
   },
 
-  skipButton: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-
-  skipButtonText: {
+  prToastExercise: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: 'bold',
+    marginTop: 2,
+    textTransform: 'capitalize',
+  },
+
+  prToastValue: {
+    color: '#fef3c7',
+    fontSize: 14,
+    marginTop: 2,
   },
 });

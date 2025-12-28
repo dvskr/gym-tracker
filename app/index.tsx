@@ -1,27 +1,28 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { useAuthStore } from '../stores/authStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Index() {
   const { user, isInitialized, isLoading, initialize } = useAuthStore();
+  const [isReady, setIsReady] = useState(false);
 
   // Initialize auth on mount
   useEffect(() => {
     initialize();
   }, []);
 
+  // Small delay to ensure root layout is mounted
   useEffect(() => {
-    if (isInitialized && !isLoading) {
-      if (user) {
-        router.replace('/(tabs)');
-      }
-    }
-  }, [user, isInitialized, isLoading]);
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Show loading while auth initializes
-  if (!isInitialized || isLoading) {
+  if (!isInitialized || isLoading || !isReady) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
@@ -30,6 +31,11 @@ export default function Index() {
         </View>
       </SafeAreaView>
     );
+  }
+
+  // Redirect if logged in
+  if (user) {
+    return <Redirect href="/(tabs)" />;
   }
 
   // Not logged in - show welcome screen
@@ -42,14 +48,21 @@ export default function Index() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.primaryButton}
-            onPress={() => router.push('/(auth)/login')}
+            onPress={() => {
+              // Use require to avoid circular dependency
+              const { router } = require('expo-router');
+              router.push('/(auth)/login');
+            }}
           >
             <Text style={styles.primaryButtonText}>Sign In</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.secondaryButton}
-            onPress={() => router.push('/(auth)/signup')}
+            onPress={() => {
+              const { router } = require('expo-router');
+              router.push('/(auth)/signup');
+            }}
           >
             <Text style={styles.secondaryButtonText}>Create Account</Text>
           </TouchableOpacity>
