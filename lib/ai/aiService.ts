@@ -146,6 +146,12 @@ class AIService {
         }
       );
 
+      console.log('Stream response status:', response.status);
+      console.log('Stream response headers:', {
+        contentType: response.headers.get('Content-Type'),
+        hasBody: !!response.body,
+      });
+
       if (!response.ok) {
         // Check for rate limit
         if (response.status === 429) {
@@ -155,12 +161,32 @@ class AIService {
             errorData
           );
         }
-        throw new Error(`Streaming request failed: ${response.status}`);
+        
+        // Try to get error details
+        const errorText = await response.text().catch(() => '');
+        throw new Error(`Streaming request failed: ${response.status} - ${errorText}`);
+      }
+
+      // Check if we actually got a streaming response
+      const contentType = response.headers.get('Content-Type');
+      if (contentType?.includes('application/json')) {
+        console.log('Got JSON response instead of stream - this might be an error response');
+        const jsonData = await response.json();
+        console.log('JSON data:', jsonData);
+        throw new Error(`Expected streaming response but got JSON: ${JSON.stringify(jsonData)}`);
       }
 
       // 6. Stream the response
       const reader = response.body?.getReader();
-      if (!reader) throw new Error('No reader available');
+      if (!reader) {
+        console.error('No reader available. Response details:', {
+          status: response.status,
+          statusText: response.statusText,
+          contentType: response.headers.get('Content-Type'),
+          bodyLocked: response.bodyUsed,
+        });
+        throw new Error('No streaming body available. The Edge Function may not be configured correctly for streaming.');
+      }
 
       const decoder = new TextDecoder();
       let buffer = '';
@@ -210,7 +236,22 @@ class AIService {
       }
 
       console.error('AI streaming failed:', error);
-      throw error;
+      
+      // Try to fall back to non-streaming request
+      try {
+        console.log('Attempting non-streaming fallback...');
+        const fallbackResponse = await this.complete(messages, {
+          ...options,
+          stream: false, // Force non-streaming
+        });
+        
+        // Yield the complete response at once
+        yield fallbackResponse.content;
+        return;
+      } catch (fallbackError) {
+        console.error('Fallback also failed:', fallbackError);
+        throw error; // Throw the original error
+      }
     }
   }
 

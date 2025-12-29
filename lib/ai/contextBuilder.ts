@@ -1,209 +1,314 @@
-/**
- * Context builders for AI prompts
- * Converts user data into formatted context strings for AI
- */
+import { supabase } from '@/lib/supabase';
 
-export interface UserContext {
-  recentWorkouts: any[];
-  personalRecords: any[];
-  currentStreak: number;
-  totalWorkouts: number;
-  preferredUnits: 'lbs' | 'kg';
+/**
+ * Build user context for AI prompts (legacy compatibility)
+ */
+export const buildUserContext = (data: {
+  recentWorkouts?: any[];
+  personalRecords?: any[];
+  currentStreak?: number;
+  totalWorkouts?: number;
+  preferredUnits?: string;
   goals?: string;
-  experienceLevel?: 'beginner' | 'intermediate' | 'advanced';
-}
+  experienceLevel?: string;
+}): string => {
+  let context = '';
 
-export interface WorkoutContext {
-  name: string;
-  started_at: string;
-  duration_seconds: number;
-  exercises: Array<{
-    name: string;
-    sets: Array<{
-      weight: number;
-      reps: number;
-      completed: boolean;
-    }>;
-  }>;
-}
+  if (data.experienceLevel) {
+    context += `Experience: ${data.experienceLevel}\n`;
+  }
 
-/**
- * Build comprehensive user profile context
- */
-export function buildUserContext(data: UserContext): string {
-  const context = `
-USER PROFILE:
-- Experience Level: ${data.experienceLevel || 'intermediate'}
-- Total Workouts Completed: ${data.totalWorkouts}
-- Current Streak: ${data.currentStreak} day${data.currentStreak !== 1 ? 's' : ''}
-- Preferred Units: ${data.preferredUnits}
-${data.goals ? `- Fitness Goals: ${data.goals}` : ''}
+  if (data.goals) {
+    context += `Goals: ${data.goals}\n`;
+  }
 
-RECENT WORKOUTS (last 7):
-${data.recentWorkouts.length > 0 
-  ? data.recentWorkouts.map((w, i) => 
-      `${i + 1}. ${w.name} on ${new Date(w.created_at).toLocaleDateString()} - ${w.exercises?.length || 0} exercises, ${Math.round((w.duration_seconds || 0) / 60)} minutes`
-    ).join('\n')
-  : '- No recent workouts'}
+  if (data.currentStreak) {
+    context += `Current streak: ${data.currentStreak} days\n`;
+  }
 
-PERSONAL RECORDS (Top 10):
-${data.personalRecords.length > 0
-  ? data.personalRecords.slice(0, 10).map((pr, i) => 
-      `${i + 1}. ${pr.exercise_name}: ${pr.weight}${data.preferredUnits} x ${pr.reps} reps`
-    ).join('\n')
-  : '- No personal records yet'}
-`.trim();
+  if (data.recentWorkouts && data.recentWorkouts.length > 0) {
+    const muscleFrequency: Record<string, number> = {};
+    
+    for (const workout of data.recentWorkouts) {
+      for (const exercise of workout.exercises || []) {
+        for (const muscle of [...(exercise.primary_muscles || []), ...(exercise.secondary_muscles || [])]) {
+          muscleFrequency[muscle] = (muscleFrequency[muscle] || 0) + 1;
+        }
+      }
+    }
+
+    const sortedMuscles = Object.entries(muscleFrequency)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5);
+
+    if (sortedMuscles.length > 0) {
+      context += `\nRecently trained: ${sortedMuscles.map(([m]) => m).join(', ')}\n`;
+    }
+  }
 
   return context;
-}
+};
 
 /**
- * Build current workout context
+ * Build equipment context for AI prompts
  */
-export function buildWorkoutContext(workout: WorkoutContext): string {
-  const duration = Math.round(workout.duration_seconds / 60);
-  const startTime = new Date(workout.started_at).toLocaleTimeString();
+export const buildEquipmentContext = (equipment: string[]): string => {
+  if (!equipment || equipment.length === 0) {
+    return 'No equipment restrictions. Suggest any exercises.';
+  }
 
-  const context = `
-CURRENT WORKOUT: ${workout.name || 'Unnamed Workout'}
-Started: ${startTime}
-Duration: ${duration} minute${duration !== 1 ? 's' : ''}
-Total Exercises: ${workout.exercises?.length || 0}
-
-EXERCISES COMPLETED:
-${workout.exercises?.map((ex, i) => {
-  const completedSets = ex.sets?.filter(s => s.completed).length || 0;
-  const totalSets = ex.sets?.length || 0;
+  const equipmentList = equipment.join(', ');
   
-  return `
-${i + 1}. ${ex.name} (${completedSets}/${totalSets} sets completed)
-${ex.sets?.map((set, j) => 
-  `   Set ${j + 1}: ${set.weight}lbs x ${set.reps} reps ${set.completed ? '✓' : '○'}`
-).join('\n')}`;
-}).join('\n') || '- No exercises yet'}
-`.trim();
-
-  return context;
-}
+  return `Available equipment: ${equipmentList}. 
+IMPORTANT: Only suggest exercises that can be done with this equipment. 
+Do not suggest exercises requiring equipment the user doesn't have.`;
+};
 
 /**
- * Build exercise history context
+ * Build fitness profile context for AI prompts
  */
-export function buildExerciseHistory(
+export const buildFitnessProfileContext = async (userId: string): Promise<string> => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('fitness_goal, weekly_workout_target, experience_level, training_split, gym_type, available_equipment')
+      .eq('id', userId)
+      .single();
+
+    if (error || !data) {
+      return '';
+    }
+
+    const goalLabels: Record<string, string> = {
+      'build_muscle': 'Build Muscle (Hypertrophy)',
+      'lose_fat': 'Lose Fat',
+      'strength': 'Strength Training',
+      'endurance': 'Endurance/Conditioning',
+      'maintain': 'Maintain Fitness',
+      'general_fitness': 'General Fitness',
+    };
+
+    const experienceLabels: Record<string, string> = {
+      'beginner': 'Beginner (<1 year)',
+      'intermediate': 'Intermediate (1-3 years)',
+      'advanced': 'Advanced (3+ years)',
+    };
+
+    const gymTypeLabels: Record<string, string> = {
+      'commercial_gym': 'Commercial Gym',
+      'home_gym': 'Home Gym',
+      'minimal': 'Minimal Equipment',
+      'bodyweight_only': 'Bodyweight Only',
+    };
+
+    let context = 'User Profile:\n';
+    
+    if (data.fitness_goal) {
+      context += `- Goal: ${goalLabels[data.fitness_goal] || data.fitness_goal}\n`;
+    }
+    
+    if (data.weekly_workout_target) {
+      context += `- Target: ${data.weekly_workout_target}x per week\n`;
+    }
+    
+    if (data.experience_level) {
+      context += `- Experience: ${experienceLabels[data.experience_level] || data.experience_level}\n`;
+    }
+    
+    if (data.training_split) {
+      context += `- Split: ${data.training_split.replace(/_/g, ' ')}\n`;
+    }
+
+    if (data.gym_type) {
+      context += `- Setup: ${gymTypeLabels[data.gym_type] || data.gym_type}\n`;
+    }
+
+    if (data.available_equipment && data.available_equipment.length > 0) {
+      context += `\n${buildEquipmentContext(data.available_equipment)}`;
+    }
+
+    return context;
+  } catch (error) {
+    console.error('Error building fitness profile context:', error);
+    return '';
+  }
+};
+
+/**
+ * Build recovery context from daily check-in
+ */
+export const buildRecoveryContext = async (userId: string): Promise<string> => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const { data, error } = await supabase
+      .from('daily_checkins')
+      .select('sleep_quality, sleep_hours, stress_level, soreness_level, energy_level')
+      .eq('user_id', userId)
+      .eq('date', today)
+      .single();
+
+    if (error || !data) {
+      return '';
+    }
+
+    let context = 'Today\'s Wellness:\n';
+    
+    if (data.sleep_quality) {
+      const quality = ['Terrible', 'Poor', 'Okay', 'Good', 'Great'][data.sleep_quality - 1];
+      context += `- Sleep quality: ${quality} (${data.sleep_quality}/5)\n`;
+    }
+    
+    if (data.sleep_hours) {
+      context += `- Sleep hours: ${data.sleep_hours}hrs\n`;
+    }
+    
+    if (data.energy_level) {
+      const energy = ['Exhausted', 'Tired', 'Okay', 'Good', 'Energized'][data.energy_level - 1];
+      context += `- Energy: ${energy} (${data.energy_level}/5)\n`;
+    }
+    
+    if (data.stress_level) {
+      const stress = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'][data.stress_level - 1];
+      context += `- Stress: ${stress} (${data.stress_level}/5)\n`;
+    }
+    
+    if (data.soreness_level) {
+      const soreness = ['None', 'Mild', 'Moderate', 'Significant', 'Severe'][data.soreness_level - 1];
+      context += `- Soreness: ${soreness} (${data.soreness_level}/5)\n`;
+    }
+
+    // Add recommendations based on wellness
+    if (data.sleep_quality && data.sleep_quality <= 2) {
+      context += '\nNote: Poor sleep detected. Consider lighter training today.';
+    }
+    
+    if (data.energy_level && data.energy_level <= 2) {
+      context += '\nNote: Low energy detected. May need active recovery instead.';
+    }
+    
+    if (data.soreness_level && data.soreness_level >= 4) {
+      context += '\nNote: High soreness detected. Focus on unaffected muscle groups.';
+    }
+
+    return context;
+  } catch (error) {
+    console.error('Error building recovery context:', error);
+    return '';
+  }
+};
+
+/**
+ * Build complete AI context combining all factors
+ */
+export const buildCompleteContext = async (userId: string): Promise<string> => {
+  const fitnessProfile = await buildFitnessProfileContext(userId);
+  const recoveryContext = await buildRecoveryContext(userId);
+  const injuryContext = await buildInjuryContext(userId);
+
+  let context = '';
+  
+  if (fitnessProfile) {
+    context += fitnessProfile + '\n\n';
+  }
+  
+  if (recoveryContext) {
+    context += recoveryContext + '\n\n';
+  }
+
+  if (injuryContext) {
+    context += injuryContext + '\n\n';
+  }
+
+  context += 'Please provide personalized recommendations based on this profile.';
+
+  return context;
+};
+
+/**
+ * Validate exercises against available equipment
+ */
+export const validateExerciseEquipment = (
   exerciseName: string,
-  history: Array<{
-    date: string;
-    sets: Array<{ weight: number; reps: number }>;
-  }>
-): string {
-  const context = `
-EXERCISE HISTORY: ${exerciseName}
-${history.slice(0, 5).map((session, i) => `
-Session ${i + 1} (${new Date(session.date).toLocaleDateString()}):
-${session.sets.map((set, j) => 
-  `  Set ${j + 1}: ${set.weight}lbs x ${set.reps} reps`
-).join('\n')}
-`).join('\n')}
-`.trim();
+  requiredEquipment: string[],
+  availableEquipment: string[]
+): { valid: boolean; missingEquipment: string[] } => {
+  if (!requiredEquipment || requiredEquipment.length === 0) {
+    return { valid: true, missingEquipment: [] };
+  }
 
-  return context;
-}
+  const missing = requiredEquipment.filter(eq => !availableEquipment.includes(eq));
+  
+  return {
+    valid: missing.length === 0,
+    missingEquipment: missing,
+  };
+};
 
 /**
- * Build muscle group training frequency
+ * Get equipment-appropriate alternatives
  */
-export function buildMuscleGroupContext(
-  trainingFrequency: Record<string, { lastTrained: string; timesThisWeek: number }>
-): string {
-  const context = `
-MUSCLE GROUP TRAINING FREQUENCY (This Week):
-${Object.entries(trainingFrequency).map(([muscle, data]) => {
-  const daysSince = Math.floor(
-    (Date.now() - new Date(data.lastTrained).getTime()) / (1000 * 60 * 60 * 24)
-  );
-  return `- ${muscle}: ${data.timesThisWeek}x this week, last trained ${daysSince} day${daysSince !== 1 ? 's' : ''} ago`;
-}).join('\n')}
-`.trim();
+export const getEquipmentAlternatives = (
+  equipment: string[]
+): Record<string, string[]> => {
+  const alternatives: Record<string, string[]> = {
+    barbell: ['dumbbells', 'kettlebells', 'resistance_bands'],
+    cables: ['resistance_bands', 'dumbbells'],
+    machines: ['dumbbells', 'barbell', 'bodyweight'],
+    squat_rack: ['dumbbells', 'kettlebells', 'bodyweight'],
+    leg_press: ['barbell', 'dumbbells', 'bodyweight'],
+    smith_machine: ['barbell', 'dumbbells'],
+  };
 
-  return context;
-}
+  return alternatives;
+};
 
 /**
- * Build workout split pattern
+ * Build injury/limitation context for AI prompts
  */
-export function buildWorkoutSplitContext(
-  recentWorkouts: Array<{ name: string; date: string; muscleGroups: string[] }>
-): string {
-  const context = `
-WORKOUT SPLIT PATTERN (Last 2 Weeks):
-${recentWorkouts.map((w, i) => 
-  `${i + 1}. ${w.name} (${new Date(w.date).toLocaleDateString()}) - ${w.muscleGroups.join(', ')}`
-).join('\n')}
-`.trim();
+export const buildInjuryContext = async (userId: string): Promise<string> => {
+  try {
+    const { data, error } = await supabase
+      .from('user_injuries')
+      .select('body_part, injury_type, severity, avoid_exercises, avoid_movements, notes')
+      .eq('user_id', userId)
+      .eq('is_active', true);
 
-  return context;
-}
+    if (error || !data || data.length === 0) {
+      return '';
+    }
 
-/**
- * Build progress summary
- */
-export function buildProgressContext(progress: {
-  volumeIncrease?: number;
-  strengthIncrease?: number;
-  workoutFrequency?: number;
-  consistencyScore?: number;
-}): string {
-  const context = `
-PROGRESS SUMMARY (Last 4 Weeks):
-${progress.volumeIncrease !== undefined 
-  ? `- Total Volume: ${progress.volumeIncrease > 0 ? '+' : ''}${progress.volumeIncrease.toFixed(1)}%` 
-  : ''}
-${progress.strengthIncrease !== undefined 
-  ? `- Average Strength: ${progress.strengthIncrease > 0 ? '+' : ''}${progress.strengthIncrease.toFixed(1)}%` 
-  : ''}
-${progress.workoutFrequency !== undefined 
-  ? `- Workout Frequency: ${progress.workoutFrequency.toFixed(1)} sessions/week` 
-  : ''}
-${progress.consistencyScore !== undefined 
-  ? `- Consistency Score: ${progress.consistencyScore.toFixed(0)}%` 
-  : ''}
-`.trim();
+    let context = '\n⚠️ IMPORTANT - Active Injuries/Limitations:\n';
+    
+    for (const injury of data) {
+      context += `\n${injury.body_part.replace('_', ' ').toUpperCase()}`;
+      if (injury.injury_type) {
+        context += ` (${injury.injury_type})`;
+      }
+      context += ` - Severity: ${injury.severity}\n`;
+      
+      if (injury.avoid_movements && injury.avoid_movements.length > 0) {
+        context += `  ❌ Avoid movements: ${injury.avoid_movements.join(', ')}\n`;
+      }
+      
+      if (injury.avoid_exercises && injury.avoid_exercises.length > 0) {
+        context += `  ❌ Avoid exercises: ${injury.avoid_exercises.join(', ')}\n`;
+      }
+      
+      if (injury.notes) {
+        context += `  📝 Note: ${injury.notes}\n`;
+      }
+    }
 
-  return context;
-}
+    context += '\n🔒 CRITICAL INSTRUCTIONS:\n';
+    context += '- DO NOT suggest any avoided exercises or movements\n';
+    context += '- Suggest safe alternatives that don\'t stress injured areas\n';
+    context += '- Consider injury severity when programming volume/intensity\n';
+    context += '- Prioritize injury-safe exercises even if suboptimal\n';
 
-/**
- * Format a complete prompt with all contexts
- */
-export function buildCompleteContext(data: {
-  user?: UserContext;
-  workout?: WorkoutContext;
-  exerciseHistory?: { name: string; history: any[] };
-  muscleGroups?: Record<string, any>;
-  progress?: any;
-}): string {
-  const parts: string[] = [];
-
-  if (data.user) {
-    parts.push(buildUserContext(data.user));
+    return context;
+  } catch (error) {
+    console.error('Error building injury context:', error);
+    return '';
   }
-
-  if (data.workout) {
-    parts.push('---', buildWorkoutContext(data.workout));
-  }
-
-  if (data.exerciseHistory) {
-    parts.push('---', buildExerciseHistory(data.exerciseHistory.name, data.exerciseHistory.history));
-  }
-
-  if (data.muscleGroups) {
-    parts.push('---', buildMuscleGroupContext(data.muscleGroups));
-  }
-
-  if (data.progress) {
-    parts.push('---', buildProgressContext(data.progress));
-  }
-
-  return parts.join('\n\n');
-}
-
+};

@@ -12,6 +12,7 @@ import { workoutSuggestionService, WorkoutSuggestion as WorkoutSuggestionType } 
 import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
+import { AIFeedback } from './AIFeedback';
 
 export function WorkoutSuggestion() {
   const { user } = useAuthStore();
@@ -156,6 +157,17 @@ export function WorkoutSuggestion() {
       >
         <Text style={styles.startButtonText}>Start Workout</Text>
       </Pressable>
+
+      {/* Feedback */}
+      <View style={styles.feedbackContainer}>
+        <AIFeedback 
+          feature="workout_suggestion" 
+          context={{ 
+            workoutType: suggestion.type,
+            exerciseCount: suggestion.exercises.length
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -250,6 +262,13 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  feedbackContainer: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+    alignItems: 'center',
   },
 });
 

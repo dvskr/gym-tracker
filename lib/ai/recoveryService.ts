@@ -43,22 +43,30 @@ class RecoveryService {
     try {
       const recentWorkouts = await this.getRecentWorkouts(userId, 14);
       
+      // Get today's check-in data
+      const checkinData = await this.getTodaysCheckin(userId);
+      
+      // Get fitness preferences
+      const fitnessPrefs = await this.getFitnessPreferences(userId);
+      
       if (recentWorkouts.length === 0) {
         return this.getDefaultStatus();
       }
 
       // Calculate per-muscle recovery
-      const muscleStatus = this.calculateMuscleRecovery(recentWorkouts);
+      const muscleStatus = this.calculateMuscleRecovery(recentWorkouts, fitnessPrefs);
       
       // Get training frequency metrics
       const workoutsThisWeek = this.countWorkoutsThisWeek(recentWorkouts);
       const consecutiveDays = this.getConsecutiveTrainingDays(recentWorkouts);
       
-      // Calculate overall score
+      // Calculate overall score (now includes check-in data and fitness prefs)
       const overallScore = this.calculateOverallScore(
         muscleStatus,
         workoutsThisWeek,
-        consecutiveDays
+        consecutiveDays,
+        checkinData,
+        fitnessPrefs
       );
       
       // Determine recommendation
@@ -66,7 +74,9 @@ class RecoveryService {
         overallScore,
         muscleStatus,
         consecutiveDays,
-        workoutsThisWeek
+        workoutsThisWeek,
+        checkinData,
+        fitnessPrefs
       );
 
       return {
@@ -87,9 +97,23 @@ class RecoveryService {
   /**
    * Calculate recovery status for each muscle group
    */
-  private calculateMuscleRecovery(workouts: any[]): MuscleRecoveryStatus[] {
+  private calculateMuscleRecovery(workouts: any[], fitnessPrefs?: any): MuscleRecoveryStatus[] {
     const muscleLastTrained = new Map<string, Date>();
     const now = new Date();
+
+    // Adjust recovery times based on experience level
+    const recoveryMultiplier = fitnessPrefs?.experience_level === 'beginner' ? 1.3 :
+                               fitnessPrefs?.experience_level === 'advanced' ? 0.8 : 1.0;
+
+    // Adjust for strength goal (needs more recovery)
+    const goalMultiplier = fitnessPrefs?.fitness_goal === 'strength' ? 1.2 : 1.0;
+
+    const adjustedRecoveryTimes = Object.fromEntries(
+      Object.entries(this.RECOVERY_TIMES).map(([muscle, days]) => [
+        muscle,
+        days * recoveryMultiplier * goalMultiplier
+      ])
+    );
 
     // Find last training date for each muscle
     for (const workout of workouts) {
@@ -120,7 +144,7 @@ class RecoveryService {
     
     for (const [muscle, lastTrained] of muscleLastTrained.entries()) {
       const daysSince = (now.getTime() - lastTrained.getTime()) / (1000 * 60 * 60 * 24);
-      const recoveryTime = this.RECOVERY_TIMES[muscle] || 2;
+      const recoveryTime = adjustedRecoveryTimes[muscle] || 2;
       
       let status: MuscleRecoveryStatus['status'];
       if (daysSince >= recoveryTime * 1.5) {
@@ -149,19 +173,45 @@ class RecoveryService {
   private calculateOverallScore(
     muscleStatus: MuscleRecoveryStatus[],
     workoutsThisWeek: number,
-    consecutiveDays: number
+    consecutiveDays: number,
+    checkinData?: any,
+    fitnessPrefs?: any
   ): number {
     let score = 100;
 
-    // Training frequency adjustments
+    // Get target from fitness preferences or default to 4
+    const targetWorkouts = fitnessPrefs?.weekly_workout_target || 4;
+
+    // Training frequency adjustments - now personalized to target
     if (workoutsThisWeek >= 7) {
       score -= 35; // Training every day = overtraining risk
     } else if (workoutsThisWeek >= 6) {
       score -= 25;
-    } else if (workoutsThisWeek >= 5) {
-      score -= 15;
-    } else if (workoutsThisWeek === 0) {
+    } else if (workoutsThisWeek >= 5 && targetWorkouts < 5) {
+      score -= 15; // Only penalize if above target
+    } else if (workoutsThisWeek >= targetWorkouts + 2) {
+      score -= 10; // Training more than 2 days above target
+    } else if (workoutsThisWeek === 0 && targetWorkouts > 0) {
       score -= 5; // Full week off = slight detraining
+    }
+
+    // Adjust for fitness goal
+    if (fitnessPrefs?.fitness_goal === 'strength' && consecutiveDays >= 3) {
+      score -= 15; // Strength training needs more rest between sessions
+    }
+
+    if (fitnessPrefs?.fitness_goal === 'endurance' && workoutsThisWeek < targetWorkouts) {
+      score += 5; // Endurance athletes can handle more volume
+    }
+
+    // Experience level adjustments
+    if (fitnessPrefs?.experience_level === 'beginner') {
+      // Beginners need more recovery
+      if (consecutiveDays >= 3) score -= 15;
+      if (workoutsThisWeek >= 5) score -= 10;
+    } else if (fitnessPrefs?.experience_level === 'advanced') {
+      // Advanced can handle more
+      score += 5;
     }
 
     // Consecutive days penalty
@@ -171,6 +221,44 @@ class RecoveryService {
       score -= 15;
     } else if (consecutiveDays >= 3) {
       score -= 10;
+    }
+
+    // Check-in data adjustments
+    if (checkinData) {
+      // Poor sleep quality (1-2)
+      if (checkinData.sleep_quality && checkinData.sleep_quality <= 2) {
+        score -= 15;
+      } else if (checkinData.sleep_quality === 3) {
+        score -= 7;
+      }
+
+      // Insufficient sleep hours
+      if (checkinData.sleep_hours && checkinData.sleep_hours < 6) {
+        score -= 12;
+      } else if (checkinData.sleep_hours && checkinData.sleep_hours < 7) {
+        score -= 6;
+      }
+
+      // High stress (4-5)
+      if (checkinData.stress_level && checkinData.stress_level >= 4) {
+        score -= 12;
+      } else if (checkinData.stress_level === 3) {
+        score -= 5;
+      }
+
+      // High soreness (4-5)
+      if (checkinData.soreness_level && checkinData.soreness_level >= 4) {
+        score -= 15;
+      } else if (checkinData.soreness_level === 3) {
+        score -= 7;
+      }
+
+      // Low energy (1-2)
+      if (checkinData.energy_level && checkinData.energy_level <= 2) {
+        score -= 10;
+      } else if (checkinData.energy_level === 3) {
+        score -= 5;
+      }
     }
 
     // Muscle fatigue adjustments
@@ -193,7 +281,8 @@ class RecoveryService {
     score: number,
     muscleStatus: MuscleRecoveryStatus[],
     consecutiveDays: number,
-    workoutsThisWeek: number
+    workoutsThisWeek: number,
+    checkinData?: any
   ): {
     status: RecoveryStatus['overall'];
     recommendation: string;
@@ -207,14 +296,62 @@ class RecoveryService {
       .filter(m => m.status === 'fatigued')
       .map(m => m.muscle);
 
-    // Recovered (80-100)
+    // Check for wellness red flags
+    const poorSleep = checkinData?.sleep_quality && checkinData.sleep_quality <= 2;
+    const highStress = checkinData?.stress_level && checkinData.stress_level >= 4;
+    const highSoreness = checkinData?.soreness_level && checkinData.soreness_level >= 4;
+    const lowEnergy = checkinData?.energy_level && checkinData.energy_level <= 2;
+
+    // Severe wellness issues override score
+    if (poorSleep && (highStress || lowEnergy)) {
+      return {
+        status: 'overtrained',
+        recommendation: 'Poor sleep and low energy/high stress detected. Your body needs rest today. Consider a rest day or very light activity.',
+        action: 'rest',
+      };
+    }
+
+    if (highSoreness && lowEnergy) {
+      return {
+        status: 'fatigued',
+        recommendation: 'High soreness and low energy detected. Take it easy today with active recovery or rest.',
+        action: 'active_recovery',
+      };
+    }
+
+      // Recovered (80-100)
     if (score >= 80) {
       let recommendation = 'You\'re well recovered and ready for an intense session! ';
+      
+      if (fitnessPrefs?.fitness_goal) {
+        const goalMessages: Record<string, string> = {
+          'build_muscle': 'Perfect time for heavy compound lifts. ',
+          'strength': 'Your strength training day looks good. ',
+          'lose_fat': 'Great energy for a high-intensity workout. ',
+          'endurance': 'Ideal conditions for a challenging cardio session. ',
+          'maintain': 'Ready for a solid workout. ',
+          'general_fitness': 'All systems go for training! ',
+        };
+        recommendation = goalMessages[fitnessPrefs.fitness_goal as string] || recommendation;
+      }
       
       if (freshMuscles.length > 0) {
         recommendation += `Focus on ${this.formatMuscleList(freshMuscles.slice(0, 2))}.`;
       } else {
-        recommendation += 'All systems go!';
+        recommendation += 'All muscle groups recovered!';
+      }
+
+      // Add wellness note if available
+      if (checkinData?.energy_level && checkinData.energy_level >= 4) {
+        recommendation += ' Your energy levels are great!';
+      }
+
+      // Check if today is preferred rest day
+      if (fitnessPrefs?.preferred_rest_days) {
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+        if (fitnessPrefs.preferred_rest_days.includes(today)) {
+          recommendation += ` Note: Today is your preferred rest day, but you're recovered if you want to train.`;
+        }
       }
 
       return {
@@ -228,18 +365,26 @@ class RecoveryService {
     if (score >= 60) {
       let recommendation = '';
       
+      if (poorSleep || highStress) {
+        recommendation = 'Your wellness metrics suggest taking it easier today. ';
+      }
+      
       if (consecutiveDays >= 3) {
-        recommendation = `You've trained ${consecutiveDays} days in a row. Consider a lighter session or active recovery today.`;
+        recommendation += `You've trained ${consecutiveDays} days in a row. Consider a lighter session or active recovery today.`;
       } else if (fatiguedMuscles.length > 2) {
-        recommendation = `Several muscle groups need rest (${this.formatMuscleList(fatiguedMuscles.slice(0, 2))}). Train fresh muscles or go lighter.`;
+        recommendation += `Several muscle groups need rest (${this.formatMuscleList(fatiguedMuscles.slice(0, 2))}). Train fresh muscles or go lighter.`;
       } else {
-        recommendation = 'Moderate recovery. A normal workout is fine, but listen to your body.';
+        recommendation += 'Moderate recovery. A normal workout is fine, but listen to your body.';
+      }
+
+      if (highSoreness) {
+        recommendation += ' High soreness detected - consider lighter weights.';
       }
 
       return {
         status: 'moderate',
         recommendation,
-        action: consecutiveDays >= 3 || fatiguedMuscles.length > 2 ? 'train_light' : 'train_hard',
+        action: consecutiveDays >= 3 || fatiguedMuscles.length > 2 || poorSleep || highSoreness ? 'train_light' : 'train_hard',
       };
     }
 
@@ -412,6 +557,51 @@ class RecoveryService {
       consecutiveDays: 0,
       workoutsThisWeek: 0,
     };
+  }
+
+  /**
+   * Get today's check-in data
+   */
+  private async getTodaysCheckin(userId: string): Promise<any> {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      
+      const { data, error } = await supabase
+        .from('daily_checkins')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('date', today)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // Not found is ok
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error fetching check-in:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get user fitness preferences
+   */
+  private async getFitnessPreferences(userId: string): Promise<any> {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('fitness_goal, weekly_workout_target, preferred_rest_days, experience_level, training_split')
+        .eq('id', userId)
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    } catch (error) {
+      console.error('Error fetching fitness preferences:', error);
+      return null;
+    }
   }
 }
 

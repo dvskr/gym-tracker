@@ -31,8 +31,6 @@ export default function CoachScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
   const [userContext, setUserContext] = useState('');
   const [isLoadingContext, setIsLoadingContext] = useState(true);
   const flatListRef = useRef<FlatList>(null);
@@ -97,7 +95,7 @@ How can I help you today?`,
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading || isStreaming) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -109,8 +107,7 @@ How can I help you today?`,
     setMessages((prev) => [...prev, userMessage]);
     const userInput = input.trim();
     setInput('');
-    setIsStreaming(true);
-    setStreamingMessage('');
+    setIsLoading(true); // Changed from setIsStreaming
 
     // Scroll to bottom
     setTimeout(() => {
@@ -131,8 +128,9 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
 
       let fullResponse = '';
 
-      // Stream the response
-      for await (const chunk of aiService.streamComplete(
+      // Use non-streaming for better React Native compatibility
+      // Streaming has issues with ReadableStream support in RN
+      const response = await aiService.complete(
         [
           { role: 'system', content: systemPrompt },
           ...conversationHistory,
@@ -143,15 +141,9 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
           maxTokens: 500,
           requestType: 'chat',
         }
-      )) {
-        fullResponse += chunk;
-        setStreamingMessage(fullResponse);
-        
-        // Auto-scroll as content streams in
-        setTimeout(() => {
-          flatListRef.current?.scrollToEnd({ animated: false });
-        }, 50);
-      }
+      );
+
+      fullResponse = response.content;
 
       // Add complete assistant message
       const assistantMessage: Message = {
@@ -179,8 +171,6 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
-      setIsStreaming(false);
-      setStreamingMessage('');
       setIsLoading(false);
     }
   };
@@ -229,24 +219,6 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
     </View>
   );
 
-  const renderStreamingMessage = () => {
-    if (!isStreaming || !streamingMessage) return null;
-    
-    return (
-      <View style={[styles.messageContainer, styles.assistantMessage]}>
-        <View style={styles.avatarContainer}>
-          <Sparkles size={16} color="#f59e0b" />
-        </View>
-        <View style={[styles.messageBubble, styles.assistantBubble]}>
-          <Text style={styles.messageText}>
-            {streamingMessage}
-            <Text style={styles.cursor}>▊</Text>
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="light" />
@@ -280,13 +252,12 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.messageList}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={renderStreamingMessage}
             onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
             onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
           />
 
-          {/* Typing Indicator - shown before streaming starts */}
-          {isLoading && !isStreaming && !streamingMessage && (
+          {/* Typing Indicator */}
+          {isLoading && (
             <View style={styles.typingIndicator}>
               <View style={styles.avatarContainer}>
                 <Sparkles size={14} color="#f59e0b" />
@@ -302,7 +273,7 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
           )}
 
           {/* Quick Prompts */}
-          {messages.length <= 1 && !isLoading && !isStreaming && (
+          {messages.length <= 1 && !isLoading && (
             <View style={styles.quickPrompts}>
               <Text style={styles.quickPromptsTitle}>Quick questions:</Text>
               {[
@@ -336,20 +307,20 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
                 placeholderTextColor="#6b7280"
                 multiline
                 maxLength={500}
-                editable={!isLoading && !isStreaming}
+                editable={!isLoading}
               />
               <Pressable
                 style={[
                   styles.sendButton,
-                  (!input.trim() || isLoading || isStreaming) && styles.sendButtonDisabled,
+                  (!input.trim() || isLoading) && styles.sendButtonDisabled,
                 ]}
                 onPress={sendMessage}
-                disabled={!input.trim() || isLoading || isStreaming}
+                disabled={!input.trim() || isLoading}
               >
                 <Send
                   size={20}
-                  color={input.trim() && !isLoading && !isStreaming ? '#3b82f6' : '#6b7280'}
-                  fill={input.trim() && !isLoading && !isStreaming ? '#3b82f6' : 'transparent'}
+                  color={input.trim() && !isLoading ? '#3b82f6' : '#6b7280'}
+                  fill={input.trim() && !isLoading ? '#3b82f6' : 'transparent'}
                 />
               </Pressable>
             </View>
@@ -488,10 +459,6 @@ const styles = StyleSheet.create({
     color: '#f1f5f9',
     fontSize: 15,
     lineHeight: 22,
-  },
-  cursor: {
-    color: '#3b82f6',
-    fontWeight: 'bold',
   },
   timestamp: {
     fontSize: 10,

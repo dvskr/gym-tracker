@@ -22,6 +22,7 @@ import {
 } from 'lucide-react-native';
 import { workoutAnalysisService, WorkoutAnalysis as WorkoutAnalysisType } from '@/lib/ai/workoutAnalysis';
 import { useAuthStore } from '@/stores/authStore';
+import { AIFeedback } from './AIFeedback';
 
 interface WorkoutAnalysisProps {
   workout: any;
@@ -247,6 +248,15 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
             {isRefreshing ? 'Refreshing...' : 'Get fresh analysis'}
           </Text>
         </TouchableOpacity>
+        
+        {/* Feedback */}
+        <AIFeedback 
+          feature="analysis" 
+          context={{ 
+            workoutId: workout.id,
+            totalVolume: analysis?.totalVolume
+          }}
+        />
       </View>
     </View>
   );
@@ -451,7 +461,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 12,
     borderTopWidth: 1,

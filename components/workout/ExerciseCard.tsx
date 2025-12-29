@@ -25,6 +25,7 @@ import { lightHaptic, mediumHaptic } from '@/lib/utils/haptics';
 import { FormTips } from '@/components/ai';
 import { WeightSuggestion } from '@/components/ai/WeightSuggestion';
 import { useAuthStore } from '@/stores/authStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // ============================================
 // Types
@@ -61,6 +62,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 }) => {
   const { exercise, sets } = workoutExercise;
   const { user } = useAuthStore();
+  const { showFormTips, showProgressiveOverload } = useSettingsStore();
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
@@ -204,9 +206,11 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
       </View>
 
       {/* Form Tips */}
-      <View style={styles.formTipsContainer}>
-        <FormTips exerciseName={exercise.name} />
-      </View>
+      {showFormTips && (
+        <View style={styles.formTipsContainer}>
+          <FormTips exerciseName={exercise.name} />
+        </View>
+      )}
 
       {/* Sets List */}
       <View style={styles.setsContainer}>
@@ -216,7 +220,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           return (
             <React.Fragment key={set.id}>
               {/* Show weight suggestion only for first set */}
-              {idx === 0 && user && (
+              {idx === 0 && user && showProgressiveOverload && (
                 <View style={styles.suggestionWrapper}>
                   <WeightSuggestion
                     exerciseId={exercise.id}

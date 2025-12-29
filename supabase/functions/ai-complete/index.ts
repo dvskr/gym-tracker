@@ -123,17 +123,24 @@ serve(async (req: Request) => {
       )
     }
 
-    // Update usage counter (same for streaming and non-streaming)
-    await supabaseAdmin
-      .from('profiles')
-      .update({ 
-        ai_requests_today: requestsToday + 1,
-        ai_requests_today_date: today,
-      })
-      .eq('id', user.id)
-
     // Handle streaming response
     if (streaming) {
+      // Update usage counter asynchronously for streaming (don't await)
+      supabaseAdmin
+        .from('profiles')
+        .update({ 
+          ai_requests_today: requestsToday + 1,
+          ai_requests_today_date: today,
+        })
+        .eq('id', user.id)
+        .then(() => console.log('Usage counter updated'))
+        .catch((err) => console.error('Failed to update usage:', err))
+
+      // Check if response body exists
+      if (!openaiResponse.body) {
+        throw new Error('OpenAI response has no body for streaming')
+      }
+
       return new Response(openaiResponse.body, {
         headers: {
           ...corsHeaders,
@@ -146,6 +153,15 @@ serve(async (req: Request) => {
         },
       })
     }
+
+    // Update usage counter for non-streaming
+    await supabaseAdmin
+      .from('profiles')
+      .update({ 
+        ai_requests_today: requestsToday + 1,
+        ai_requests_today_date: today,
+      })
+      .eq('id', user.id)
 
     // Non-streaming response
     const data = await openaiResponse.json()

@@ -10,4 +10,7 @@ export { RecoveryStatusSkeleton } from './RecoveryStatusSkeleton';
 export { AIUsageWarning } from './AIUsageWarning';
 export { AIUsageIndicator } from './AIUsageIndicator';
 export { AILimitModal } from './AILimitModal';
+export { AIFeedback } from './AIFeedback';
+export { DailyCheckin } from './DailyCheckin';
+export { CheckinPrompt } from './CheckinPrompt';
 

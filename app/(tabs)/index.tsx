@@ -31,7 +31,7 @@ import { QuickWeightLog, WeightSparkline } from '@/components/home';
 import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
-import { PlateauAlerts, RecoveryStatus } from '@/components/ai';
+import { PlateauAlerts, RecoveryStatus, CheckinPrompt } from '@/components/ai';
 
 
 
@@ -413,6 +413,10 @@ export default function HomeScreen() {
             onContinue={handleContinueWorkout}
           />
         )}
+
+        {/* Recovery Status */}
+        {/* Daily Check-in Prompt */}
+        <CheckinPrompt />
 
         {/* Recovery Status */}
         <RecoveryStatus />

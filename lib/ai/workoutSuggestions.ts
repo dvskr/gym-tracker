@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { aiService } from './aiService';
-import { buildUserContext } from './contextBuilder';
+import { buildUserContext, buildEquipmentContext, buildFitnessProfileContext, buildInjuryContext } from './contextBuilder';
 import { FITNESS_COACH_SYSTEM_PROMPT, WORKOUT_SUGGESTION_PROMPT } from './prompts';
 import { validateWorkoutSuggestion, validateAndFallback, normalizeConfidence } from './validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -162,8 +162,17 @@ class WorkoutSuggestionService {
         experienceLevel: profile.experience_level || 'intermediate',
       });
 
+      // Add equipment context
+      const equipmentContext = profile.available_equipment 
+        ? buildEquipmentContext(profile.available_equipment)
+        : '';
+
+      // Add injury context
+      const { data: { user } } = await supabase.auth.getUser();
+      const injuryContext = user ? await buildInjuryContext(user.id) : '';
+
       // Get AI suggestion with detailed error logging
-      const prompt = `${userContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`;
+      const prompt = `${userContext}\n\n${equipmentContext}\n\n${injuryContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`;
       
       console.log('🤖 Calling AI service for workout suggestion...');
       

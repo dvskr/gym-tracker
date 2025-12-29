@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Lightbulb, ChevronDown, Check, X, AlertCircle } from 'lucide-react-native';
 import { formTipsService, FormTip as FormTipType } from '@/lib/ai/formTips';
+import { AIFeedback } from './AIFeedback';
 
 interface FormTipsProps {
   exerciseName: string;
@@ -137,14 +138,20 @@ export function FormTips({ exerciseName, initiallyExpanded = false }: FormTipsPr
             </View>
           )}
 
-          {/* Source indicator */}
-          <Text style={styles.sourceText}>
-            {tips.cachedAt === 'static' 
-              ? 'Expert-verified tips' 
-              : tips.cachedAt === 'generic'
-              ? 'General guidance'
-              : 'AI-generated tips'}
-          </Text>
+          {/* Source indicator and feedback */}
+          <View style={styles.footer}>
+            <Text style={styles.sourceText}>
+              {tips.cachedAt === 'static' 
+                ? 'Expert-verified tips' 
+                : tips.cachedAt === 'generic'
+                ? 'General guidance'
+                : 'AI-generated tips'}
+            </Text>
+            <AIFeedback 
+              feature="form_tips" 
+              context={{ exercise: exerciseName }}
+            />
+          </View>
         </View>
       )}
     </View>
@@ -251,7 +258,11 @@ const styles = StyleSheet.create({
   sourceText: {
     fontSize: 11,
     color: '#64748b',
-    textAlign: 'center',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 4,
   },
 });

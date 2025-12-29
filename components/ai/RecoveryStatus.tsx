@@ -6,6 +6,7 @@ import { recoveryService, RecoveryStatus as RecoveryStatusType } from '@/lib/ai/
 import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { RecoveryStatusSkeleton } from './RecoveryStatusSkeleton';
+import { AIFeedback } from './AIFeedback';
 
 export function RecoveryStatus() {
   const { user } = useAuthStore();
@@ -285,6 +286,17 @@ export function RecoveryStatus() {
           />
         </Pressable>
       )}
+
+      {/* Feedback */}
+      <View style={styles.feedbackContainer}>
+        <AIFeedback 
+          feature="recovery" 
+          context={{ 
+            status: status.overall,
+            score: status.score
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -482,6 +494,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6b7280',
     marginRight: 4,
+  },
+  feedbackContainer: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+    alignItems: 'center',
   },
 });
 
