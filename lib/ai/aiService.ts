@@ -88,6 +88,133 @@ class AIService {
   }
 
   // ==========================================
+  // STREAMING COMPLETION METHOD
+  // ==========================================
+  async *streamComplete(
+    messages: AIMessage[],
+    options: AIOptions = {}
+  ): AsyncGenerator<string, void, unknown> {
+    // 1. Verify user is authenticated
+    const user = useAuthStore.getState().user;
+    if (!user) {
+      throw new Error('Please log in to use AI features');
+    }
+
+    // 2. Check limits
+    const limits = await this.checkLimits();
+
+    if (!limits.allowed) {
+      throw new AILimitError(
+        `Daily AI limit reached (${limits.used}/${limits.limit})`,
+        limits
+      );
+    }
+
+    // 3. Apply default options
+    const finalOptions = {
+      temperature: 0.7, // Higher temp for chat
+      maxTokens: 500,
+      model: 'gpt-4o-mini',
+      requestType: 'chat',
+      stream: true, // Enable streaming
+      ...options,
+    };
+
+    try {
+      // 4. Get Supabase URL and session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Session expired. Please log in again.');
+      }
+
+      const supabaseUrl = supabase.supabaseUrl;
+
+      // 5. Call Edge Function with fetch for streaming
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/ai-complete`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            messages,
+            options: finalOptions,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        // Check for rate limit
+        if (response.status === 429) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new AILimitError(
+            errorData.message || 'Rate limit exceeded',
+            errorData
+          );
+        }
+        throw new Error(`Streaming request failed: ${response.status}`);
+      }
+
+      // 6. Stream the response
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No reader available');
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        
+        // Keep the last incomplete line in the buffer
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6).trim();
+            
+            if (data === '[DONE]') {
+              // Update cached limits from headers
+              const usedHeader = response.headers.get('X-Requests-Used');
+              const limitHeader = response.headers.get('X-Requests-Limit');
+              if (usedHeader && limitHeader && this.cachedLimits) {
+                this.cachedLimits.used = parseInt(usedHeader);
+                this.cachedLimits.remaining = parseInt(limitHeader) - parseInt(usedHeader);
+              }
+              return;
+            }
+
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                yield content;
+              }
+            } catch {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+
+    } catch (error) {
+      // Re-throw limit errors
+      if (error instanceof AILimitError) {
+        throw error;
+      }
+
+      console.error('AI streaming failed:', error);
+      throw error;
+    }
+  }
+
+  // ==========================================
   // MAIN COMPLETION METHOD
   // ==========================================
   async complete(
@@ -110,17 +237,26 @@ class AIService {
       );
     }
 
+    // 3. Apply default options (lower temperature for more consistent JSON)
+    const finalOptions = {
+      temperature: 0.3,  // Lower temperature for more deterministic outputs
+      maxTokens: 500,
+      model: 'gpt-4o-mini',
+      requestType: 'general',
+      ...options,  // User options override defaults
+    };
+
     try {
-      // 3. Verify Supabase session
+      // 4. Verify Supabase session
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         throw new Error('Session expired. Please log in again.');
       }
 
-      // 4. Call Edge Function
+      // 5. Call Edge Function
       const { data, error } = await supabase.functions.invoke('ai-complete', {
-        body: { messages, options },
+        body: { messages, options: finalOptions },
       });
 
       if (error) {

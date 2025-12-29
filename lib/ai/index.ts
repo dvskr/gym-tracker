@@ -17,6 +17,35 @@ export type {
 export { AILimitError } from './types';
 
 // ==========================================
+// VALIDATION
+// ==========================================
+export {
+  validateWorkoutSuggestion,
+  validateWorkoutAnalysis,
+  validateFormTips,
+  validateProgression,
+  validateAndFallback,
+  sanitizeText,
+  sanitizeStringArray,
+  normalizeConfidence,
+} from './validation';
+
+export type {
+  FormTips,
+  ProgressionRecommendation,
+} from './validation';
+
+// ==========================================
+// JSON PARSING UTILITIES
+// ==========================================
+export {
+  cleanAIResponse,
+  cleanExerciseName,
+  safeJSONParse,
+  cleanExerciseArray,
+} from './helpers';
+
+// ==========================================
 // CONTEXT BUILDERS
 // ==========================================
 export {
@@ -39,6 +68,7 @@ export {
   WORKOUT_SUGGESTION_PROMPT,
   FORM_TIPS_PROMPT,
   WORKOUT_ANALYSIS_PROMPT,
+  PROGRESSIVE_OVERLOAD_PROMPT,
   FORM_CHECK_PROMPT,
   PROGRESSION_PROMPT,
   REST_TIME_PROMPT,
@@ -75,11 +105,38 @@ export { recoveryService } from './recoveryService';
 export type { RecoveryStatus, MuscleRecoveryStatus } from './recoveryService';
 
 // ==========================================
+// PREFETCH & CACHING
+// ==========================================
+export {
+  prefetchAIData,
+  getCachedData,
+  setCacheData,
+  invalidateCache,
+  invalidateCacheKey,
+  isCached,
+  getCacheStats,
+  clearAllCache,
+  CACHE_DURATIONS,
+} from './prefetch';
+
+// ==========================================
+// HIGH-LEVEL HELPERS
+// ==========================================
+export {
+  getWorkoutSuggestion,
+  getFormTips,
+  getProgressionAdvice,
+  critiqueWorkout,
+  getMotivation,
+  askCoach,
+  getRestTimeAdvice,
+  getExerciseSubstitutes,
+  analyzeWorkoutSplit,
+  generateWorkoutPlan,
+} from './helpers';
+
+// ==========================================
 // LEGACY (Deprecated - now using database tracking)
 // ==========================================
 export { aiUsageTracker } from './usageTracker';
 export type { UsageData, UsageStats, UsageCheck } from './usageTracker';
-
-
-
-

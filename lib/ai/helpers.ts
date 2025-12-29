@@ -19,6 +19,79 @@ import {
   buildCompleteContext,
 } from './contextBuilder';
 
+// ==========================================
+// JSON PARSING UTILITIES
+// ==========================================
+
+/**
+ * Clean AI response before JSON parsing
+ * Removes markdown, code blocks, and extraneous text
+ */
+export function cleanAIResponse(response: string): string {
+  return response
+    // Remove markdown code blocks
+    .replace(/```json\n?/g, '')
+    .replace(/```\n?/g, '')
+    // Remove any leading/trailing whitespace
+    .trim()
+    // Remove any text before the first {
+    .replace(/^[^{]*/, '')
+    // Remove any text after the last }
+    .replace(/}[^}]*$/, '}');
+}
+
+/**
+ * Clean exercise names from AI responses
+ * Removes markdown, numbers, bullets, and extra whitespace
+ */
+export function cleanExerciseName(name: string): string {
+  return name
+    .replace(/\*\*/g, '')        // Remove bold markdown
+    .replace(/^\d+\.\s*/, '')    // Remove numbered prefix (1. )
+    .replace(/^[-•*]\s*/, '')    // Remove bullet prefix (- or • or *)
+    .replace(/\s+/g, ' ')        // Normalize whitespace
+    .trim();
+}
+
+/**
+ * Safe JSON parse with fallback
+ */
+export function safeJSONParse<T>(response: string, fallback: T): T {
+  try {
+    const cleaned = cleanAIResponse(response);
+    return JSON.parse(cleaned) as T;
+  } catch (error) {
+    console.error('Failed to parse AI JSON response:', error);
+    console.error('Response was:', response);
+    return fallback;
+  }
+}
+
+/**
+ * Validate and clean exercise array from AI response
+ */
+export function cleanExerciseArray(exercises: any[]): Array<{
+  name: string;
+  sets: number;
+  reps: string;
+}> {
+  if (!Array.isArray(exercises)) {
+    return [];
+  }
+
+  return exercises
+    .filter((ex) => ex && ex.name)
+    .map((ex) => ({
+      name: cleanExerciseName(ex.name),
+      sets: typeof ex.sets === 'number' ? ex.sets : 3,
+      reps: ex.reps || '8-12',
+    }));
+}
+
+// ==========================================
+// AI HELPER FUNCTIONS
+// ==========================================
+
 /**
  * Get AI workout suggestion for today
  */
@@ -28,7 +101,7 @@ export async function getWorkoutSuggestion(userData: any): Promise<string> {
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     `${userContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`,
-    { temperature: 0.7, maxTokens: 400 }
+    { temperature: 0.3, maxTokens: 400 }
   );
 }
 
@@ -39,7 +112,7 @@ export async function getFormTips(exerciseName: string): Promise<string> {
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     `${FORM_CHECK_PROMPT}\n\nExercise: ${exerciseName}`,
-    { temperature: 0.5, maxTokens: 300 }
+    { temperature: 0.3, maxTokens: 300 }
   );
 }
 
@@ -55,7 +128,7 @@ export async function getProgressionAdvice(
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     `${historyContext}\n\n${PROGRESSION_PROMPT}`,
-    { temperature: 0.6, maxTokens: 250 }
+    { temperature: 0.3, maxTokens: 250 }
   );
 }
 
@@ -74,7 +147,7 @@ export async function critiqueWorkout(
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     `${context}\n\n${WORKOUT_CRITIQUE_PROMPT}`,
-    { temperature: 0.7, maxTokens: 350 }
+    { temperature: 0.3, maxTokens: 350 }
   );
 }
 
@@ -87,7 +160,7 @@ export async function getMotivation(userData: any): Promise<string> {
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     `${userContext}\n\n${MOTIVATION_PROMPT}`,
-    { temperature: 0.9, maxTokens: 150 }
+    { temperature: 0.7, maxTokens: 150 }  // Keep higher temp for motivation
   );
 }
 
@@ -106,7 +179,7 @@ export async function askCoach(
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     fullPrompt,
-    { temperature: 0.7, maxTokens: 400 }
+    { temperature: 0.5, maxTokens: 400 }
   );
 }
 
@@ -127,7 +200,7 @@ Suggest appropriate rest time between sets with brief reasoning.`;
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     prompt,
-    { temperature: 0.5, maxTokens: 200 }
+    { temperature: 0.3, maxTokens: 200 }
   );
 }
 
@@ -149,7 +222,7 @@ For each alternative, explain:
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     prompt,
-    { temperature: 0.6, maxTokens: 400 }
+    { temperature: 0.4, maxTokens: 400 }
   );
 }
 
@@ -172,7 +245,7 @@ export async function analyzeWorkoutSplit(
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     prompt,
-    { temperature: 0.7, maxTokens: 400 }
+    { temperature: 0.4, maxTokens: 400 }
   );
 }
 
@@ -199,7 +272,7 @@ Include:
   return await aiService.askWithContext(
     FITNESS_COACH_SYSTEM_PROMPT,
     prompt,
-    { temperature: 0.7, maxTokens: 600 }
+    { temperature: 0.5, maxTokens: 600 }
   );
 }
 

@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase';
 import { aiService } from './aiService';
 import { FITNESS_COACH_SYSTEM_PROMPT } from './prompts';
 import { buildWorkoutContext } from './contextBuilder';
+import { validateWorkoutAnalysis, validateAndFallback, sanitizeText, sanitizeStringArray } from './validation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface WorkoutAnalysis {
   summary: string;
@@ -21,15 +23,34 @@ interface WorkoutStats {
   streak: number;
 }
 
+// Cache configuration
+const ANALYSIS_CACHE_KEY = 'workout_analysis_cache';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+interface CachedAnalysis {
+  analysis: WorkoutAnalysis;
+  timestamp: number;
+  workoutId: string;
+}
+
 class WorkoutAnalysisService {
   /**
    * Analyze completed workout and provide AI-powered feedback
    */
   async analyzeWorkout(
     workout: any,
-    userId: string
+    userId: string,
+    forceRefresh = false
   ): Promise<WorkoutAnalysis> {
     try {
+      // Check cache unless force refresh
+      if (!forceRefresh && workout.id) {
+        const cached = await this.getCachedAnalysis(workout.id);
+        if (cached) {
+          console.log('✅ Using cached workout analysis');
+          return cached;
+        }
+      }
       // Get comparison data
       const [previousWorkout, userStats, prCount] = await Promise.all([
         this.getPreviousSimilarWorkout(userId, workout),
@@ -61,18 +82,8 @@ class WorkoutAnalysisService {
           prCount
         );
 
-        return {
-          ...aiAnalysis,
-          volumeComparison,
-          musclesWorked,
-          estimatedCalories: this.estimateCalories(workout),
-          totalVolume: currentVolume,
-          totalSets,
-          personalRecordsAchieved: prCount,
-        };
-      } catch (error) {
-        console.error('AI analysis failed, using rule-based:', error);
-        return this.getRuleBasedAnalysis(
+        // Validate and sanitize AI response
+        const fallbackAnalysis = this.getRuleBasedAnalysis(
           workout,
           volumeComparison,
           musclesWorked,
@@ -80,10 +91,97 @@ class WorkoutAnalysisService {
           totalSets,
           prCount
         );
+
+        const validated = validateAndFallback(
+          aiAnalysis,
+          validateWorkoutAnalysis,
+          fallbackAnalysis,
+          'WorkoutAnalysis'
+        );
+
+        const finalAnalysis: WorkoutAnalysis = {
+          ...validated,
+          summary: sanitizeText(validated.summary, 500),
+          highlights: sanitizeStringArray(validated.highlights, 200),
+          improvements: sanitizeStringArray(validated.improvements, 200),
+          nextWorkoutTip: sanitizeText(validated.nextWorkoutTip, 200),
+          volumeComparison,
+          musclesWorked,
+          estimatedCalories: this.estimateCalories(workout),
+          totalVolume: currentVolume,
+          totalSets,
+          personalRecordsAchieved: prCount,
+        };
+
+        // Cache the result
+        if (workout.id) {
+          await this.cacheAnalysis(workout.id, finalAnalysis);
+        }
+
+        return finalAnalysis;
+      } catch (error) {
+        console.error('AI analysis failed, using rule-based:', error);
+        const fallback = this.getRuleBasedAnalysis(
+          workout,
+          volumeComparison,
+          musclesWorked,
+          currentVolume,
+          totalSets,
+          prCount
+        );
+
+        // Cache the fallback
+        if (workout.id) {
+          await this.cacheAnalysis(workout.id, fallback);
+        }
+
+        return fallback;
       }
     } catch (error) {
       console.error('Workout analysis failed:', error);
       return this.getDefaultAnalysis(workout);
+    }
+  }
+
+  /**
+   * Get cached analysis if valid
+   */
+  private async getCachedAnalysis(workoutId: string): Promise<WorkoutAnalysis | null> {
+    try {
+      const cacheKey = `${ANALYSIS_CACHE_KEY}_${workoutId}`;
+      const cached = await AsyncStorage.getItem(cacheKey);
+      if (!cached) return null;
+      
+      const parsed: CachedAnalysis = JSON.parse(cached);
+      
+      // Check if cache is not expired
+      const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+      if (isExpired) {
+        await AsyncStorage.removeItem(cacheKey);
+        return null;
+      }
+      
+      return parsed.analysis;
+    } catch (error) {
+      console.error('Error reading cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Cache analysis for future use
+   */
+  private async cacheAnalysis(workoutId: string, analysis: WorkoutAnalysis): Promise<void> {
+    try {
+      const cacheKey = `${ANALYSIS_CACHE_KEY}_${workoutId}`;
+      const cacheData: CachedAnalysis = {
+        analysis,
+        timestamp: Date.now(),
+        workoutId,
+      };
+      await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.error('Error caching analysis:', error);
     }
   }
 
@@ -139,27 +237,57 @@ Respond in this exact JSON format:
     const response = await aiService.askWithContext(
       FITNESS_COACH_SYSTEM_PROMPT,
       prompt,
-      { temperature: 0.7, maxTokens: 500 }
+      { temperature: 0.3, maxTokens: 500, requestType: 'analysis' }
     );
 
+    return this.parseAnalysisResponse(response);
+  }
+
+  /**
+   * Parse AI analysis response
+   */
+  private parseAnalysisResponse(response: string): Partial<WorkoutAnalysis> {
     try {
+      // Clean response before parsing
+      const cleaned = this.cleanAIResponse(response);
+      
       // Try to extract JSON from response
-      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
         return {
           summary: parsed.summary || 'Great workout!',
-          highlights: Array.isArray(parsed.highlights) ? parsed.highlights : ['Strong performance!'],
-          improvements: Array.isArray(parsed.improvements) ? parsed.improvements : [],
+          highlights: Array.isArray(parsed.highlights) 
+            ? parsed.highlights.filter((h: string) => h && h.length > 0)
+            : ['Strong performance!'],
+          improvements: Array.isArray(parsed.improvements) 
+            ? parsed.improvements.filter((i: string) => i && i.length > 0)
+            : [],
           nextWorkoutTip: parsed.nextWorkoutTip || 'Keep up the great work!',
         };
       }
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error('Failed to parse AI analysis:', parseError);
     }
 
     // Fallback: extract from text
     return this.parseTextResponse(response);
+  }
+
+  /**
+   * Clean AI response before JSON parsing
+   */
+  private cleanAIResponse(response: string): string {
+    return response
+      // Remove markdown code blocks
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      // Remove any leading/trailing whitespace
+      .trim()
+      // Remove any text before the first {
+      .replace(/^[^{]*/, '')
+      // Remove any text after the last }
+      .replace(/}[^}]*$/, '}');
   }
 
   /**

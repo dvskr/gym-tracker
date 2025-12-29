@@ -328,11 +328,39 @@ class RecoveryService {
   /**
    * Count workouts in last 7 days
    */
+  /**
+   * Count workouts from Monday of current week to today
+   * Fixed: Was counting last 7 days instead of current calendar week
+   */
   private countWorkoutsThisWeek(workouts: any[]): number {
-    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-    return workouts.filter(w => 
-      new Date(w.created_at).getTime() >= sevenDaysAgo
-    ).length;
+    // Get start of current week (Monday)
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // If Sunday, go back 6 days; else calculate offset to Monday
+    
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() + mondayOffset);
+    startOfWeek.setHours(0, 0, 0, 0); // Set to midnight
+    
+    const startTimestamp = startOfWeek.getTime();
+    
+    // Count workouts from Monday onwards
+    const count = workouts.filter(w => {
+      const workoutTime = new Date(w.created_at).getTime();
+      return workoutTime >= startTimestamp;
+    }).length;
+    
+    // Debug logging (can be removed after testing)
+    console.log('Recovery Debug - Workouts This Week:', {
+      startOfWeek: startOfWeek.toISOString(),
+      now: now.toISOString(),
+      dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek],
+      count,
+      totalWorkoutsInLast14Days: workouts.length,
+    });
+    
+    // Sanity check: Cap at 14 (2 per day max for a week)
+    return Math.min(count, 14);
   }
 
   /**

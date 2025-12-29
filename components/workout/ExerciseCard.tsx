@@ -23,6 +23,8 @@ import { Card } from '@/components/ui';
 import { usePreviousWorkout } from '@/hooks/usePreviousWorkout';
 import { lightHaptic, mediumHaptic } from '@/lib/utils/haptics';
 import { FormTips } from '@/components/ai';
+import { WeightSuggestion } from '@/components/ai/WeightSuggestion';
+import { useAuthStore } from '@/stores/authStore';
 
 // ============================================
 // Types
@@ -58,6 +60,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   onMoveDown,
 }) => {
   const { exercise, sets } = workoutExercise;
+  const { user } = useAuthStore();
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
@@ -207,29 +210,45 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 
       {/* Sets List */}
       <View style={styles.setsContainer}>
-        {sets.map((set) => {
+        {sets.map((set, idx) => {
           const prevSet = getPreviousSet(set.setNumber);
 
           return (
-            <SetRow
-              key={set.id}
-              setNumber={set.setNumber}
-              weight={set.weight?.toString() || ''}
-              reps={set.reps?.toString() || ''}
-              previousWeight={prevSet?.weight?.toString()}
-              previousReps={prevSet?.reps?.toString()}
-              isCompleted={set.isCompleted}
-              onWeightChange={(value) => {
-                const numValue = parseFloat(value) || 0;
-                onUpdateSet(set.id, { weight: numValue });
-              }}
-              onRepsChange={(value) => {
-                const numValue = parseInt(value, 10) || 0;
-                onUpdateSet(set.id, { reps: numValue });
-              }}
-              onPreviousTap={() => handleCopyPrevious(set.id, set.setNumber)}
-              onComplete={() => onCompleteSet(set.id)}
-            />
+            <React.Fragment key={set.id}>
+              {/* Show weight suggestion only for first set */}
+              {idx === 0 && user && (
+                <View style={styles.suggestionWrapper}>
+                  <WeightSuggestion
+                    exerciseId={exercise.id}
+                    exerciseName={exercise.name}
+                    setNumber={set.setNumber}
+                    currentWeight={set.weight || 0}
+                    onApplyWeight={(weight) => onUpdateSet(set.id, { weight })}
+                    onApplyReps={(reps) => onUpdateSet(set.id, { reps })}
+                    userId={user.id}
+                  />
+                </View>
+              )}
+              
+              <SetRow
+                setNumber={set.setNumber}
+                weight={set.weight?.toString() || ''}
+                reps={set.reps?.toString() || ''}
+                previousWeight={prevSet?.weight?.toString()}
+                previousReps={prevSet?.reps?.toString()}
+                isCompleted={set.isCompleted}
+                onWeightChange={(value) => {
+                  const numValue = parseFloat(value) || 0;
+                  onUpdateSet(set.id, { weight: numValue });
+                }}
+                onRepsChange={(value) => {
+                  const numValue = parseInt(value, 10) || 0;
+                  onUpdateSet(set.id, { reps: numValue });
+                }}
+                onPreviousTap={() => handleCopyPrevious(set.id, set.setNumber)}
+                onComplete={() => onCompleteSet(set.id)}
+              />
+            </React.Fragment>
           );
         })}
       </View>
@@ -501,6 +520,12 @@ const styles = StyleSheet.create({
 
   // Sets Container
   setsContainer: {},
+
+  // Suggestion Wrapper
+  suggestionWrapper: {
+    paddingHorizontal: 12,
+    paddingTop: 12,
+  },
 
   // Form Tips Container
   formTipsContainer: {

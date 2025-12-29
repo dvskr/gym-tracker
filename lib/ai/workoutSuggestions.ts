@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase';
 import { aiService } from './aiService';
 import { buildUserContext } from './contextBuilder';
 import { FITNESS_COACH_SYSTEM_PROMPT, WORKOUT_SUGGESTION_PROMPT } from './prompts';
+import { validateWorkoutSuggestion, validateAndFallback, normalizeConfidence } from './validation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface WorkoutSuggestion {
   type: string;
@@ -14,12 +16,31 @@ export interface WorkoutSuggestion {
   confidence: 'high' | 'medium' | 'low';
 }
 
+// Cache configuration
+const SUGGESTION_CACHE_KEY = 'workout_suggestion_cache';
+const CACHE_DURATION = 4 * 60 * 60 * 1000; // 4 hours
+
+interface CachedSuggestion {
+  suggestion: WorkoutSuggestion;
+  timestamp: number;
+  userId: string;
+}
+
 class WorkoutSuggestionService {
   /**
    * Get AI-powered workout suggestion for today
    */
-  async getSuggestion(userId: string): Promise<WorkoutSuggestion> {
+  async getSuggestion(userId: string, forceRefresh = false): Promise<WorkoutSuggestion> {
     try {
+      // Check cache unless force refresh
+      if (!forceRefresh) {
+        const cached = await this.getCachedSuggestion(userId);
+        if (cached) {
+          console.log('✅ Using cached workout suggestion');
+          return cached;
+        }
+      }
+
       // Gather user data
       const [recentWorkouts, personalRecords, profile] = await Promise.all([
         this.getRecentWorkouts(userId, 14), // Last 2 weeks
@@ -35,18 +56,74 @@ class WorkoutSuggestionService {
 
       // Try AI suggestion first
       try {
-        return await this.getAISuggestion({
+        const aiSuggestion = await this.getAISuggestion({
           recentWorkouts,
           personalRecords,
           profile,
         });
+        
+        // Validate AI response
+        const fallbackSuggestion = this.getRuleBasedSuggestion(recentWorkouts);
+        const finalSuggestion = validateAndFallback(
+          aiSuggestion,
+          validateWorkoutSuggestion,
+          fallbackSuggestion,
+          'WorkoutSuggestion'
+        );
+        
+        // Cache the result
+        await this.cacheSuggestion(userId, finalSuggestion);
+        
+        return finalSuggestion;
       } catch (aiError) {
         console.warn('AI suggestion failed, falling back to rule-based:', aiError);
-        return this.getRuleBasedSuggestion(recentWorkouts);
+        const fallback = this.getRuleBasedSuggestion(recentWorkouts);
+        await this.cacheSuggestion(userId, fallback);
+        return fallback;
       }
     } catch (error) {
       console.error('Failed to get workout suggestion:', error);
       return this.getDefaultSuggestion([]);
+    }
+  }
+
+  /**
+   * Get cached suggestion if valid
+   */
+  private async getCachedSuggestion(userId: string): Promise<WorkoutSuggestion | null> {
+    try {
+      const cached = await AsyncStorage.getItem(SUGGESTION_CACHE_KEY);
+      if (!cached) return null;
+      
+      const parsed: CachedSuggestion = JSON.parse(cached);
+      
+      // Check if cache is for same user and not expired
+      const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+      if (parsed.userId !== userId || isExpired) {
+        await AsyncStorage.removeItem(SUGGESTION_CACHE_KEY);
+        return null;
+      }
+      
+      return parsed.suggestion;
+    } catch (error) {
+      console.error('Error reading cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Cache suggestion for future use
+   */
+  private async cacheSuggestion(userId: string, suggestion: WorkoutSuggestion): Promise<void> {
+    try {
+      const cacheData: CachedSuggestion = {
+        suggestion,
+        timestamp: Date.now(),
+        userId,
+      };
+      await AsyncStorage.setItem(SUGGESTION_CACHE_KEY, JSON.stringify(cacheData));
+    } catch (error) {
+      console.error('Error caching suggestion:', error);
     }
   }
 
@@ -276,82 +353,154 @@ class WorkoutSuggestionService {
    */
   private parseAISuggestion(response: string): WorkoutSuggestion {
     try {
-      // AI might return JSON or text - handle both
-      if (response.trim().startsWith('{')) {
-        return JSON.parse(response);
-      }
-
-      // Parse text response
-      const lines = response.split('\n').filter(l => l.trim());
+      // Clean response before parsing
+      const cleaned = this.cleanAIResponse(response);
       
-      // Extract workout type (usually in first line with ** or #)
-      let type = 'Full Body';
-      const typeMatch = lines[0]?.match(/\*\*(.+?)\*\*|#\s*(.+?)$/);
-      if (typeMatch) {
-        type = (typeMatch[1] || typeMatch[2]).trim();
-      }
-      
-      // Extract reason (usually next 2-3 lines)
-      const reasonLines: string[] = [];
-      let exerciseStartIndex = 1;
-      
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        // Stop when we hit exercises (numbered or bulleted list)
-        if (/^\d+\.|^[-•*]/.test(line.trim())) {
-          exerciseStartIndex = i;
-          break;
-        }
-        if (line.trim() && !line.toLowerCase().includes('exercise')) {
-          reasonLines.push(line);
-        }
-      }
-      
-      const reason = reasonLines.join(' ').substring(0, 250) || 
-                     'Based on your recent training patterns.';
-      
-      // Extract exercises
-      const exercises: any[] = [];
-      for (let i = exerciseStartIndex; i < lines.length; i++) {
-        const line = lines[i];
-        // Match patterns like:
-        // 1. Bench Press - 4 x 6-8
-        // - Squats - 3 x 8-10
-        // • Deadlifts: 4 sets of 6-8 reps
-        const match = line.match(/[-•*\d.]\s*(.+?)[-:–]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-–~]\d+|\d+)/i);
+      // Try to parse as JSON first
+      if (cleaned.trim().startsWith('{')) {
+        const parsed = JSON.parse(cleaned);
         
-        if (match && exercises.length < 5) {
-          exercises.push({
-            name: match[1].trim(),
-            sets: parseInt(match[2]),
-            reps: match[3],
-          });
-        }
-      }
-
-      // If no exercises found, use defaults
-      if (exercises.length === 0) {
-        const typeKey = type.includes('Push') ? 'Push' : 
-                       type.includes('Pull') ? 'Pull' : 
-                       type.includes('Leg') ? 'Legs' : 'Push';
+        // Clean and validate structure
         return {
-          type,
-          reason,
-          exercises: this.getDefaultExercises(typeKey),
-          confidence: 'medium',
+          type: parsed.workoutType || parsed.type || 'Full Body',
+          reason: parsed.reason || 'Based on your recent training patterns.',
+          exercises: this.cleanExercises(parsed.exercises || []),
+          confidence: normalizeConfidence(parsed.confidence),
         };
       }
 
-      return {
-        type,
-        reason,
-        exercises,
-        confidence: 'high',
-      };
+      // Fallback: parse text response (legacy format)
+      return this.parseTextResponse(response);
     } catch (error) {
       console.error('Failed to parse AI suggestion:', error);
+      console.error('Response was:', response);
       return this.getDefaultSuggestion([]);
     }
+  }
+
+  /**
+   * Clean AI response before JSON parsing
+   */
+  private cleanAIResponse(response: string): string {
+    return response
+      // Remove markdown code blocks
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      // Remove any leading/trailing whitespace
+      .trim()
+      // Remove any text before the first {
+      .replace(/^[^{]*/, '')
+      // Remove any text after the last }
+      .replace(/}[^}]*$/, '}');
+  }
+
+  /**
+   * Clean exercise array from AI response
+   */
+  private cleanExercises(exercises: any[]): Array<{
+    name: string;
+    sets: number;
+    reps: string;
+  }> {
+    if (!Array.isArray(exercises)) {
+      return [];
+    }
+
+    const cleaned = exercises
+      .filter((ex) => ex && ex.name)
+      .map((ex) => ({
+        name: this.cleanExerciseName(ex.name),
+        sets: typeof ex.sets === 'number' ? ex.sets : 3,
+        reps: ex.reps || '8-12',
+      }))
+      .slice(0, 5); // Limit to 5 exercises
+
+    // If no exercises, return defaults
+    if (cleaned.length === 0) {
+      return this.getDefaultExercises('Push');
+    }
+
+    return cleaned;
+  }
+
+  /**
+   * Clean exercise name
+   */
+  private cleanExerciseName(name: string): string {
+    return name
+      .replace(/\*\*/g, '')        // Remove bold markdown
+      .replace(/^\d+\.\s*/, '')    // Remove numbered prefix (1. )
+      .replace(/^[-•*]\s*/, '')    // Remove bullet prefix (- or • or *)
+      .replace(/\s+/g, ' ')        // Normalize whitespace
+      .trim();
+  }
+
+  /**
+   * Parse text response (legacy fallback)
+   */
+  private parseTextResponse(response: string): WorkoutSuggestion {
+    const lines = response.split('\n').filter(l => l.trim());
+    
+    // Extract workout type (usually in first line with ** or #)
+    let type = 'Full Body';
+    const typeMatch = lines[0]?.match(/\*\*(.+?)\*\*|#\s*(.+?)$/);
+    if (typeMatch) {
+      type = (typeMatch[1] || typeMatch[2]).trim();
+    }
+    
+    // Extract reason (usually next 2-3 lines)
+    const reasonLines: string[] = [];
+    let exerciseStartIndex = 1;
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      // Stop when we hit exercises (numbered or bulleted list)
+      if (/^\d+\.|^[-•*]/.test(line.trim())) {
+        exerciseStartIndex = i;
+        break;
+      }
+      if (line.trim() && !line.toLowerCase().includes('exercise')) {
+        reasonLines.push(line);
+      }
+    }
+    
+    const reason = reasonLines.join(' ').substring(0, 250) || 
+                   'Based on your recent training patterns.';
+    
+    // Extract exercises
+    const exercises: any[] = [];
+    for (let i = exerciseStartIndex; i < lines.length; i++) {
+      const line = lines[i];
+      // Match patterns like:
+      // 1. Bench Press - 4 x 6-8
+      // - Squats - 3 x 8-10
+      // • Deadlifts: 4 sets of 6-8 reps
+      const match = line.match(/[-•*\d.]\s*(.+?)[-:–]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-–~]\d+|\d+)/i);
+      
+      if (match && exercises.length < 5) {
+        exercises.push({
+          name: this.cleanExerciseName(match[1]),
+          sets: parseInt(match[2]),
+          reps: match[3],
+        });
+      }
+    }
+
+    // If no exercises found, use defaults
+    const cleanedExercises = exercises.length > 0 
+      ? exercises 
+      : this.getDefaultExercises(
+          type.includes('Push') ? 'Push' : 
+          type.includes('Pull') ? 'Pull' : 
+          type.includes('Leg') ? 'Legs' : 'Push'
+        );
+
+    return {
+      type,
+      reason,
+      exercises: cleanedExercises,
+      confidence: 'medium',
+    };
   }
 
   /**

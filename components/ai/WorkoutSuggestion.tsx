@@ -1,41 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
-  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { RefreshCw } from 'lucide-react-native';
 import { workoutSuggestionService, WorkoutSuggestion as WorkoutSuggestionType } from '@/lib/ai/workoutSuggestions';
+import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
+import { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
 
 export function WorkoutSuggestion() {
-  const [suggestion, setSuggestion] = useState<WorkoutSuggestionType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const { user } = useAuthStore();
+  const router = useRouter();
+  
+  // Try to get cached data immediately
+  const [suggestion, setSuggestion] = useState<WorkoutSuggestionType | null>(() => {
+    if (!user) return null;
+    return getCachedData<WorkoutSuggestionType>(user.id, 'suggestion');
+  });
+  
+  const [isLoading, setIsLoading] = useState(!suggestion);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchSuggestion = async () => {
+  const fetchSuggestion = useCallback(async (forceRefresh = false) => {
     if (!user) return;
     
-    setIsLoading(true);
-    
     try {
-      const result = await workoutSuggestionService.getSuggestion(user.id);
+      if (forceRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+      setError(null);
+      
+      const result = await workoutSuggestionService.getSuggestion(user.id, forceRefresh);
       setSuggestion(result);
-    } catch (err) {
+      
+      // Cache the result
+      setCacheData(user.id, 'suggestion', result);
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to get suggestion';
+      setError(errorMessage);
       console.error('Error fetching suggestion:', err);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      fetchSuggestion();
+      setIsRefreshing(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    // Only fetch if we don't have cached data
+    if (user && !suggestion) {
+      fetchSuggestion();
+    }
+  }, [user, suggestion, fetchSuggestion]);
+
+  const handleRefresh = () => {
+    fetchSuggestion(true);
+  };
 
   const startSuggestedWorkout = () => {
     if (!suggestion) return;
@@ -57,23 +84,43 @@ export function WorkoutSuggestion() {
 
   if (!user) return null;
 
-  if (isLoading) {
+  // Error state with retry
+  if (error && !suggestion) {
     return (
       <View style={styles.container}>
-        <View style={styles.loadingContent}>
-          <ActivityIndicator size="small" color="#3b82f6" />
-          <Text style={styles.loadingText}>Loading...</Text>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity onPress={() => fetchSuggestion()} style={styles.retryButton}>
+            <Text style={styles.retryText}>Tap to retry</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
+  }
+
+  if (isLoading) {
+    return <WorkoutSuggestionSkeleton />;
   }
 
   if (!suggestion) return null;
 
   return (
     <View style={styles.container}>
-      {/* Simple label */}
-      <Text style={styles.label}>Today</Text>
+      {/* Header with label and refresh */}
+      <View style={styles.header}>
+        <Text style={styles.label}>Today</Text>
+        <TouchableOpacity 
+          onPress={handleRefresh} 
+          disabled={isRefreshing}
+          style={styles.refreshButton}
+        >
+          <RefreshCw 
+            size={18} 
+            color={isRefreshing ? '#475569' : '#60a5fa'} 
+            style={isRefreshing ? { opacity: 0.5 } : undefined}
+          />
+        </TouchableOpacity>
+      </View>
       
       {/* Workout title - clean, no extra text */}
       <Text style={styles.workoutTitle}>
@@ -120,15 +167,35 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
   },
-  loadingContent: {
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20,
+    marginBottom: 8,
+  },
+  refreshButton: {
+    padding: 6,
+  },
+  errorContainer: {
+    backgroundColor: '#451a1a',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
     gap: 12,
   },
-  loadingText: {
+  errorText: {
+    color: '#fca5a5',
     fontSize: 14,
-    color: '#94a3b8',
-    fontWeight: '500',
+    textAlign: 'center',
+  },
+  retryButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  retryText: {
+    color: '#60a5fa',
+    fontWeight: '600',
+    fontSize: 14,
   },
   label: {
     fontSize: 12,

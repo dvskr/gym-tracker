@@ -1,30 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
+import { ChevronRight, RefreshCw } from 'lucide-react-native';
 import { recoveryService, RecoveryStatus as RecoveryStatusType } from '@/lib/ai/recoveryService';
+import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
+import { RecoveryStatusSkeleton } from './RecoveryStatusSkeleton';
 
 export function RecoveryStatus() {
-  const [status, setStatus] = useState<RecoveryStatusType | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [expanded, setExpanded] = useState(false);
   const { user } = useAuthStore();
+  
+  // Try to get cached data immediately
+  const [status, setStatus] = useState<RecoveryStatusType | null>(() => {
+    if (!user) return null;
+    return getCachedData<RecoveryStatusType>(user.id, 'recovery');
+  });
+  
+  const [isLoading, setIsLoading] = useState(!status);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
-  useEffect(() => {
-    fetchStatus();
-  }, [user]);
-
-  const fetchStatus = async () => {
+  const fetchStatus = useCallback(async (forceRefresh = false) => {
     if (!user) return;
 
-    setIsLoading(true);
     try {
+      if (forceRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+      setError(null);
+
       const result = await recoveryService.getRecoveryStatus(user.id);
       setStatus(result);
-    } catch (error) {
-      console.error('Failed to fetch recovery status:', error);
+      
+      // Cache the result
+      setCacheData(user.id, 'recovery', result);
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to fetch recovery status';
+      setError(errorMessage);
+      console.error('Failed to fetch recovery status:', err);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Only fetch if we don't have cached data
+    if (user && !status) {
+      fetchStatus();
+    }
+  }, [user, status, fetchStatus]);
+
+  const handleRefresh = () => {
+    fetchStatus(true);
+  };
+
+  const getStatusColor = () => {
+    if (!status) return '#6b7280';
+    switch (status.overall) {
+      case 'recovered':
+        return '#10b981';
+      case 'moderate':
+        return '#60a5fa';
+      case 'fatigued':
+        return '#f59e0b';
+      case 'overtrained':
+        return '#ef4444';
+      default:
+        return '#6b7280';
     }
   };
 
@@ -34,9 +80,9 @@ export function RecoveryStatus() {
       case 'recovered':
         return '💪';
       case 'moderate':
-        return '😊';
+        return '👍';
       case 'fatigued':
-        return '😴';
+        return '😓';
       case 'overtrained':
         return '😴';
     }
@@ -44,12 +90,18 @@ export function RecoveryStatus() {
 
   const getStatusTitle = () => {
     if (!status) return 'Loading';
-    const isRestDay = status.suggestedAction === 'rest' || status.overall === 'overtrained';
-    
-    if (isRestDay) {
-      return 'Rest Day';
+    switch (status.overall) {
+      case 'recovered':
+        return 'Ready to Train';
+      case 'moderate':
+        return 'Good to Go';
+      case 'fatigued':
+        return 'Take It Easy';
+      case 'overtrained':
+        return 'Rest Day';
+      default:
+        return 'Unknown';
     }
-    return 'Ready to Train';
   };
 
   const getStatusMessage = () => {
@@ -79,9 +131,19 @@ export function RecoveryStatus() {
   };
 
   if (isLoading) {
+    return <RecoveryStatusSkeleton />;
+  }
+
+  // Error state with retry
+  if (error && !status) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#3b82f6" />
+      <View style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity onPress={() => fetchStatus()} style={styles.retryButton}>
+            <Text style={styles.retryText}>Tap to retry</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -90,17 +152,63 @@ export function RecoveryStatus() {
 
   return (
     <View style={styles.container}>
-      {/* Simple label */}
-      <Text style={styles.label}>Your Status</Text>
-      
-      {/* Status with friendly emoji */}
-      <View style={styles.statusRow}>
-        <Text style={styles.emoji}>{getStatusEmoji()}</Text>
-        <Text style={styles.statusTitle}>{getStatusTitle()}</Text>
+      {/* Header with label and refresh */}
+      <View style={styles.header}>
+        <Text style={styles.label}>YOUR STATUS</Text>
+        <TouchableOpacity 
+          onPress={handleRefresh} 
+          disabled={isRefreshing}
+          style={styles.refreshButton}
+        >
+          <RefreshCw 
+            size={16} 
+            color={isRefreshing ? '#475569' : '#60a5fa'} 
+            style={isRefreshing ? { opacity: 0.5 } : undefined}
+          />
+        </TouchableOpacity>
       </View>
       
-      {/* Helpful message - positive framing */}
-      <Text style={styles.message}>{getStatusMessage()}</Text>
+      {/* Main Content with Recovery Ring */}
+      <View style={styles.mainContent}>
+        {/* Recovery Ring */}
+        <View style={styles.ringContainer}>
+          <Svg width={80} height={80}>
+            {/* Background circle */}
+            <Circle
+              cx={40}
+              cy={40}
+              r={35}
+              stroke="#334155"
+              strokeWidth={6}
+              fill="transparent"
+            />
+            {/* Progress circle */}
+            <Circle
+              cx={40}
+              cy={40}
+              r={35}
+              stroke={getStatusColor()}
+              strokeWidth={6}
+              fill="transparent"
+              strokeDasharray={`${Math.max(0, Math.min(100, status.score)) / 100 * 220} 220`}
+              strokeLinecap="round"
+              transform="rotate(-90 40 40)"
+            />
+          </Svg>
+          <View style={styles.ringCenter}>
+            <Text style={styles.scoreText}>{Math.round(status.score)}</Text>
+          </View>
+        </View>
+
+        {/* Status Info */}
+        <View style={styles.statusInfo}>
+          <Text style={styles.emoji}>{getStatusEmoji()}</Text>
+          <Text style={[styles.statusTitle, { color: getStatusColor() }]}>
+            {getStatusTitle()}
+          </Text>
+          <Text style={styles.message}>{getStatusMessage()}</Text>
+        </View>
+      </View>
       
       {/* Stats row - inline, with units */}
       <View style={styles.statsRow}>
@@ -110,7 +218,9 @@ export function RecoveryStatus() {
         </View>
         <View style={styles.statDivider} />
         <View style={styles.stat}>
-          <Text style={styles.statValue}>{status.workoutsThisWeek}</Text>
+          <Text style={styles.statValue}>
+            {Math.min(status.workoutsThisWeek, 14)}
+          </Text>
           <Text style={styles.statLabel}>
             {status.workoutsThisWeek === 1 ? 'workout' : 'workouts'} this week
           </Text>
@@ -180,81 +290,125 @@ export function RecoveryStatus() {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    backgroundColor: '#111827',
-    marginHorizontal: 8,
-    marginTop: 24,
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-  },
   container: {
-    backgroundColor: '#111827',
+    backgroundColor: '#1e293b',
     marginHorizontal: 8,
     marginTop: 24,
     marginBottom: 32,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 12,
+    padding: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  refreshButton: {
+    padding: 6,
+  },
+  errorContainer: {
+    backgroundColor: '#451a1a',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    gap: 12,
+  },
+  errorText: {
+    color: '#fca5a5',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  retryButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  retryText: {
+    color: '#60a5fa',
+    fontWeight: '600',
+    fontSize: 14,
   },
   label: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#6b7280',
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748b',
     textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    letterSpacing: 0.5,
   },
-  statusRow: {
+  mainContent: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
+    marginBottom: 4,
   },
-  emoji: {
-    fontSize: 28,
-    marginRight: 8,
+  ringContainer: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+    marginRight: 16,
   },
-  statusTitle: {
+  ringCenter: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scoreText: {
+    color: '#f1f5f9',
     fontSize: 24,
     fontWeight: '700',
-    color: '#ffffff',
+  },
+  statusInfo: {
+    flex: 1,
+  },
+  emoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  statusTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 4,
   },
   message: {
-    fontSize: 14,
-    color: '#9ca3af',
-    lineHeight: 20,
-    marginTop: 8,
+    fontSize: 13,
+    color: '#94a3b8',
+    lineHeight: 18,
   },
   statsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 16,
-    paddingTop: 16,
+    paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#1f2937',
+    borderTopColor: '#334155',
   },
   stat: {
     flex: 1,
+    alignItems: 'center',
   },
   statDivider: {
     width: 1,
     height: 32,
-    backgroundColor: '#1f2937',
-    marginHorizontal: 16,
+    backgroundColor: '#334155',
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: '#ffffff',
+    color: '#f1f5f9',
   },
   statLabel: {
     fontSize: 12,
-    color: '#6b7280',
-    marginTop: 2,
+    color: '#64748b',
   },
   muscleSection: {
     marginTop: 16,
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: '#1f2937',
+    borderTopColor: '#334155',
   },
   muscleSectionTitle: {
     fontSize: 12,
@@ -273,7 +427,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#1f2937',
+    backgroundColor: '#0f172a',
     borderRadius: 8,
     padding: 10,
     minWidth: '48%',

@@ -10,27 +10,35 @@ import {
 } from 'react-native';
 import { AlertTriangle, X, TrendingDown, Lightbulb, ChevronRight } from 'lucide-react-native';
 import { plateauDetectionService, PlateauAlert } from '@/lib/ai/plateauDetection';
+import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DISMISSED_KEY = '@gym/dismissed_plateaus';
 
 export function PlateauAlerts() {
-  const [plateaus, setPlateaus] = useState<PlateauAlert[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuthStore();
+  
+  // Try to get cached data immediately
+  const [plateaus, setPlateaus] = useState<PlateauAlert[]>(() => {
+    if (!user) return [];
+    return getCachedData<PlateauAlert[]>(user.id, 'plateaus') || [];
+  });
+  
+  const [isLoading, setIsLoading] = useState(plateaus.length === 0);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [selectedPlateau, setSelectedPlateau] = useState<PlateauAlert | null>(null);
-  const { user } = useAuthStore();
 
   useEffect(() => {
     loadDismissed();
   }, []);
 
   useEffect(() => {
-    if (user) {
+    // Only fetch if we don't have cached data
+    if (user && plateaus.length === 0) {
       checkPlateaus();
     }
-  }, [user]);
+  }, [user, plateaus.length]);
 
   const loadDismissed = async () => {
     try {
@@ -58,6 +66,9 @@ export function PlateauAlerts() {
     try {
       const results = await plateauDetectionService.detectPlateaus(user.id);
       setPlateaus(results);
+      
+      // Cache the result
+      setCacheData(user.id, 'plateaus', results);
     } catch (error) {
       console.error('Failed to check plateaus:', error);
     } finally {

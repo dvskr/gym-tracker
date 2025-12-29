@@ -31,6 +31,8 @@ export default function CoachScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
   const [userContext, setUserContext] = useState('');
   const [isLoadingContext, setIsLoadingContext] = useState(true);
   const flatListRef = useRef<FlatList>(null);
@@ -95,7 +97,7 @@ How can I help you today?`,
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || isStreaming) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -105,8 +107,10 @@ How can I help you today?`,
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const userInput = input.trim();
     setInput('');
-    setIsLoading(true);
+    setIsStreaming(true);
+    setStreamingMessage('');
 
     // Scroll to bottom
     setTimeout(() => {
@@ -125,41 +129,58 @@ How can I help you today?`,
 
 ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
 
-      const response = await aiService.complete(
+      let fullResponse = '';
+
+      // Stream the response
+      for await (const chunk of aiService.streamComplete(
         [
           { role: 'system', content: systemPrompt },
           ...conversationHistory,
-          { role: 'user', content: input.trim() },
+          { role: 'user', content: userInput },
         ],
         {
           temperature: 0.7,
           maxTokens: 500,
+          requestType: 'chat',
         }
-      );
+      )) {
+        fullResponse += chunk;
+        setStreamingMessage(fullResponse);
+        
+        // Auto-scroll as content streams in
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: false });
+        }, 50);
+      }
 
+      // Add complete assistant message
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.content,
+        content: fullResponse,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // Scroll to bottom
+      // Final scroll
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I had trouble processing that. Please make sure you have an API key configured and try again.',
+        content: error.message?.includes('limit') 
+          ? 'You\'ve reached your daily AI limit. Upgrade to Premium for more requests!'
+          : 'Sorry, I had trouble processing that. Please make sure you have an API key configured and try again.',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
+      setIsStreaming(false);
+      setStreamingMessage('');
       setIsLoading(false);
     }
   };
@@ -208,6 +229,24 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
     </View>
   );
 
+  const renderStreamingMessage = () => {
+    if (!isStreaming || !streamingMessage) return null;
+    
+    return (
+      <View style={[styles.messageContainer, styles.assistantMessage]}>
+        <View style={styles.avatarContainer}>
+          <Sparkles size={16} color="#f59e0b" />
+        </View>
+        <View style={[styles.messageBubble, styles.assistantBubble]}>
+          <Text style={styles.messageText}>
+            {streamingMessage}
+            <Text style={styles.cursor}>▊</Text>
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="light" />
@@ -241,12 +280,13 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.messageList}
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={renderStreamingMessage}
             onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
             onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
           />
 
-          {/* Typing Indicator */}
-          {isLoading && (
+          {/* Typing Indicator - shown before streaming starts */}
+          {isLoading && !isStreaming && !streamingMessage && (
             <View style={styles.typingIndicator}>
               <View style={styles.avatarContainer}>
                 <Sparkles size={14} color="#f59e0b" />
@@ -262,7 +302,7 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
           )}
 
           {/* Quick Prompts */}
-          {messages.length <= 1 && !isLoading && (
+          {messages.length <= 1 && !isLoading && !isStreaming && (
             <View style={styles.quickPrompts}>
               <Text style={styles.quickPromptsTitle}>Quick questions:</Text>
               {[
@@ -296,20 +336,20 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
                 placeholderTextColor="#6b7280"
                 multiline
                 maxLength={500}
-                editable={!isLoading}
+                editable={!isLoading && !isStreaming}
               />
               <Pressable
                 style={[
                   styles.sendButton,
-                  (!input.trim() || isLoading) && styles.sendButtonDisabled,
+                  (!input.trim() || isLoading || isStreaming) && styles.sendButtonDisabled,
                 ]}
                 onPress={sendMessage}
-                disabled={!input.trim() || isLoading}
+                disabled={!input.trim() || isLoading || isStreaming}
               >
                 <Send
                   size={20}
-                  color={input.trim() && !isLoading ? '#3b82f6' : '#6b7280'}
-                  fill={input.trim() && !isLoading ? '#3b82f6' : 'transparent'}
+                  color={input.trim() && !isLoading && !isStreaming ? '#3b82f6' : '#6b7280'}
+                  fill={input.trim() && !isLoading && !isStreaming ? '#3b82f6' : 'transparent'}
                 />
               </Pressable>
             </View>
@@ -448,6 +488,10 @@ const styles = StyleSheet.create({
     color: '#f1f5f9',
     fontSize: 15,
     lineHeight: 22,
+  },
+  cursor: {
+    color: '#3b82f6',
+    fontWeight: 'bold',
   },
   timestamp: {
     fontSize: 10,

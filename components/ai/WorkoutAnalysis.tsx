@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Sparkles,
@@ -17,6 +18,7 @@ import {
   ArrowRight,
   Lightbulb,
   Trophy,
+  RefreshCw,
 } from 'lucide-react-native';
 import { workoutAnalysisService, WorkoutAnalysis as WorkoutAnalysisType } from '@/lib/ai/workoutAnalysis';
 import { useAuthStore } from '@/stores/authStore';
@@ -28,25 +30,40 @@ interface WorkoutAnalysisProps {
 export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
   const [analysis, setAnalysis] = useState<WorkoutAnalysisType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    async function analyze() {
-      if (!user) return;
+  const fetchAnalysis = useCallback(async (forceRefresh = false) => {
+    if (!user) return;
 
-      setIsLoading(true);
-      try {
-        const result = await workoutAnalysisService.analyzeWorkout(workout, user.id);
-        setAnalysis(result);
-      } catch (error) {
-        console.error('Failed to analyze workout:', error);
-      } finally {
-        setIsLoading(false);
+    try {
+      if (forceRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
       }
-    }
+      setError(null);
 
-    analyze();
+      const result = await workoutAnalysisService.analyzeWorkout(workout, user.id, forceRefresh);
+      setAnalysis(result);
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to analyze workout';
+      setError(errorMessage);
+      console.error('Failed to analyze workout:', err);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
   }, [workout, user]);
+
+  useEffect(() => {
+    fetchAnalysis();
+  }, [fetchAnalysis]);
+
+  const handleRefresh = () => {
+    fetchAnalysis(true);
+  };
 
   if (isLoading) {
     return (
@@ -55,6 +72,20 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
         <Text style={styles.loadingTitle}>Analyzing your workout...</Text>
         <ActivityIndicator size="large" color="#3b82f6" style={styles.loader} />
         <Text style={styles.loadingSubtext}>Crunching the numbers</Text>
+      </View>
+    );
+  }
+
+  // Error state with retry
+  if (error && !analysis) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity onPress={() => fetchAnalysis()} style={styles.retryButton}>
+            <Text style={styles.retryText}>Tap to retry</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -199,6 +230,24 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
           </View>
         </View>
       )}
+
+      {/* Refresh Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity 
+          onPress={handleRefresh} 
+          disabled={isRefreshing}
+          style={styles.refreshLink}
+        >
+          <RefreshCw 
+            size={14} 
+            color={isRefreshing ? '#475569' : '#60a5fa'} 
+            style={isRefreshing ? { opacity: 0.5 } : undefined}
+          />
+          <Text style={[styles.refreshLinkText, isRefreshing && { opacity: 0.5 }]}>
+            {isRefreshing ? 'Refreshing...' : 'Get fresh analysis'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -233,6 +282,27 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     gap: 20,
+  },
+  errorContainer: {
+    backgroundColor: '#451a1a',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    gap: 12,
+  },
+  errorText: {
+    color: '#fca5a5',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  retryButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  retryText: {
+    color: '#60a5fa',
+    fontWeight: '600',
+    fontSize: 14,
   },
   header: {
     flexDirection: 'row',
@@ -378,6 +448,26 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#3b82f6',
     textTransform: 'capitalize',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+  },
+  refreshLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  refreshLinkText: {
+    fontSize: 13,
+    color: '#60a5fa',
+    fontWeight: '500',
   },
 });
 

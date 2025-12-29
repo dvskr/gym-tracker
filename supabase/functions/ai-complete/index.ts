@@ -87,6 +87,9 @@ serve(async (req: Request) => {
       )
     }
 
+    // Check if streaming is requested
+    const streaming = options.stream === true
+
     // 5. Call OpenAI
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -99,6 +102,7 @@ serve(async (req: Request) => {
         messages,
         temperature: options.temperature || 0.7,
         max_tokens: Math.min(options.maxTokens || 500, 1000),
+        stream: streaming,
       }),
     })
 
@@ -119,9 +123,7 @@ serve(async (req: Request) => {
       )
     }
 
-    const data = await openaiResponse.json()
-
-    // 6. Update usage counter
+    // Update usage counter (same for streaming and non-streaming)
     await supabaseAdmin
       .from('profiles')
       .update({ 
@@ -129,6 +131,24 @@ serve(async (req: Request) => {
         ai_requests_today_date: today,
       })
       .eq('id', user.id)
+
+    // Handle streaming response
+    if (streaming) {
+      return new Response(openaiResponse.body, {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'X-Usage-Updated': 'true',
+          'X-Requests-Used': String(requestsToday + 1),
+          'X-Requests-Limit': String(dailyLimit),
+        },
+      })
+    }
+
+    // Non-streaming response
+    const data = await openaiResponse.json()
 
     // 7. Return response
     return new Response(

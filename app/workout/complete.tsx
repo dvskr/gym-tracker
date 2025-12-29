@@ -32,6 +32,7 @@ import { Button, Card } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
 import { createTemplateFromWorkout } from '@/lib/api/templates';
+import { invalidateCache, prefetchAIData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { WorkoutAnalysis } from '@/components/ai';
 
@@ -247,6 +248,17 @@ export default function WorkoutCompleteScreen() {
         .eq('id', workoutId);
 
       if (error) throw error;
+
+      // Invalidate AI cache since workout data changed
+      if (user?.id) {
+        console.log('[WorkoutComplete] Invalidating AI cache');
+        invalidateCache(user.id);
+        
+        // Pre-fetch fresh data in background (optional)
+        prefetchAIData(user.id).catch(err => 
+          console.warn('[WorkoutComplete] Prefetch failed:', err)
+        );
+      }
 
       successHaptic();
       router.replace('/(tabs)');

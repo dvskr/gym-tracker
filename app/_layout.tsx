@@ -13,9 +13,13 @@ import { calculateStreak } from '../lib/utils/streakCalculation';
 import { useAuthStore } from '../stores/authStore';
 import { supabase } from '../lib/supabase';
 import { PRToast, AchievementToast } from '../components/notifications';
+import { usePrefetchAI } from '../hooks/usePrefetchAI';
 
 export default function RootLayout() {
   const router = useRouter();
+
+  // Pre-fetch AI data after authentication
+  usePrefetchAI();
 
   // Initialize notifications
   useEffect(() => {
