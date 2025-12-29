@@ -31,7 +31,6 @@ CREATE TABLE workout_sets (
   weight_unit TEXT DEFAULT 'lbs',
   reps INTEGER,
   set_type TEXT DEFAULT 'normal',
-  rpe INTEGER,
   is_completed BOOLEAN DEFAULT false,
   completed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()

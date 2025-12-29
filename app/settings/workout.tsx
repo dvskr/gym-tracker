@@ -198,7 +198,6 @@ export default function WorkoutSettingsScreen() {
   } = useSettingsStore();
 
   const [showDurationPicker, setShowDurationPicker] = useState(false);
-  const [askForRPE, setAskForRPE] = useState(true);
   const [autoFillSets, setAutoFillSets] = useState(false);
   const [showCalculator, setShowCalculator] = useState(true);
   const [soundOnPR, setSoundOnPR] = useState(true);
@@ -267,15 +266,6 @@ export default function WorkoutSettingsScreen() {
             toggle
             toggleValue={showPreviousWorkout}
             onToggleChange={setShowPreviousWorkout}
-          />
-          <View style={styles.divider} />
-          <SettingRow
-            icon={<Eye size={24} color="#3b82f6" />}
-            label="Ask for RPE"
-            description="Prompt for effort rating after each set"
-            toggle
-            toggleValue={askForRPE}
-            onToggleChange={setAskForRPE}
           />
           <View style={styles.divider} />
           <SettingRow

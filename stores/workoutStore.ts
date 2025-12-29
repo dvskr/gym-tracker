@@ -21,7 +21,6 @@ export interface WorkoutSet {
   weightUnit: 'lbs' | 'kg';
   reps: number | null;
   setType: 'normal' | 'warmup' | 'dropset' | 'failure';
-  rpe: number | null;
   isCompleted: boolean;
   completedAt: string | null;
   isPR: boolean;
@@ -119,7 +118,6 @@ const createDefaultSet = (setNumber: number): WorkoutSet => ({
   weightUnit: 'lbs',
   reps: null,
   setType: 'normal',
-  rpe: null,
   isCompleted: false,
   completedAt: null,
   isPR: false,
@@ -263,7 +261,6 @@ export const useWorkoutStore = create<WorkoutState>()(
                 weight_unit: s.weightUnit,
                 reps: s.reps,
                 set_type: s.setType,
-                rpe: s.rpe,
                 is_completed: true,
                 completed_at: s.completedAt,
                 is_pr: s.isPR,
@@ -372,7 +369,6 @@ export const useWorkoutStore = create<WorkoutState>()(
               weightUnit: 'lbs',
               reps: prefillData.reps ?? null,
               setType: 'normal',
-              rpe: null,
               isCompleted: false,
               completedAt: null,
               isPR: false,

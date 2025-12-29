@@ -23,7 +23,6 @@ interface SettingsState {
   soundEnabled: boolean;
   hapticEnabled: boolean;
   showPreviousWorkout: boolean;
-  askForRPE: boolean;
   autoFillSets: boolean;
 
   // Plate Calculator
@@ -86,7 +85,6 @@ interface SettingsState {
   setSoundEnabled: (enabled: boolean) => void;
   setHapticEnabled: (enabled: boolean) => void;
   setShowPreviousWorkout: (enabled: boolean) => void;
-  setAskForRPE: (enabled: boolean) => void;
   setAutoFillSets: (enabled: boolean) => void;
   setBarbellWeight: (weight: number) => void;
   setDefaultPlates: (plates: string) => void;
@@ -116,7 +114,7 @@ interface SettingsState {
   syncToProfile: (userId: string) => Promise<void>;
 }
 
-const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAskForRPE' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'> = {
+const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'> = {
   // Units
   unitSystem: 'imperial',
   weightUnit: 'lbs',
@@ -131,7 +129,6 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   soundEnabled: true,
   hapticEnabled: true,
   showPreviousWorkout: true,
-  askForRPE: false,
   autoFillSets: true,
 
   // Plate Calculator
@@ -242,11 +239,6 @@ export const useSettingsStore = create<SettingsState>()(
 
       setShowPreviousWorkout: (enabled) => {
         set({ showPreviousWorkout: enabled });
-        debounceSyncToProfile();
-      },
-
-      setAskForRPE: (enabled) => {
-        set({ askForRPE: enabled });
         debounceSyncToProfile();
       },
 

@@ -8,13 +8,6 @@ ALTER TABLE workouts
   ADD CONSTRAINT workouts_rating_check 
   CHECK (rating IS NULL OR (rating >= 1 AND rating <= 5));
 
--- Validate RPE is between 1-10
-ALTER TABLE workout_sets 
-  DROP CONSTRAINT IF EXISTS workout_sets_rpe_check;
-ALTER TABLE workout_sets 
-  ADD CONSTRAINT workout_sets_rpe_check 
-  CHECK (rpe IS NULL OR (rpe >= 1 AND rpe <= 10));
-
 -- Validate set_type values
 ALTER TABLE workout_sets 
   DROP CONSTRAINT IF EXISTS workout_sets_type_check;
@@ -151,7 +144,7 @@ ALTER TABLE weight_goals
 
 COMMENT ON TABLE workouts IS 'Stores completed workout sessions with aggregated stats';
 COMMENT ON TABLE workout_exercises IS 'Exercises performed in a workout';
-COMMENT ON TABLE workout_sets IS 'Individual sets (weight, reps, RPE) within workout exercises';
+COMMENT ON TABLE workout_sets IS 'Individual sets (weight, reps) within workout exercises';
 COMMENT ON TABLE workout_templates IS 'Saved workout templates for quick workout creation';
 COMMENT ON TABLE template_exercises IS 'Exercises configured in workout templates';
 COMMENT ON TABLE personal_records IS 'User personal records per exercise';

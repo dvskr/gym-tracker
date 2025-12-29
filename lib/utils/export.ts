@@ -14,7 +14,6 @@ export interface ExportableSet {
   reps: number | null;
   weightUnit?: string;
   setType?: string;
-  rpe?: number | null;
   isCompleted?: boolean;
 }
 
@@ -80,9 +79,8 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
       const weightStr = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '—';
       const repsStr = set.reps !== null ? `${set.reps}` : '—';
       const setTypeStr = set.setType && set.setType !== 'normal' ? ` (${set.setType})` : '';
-      const rpeStr = set.rpe ? ` @RPE ${set.rpe}` : '';
       
-      lines.push(`  ${set.setNumber}. ${weightStr} × ${repsStr}${setTypeStr}${rpeStr}`);
+      lines.push(`  ${set.setNumber}. ${weightStr} × ${repsStr}${setTypeStr}`);
     });
     
     if (exercise.notes) {
@@ -185,7 +183,7 @@ export function generateWorkoutHistoryCSV(workouts: ExportableWorkout[]): string
   const rows: string[] = [];
 
   // Header
-  rows.push('Date,Workout,Exercise,Set,Weight,Unit,Reps,Type,RPE');
+  rows.push('Date,Workout,Exercise,Set,Weight,Unit,Reps,Type');
 
   workouts.forEach((workout) => {
     const dateStr = format(new Date(workout.startedAt), 'yyyy-MM-dd');
@@ -201,7 +199,6 @@ export function generateWorkoutHistoryCSV(workouts: ExportableWorkout[]): string
           set.weightUnit || 'lbs',
           set.reps?.toString() || '',
           set.setType || 'normal',
-          set.rpe?.toString() || '',
         ];
         rows.push(row.join(','));
       });
@@ -247,7 +244,6 @@ export function generateWorkoutJSON(workout: ExportableWorkout): string {
           weightUnit: set.weightUnit || 'lbs',
           reps: set.reps,
           type: set.setType || 'normal',
-          rpe: set.rpe,
         })),
       })),
     },
@@ -319,16 +315,15 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
       lines.push(`*Target: ${exercise.muscle}*`);
     }
     lines.push('');
-    lines.push('| Set | Weight | Reps | Type | RPE |');
-    lines.push('|-----|--------|------|------|-----|');
+    lines.push('| Set | Weight | Reps | Type |');
+    lines.push('|-----|--------|------|------|');
     
     exercise.sets.forEach((set) => {
       const weight = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '—';
       const reps = set.reps !== null ? set.reps.toString() : '—';
       const type = set.setType || 'normal';
-      const rpe = set.rpe ? set.rpe.toString() : '—';
       
-      lines.push(`| ${set.setNumber} | ${weight} | ${reps} | ${type} | ${rpe} |`);
+      lines.push(`| ${set.setNumber} | ${weight} | ${reps} | ${type} |`);
     });
     
     if (exercise.notes) {
@@ -544,7 +539,6 @@ export function convertToExportable(workoutDetail: any): ExportableWorkout {
           reps: set.reps,
           weightUnit: set.weight_unit || 'lbs',
           setType: set.set_type,
-          rpe: set.rpe,
           isCompleted: set.is_completed,
         };
       });
