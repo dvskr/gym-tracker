@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
+import { invalidateCoachContextAfterInjuryUpdate } from '@/lib/ai/cacheInvalidation';
 
 export interface Injury {
   id: string;
@@ -106,6 +107,9 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       // Refresh injuries list
       await get().fetchInjuries();
       
+      // Invalidate AI cache so coach sees latest injury data
+      invalidateCoachContextAfterInjuryUpdate(user.id);
+      
       set({ loading: false });
       return true;
     } catch (error: any) {
@@ -134,6 +138,12 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
 
       // Refresh injuries list
       await get().fetchInjuries();
+      
+      // Invalidate AI cache so coach sees updated injury data
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        invalidateCoachContextAfterInjuryUpdate(user.id);
+      }
       
       set({ loading: false });
       return true;
@@ -174,6 +184,12 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
 
       // Refresh injuries list
       await get().fetchInjuries();
+      
+      // Invalidate AI cache so coach knows injury is removed
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        invalidateCoachContextAfterInjuryUpdate(user.id);
+      }
       
       set({ loading: false });
       return true;

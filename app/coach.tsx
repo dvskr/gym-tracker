@@ -9,16 +9,21 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Sparkles, Send, ArrowLeft, RefreshCw } from 'lucide-react-native';
+import { Sparkles, Send, ArrowLeft, RefreshCw, Database, Play } from 'lucide-react-native';
 import { aiService } from '@/lib/ai/aiService';
 import { FITNESS_COACH_SYSTEM_PROMPT } from '@/lib/ai/prompts';
-import { buildUserContext } from '@/lib/ai/contextBuilder';
+import { buildCoachContext } from '@/lib/ai/contextBuilder';
+import { getCachedData, setCacheData, invalidateCacheKey } from '@/lib/ai/prefetch';
+import { parseCoachResponse } from '@/lib/ai/parseActions';
 import { useAuthStore } from '@/stores/authStore';
+import { useWorkoutStore } from '@/stores/workoutStore';
 import { supabase } from '@/lib/supabase';
+import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
 
 interface Message {
   id: string;
@@ -33,35 +38,75 @@ export default function CoachScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [userContext, setUserContext] = useState('');
   const [isLoadingContext, setIsLoadingContext] = useState(true);
+  const [contextData, setContextData] = useState<{
+    hasWorkouts: boolean;
+    hasInjuries: boolean;
+    isRestDay: boolean;
+    lowEnergy: boolean;
+  }>({
+    hasWorkouts: false,
+    hasInjuries: false,
+    isRestDay: false,
+    lowEnergy: false,
+  });
   const flatListRef = useRef<FlatList>(null);
   const { user } = useAuthStore();
+  const { startWorkout, addExercise } = useWorkoutStore();
 
   // Load user context on mount
   useEffect(() => {
     loadUserContext();
+    loadChatHistory();
   }, [user]);
 
-  // Add welcome message after context loads
-  useEffect(() => {
-    if (!isLoadingContext && messages.length === 0) {
-      setMessages([
-        {
-          id: 'welcome',
-          role: 'assistant',
-          content: `Hey! 👋 I'm your AI fitness coach. Ask me anything about:
+  const loadChatHistory = async () => {
+    if (!user) return;
 
-• Exercise form & technique
-• Workout programming
-• Progressive overload
-• Recovery & nutrition
-• Your training progress
+    try {
+      const { data, error } = await supabase
+        .from('coach_messages')
+        .select('id, role, content, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true })
+        .limit(50);
 
-How can I help you today?`,
-          timestamp: new Date(),
-        },
-      ]);
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const loadedMessages: Message[] = data.map((msg) => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.created_at),
+        }));
+        setMessages(loadedMessages);
+      }
+    } catch (error) {
+      console.error('Failed to load chat history:', error);
     }
-  }, [isLoadingContext]);
+  };
+
+  const saveMessage = async (role: 'user' | 'assistant', content: string) => {
+    if (!user) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('coach_messages')
+        .insert({
+          user_id: user.id,
+          role,
+          content,
+        })
+        .select('id')
+        .single();
+
+      if (error) throw error;
+      return data?.id;
+    } catch (error) {
+      console.error('Failed to save message:', error);
+      return null;
+    }
+  };
 
   const loadUserContext = async () => {
     if (!user) {
@@ -70,23 +115,30 @@ How can I help you today?`,
     }
 
     try {
-      const [workouts, records, profile] = await Promise.all([
-        getRecentWorkouts(user.id, 7),
-        getPersonalRecords(user.id),
-        getUserProfile(user.id),
-      ]);
+      // Try to get cached context first (cache for 5 minutes)
+      const cached = getCachedData<string>(user.id, 'coachContext', 5 * 60 * 1000);
+      
+      if (cached) {
+        console.log('[Coach] Using cached context');
+        setUserContext(cached);
+        setIsLoadingContext(false);
+        
+        // Still fetch contextual data for suggested questions
+        await fetchContextData();
+        return;
+      }
 
-      const context = buildUserContext({
-        recentWorkouts: workouts,
-        personalRecords: records,
-        currentStreak: profile.current_streak || 0,
-        totalWorkouts: profile.total_workouts || 0,
-        preferredUnits: profile.weight_unit || 'lbs',
-        goals: profile.fitness_goals,
-        experienceLevel: profile.experience_level,
-      });
-
+      // Build fresh context if not cached
+      console.log('[Coach] Building fresh context');
+      const context = await buildCoachContext(user.id);
+      
+      // Cache for future use
+      setCacheData(user.id, 'coachContext', context);
+      
       setUserContext(context);
+      
+      // Fetch contextual data for suggested questions
+      await fetchContextData();
     } catch (error) {
       console.error('Failed to load user context:', error);
     } finally {
@@ -94,20 +146,71 @@ How can I help you today?`,
     }
   };
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const fetchContextData = async () => {
+    if (!user) return;
+    
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      
+      const [workouts, injuries, checkin] = await Promise.all([
+        supabase
+          .from('workouts')
+          .select('id')
+          .eq('user_id', user.id)
+          .gte('created_at', weekAgo)
+          .limit(1),
+        supabase
+          .from('user_injuries')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .limit(1),
+        supabase
+          .from('daily_checkins')
+          .select('energy_level')
+          .eq('user_id', user.id)
+          .eq('date', today)
+          .single(),
+      ]);
+      
+      // Check if today is a rest day (no workout in last 24 hours)
+      const { data: recentWorkout } = await supabase
+        .from('workouts')
+        .select('id')
+        .eq('user_id', user.id)
+        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+        .limit(1)
+        .single();
+      
+      setContextData({
+        hasWorkouts: (workouts.data?.length ?? 0) > 0,
+        hasInjuries: (injuries.data?.length ?? 0) > 0,
+        isRestDay: !recentWorkout,
+        lowEnergy: (checkin.data?.energy_level ?? 5) <= 2,
+      });
+    } catch (error) {
+      console.error('Failed to fetch context data:', error);
+    }
+  };
+
+  const sendMessage = async (messageText?: string) => {
+    const textToSend = messageText || input.trim();
+    if (!textToSend || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input.trim(),
+      content: textToSend,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    const userInput = input.trim();
     setInput('');
-    setIsLoading(true); // Changed from setIsStreaming
+    setIsLoading(true);
+
+    // Save user message to database
+    const savedUserId = await saveMessage('user', textToSend);
 
     // Scroll to bottom
     setTimeout(() => {
@@ -115,16 +218,17 @@ How can I help you today?`,
     }, 100);
 
     try {
-      // Build conversation history (last 6 messages for context)
-      const conversationHistory = messages.slice(-6).map((m) => ({
+      // Build conversation history (last 10 messages for context)
+      const conversationHistory = messages.slice(-10).map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       }));
 
-      // Add user context to system prompt
+      // Add comprehensive user context to system prompt
       const systemPrompt = `${FITNESS_COACH_SYSTEM_PROMPT}
 
-${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
+${userContext ? `\n${userContext}\n` : ''}
+Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
 
       let fullResponse = '';
 
@@ -134,7 +238,7 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
         [
           { role: 'system', content: systemPrompt },
           ...conversationHistory,
-          { role: 'user', content: userInput },
+          { role: 'user', content: textToSend },
         ],
         {
           temperature: 0.7,
@@ -155,6 +259,9 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
 
       setMessages((prev) => [...prev, assistantMessage]);
 
+      // Save assistant message to database
+      await saveMessage('assistant', fullResponse);
+
       // Final scroll
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
@@ -170,54 +277,130 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+      
+      // Save error message too
+      await saveMessage('assistant', errorMessage.content);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const clearChat = () => {
-    setMessages([
-      {
-        id: 'welcome-' + Date.now(),
-        role: 'assistant',
-        content: `Chat cleared! Ready to help. What's on your mind?`,
-        timestamp: new Date(),
-      },
-    ]);
+  const confirmClearChat = () => {
+    Alert.alert(
+      'Clear Chat History',
+      'This will permanently delete all your conversation history with the AI Coach. Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Clear',
+          style: 'destructive',
+          onPress: clearChat,
+        },
+      ]
+    );
   };
 
-  const useQuickPrompt = (prompt: string) => {
-    setInput(prompt);
+  const clearChat = async () => {
+    if (!user) return;
+
+    try {
+      // Clear messages from database
+      const { error } = await supabase
+        .from('coach_messages')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      // Clear local state
+      setMessages([]);
+    } catch (error) {
+      console.error('Failed to clear chat history:', error);
+      // Still clear local state even if DB delete fails
+      setMessages([]);
+    }
   };
 
-  const renderMessage = ({ item }: { item: Message }) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.role === 'user' ? styles.userMessage : styles.assistantMessage,
-      ]}
-    >
-      {item.role === 'assistant' && (
-        <View style={styles.avatarContainer}>
-          <Sparkles size={16} color="#f59e0b" />
-        </View>
-      )}
+  const refreshContext = async () => {
+    if (!user) return;
+    
+    setIsLoadingContext(true);
+    try {
+      // Invalidate cache and reload
+      invalidateCacheKey(user.id, 'coachContext');
+      await loadUserContext();
+    } finally {
+      setIsLoadingContext(false);
+    }
+  };
+
+  const handleStartWorkout = async (workoutName: string, exercises: any[]) => {
+    try {
+      // Start a new workout with the AI-suggested name
+      startWorkout(workoutName);
+      
+      // Store exercises in state to add them in the workout screen
+      // (exercises need to be looked up in the database first)
+      
+      // Navigate to active workout
+      router.push('/workout/active');
+      
+      // TODO: In the future, we could pass the exercise list via params
+      // and auto-add them in the active workout screen
+    } catch (error) {
+      console.error('Failed to start workout:', error);
+    }
+  };
+
+  const renderMessage = ({ item }: { item: Message }) => {
+    // Parse the message for actions (only for assistant messages)
+    const parsed = item.role === 'assistant' 
+      ? parseCoachResponse(item.content)
+      : { message: item.content };
+
+    return (
       <View
         style={[
-          styles.messageBubble,
-          item.role === 'user' ? styles.userBubble : styles.assistantBubble,
+          styles.messageContainer,
+          item.role === 'user' ? styles.userMessage : styles.assistantMessage,
         ]}
       >
-        <Text style={styles.messageText}>{item.content}</Text>
-        <Text style={styles.timestamp}>
-          {item.timestamp.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
+        {item.role === 'assistant' && (
+          <View style={styles.avatarContainer}>
+            <Sparkles size={16} color="#f59e0b" />
+          </View>
+        )}
+        <View
+          style={[
+            styles.messageBubble,
+            item.role === 'user' ? styles.userBubble : styles.assistantBubble,
+          ]}
+        >
+          <Text style={styles.messageText}>{parsed.message}</Text>
+          <Text style={styles.timestamp}>
+            {item.timestamp.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Text>
+          
+          {/* Action Button for Workout */}
+          {parsed.action?.type === 'workout' && (
+            <Pressable
+              style={styles.actionButton}
+              onPress={() => handleStartWorkout(parsed.action!.name, parsed.action!.exercises)}
+            >
+              <Play size={18} color="#ffffff" />
+              <Text style={styles.actionButtonText}>Start This Workout</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -232,9 +415,14 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
           <Sparkles size={20} color="#f59e0b" />
           <Text style={styles.headerTitle}>AI Coach</Text>
         </View>
-        <Pressable onPress={clearChat} style={styles.clearButton}>
-          <RefreshCw size={20} color="#94a3b8" />
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable onPress={refreshContext} style={styles.actionButton}>
+            <Database size={18} color="#94a3b8" />
+          </Pressable>
+          <Pressable onPress={confirmClearChat} style={styles.actionButton}>
+            <RefreshCw size={18} color="#94a3b8" />
+          </Pressable>
+        </View>
       </View>
 
       {/* Messages */}
@@ -245,52 +433,44 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
         </View>
       ) : (
         <>
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.messageList}
-            showsVerticalScrollIndicator={false}
-            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-            onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
-          />
+          {messages.length === 0 && !isLoading ? (
+            <SuggestedQuestions
+              onSelect={(question) => sendMessage(question)}
+              hasWorkouts={contextData.hasWorkouts}
+              hasPlateaus={false}
+              hasInjuries={contextData.hasInjuries}
+              isRestDay={contextData.isRestDay}
+              lowEnergy={contextData.lowEnergy}
+            />
+          ) : (
+            <>
+              <FlatList
+                ref={flatListRef}
+                data={messages}
+                renderItem={renderMessage}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.messageList}
+                showsVerticalScrollIndicator={false}
+                onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+                onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
+              />
 
-          {/* Typing Indicator */}
-          {isLoading && (
-            <View style={styles.typingIndicator}>
-              <View style={styles.avatarContainer}>
-                <Sparkles size={14} color="#f59e0b" />
-              </View>
-              <View style={styles.typingBubble}>
-                <View style={styles.typingDots}>
-                  <View style={[styles.typingDot, styles.typingDot1]} />
-                  <View style={[styles.typingDot, styles.typingDot2]} />
-                  <View style={[styles.typingDot, styles.typingDot3]} />
+              {/* Typing Indicator */}
+              {isLoading && (
+                <View style={styles.typingIndicator}>
+                  <View style={styles.avatarContainer}>
+                    <Sparkles size={14} color="#f59e0b" />
+                  </View>
+                  <View style={styles.typingBubble}>
+                    <View style={styles.typingDots}>
+                      <View style={[styles.typingDot, styles.typingDot1]} />
+                      <View style={[styles.typingDot, styles.typingDot2]} />
+                      <View style={[styles.typingDot, styles.typingDot3]} />
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          )}
-
-          {/* Quick Prompts */}
-          {messages.length <= 1 && !isLoading && (
-            <View style={styles.quickPrompts}>
-              <Text style={styles.quickPromptsTitle}>Quick questions:</Text>
-              {[
-                'What should I train today?',
-                'How do I break through a plateau?',
-                'Am I overtraining?',
-                'Best exercises for bigger arms?',
-              ].map((prompt, i) => (
-                <Pressable
-                  key={i}
-                  style={styles.quickPrompt}
-                  onPress={() => useQuickPrompt(prompt)}
-                >
-                  <Text style={styles.quickPromptText}>{prompt}</Text>
-                </Pressable>
-              ))}
-            </View>
+              )}
+            </>
           )}
 
           {/* Input */}
@@ -314,7 +494,7 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
                   styles.sendButton,
                   (!input.trim() || isLoading) && styles.sendButtonDisabled,
                 ]}
-                onPress={sendMessage}
+                onPress={() => sendMessage()}
                 disabled={!input.trim() || isLoading}
               >
                 <Send
@@ -331,46 +511,6 @@ ${userContext ? `USER CONTEXT:\n${userContext}\n\n` : ''}Keep responses concise 
   );
 }
 
-// Helper functions
-async function getRecentWorkouts(userId: string, days: number) {
-  const since = new Date();
-  since.setDate(since.getDate() - days);
-
-  const { data } = await supabase
-    .from('workouts')
-    .select('*, workout_exercises(*, exercises(*))')
-    .eq('user_id', userId)
-    .gte('created_at', since.toISOString())
-    .order('created_at', { ascending: false })
-    .limit(10);
-
-  return data || [];
-}
-
-async function getPersonalRecords(userId: string) {
-  const { data } = await supabase
-    .from('personal_records')
-    .select('*, exercises(name)')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(10);
-
-  return (data || []).map((pr) => ({
-    exercise_name: pr.exercises?.name || 'Unknown',
-    weight: pr.weight,
-    reps: pr.reps,
-  }));
-}
-
-async function getUserProfile(userId: string) {
-  const { data } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
-
-  return data || {};
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -399,7 +539,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#f1f5f9',
   },
-  clearButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  actionButton: {
     padding: 4,
   },
   loadingContainer: {
@@ -465,6 +610,22 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     marginTop: 4,
   },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3b82f6',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    gap: 8,
+  },
+  actionButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   typingIndicator: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -497,29 +658,6 @@ const styles = StyleSheet.create({
   },
   typingDot3: {
     opacity: 1,
-  },
-  quickPrompts: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    gap: 8,
-  },
-  quickPromptsTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#64748b',
-    marginBottom: 4,
-  },
-  quickPrompt: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  quickPromptText: {
-    color: '#94a3b8',
-    fontSize: 14,
   },
   inputContainer: {
     flexDirection: 'row',

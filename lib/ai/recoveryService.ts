@@ -97,7 +97,7 @@ class RecoveryService {
   /**
    * Calculate recovery status for each muscle group
    */
-  private calculateMuscleRecovery(workouts: any[], fitnessPrefs?: any): MuscleRecoveryStatus[] {
+  private calculateMuscleRecovery(workouts: any[], fitnessPrefs?: any | null): MuscleRecoveryStatus[] {
     const muscleLastTrained = new Map<string, Date>();
     const now = new Date();
 
@@ -175,7 +175,7 @@ class RecoveryService {
     workoutsThisWeek: number,
     consecutiveDays: number,
     checkinData?: any,
-    fitnessPrefs?: any
+    fitnessPrefs?: any | null
   ): number {
     let score = 100;
 
@@ -282,7 +282,8 @@ class RecoveryService {
     muscleStatus: MuscleRecoveryStatus[],
     consecutiveDays: number,
     workoutsThisWeek: number,
-    checkinData?: any
+    checkinData?: any,
+    fitnessPrefs?: any | null
   ): {
     status: RecoveryStatus['overall'];
     recommendation: string;
@@ -587,7 +588,7 @@ class RecoveryService {
   /**
    * Get user fitness preferences
    */
-  private async getFitnessPreferences(userId: string): Promise<any> {
+  private async getFitnessPreferences(userId: string): Promise<any | null> {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -595,9 +596,12 @@ class RecoveryService {
         .eq('id', userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Error fetching fitness preferences:', error);
+        return null;
+      }
 
-      return data;
+      return data || null;
     } catch (error) {
       console.error('Error fetching fitness preferences:', error);
       return null;

@@ -1,6 +1,7 @@
 import { workoutSuggestionService } from './workoutSuggestions';
 import { recoveryService } from './recoveryService';
 import { plateauDetectionService } from './plateauDetection';
+import { buildCoachContext } from './contextBuilder';
 
 // Types
 interface CacheEntry<T> {
@@ -17,6 +18,7 @@ export const CACHE_DURATIONS = {
   plateaus: 24 * 60 * 60 * 1000, // 24 hours
   suggestion: 4 * 60 * 60 * 1000, // 4 hours
   formTips: Infinity,             // Forever (tips don't change)
+  coachContext: 5 * 60 * 1000,    // 5 minutes (for coach chat)
 };
 
 /**
@@ -32,10 +34,11 @@ export async function prefetchAIData(userId: string): Promise<void> {
     recoveryService.getRecoveryStatus(userId),
     plateauDetectionService.detectPlateaus(userId),
     workoutSuggestionService.getSuggestion(userId),
+    buildCoachContext(userId), // Pre-fetch coach context
   ]);
   
   // Cache successful results
-  const keys = ['recovery', 'plateaus', 'suggestion'];
+  const keys = ['recovery', 'plateaus', 'suggestion', 'coachContext'];
   let successCount = 0;
   
   results.forEach((result, index) => {

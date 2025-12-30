@@ -13,4 +13,4 @@ export { AILimitModal } from './AILimitModal';
 export { AIFeedback } from './AIFeedback';
 export { DailyCheckin } from './DailyCheckin';
 export { CheckinPrompt } from './CheckinPrompt';
-
+export { SuggestedQuestions } from './SuggestedQuestions';

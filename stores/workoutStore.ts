@@ -9,6 +9,7 @@ import { achievementNotificationService } from '@/lib/notifications/achievementN
 import { smartTimingService } from '@/lib/notifications/smartTiming';
 import { calculateStreak } from '@/lib/utils/streakCalculation';
 import { getWorkoutCount } from '@/lib/utils/streakCalculation';
+import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
 
 // ============================================
 // Types
@@ -289,6 +290,9 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           // Trigger engagement notifications in background
           triggerEngagementNotifications(user.id, workout.ended_at);
+
+          // Invalidate AI cache so coach sees latest workout
+          invalidateCoachContextAfterWorkout(user.id);
 
           return { success: true, workoutId: workout.id };
         } catch (error) {

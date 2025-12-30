@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
+import { invalidateCoachContextAfterCheckin } from '@/lib/ai/cacheInvalidation';
 
 export interface CheckinData {
   sleep_quality?: number;
@@ -104,6 +105,9 @@ export const useCheckinStore = create<CheckinStore>((set, get) => ({
         hasCheckedInToday: true,
         loading: false 
       });
+
+      // Invalidate AI cache so coach sees latest wellness data
+      invalidateCoachContextAfterCheckin(user.id);
 
       return true;
     } catch (error: any) {
