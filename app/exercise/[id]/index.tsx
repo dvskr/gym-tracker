@@ -508,23 +508,36 @@ export default function ExerciseDetailScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Exercise Info */}
-      <View style={styles.exerciseHeader}>
-        {exercise.gif_url && (
-          <Image
-            source={{ uri: exercise.gif_url }}
-            style={styles.exerciseGif}
-            resizeMode="cover"
-          />
-        )}
-        <Text style={styles.exerciseName}>{exercise.name}</Text>
-        <View style={styles.badgeRow}>
-          <View style={styles.badgePrimary}>
-            <Text style={styles.badgeText}>{exercise.primary_muscles?.[0]}</Text>
-          </View>
-          <View style={styles.badgeSecondary}>
-            <Dumbbell size={12} color="#94a3b8" />
-            <Text style={styles.badgeTextSecondary}>{exercise.equipment}</Text>
+      {/* Exercise GIF Card - Prominent Display */}
+      <View style={styles.gifSection}>
+        <View style={styles.gifCard}>
+          {exercise.gif_url ? (
+            <Image
+              source={{ uri: exercise.gif_url }}
+              style={styles.exerciseGif}
+              resizeMode="contain"
+            />
+          ) : (
+            <View style={styles.gifPlaceholder}>
+              <Dumbbell size={48} color="#64748b" />
+              <Text style={styles.gifPlaceholderText}>No preview available</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Exercise Info Below GIF */}
+        <View style={styles.exerciseInfo}>
+          <Text style={styles.exerciseName}>{exercise.name}</Text>
+          
+          <View style={styles.badgeRow}>
+            <View style={styles.badgePrimary}>
+              <Target size={14} color="#22c55e" />
+              <Text style={styles.badgeText}>{exercise.primary_muscles?.[0]}</Text>
+            </View>
+            <View style={styles.badgeSecondary}>
+              <Dumbbell size={12} color="#8b5cf6" />
+              <Text style={styles.badgeTextSecondary}>{exercise.equipment}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -603,25 +616,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  exerciseHeader: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
+  gifSection: {
+    paddingHorizontal: 16,
     paddingBottom: 20,
   },
 
-  exerciseGif: {
-    width: 120,
-    height: 120,
-    borderRadius: 16,
+  gifCard: {
     backgroundColor: '#1e293b',
+    borderRadius: 16,
+    overflow: 'hidden',
     marginBottom: 16,
+  },
+
+  exerciseGif: {
+    width: '100%',
+    aspectRatio: 1,
+    backgroundColor: '#0f172a',
+  },
+
+  gifPlaceholder: {
+    width: '100%',
+    aspectRatio: 1,
+    backgroundColor: '#0f172a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+
+  gifPlaceholderText: {
+    color: '#64748b',
+    fontSize: 14,
+    marginTop: 8,
+  },
+
+  exerciseInfo: {
+    paddingHorizontal: 4,
   },
 
   exerciseName: {
     color: '#ffffff',
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
     textTransform: 'capitalize',
     marginBottom: 12,
   },
@@ -629,35 +664,40 @@ const styles = StyleSheet.create({
   badgeRow: {
     flexDirection: 'row',
     gap: 8,
+    flexWrap: 'wrap',
   },
 
   badgePrimary: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#14532d',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 20,
+    gap: 6,
   },
 
   badgeText: {
     color: '#22c55e',
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontWeight: '600',
     textTransform: 'capitalize',
   },
 
   badgeSecondary: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1e293b',
+    backgroundColor: '#2e1065',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16,
-    gap: 4,
+    borderRadius: 20,
+    gap: 6,
   },
 
   badgeTextSecondary: {
-    color: '#94a3b8',
-    fontSize: 12,
+    color: '#8b5cf6',
+    fontSize: 13,
+    fontWeight: '600',
     textTransform: 'capitalize',
   },
 

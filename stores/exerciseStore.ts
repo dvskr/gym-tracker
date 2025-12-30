@@ -26,7 +26,9 @@ type BodyPart =
   | 'shoulders'
   | 'upper arms'
   | 'upper legs'
-  | 'waist';
+  | 'waist'
+  | 'arms'    // Grouped filter for both upper and lower arms
+  | 'legs';   // Grouped filter for both upper and lower legs
 
 interface ExerciseState {
   // State
@@ -41,6 +43,7 @@ interface ExerciseState {
 
   // Actions
   fetchExercises: (force?: boolean) => Promise<void>;
+  clearCache: () => void; // Force clear cache and reload
   searchExercises: (query: string) => void;
   filterByBodyPart: (bodyPart: BodyPart | null) => void;
   getFilteredExercises: () => DisplayExercise[];
@@ -156,6 +159,18 @@ export const useExerciseStore = create<ExerciseState>()(
         }
       },
 
+      // Clear cache and force reload
+      clearCache: () => {
+        set({
+          exercises: [],
+          lastFetched: null,
+          searchQuery: '',
+          selectedBodyPart: null,
+        });
+        // Immediately fetch fresh data
+        get().fetchExercises(true);
+      },
+
       // Set search query (filtering happens in getFilteredExercises)
       searchExercises: (query: string) => {
         set({ searchQuery: query });
@@ -172,12 +187,18 @@ export const useExerciseStore = create<ExerciseState>()(
 
         let filtered = [...exercises];
 
-        // Filter by body part
+        // Filter by body part with partial matching
         if (selectedBodyPart) {
-          filtered = filtered.filter(
-            (exercise) =>
-              exercise.bodyPart.toLowerCase() === selectedBodyPart.toLowerCase()
-          );
+          const selected = selectedBodyPart.toLowerCase();
+          
+          filtered = filtered.filter((exercise) => {
+            const bodyPart = exercise.bodyPart.toLowerCase();
+            
+            // Exact match OR partial match
+            // This makes "legs" match both "upper legs" and "lower legs"
+            // And "arms" match both "upper arms" and "lower arms"
+            return bodyPart === selected || bodyPart.includes(selected);
+          });
         }
 
         // Filter by search query

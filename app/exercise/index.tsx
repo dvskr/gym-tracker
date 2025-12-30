@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Search, Dumbbell, X, Star } from 'lucide-react-native';
+import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc } from 'lucide-react-native';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
 
@@ -22,11 +22,72 @@ const BODY_PART_FILTERS = [
   { label: 'Chest', value: 'chest' },
   { label: 'Back', value: 'back' },
   { label: 'Shoulders', value: 'shoulders' },
-  { label: 'Arms', value: 'upper arms' },
-  { label: 'Legs', value: 'upper legs' },
+  { label: 'Arms', value: 'arms' },      // Matches both upper and lower arms
+  { label: 'Legs', value: 'legs' },      // Matches both upper and lower legs
   { label: 'Core', value: 'waist' },
   { label: 'Cardio', value: 'cardio' },
 ] as const;
+
+// Helper function to get category-specific icon
+const getExerciseIcon = (bodyPart: string) => {
+  const part = bodyPart.toLowerCase();
+  
+  if (part.includes('legs')) return Target;
+  if (part.includes('back')) return Flame;
+  if (part.includes('cardio')) return Heart;
+  if (part.includes('waist') || part.includes('core') || part.includes('abs')) return Zap;
+  if (part.includes('chest')) return Activity;
+  
+  return Dumbbell; // Default for arms, shoulders, neck, etc.
+};
+
+// Helper function to get equipment-based icon
+const getEquipmentIcon = (equipment: string) => {
+  const equip = equipment.toLowerCase();
+  
+  // Barbell exercises
+  if (equip.includes('barbell')) return Weight;
+  
+  // Dumbbell exercises
+  if (equip.includes('dumbbell')) return Dumbbell;
+  
+  // Cable exercises
+  if (equip.includes('cable')) return Zap;
+  
+  // Machine exercises
+  if (equip.includes('machine') || equip.includes('smith')) return Cog;
+  
+  // Bodyweight exercises
+  if (equip.includes('bodyweight') || equip.includes('assisted')) return User;
+  
+  // Bands/Resistance
+  if (equip.includes('band') || equip.includes('resistance')) return Circle;
+  
+  // Cardio
+  if (equip.includes('cardio') || equip.includes('treadmill') || equip.includes('bike')) return Heart;
+  
+  // Leverage/Plate exercises
+  if (equip.includes('leverage') || equip.includes('sled')) return Disc;
+  
+  // Default fallback
+  return Dumbbell;
+};
+
+// Helper function to get equipment-based icon color
+const getEquipmentColor = (equipment: string) => {
+  const equip = equipment.toLowerCase();
+  
+  if (equip.includes('barbell')) return '#3b82f6';      // Blue
+  if (equip.includes('dumbbell')) return '#8b5cf6';     // Purple
+  if (equip.includes('cable')) return '#eab308';        // Yellow
+  if (equip.includes('machine')) return '#06b6d4';      // Cyan
+  if (equip.includes('bodyweight')) return '#10b981';   // Green
+  if (equip.includes('band')) return '#f59e0b';         // Orange
+  if (equip.includes('cardio')) return '#ef4444';       // Red
+  if (equip.includes('leverage') || equip.includes('sled')) return '#ec4899'; // Pink
+  
+  return '#3b82f6'; // Default blue
+};
 
 interface ExerciseItemProps {
   exercise: {
@@ -49,6 +110,10 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
   onToggleFavorite,
   showFavoriteIcon = true 
 }) => {
+  // Get equipment-specific icon and color
+  const EquipmentIcon = getEquipmentIcon(exercise.equipment);
+  const iconColor = getEquipmentColor(exercise.equipment);
+  
   // Get color for body part tag
   const getBodyPartColor = (bodyPart: string) => {
     const colors: Record<string, string> = {
@@ -72,9 +137,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      {/* Icon Placeholder (will be replaced with GIF thumbnails later) */}
+      {/* Equipment-Based Exercise Icon */}
       <View style={styles.iconPlaceholder}>
-        <Dumbbell size={24} color="#64748b" />
+        <EquipmentIcon size={24} color={iconColor} />
       </View>
 
       {/* Exercise Info */}
@@ -133,6 +198,7 @@ export default function ExerciseLibraryScreen() {
     selectedBodyPart,
     error,
     fetchExercises,
+    clearCache,
     searchExercises,
     filterByBodyPart,
     getFilteredExercises,
@@ -157,12 +223,14 @@ export default function ExerciseLibraryScreen() {
   const recentlyUsed = getRecentlyUsedExercises();
   const favorites = getFavoriteExercises();
 
-  // Handle refresh
+  // Handle refresh - Clear cache and reload fresh data
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchExercises(true); // Force refresh
+    clearCache(); // This will clear cache and fetch fresh data
+    // Wait a moment for the fetch to complete
+    await new Promise(resolve => setTimeout(resolve, 1000));
     setRefreshing(false);
-  }, [fetchExercises]);
+  }, [clearCache]);
 
   // Handle search input
   const handleSearchChange = useCallback(
@@ -330,21 +398,25 @@ export default function ExerciseLibraryScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
           >
-            {recentlyUsed.slice(0, 10).map((exercise) => (
-              <TouchableOpacity
-                key={exercise.id}
-                style={styles.horizontalCard}
-                onPress={() => handleExercisePress(exercise.id)}
-                activeOpacity={0.7}
-              >
-                <View style={styles.horizontalIcon}>
-                  <Dumbbell size={20} color="#64748b" />
-                </View>
-                <Text style={styles.horizontalCardName} numberOfLines={2}>
-                  {exercise.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {recentlyUsed.slice(0, 10).map((exercise) => {
+              const EquipmentIcon = getEquipmentIcon(exercise.equipment);
+              const iconColor = getEquipmentColor(exercise.equipment);
+              return (
+                <TouchableOpacity
+                  key={exercise.id}
+                  style={styles.horizontalCard}
+                  onPress={() => handleExercisePress(exercise.id)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.horizontalIcon}>
+                    <EquipmentIcon size={20} color={iconColor} />
+                  </View>
+                  <Text style={styles.horizontalCardName} numberOfLines={2}>
+                    {exercise.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
         </View>
       )}
@@ -357,21 +429,25 @@ export default function ExerciseLibraryScreen() {
             <Star size={16} color="#fbbf24" fill="#fbbf24" />
           </View>
           <View style={styles.favoritesGrid}>
-            {favorites.slice(0, 6).map((exercise) => (
-              <TouchableOpacity
-                key={exercise.id}
-                style={styles.favoriteCard}
-                onPress={() => handleExercisePress(exercise.id)}
-                activeOpacity={0.7}
-              >
-                <View style={styles.favoriteIcon}>
-                  <Dumbbell size={18} color="#64748b" />
-                </View>
-                <Text style={styles.favoriteCardName} numberOfLines={2}>
-                  {exercise.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {favorites.slice(0, 6).map((exercise) => {
+              const EquipmentIcon = getEquipmentIcon(exercise.equipment);
+              const iconColor = getEquipmentColor(exercise.equipment);
+              return (
+                <TouchableOpacity
+                  key={exercise.id}
+                  style={styles.favoriteCard}
+                  onPress={() => handleExercisePress(exercise.id)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.favoriteIcon}>
+                    <EquipmentIcon size={18} color={iconColor} />
+                  </View>
+                  <Text style={styles.favoriteCardName} numberOfLines={2}>
+                    {exercise.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       )}

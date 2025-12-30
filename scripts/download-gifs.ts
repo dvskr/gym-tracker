@@ -20,20 +20,30 @@ if (!fs.existsSync(DOWNLOAD_DIR)) {
   fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
 }
 
-// Download from any URL (http or https)
-function downloadFromUrl(url: string, filepath: string): Promise<void> {
+// Download from any URL (http or https) with optional headers
+function downloadFromUrl(url: string, filepath: string, headers?: Record<string, string>): Promise<void> {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(filepath);
+    const urlObj = new URL(url);
     const protocol = url.startsWith('https') ? https : http;
 
-    protocol.get(url, (response) => {
+    // Properly format options for Node.js http/https.get()
+    const options = {
+      hostname: urlObj.hostname,
+      port: urlObj.port,
+      path: urlObj.pathname + urlObj.search,
+      method: 'GET',
+      headers: headers || {}
+    };
+
+    protocol.get(options, (response) => {
       // Handle redirects
       if (response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 307) {
         const redirectUrl = response.headers.location;
         if (redirectUrl) {
           file.close();
           fs.unlink(filepath, () => {});
-          downloadFromUrl(redirectUrl, filepath).then(resolve).catch(reject);
+          downloadFromUrl(redirectUrl, filepath, headers).then(resolve).catch(reject);
           return;
         }
       }
@@ -65,7 +75,7 @@ function downloadFromUrl(url: string, filepath: string): Promise<void> {
   });
 }
 
-function downloadGif(gifUrl: string, filename: string, exerciseName: string): Promise<void> {
+function downloadGif(gifUrl: string, filename: string, exerciseName: string, headers: Record<string, string>): Promise<void> {
   return new Promise(async (resolve, reject) => {
     const filepath = path.join(DOWNLOAD_DIR, filename);
 
@@ -77,8 +87,8 @@ function downloadGif(gifUrl: string, filename: string, exerciseName: string): Pr
     }
 
     try {
-      // Download the GIF
-      await downloadFromUrl(gifUrl, filepath);
+      // Download the GIF with RapidAPI headers
+      await downloadFromUrl(gifUrl, filepath, headers);
       
       const stats = fs.statSync(filepath);
       const sizeMB = (stats.size / 1024 / 1024).toFixed(2);
@@ -120,22 +130,36 @@ async function downloadAllGifs() {
 
   console.log(`Found ${exercises.length} exercises\n`);
 
+  // RapidAPI Headers (standard authentication method)
+  const rapidApiHeaders = {
+    'X-RapidAPI-Key': EXERCISEDB_API_KEY,
+    'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
+  };
+
   // Use ExerciseDB API image endpoint to get GIFs
   // API format: https://exercisedb.p.rapidapi.com/image?exerciseId={id}&resolution=360
   
   const exercisesWithGifs = exercises.map(ex => {
     let gifUrl = null;
     
-    // Extract exercise ID from existing URL or use external_id
+    // Use external_id FIRST (it has the correct numeric format)
     let exerciseId = ex.external_id;
-    if (ex.gif_url && ex.gif_url.includes('/')) {
+    
+    // Only parse gif_url as fallback if external_id is missing
+    if (!exerciseId && ex.gif_url && ex.gif_url.includes('/')) {
       const urlParts = ex.gif_url.split('/');
       exerciseId = urlParts[urlParts.length - 1];
+      
+      // Remove .gif extension if present
+      if (exerciseId && exerciseId.endsWith('.gif')) {
+        exerciseId = exerciseId.replace('.gif', '');
+      }
     }
     
     if (exerciseId) {
-      // Use ExerciseDB RapidAPI image endpoint (360p resolution for reasonable file sizes)
-      gifUrl = `https://exercisedb.p.rapidapi.com/image?exerciseId=${exerciseId}&resolution=360&rapidapi-key=${EXERCISEDB_API_KEY}`;
+      // Use ExerciseDB RapidAPI image endpoint (1080p resolution for high quality)
+      // Note: API key is now passed via headers, not query params
+      gifUrl = `https://exercisedb.p.rapidapi.com/image?exerciseId=${exerciseId}&resolution=1080`;
     }
     
     return {
@@ -148,11 +172,12 @@ async function downloadAllGifs() {
   console.log(`Found ${exercisesWithGifs.length} exercises with GIF URLs\n`);
 
   // Log first few URLs for debugging
-  console.log('Sample GIF URLs (RapidAPI format):');
+  console.log('Sample GIF URLs (RapidAPI format with headers):');
   exercisesWithGifs.slice(0, 3).forEach(ex => {
-    const safeUrl = ex.gif_url.replace(EXERCISEDB_API_KEY, '***');
-    console.log(`  ${ex.name} [${ex.exercise_id}]: ${safeUrl}`);
+    console.log(`  ${ex.name} [${ex.exercise_id}]: ${ex.gif_url}`);
   });
+  console.log(`  Headers: X-RapidAPI-Key: ${EXERCISEDB_API_KEY.substring(0, 8)}***`);
+  console.log(`           X-RapidAPI-Host: exercisedb.p.rapidapi.com`);
   console.log();
 
   let completed = 0;
@@ -168,7 +193,7 @@ async function downloadAllGifs() {
     await Promise.allSettled(
       batch.map(ex => {
         const filename = `${ex.id}.gif`;
-        return downloadGif(ex.gif_url, filename, ex.name);
+        return downloadGif(ex.gif_url, filename, ex.name, rapidApiHeaders);
       })
     ).then(results => {
       results.forEach((result, idx) => {
