@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,12 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Pressable,
+  Modal,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -19,12 +25,22 @@ import {
   Calendar,
   ChevronRight,
   Star,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+  X,
+  Play,
+  PlusCircle,
+  Edit2,
+  Save,
 } from 'lucide-react-native';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { useWorkoutStore } from '@/stores/workoutStore';
 import { lightHaptic } from '@/lib/utils/haptics';
 import { Card, LoadingSpinner, Skeleton } from '@/components/ui';
+import { supabase } from '@/lib/supabase';
 import {
   getExerciseById,
   getExerciseHistory,
@@ -44,68 +60,211 @@ type TabType = 'about' | 'history' | 'charts' | 'records';
 // Tab Components
 // ============================================
 
-const AboutTab: React.FC<{ exercise: Exercise }> = ({ exercise }) => (
-  <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-    {/* Instructions */}
-    {exercise.instructions && exercise.instructions.length > 0 && (
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Instructions</Text>
-        {exercise.instructions.map((instruction, index) => (
-          <View key={index} style={styles.instructionItem}>
-            <View style={styles.instructionNumber}>
-              <Text style={styles.instructionNumberText}>{index + 1}</Text>
-            </View>
-            <Text style={styles.instructionText}>{instruction}</Text>
-          </View>
-        ))}
-      </View>
-    )}
+const AboutTab: React.FC<{ 
+  exercise: Exercise; 
+  stats: ExerciseStats | null;
+}> = ({ exercise, stats }) => {
+  const [instructionsExpanded, setInstructionsExpanded] = useState(true);
+  const [fullScreenInstructions, setFullScreenInstructions] = useState(false);
 
-    {/* Primary Muscles */}
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Primary Muscles</Text>
-      <View style={styles.muscleList}>
-        {exercise.primary_muscles?.map((muscle, index) => (
-          <View key={index} style={styles.muscleBadgePrimary}>
-            <Target size={14} color="#22c55e" />
-            <Text style={styles.muscleBadgeText}>{muscle}</Text>
-          </View>
-        ))}
-      </View>
-    </View>
+  return (
+    <>
+      <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+        {/* Personal Records Section */}
+        {stats && (stats.bestWeight || stats.bestReps || stats.bestVolume || stats.estimated1RM) && (
+          <View style={styles.prSection}>
+            <Text style={styles.prSectionTitle}>🏆 Your Personal Records</Text>
+            
+            <View style={styles.prGrid}>
+              {/* Max Weight */}
+              {stats.bestWeight && (
+                <View style={styles.prCard}>
+                  <View style={styles.prIconContainer}>
+                    <Trophy size={24} color="#fbbf24" />
+                  </View>
+                  <Text style={styles.prLabel}>Max Weight</Text>
+                  <Text style={styles.prValue}>{stats.bestWeight.value} kg</Text>
+                  {stats.bestWeight.reps && (
+                    <Text style={styles.prDetail}>× {stats.bestWeight.reps} reps</Text>
+                  )}
+                  <Text style={styles.prDate}>
+                    {format(new Date(stats.bestWeight.date), 'MMM d, yyyy')}
+                  </Text>
+                </View>
+              )}
 
-    {/* Secondary Muscles */}
-    {exercise.secondary_muscles && exercise.secondary_muscles.length > 0 && (
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Secondary Muscles</Text>
-        <View style={styles.muscleList}>
-          {exercise.secondary_muscles.map((muscle, index) => (
-            <View key={index} style={styles.muscleBadgeSecondary}>
-              <Text style={styles.muscleBadgeTextSecondary}>{muscle}</Text>
+              {/* Max Reps */}
+              {stats.bestReps && (
+                <View style={styles.prCard}>
+                  <View style={[styles.prIconContainer, { backgroundColor: '#14532d' }]}>
+                    <Dumbbell size={24} color="#22c55e" />
+                  </View>
+                  <Text style={styles.prLabel}>Max Reps</Text>
+                  <Text style={styles.prValue}>{stats.bestReps.value} reps</Text>
+                  {stats.bestReps.weight && (
+                    <Text style={styles.prDetail}>@ {stats.bestReps.weight} kg</Text>
+                  )}
+                  <Text style={styles.prDate}>
+                    {format(new Date(stats.bestReps.date), 'MMM d, yyyy')}
+                  </Text>
+                </View>
+              )}
+
+              {/* Max Volume */}
+              {stats.bestVolume && (
+                <View style={styles.prCard}>
+                  <View style={[styles.prIconContainer, { backgroundColor: '#1e3a5f' }]}>
+                    <TrendingUp size={24} color="#3b82f6" />
+                  </View>
+                  <Text style={styles.prLabel}>Max Volume</Text>
+                  <Text style={styles.prValue}>
+                    {stats.bestVolume.value.toLocaleString()} kg
+                  </Text>
+                  <Text style={styles.prDetail}>Single Session</Text>
+                  <Text style={styles.prDate}>
+                    {format(new Date(stats.bestVolume.date), 'MMM d, yyyy')}
+                  </Text>
+                </View>
+              )}
+
+              {/* Estimated 1RM */}
+              {stats.estimated1RM && (
+                <View style={styles.prCard}>
+                  <View style={[styles.prIconContainer, { backgroundColor: '#4c1d95' }]}>
+                    <Target size={24} color="#a855f7" />
+                  </View>
+                  <Text style={styles.prLabel}>Estimated 1RM</Text>
+                  <Text style={styles.prValue}>{stats.estimated1RM} kg</Text>
+                  <Text style={styles.prDetail}>Brzycki Formula</Text>
+                  <Text style={styles.prDate}>Current</Text>
+                </View>
+              )}
             </View>
-          ))}
+          </View>
+        )}
+
+        {/* Instructions */}
+        {exercise.instructions && exercise.instructions.length > 0 && (
+          <View style={styles.instructionsContainer}>
+            <Pressable 
+              style={styles.instructionsHeader}
+              onPress={() => setInstructionsExpanded(!instructionsExpanded)}
+            >
+              <Text style={styles.instructionsTitle}>Instructions</Text>
+              <View style={styles.instructionsHeaderRight}>
+                <Pressable 
+                  style={styles.expandButton}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    setFullScreenInstructions(true);
+                  }}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Maximize2 size={18} color="#3B82F6" />
+                </Pressable>
+                {instructionsExpanded ? (
+                  <ChevronUp size={24} color="#888" />
+                ) : (
+                  <ChevronDown size={24} color="#888" />
+                )}
+              </View>
+            </Pressable>
+            
+            {instructionsExpanded && (
+              <ScrollView 
+                style={styles.instructionsContent}
+                nestedScrollEnabled
+              >
+                {exercise.instructions.map((instruction, index) => (
+                  <View key={index} style={styles.instructionStep}>
+                    <View style={styles.stepNumber}>
+                      <Text style={styles.stepNumberText}>{index + 1}</Text>
+                    </View>
+                    <Text style={styles.instructionText}>{instruction}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+        )}
+
+        {/* Primary Muscles */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Primary Muscles</Text>
+          <View style={styles.muscleList}>
+            {exercise.primary_muscles?.map((muscle, index) => (
+              <View key={index} style={styles.muscleBadgePrimary}>
+                <Target size={14} color="#22c55e" />
+                <Text style={styles.muscleBadgeText}>{muscle}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    )}
 
-    {/* Equipment */}
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Equipment</Text>
-      <View style={styles.equipmentContainer}>
-        <Dumbbell size={20} color="#3b82f6" />
-        <Text style={styles.equipmentText}>{exercise.equipment}</Text>
-      </View>
-    </View>
+        {/* Secondary Muscles */}
+        {exercise.secondary_muscles && exercise.secondary_muscles.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Secondary Muscles</Text>
+            <View style={styles.muscleList}>
+              {exercise.secondary_muscles.map((muscle, index) => (
+                <View key={index} style={styles.muscleBadgeSecondary}>
+                  <Text style={styles.muscleBadgeTextSecondary}>{muscle}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
 
-    {/* Category */}
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Category</Text>
-      <Text style={styles.categoryText}>{exercise.category}</Text>
-    </View>
+        {/* Equipment */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Equipment</Text>
+          <View style={styles.equipmentContainer}>
+            <Dumbbell size={20} color="#3b82f6" />
+            <Text style={styles.equipmentText}>{exercise.equipment}</Text>
+          </View>
+        </View>
 
-    <View style={styles.bottomSpacer} />
-  </ScrollView>
-);
+        {/* Category */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Category</Text>
+          <Text style={styles.categoryText}>{exercise.category}</Text>
+        </View>
+
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
+
+      {/* Full-Screen Instructions Modal */}
+      <Modal 
+        visible={fullScreenInstructions} 
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <SafeAreaView style={styles.fullScreenModal} edges={['top', 'bottom']}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Instructions</Text>
+            <Pressable 
+              onPress={() => setFullScreenInstructions(false)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <X size={28} color="#FFF" />
+            </Pressable>
+          </View>
+          <ScrollView style={styles.modalContent}>
+            {exercise.instructions.map((instruction, index) => (
+              <View key={index} style={styles.instructionStepLarge}>
+                <View style={styles.stepNumberLarge}>
+                  <Text style={styles.stepNumberTextLarge}>{index + 1}</Text>
+                </View>
+                <Text style={styles.instructionTextLarge}>{instruction}</Text>
+              </View>
+            ))}
+            <View style={styles.bottomSpacer} />
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
+    </>
+  );
+};
 
 const HistoryTab: React.FC<{
   history: ExerciseHistoryEntry[];
@@ -389,6 +548,7 @@ export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
   const { isFavorite, toggleFavorite, loadFavorites } = useExerciseStore();
+  const { currentWorkout, addExerciseToWorkout } = useWorkoutStore();
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [history, setHistory] = useState<ExerciseHistoryEntry[]>([]);
@@ -396,6 +556,10 @@ export default function ExerciseDetailScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('about');
   const [isLoading, setIsLoading] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [personalNotes, setPersonalNotes] = useState('');
+  const [isSavingNotes, setIsSavingNotes] = useState(false);
+  const [notesId, setNotesId] = useState<string | null>(null);
 
   // Load favorites on mount
   useEffect(() => {
@@ -461,6 +625,110 @@ export default function ExerciseDetailScreen() {
     }
   };
 
+  // Load personal notes
+  useEffect(() => {
+    loadPersonalNotes();
+  }, [exercise?.id, user?.id]);
+
+  const loadPersonalNotes = async () => {
+    if (!user?.id || !exercise?.id) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('exercise_notes')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('exercise_id', exercise.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        setPersonalNotes(data.notes || '');
+        setNotesId(data.id);
+      }
+    } catch (error) {
+      console.error('Error loading notes:', error);
+    }
+  };
+
+  const savePersonalNotes = async () => {
+    if (!user?.id || !exercise?.id) {
+      Alert.alert('Error', 'You must be logged in to save notes');
+      return;
+    }
+
+    setIsSavingNotes(true);
+    lightHaptic();
+
+    try {
+      if (notesId) {
+        // Update existing notes
+        if (personalNotes.trim()) {
+          const { error } = await supabase
+            .from('exercise_notes')
+            .update({ notes: personalNotes.trim() })
+            .eq('id', notesId);
+
+          if (error) throw error;
+        } else {
+          // Delete if empty
+          const { error } = await supabase
+            .from('exercise_notes')
+            .delete()
+            .eq('id', notesId);
+
+          if (error) throw error;
+          setNotesId(null);
+        }
+      } else if (personalNotes.trim()) {
+        // Insert new notes
+        const { data, error } = await supabase
+          .from('exercise_notes')
+          .insert({
+            user_id: user.id,
+            exercise_id: exercise.id,
+            notes: personalNotes.trim(),
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        setNotesId(data.id);
+      }
+
+      setIsNotesModalOpen(false);
+      lightHaptic();
+    } catch (error: any) {
+      console.error('Error saving notes:', error);
+      Alert.alert('Error', 'Failed to save notes. Please try again.');
+    } finally {
+      setIsSavingNotes(false);
+    }
+  };
+
+  // Handle start workout with this exercise
+  const startWorkoutWithExercise = () => {
+    if (!exercise) return;
+    lightHaptic();
+    router.push({
+      pathname: '/workout/active',
+      params: {
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        quickStart: 'true'
+      }
+    });
+  };
+
+  // Handle add to current workout
+  const addExerciseToCurrentWorkout = () => {
+    if (!exercise || !currentWorkout) return;
+    lightHaptic();
+    addExerciseToWorkout(exercise.id);
+    router.push('/workout/active');
+  };
+
   const favorited = id ? isFavorite(id) : false;
 
   if (isLoading) {
@@ -495,50 +763,63 @@ export default function ExerciseDetailScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.favoriteButton}
-          onPress={handleToggleFavorite}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <Star
-            size={24}
-            color={favorited ? '#fbbf24' : '#64748b'}
-            fill={favorited ? '#fbbf24' : 'transparent'}
-          />
-        </TouchableOpacity>
+        
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            style={styles.headerIconButton}
+            onPress={() => {
+              lightHaptic();
+              setIsNotesModalOpen(true);
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Edit2
+              size={22}
+              color={personalNotes ? '#3b82f6' : '#64748b'}
+            />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.headerIconButton}
+            onPress={handleToggleFavorite}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Star
+              size={24}
+              color={favorited ? '#fbbf24' : '#64748b'}
+              fill={favorited ? '#fbbf24' : 'transparent'}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Exercise GIF Card - Prominent Display */}
       <View style={styles.gifSection}>
         <View style={styles.gifCard}>
           {exercise.gif_url ? (
-            <Image
-              source={{ uri: exercise.gif_url }}
-              style={styles.exerciseGif}
-              resizeMode="contain"
-            />
+            <>
+              <Image
+                source={{ uri: exercise.gif_url }}
+                style={styles.exerciseGif}
+                resizeMode="contain"
+              />
+              
+              {/* Play Button at Bottom-Right Corner */}
+              <Pressable 
+                style={styles.cornerPlayButton}
+                onPress={startWorkoutWithExercise}
+              >
+                <View style={styles.playButtonCircle}>
+                  <Play size={28} color="#FFF" />
+                </View>
+              </Pressable>
+            </>
           ) : (
             <View style={styles.gifPlaceholder}>
               <Dumbbell size={48} color="#64748b" />
               <Text style={styles.gifPlaceholderText}>No preview available</Text>
             </View>
           )}
-        </View>
-
-        {/* Exercise Info Below GIF */}
-        <View style={styles.exerciseInfo}>
-          <Text style={styles.exerciseName}>{exercise.name}</Text>
-          
-          <View style={styles.badgeRow}>
-            <View style={styles.badgePrimary}>
-              <Target size={14} color="#22c55e" />
-              <Text style={styles.badgeText}>{exercise.primary_muscles?.[0]}</Text>
-            </View>
-            <View style={styles.badgeSecondary}>
-              <Dumbbell size={12} color="#8b5cf6" />
-              <Text style={styles.badgeTextSecondary}>{exercise.equipment}</Text>
-            </View>
-          </View>
         </View>
       </View>
 
@@ -564,7 +845,12 @@ export default function ExerciseDetailScreen() {
 
       {/* Tab Content */}
       <View style={styles.tabContentContainer}>
-        {activeTab === 'about' && <AboutTab exercise={exercise} />}
+        {activeTab === 'about' && (
+          <AboutTab 
+            exercise={exercise} 
+            stats={stats}
+          />
+        )}
         {activeTab === 'history' && (
           <HistoryTab 
             history={history} 
@@ -580,6 +866,70 @@ export default function ExerciseDetailScreen() {
           />
         )}
       </View>
+
+      {/* Quick Add Button (if workout is active) */}
+      {currentWorkout && (
+        <View style={styles.quickAddContainer}>
+          <Pressable 
+            style={styles.quickAddButton}
+            onPress={addExerciseToCurrentWorkout}
+          >
+            <PlusCircle size={18} color="#3B82F6" />
+            <Text style={styles.quickAddText}>Quick Add to Workout</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Personal Notes Modal */}
+      <Modal
+        visible={isNotesModalOpen}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setIsNotesModalOpen(false)}
+      >
+        <SafeAreaView style={styles.modalContainer} edges={['top', 'bottom']}>
+          <View style={styles.modalHeader}>
+            <Pressable
+              onPress={() => setIsNotesModalOpen(false)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <X size={24} color="#ffffff" />
+            </Pressable>
+            <Text style={styles.modalTitle}>Personal Notes</Text>
+            <Pressable
+              onPress={savePersonalNotes}
+              disabled={isSavingNotes}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Text style={[styles.modalSaveButton, isSavingNotes && styles.modalSaveButtonDisabled]}>
+                {isSavingNotes ? 'Saving...' : 'Save'}
+              </Text>
+            </Pressable>
+          </View>
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.modalContent}
+          >
+            <ScrollView>
+              <Text style={styles.modalLabel}>
+                Add your own form cues, setup tips, or personal reminders
+              </Text>
+              <TextInput
+                style={styles.modalTextInput}
+                placeholder="Examples:&#10;• Keep elbows tucked at 45°&#10;• Drive through heels&#10;• Chest up, shoulders back&#10;• Bar should touch mid-chest"
+                placeholderTextColor="#64748b"
+                value={personalNotes}
+                onChangeText={setPersonalNotes}
+                multiline
+                numberOfLines={15}
+                textAlignVertical="top"
+                autoFocus
+              />
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -609,7 +959,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  favoriteButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  headerIconButton: {
     width: 44,
     height: 44,
     alignItems: 'center',
@@ -618,14 +974,14 @@ const styles = StyleSheet.create({
 
   gifSection: {
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingBottom: 8,
   },
 
   gifCard: {
     backgroundColor: '#1e293b',
     borderRadius: 16,
     overflow: 'hidden',
-    marginBottom: 16,
+    position: 'relative', // Enable absolute positioning for play button
   },
 
   exerciseGif: {
@@ -649,56 +1005,28 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  exerciseInfo: {
-    paddingHorizontal: 4,
+  // Play button at bottom-right corner
+  cornerPlayButton: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 10,
   },
 
-  exerciseName: {
-    color: '#ffffff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
-    marginBottom: 12,
-  },
-
-  badgeRow: {
-    flexDirection: 'row',
-    gap: 8,
-    flexWrap: 'wrap',
-  },
-
-  badgePrimary: {
-    flexDirection: 'row',
+  playButtonCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#3B82F6',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#14532d',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    gap: 6,
-  },
-
-  badgeText: {
-    color: '#22c55e',
-    fontSize: 13,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-
-  badgeSecondary: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2e1065',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    gap: 6,
-  },
-
-  badgeTextSecondary: {
-    color: '#8b5cf6',
-    fontSize: 13,
-    fontWeight: '600',
-    textTransform: 'capitalize',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
 
   // Tabs
@@ -736,6 +1064,7 @@ const styles = StyleSheet.create({
   tabContent: {
     flex: 1,
     padding: 16,
+    paddingBottom: 140, // Extra space for FAB (accounts for both buttons)
   },
 
   // About Tab
@@ -750,6 +1079,211 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
+  // Personal Records Section
+  prSection: {
+    marginBottom: 24,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#fbbf24',
+  },
+
+  prSectionTitle: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+
+  prGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+  },
+
+  prCard: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    minWidth: 150,
+    flex: 1,
+    maxWidth: '48%',
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+
+  prIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#422006',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+
+  prLabel: {
+    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+
+  prValue: {
+    color: '#ffffff',
+    fontSize: 24,
+    fontWeight: '800',
+    marginBottom: 2,
+  },
+
+  prDetail: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+
+  prDate: {
+    color: '#475569',
+    fontSize: 11,
+    fontWeight: '500',
+  },
+
+  // Enhanced Instructions Section
+  instructionsContainer: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    marginBottom: 24,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+  },
+
+  instructionsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#2A2A2A',
+  },
+
+  instructionsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+  instructionsHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+
+  expandButton: {
+    padding: 4,
+  },
+
+  instructionsContent: {
+    maxHeight: 400,
+    padding: 16,
+  },
+
+  instructionStep: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    alignItems: 'flex-start',
+  },
+
+  stepNumber: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#3B82F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+    flexShrink: 0,
+  },
+
+  stepNumberText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+
+  instructionText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#E5E5E5',
+    fontWeight: '400',
+  },
+
+  // Full-Screen Modal
+  fullScreenModal: {
+    flex: 1,
+    backgroundColor: '#020617',
+  },
+
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
+  },
+
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+
+  modalContent: {
+    flex: 1,
+    padding: 20,
+  },
+
+  instructionStepLarge: {
+    flexDirection: 'row',
+    marginBottom: 28,
+    alignItems: 'flex-start',
+  },
+
+  stepNumberLarge: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#3B82F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    flexShrink: 0,
+  },
+
+  stepNumberTextLarge: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+
+  instructionTextLarge: {
+    flex: 1,
+    fontSize: 18,
+    lineHeight: 28,
+    color: '#E5E5E5',
+    fontWeight: '400',
+  },
+
+  // Deprecated styles (kept for backwards compatibility)
   instructionItem: {
     flexDirection: 'row',
     marginBottom: 12,
@@ -769,13 +1303,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 12,
     fontWeight: 'bold',
-  },
-
-  instructionText: {
-    flex: 1,
-    color: '#94a3b8',
-    fontSize: 14,
-    lineHeight: 20,
   },
 
   muscleList: {
@@ -1049,6 +1576,94 @@ const styles = StyleSheet.create({
 
   bottomSpacer: {
     height: 40,
+  },
+
+  // Quick Add Button (bottom of screen)
+  quickAddContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
+  },
+
+  quickAddButton: {
+    backgroundColor: '#1e293b',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#3B82F6',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  quickAddText: {
+    color: '#3B82F6',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+
+  // Personal Notes Modal
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#020617',
+  },
+
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
+  },
+
+  modalTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+
+  modalSaveButton: {
+    color: '#3b82f6',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  modalSaveButtonDisabled: {
+    color: '#64748b',
+  },
+
+  modalContent: {
+    flex: 1,
+    padding: 16,
+  },
+
+  modalLabel: {
+    color: '#94a3b8',
+    fontSize: 14,
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+
+  modalTextInput: {
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    padding: 16,
+    color: '#ffffff',
+    fontSize: 16,
+    lineHeight: 24,
+    minHeight: 300,
+    borderWidth: 1,
+    borderColor: '#334155',
   },
 });
 

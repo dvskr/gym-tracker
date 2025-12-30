@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc } from 'lucide-react-native';
+import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc, PlusCircle } from 'lucide-react-native';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
 
@@ -358,6 +358,18 @@ export default function ExerciseLibraryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Exercise Library</Text>
+        
+        {/* Add Custom Exercise Button */}
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            lightHaptic();
+            router.push('/exercise/add-custom');
+          }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <PlusCircle size={26} color="#3B82F6" />
+        </TouchableOpacity>
       </View>
 
       {/* Search Bar */}
@@ -521,6 +533,9 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -531,6 +546,15 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 28,
     fontWeight: 'bold',
+  },
+
+  addButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   searchContainer: {
