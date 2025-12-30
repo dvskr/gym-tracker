@@ -1,0 +1,1667 @@
+{
+  "definiteMatches": [
+    {
+      "strong": "Arnold Press",
+      "ourExercise": "dumbbell arnold press\r",
+      "score": 90,
+      "strongNorm": "arnold press",
+      "ourNorm": "dumbbell arnold press",
+      "strongCore": "arnold press",
+      "ourCore": "arnold press"
+    },
+    {
+      "strong": "Back Extension",
+      "ourExercise": "lever back extension\r",
+      "score": 90,
+      "strongNorm": "back extension",
+      "ourNorm": "lever back extension",
+      "strongCore": "back extension",
+      "ourCore": "back extension"
+    },
+    {
+      "strong": "Back Extension (Machine)",
+      "ourExercise": "lever back extension\r",
+      "score": 90,
+      "strongNorm": "back extension",
+      "ourNorm": "lever back extension",
+      "strongCore": "back extension",
+      "ourCore": "back extension"
+    },
+    {
+      "strong": "Bench Dip",
+      "ourExercise": "bench dip (knees bent)\r",
+      "score": 100,
+      "strongNorm": "bench dip",
+      "ourNorm": "bench dip",
+      "strongCore": "bench dip",
+      "ourCore": "bench dip"
+    },
+    {
+      "strong": "Bench Press (Barbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Bench Press (Cable)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Bench Press (Dumbbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Bench Press (Smith Machine)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Bent Over Row (Band)",
+      "ourExercise": "barbell bent over row\r",
+      "score": 90,
+      "strongNorm": "bent over row",
+      "ourNorm": "barbell bent over row",
+      "strongCore": "bent over row",
+      "ourCore": "bent over row"
+    },
+    {
+      "strong": "Bent Over Row (Barbell)",
+      "ourExercise": "barbell bent over row\r",
+      "score": 90,
+      "strongNorm": "bent over row",
+      "ourNorm": "barbell bent over row",
+      "strongCore": "bent over row",
+      "ourCore": "bent over row"
+    },
+    {
+      "strong": "Bent Over Row (Dumbbell)",
+      "ourExercise": "barbell bent over row\r",
+      "score": 90,
+      "strongNorm": "bent over row",
+      "ourNorm": "barbell bent over row",
+      "strongCore": "bent over row",
+      "ourCore": "bent over row"
+    },
+    {
+      "strong": "Burpee",
+      "ourExercise": "burpee\r",
+      "score": 100,
+      "strongNorm": "burpee",
+      "ourNorm": "burpee",
+      "strongCore": "burpee",
+      "ourCore": "burpee"
+    },
+    {
+      "strong": "Cable Crunch",
+      "ourExercise": "cable seated crunch\r",
+      "score": 90,
+      "strongNorm": "cable crunch",
+      "ourNorm": "cable seated crunch",
+      "strongCore": "crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Chest Dip",
+      "ourExercise": "chest dip\r",
+      "score": 100,
+      "strongNorm": "chest dip",
+      "ourNorm": "chest dip",
+      "strongCore": "chest dip",
+      "ourCore": "chest dip"
+    },
+    {
+      "strong": "Chest Dip (Assisted)",
+      "ourExercise": "chest dip\r",
+      "score": 100,
+      "strongNorm": "chest dip",
+      "ourNorm": "chest dip",
+      "strongCore": "chest dip",
+      "ourCore": "chest dip"
+    },
+    {
+      "strong": "Concentration Curl (Dumbbell)",
+      "ourExercise": "barbell standing concentration curl\r",
+      "score": 90,
+      "strongNorm": "concentration curl",
+      "ourNorm": "barbell standing concentration curl",
+      "strongCore": "concentration curl",
+      "ourCore": "concentration curl"
+    },
+    {
+      "strong": "Cross Body Crunch",
+      "ourExercise": "cross body crunch\r",
+      "score": 100,
+      "strongNorm": "cross body crunch",
+      "ourNorm": "cross body crunch",
+      "strongCore": "cross body crunch",
+      "ourCore": "cross body crunch"
+    },
+    {
+      "strong": "Crunch",
+      "ourExercise": "crunch (hands overhead)\r",
+      "score": 100,
+      "strongNorm": "crunch",
+      "ourNorm": "crunch",
+      "strongCore": "crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Crunch (Machine)",
+      "ourExercise": "crunch (hands overhead)\r",
+      "score": 100,
+      "strongNorm": "crunch",
+      "ourNorm": "crunch",
+      "strongCore": "crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Crunch (Stability Ball)",
+      "ourExercise": "crunch (hands overhead)\r",
+      "score": 100,
+      "strongNorm": "crunch",
+      "ourNorm": "crunch",
+      "strongCore": "crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Deadlift (Band)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 90,
+      "strongNorm": "deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Deadlift (Barbell)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 90,
+      "strongNorm": "deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Deadlift (Dumbbell)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 90,
+      "strongNorm": "deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Deadlift (Smith Machine)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 90,
+      "strongNorm": "deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Decline Bench Press (Barbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "decline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Decline Bench Press (Dumbbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "decline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Decline Bench Press (Smith Machine)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "decline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Decline Crunch",
+      "ourExercise": "decline crunch\r",
+      "score": 100,
+      "strongNorm": "decline crunch",
+      "ourNorm": "decline crunch",
+      "strongCore": "crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Front Raise (Band)",
+      "ourExercise": "barbell front raise\r",
+      "score": 90,
+      "strongNorm": "front raise",
+      "ourNorm": "barbell front raise",
+      "strongCore": "front raise",
+      "ourCore": "front raise"
+    },
+    {
+      "strong": "Front Raise (Barbell)",
+      "ourExercise": "barbell front raise\r",
+      "score": 90,
+      "strongNorm": "front raise",
+      "ourNorm": "barbell front raise",
+      "strongCore": "front raise",
+      "ourCore": "front raise"
+    },
+    {
+      "strong": "Front Raise (Cable)",
+      "ourExercise": "barbell front raise\r",
+      "score": 90,
+      "strongNorm": "front raise",
+      "ourNorm": "barbell front raise",
+      "strongCore": "front raise",
+      "ourCore": "front raise"
+    },
+    {
+      "strong": "Front Raise (Dumbbell)",
+      "ourExercise": "barbell front raise\r",
+      "score": 90,
+      "strongNorm": "front raise",
+      "ourNorm": "barbell front raise",
+      "strongCore": "front raise",
+      "ourCore": "front raise"
+    },
+    {
+      "strong": "Front Raise (Plate)",
+      "ourExercise": "barbell front raise\r",
+      "score": 90,
+      "strongNorm": "front raise",
+      "ourNorm": "barbell front raise",
+      "strongCore": "front raise",
+      "ourCore": "front raise"
+    },
+    {
+      "strong": "Front Squat (Barbell)",
+      "ourExercise": "barbell front squat\r",
+      "score": 90,
+      "strongNorm": "front squat",
+      "ourNorm": "barbell front squat",
+      "strongCore": "front squat",
+      "ourCore": "front squat"
+    },
+    {
+      "strong": "Goblet Squat (Kettlebell)",
+      "ourExercise": "dumbbell goblet squat\r",
+      "score": 90,
+      "strongNorm": "goblet squat",
+      "ourNorm": "dumbbell goblet squat",
+      "strongCore": "goblet squat",
+      "ourCore": "goblet squat"
+    },
+    {
+      "strong": "Good Morning (Barbell)",
+      "ourExercise": "barbell good morning\r",
+      "score": 90,
+      "strongNorm": "good morning",
+      "ourNorm": "barbell good morning",
+      "strongCore": "good morning",
+      "ourCore": "good morning"
+    },
+    {
+      "strong": "Hack Squat",
+      "ourExercise": "barbell hack squat\r",
+      "score": 90,
+      "strongNorm": "hack squat",
+      "ourNorm": "barbell hack squat",
+      "strongCore": "hack squat",
+      "ourCore": "hack squat"
+    },
+    {
+      "strong": "Hack Squat (Barbell)",
+      "ourExercise": "barbell hack squat\r",
+      "score": 90,
+      "strongNorm": "hack squat",
+      "ourNorm": "barbell hack squat",
+      "strongCore": "hack squat",
+      "ourCore": "hack squat"
+    },
+    {
+      "strong": "Hang Clean (Barbell)",
+      "ourExercise": "kettlebell hang clean\r",
+      "score": 90,
+      "strongNorm": "hang clean",
+      "ourNorm": "kettlebell hang clean",
+      "strongCore": "hang clean",
+      "ourCore": "hang clean"
+    },
+    {
+      "strong": "Incline Bench Press (Barbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "incline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Cable)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "incline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Dumbbell)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "incline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Smith Machine)",
+      "ourExercise": "band bench press\r",
+      "score": 90,
+      "strongNorm": "incline bench press",
+      "ourNorm": "band bench press",
+      "strongCore": "bench press",
+      "ourCore": "bench press"
+    },
+    {
+      "strong": "Incline Curl (Dumbbell)",
+      "ourExercise": "barbell curl\r",
+      "score": 90,
+      "strongNorm": "incline curl",
+      "ourNorm": "barbell curl",
+      "strongCore": "curl",
+      "ourCore": "curl"
+    },
+    {
+      "strong": "Inverted Row (Bodyweight)",
+      "ourExercise": "inverted row\r",
+      "score": 100,
+      "strongNorm": "inverted row",
+      "ourNorm": "inverted row",
+      "strongCore": "inverted row",
+      "ourCore": "inverted row"
+    },
+    {
+      "strong": "Jump Squat",
+      "ourExercise": "barbell jump squat\r",
+      "score": 90,
+      "strongNorm": "jump squat",
+      "ourNorm": "barbell jump squat",
+      "strongCore": "jump squat",
+      "ourCore": "jump squat"
+    },
+    {
+      "strong": "Kneeling Pulldown (Band)",
+      "ourExercise": "cable pulldown\r",
+      "score": 90,
+      "strongNorm": "kneeling pulldown",
+      "ourNorm": "cable pulldown",
+      "strongCore": "pulldown",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lateral Raise (Band)",
+      "ourExercise": "dumbbell lateral raise\r",
+      "score": 90,
+      "strongNorm": "lateral raise",
+      "ourNorm": "dumbbell lateral raise",
+      "strongCore": "lateral raise",
+      "ourCore": "lateral raise"
+    },
+    {
+      "strong": "Lateral Raise (Cable)",
+      "ourExercise": "dumbbell lateral raise\r",
+      "score": 90,
+      "strongNorm": "lateral raise",
+      "ourNorm": "dumbbell lateral raise",
+      "strongCore": "lateral raise",
+      "ourCore": "lateral raise"
+    },
+    {
+      "strong": "Lateral Raise (Dumbbell)",
+      "ourExercise": "dumbbell lateral raise\r",
+      "score": 90,
+      "strongNorm": "lateral raise",
+      "ourNorm": "dumbbell lateral raise",
+      "strongCore": "lateral raise",
+      "ourCore": "lateral raise"
+    },
+    {
+      "strong": "Lateral Raise (Machine)",
+      "ourExercise": "dumbbell lateral raise\r",
+      "score": 90,
+      "strongNorm": "lateral raise",
+      "ourNorm": "dumbbell lateral raise",
+      "strongCore": "lateral raise",
+      "ourCore": "lateral raise"
+    },
+    {
+      "strong": "Leg Extension (Machine)",
+      "ourExercise": "lever leg extension\r",
+      "score": 90,
+      "strongNorm": "leg extension",
+      "ourNorm": "lever leg extension",
+      "strongCore": "leg extension",
+      "ourCore": "leg extension"
+    },
+    {
+      "strong": "Lunge (Barbell)",
+      "ourExercise": "barbell lunge\r",
+      "score": 90,
+      "strongNorm": "lunge",
+      "ourNorm": "barbell lunge",
+      "strongCore": "lunge",
+      "ourCore": "lunge"
+    },
+    {
+      "strong": "Lunge (Bodyweight)",
+      "ourExercise": "barbell lunge\r",
+      "score": 90,
+      "strongNorm": "lunge",
+      "ourNorm": "barbell lunge",
+      "strongCore": "lunge",
+      "ourCore": "lunge"
+    },
+    {
+      "strong": "Lunge (Dumbbell)",
+      "ourExercise": "barbell lunge\r",
+      "score": 90,
+      "strongNorm": "lunge",
+      "ourNorm": "barbell lunge",
+      "strongCore": "lunge",
+      "ourCore": "lunge"
+    },
+    {
+      "strong": "Lying Leg Curl (Machine)",
+      "ourExercise": "lever kneeling leg curl\r",
+      "score": 90,
+      "strongNorm": "lying leg curl",
+      "ourNorm": "lever kneeling leg curl",
+      "strongCore": "leg curl",
+      "ourCore": "leg curl"
+    },
+    {
+      "strong": "Overhead Press (Barbell)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Overhead Press (Cable)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Overhead Press (Dumbbell)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Overhead Press (Smith Machine)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Overhead Squat (Barbell)",
+      "ourExercise": "barbell overhead squat\r",
+      "score": 90,
+      "strongNorm": "overhead squat",
+      "ourNorm": "barbell overhead squat",
+      "strongCore": "overhead squat",
+      "ourCore": "overhead squat"
+    },
+    {
+      "strong": "Pendlay Row (Barbell)",
+      "ourExercise": "barbell pendlay row\r",
+      "score": 90,
+      "strongNorm": "pendlay row",
+      "ourNorm": "barbell pendlay row",
+      "strongCore": "pendlay row",
+      "ourCore": "pendlay row"
+    },
+    {
+      "strong": "Preacher Curl (Barbell)",
+      "ourExercise": "barbell lying preacher curl\r",
+      "score": 90,
+      "strongNorm": "preacher curl",
+      "ourNorm": "barbell lying preacher curl",
+      "strongCore": "preacher curl",
+      "ourCore": "preacher curl"
+    },
+    {
+      "strong": "Preacher Curl (Dumbbell)",
+      "ourExercise": "barbell lying preacher curl\r",
+      "score": 90,
+      "strongNorm": "preacher curl",
+      "ourNorm": "barbell lying preacher curl",
+      "strongCore": "preacher curl",
+      "ourCore": "preacher curl"
+    },
+    {
+      "strong": "Preacher Curl (Machine)",
+      "ourExercise": "barbell lying preacher curl\r",
+      "score": 90,
+      "strongNorm": "preacher curl",
+      "ourNorm": "barbell lying preacher curl",
+      "strongCore": "preacher curl",
+      "ourCore": "preacher curl"
+    },
+    {
+      "strong": "Pullover (Dumbbell)",
+      "ourExercise": "barbell decline pullover\r",
+      "score": 90,
+      "strongNorm": "pullover",
+      "ourNorm": "barbell decline pullover",
+      "strongCore": "pullover",
+      "ourCore": "pullover"
+    },
+    {
+      "strong": "Pullover (Machine)",
+      "ourExercise": "barbell decline pullover\r",
+      "score": 90,
+      "strongNorm": "pullover",
+      "ourNorm": "barbell decline pullover",
+      "strongCore": "pullover",
+      "ourCore": "pullover"
+    },
+    {
+      "strong": "Push Press",
+      "ourExercise": "dumbbell push press\r",
+      "score": 90,
+      "strongNorm": "push press",
+      "ourNorm": "dumbbell push press",
+      "strongCore": "push press",
+      "ourCore": "push press"
+    },
+    {
+      "strong": "Reverse Crunch",
+      "ourExercise": "cable reverse crunch\r",
+      "score": 90,
+      "strongNorm": "reverse crunch",
+      "ourNorm": "cable reverse crunch",
+      "strongCore": "reverse crunch",
+      "ourCore": "reverse crunch"
+    },
+    {
+      "strong": "Reverse Curl (Band)",
+      "ourExercise": "barbell reverse curl\r",
+      "score": 90,
+      "strongNorm": "reverse curl",
+      "ourNorm": "barbell reverse curl",
+      "strongCore": "reverse curl",
+      "ourCore": "reverse curl"
+    },
+    {
+      "strong": "Reverse Curl (Barbell)",
+      "ourExercise": "barbell reverse curl\r",
+      "score": 90,
+      "strongNorm": "reverse curl",
+      "ourNorm": "barbell reverse curl",
+      "strongCore": "reverse curl",
+      "ourCore": "reverse curl"
+    },
+    {
+      "strong": "Reverse Curl (Dumbbell)",
+      "ourExercise": "barbell reverse curl\r",
+      "score": 90,
+      "strongNorm": "reverse curl",
+      "ourNorm": "barbell reverse curl",
+      "strongCore": "reverse curl",
+      "ourCore": "reverse curl"
+    },
+    {
+      "strong": "Reverse Fly (Cable)",
+      "ourExercise": "dumbbell reverse fly\r",
+      "score": 90,
+      "strongNorm": "reverse fly",
+      "ourNorm": "dumbbell reverse fly",
+      "strongCore": "reverse fly",
+      "ourCore": "reverse fly"
+    },
+    {
+      "strong": "Reverse Fly (Dumbbell)",
+      "ourExercise": "dumbbell reverse fly\r",
+      "score": 90,
+      "strongNorm": "reverse fly",
+      "ourNorm": "dumbbell reverse fly",
+      "strongCore": "reverse fly",
+      "ourCore": "reverse fly"
+    },
+    {
+      "strong": "Reverse Fly (Machine)",
+      "ourExercise": "dumbbell reverse fly\r",
+      "score": 90,
+      "strongNorm": "reverse fly",
+      "ourNorm": "dumbbell reverse fly",
+      "strongCore": "reverse fly",
+      "ourCore": "reverse fly"
+    },
+    {
+      "strong": "Romanian Deadlift (Barbell)",
+      "ourExercise": "barbell romanian deadlift\r",
+      "score": 90,
+      "strongNorm": "romanian deadlift",
+      "ourNorm": "barbell romanian deadlift",
+      "strongCore": "romanian deadlift",
+      "ourCore": "romanian deadlift"
+    },
+    {
+      "strong": "Romanian Deadlift (Dumbbell)",
+      "ourExercise": "barbell romanian deadlift\r",
+      "score": 90,
+      "strongNorm": "romanian deadlift",
+      "ourNorm": "barbell romanian deadlift",
+      "strongCore": "romanian deadlift",
+      "ourCore": "romanian deadlift"
+    },
+    {
+      "strong": "Seated Calf Raise (Machine)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "seated calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Seated Calf Raise (Plate Loaded)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "seated calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Seated Leg Curl (Machine)",
+      "ourExercise": "lever kneeling leg curl\r",
+      "score": 90,
+      "strongNorm": "seated leg curl",
+      "ourNorm": "lever kneeling leg curl",
+      "strongCore": "leg curl",
+      "ourCore": "leg curl"
+    },
+    {
+      "strong": "Seated Overhead Press (Barbell)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "seated overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Seated Overhead Press (Dumbbell)",
+      "ourExercise": "barbell seated overhead press\r",
+      "score": 90,
+      "strongNorm": "seated overhead press",
+      "ourNorm": "barbell seated overhead press",
+      "strongCore": "overhead press",
+      "ourCore": "overhead press"
+    },
+    {
+      "strong": "Seated Wide-Grip Row (Cable)",
+      "ourExercise": "cable seated wide-grip row\r",
+      "score": 90,
+      "strongNorm": "seated widegrip row",
+      "ourNorm": "cable seated widegrip row",
+      "strongCore": "widegrip row",
+      "ourCore": "widegrip row"
+    },
+    {
+      "strong": "Shoulder Press (Machine)",
+      "ourExercise": "dumbbell seated shoulder press\r",
+      "score": 90,
+      "strongNorm": "shoulder press",
+      "ourNorm": "dumbbell seated shoulder press",
+      "strongCore": "shoulder press",
+      "ourCore": "shoulder press"
+    },
+    {
+      "strong": "Shoulder Press (Plate Loaded)",
+      "ourExercise": "dumbbell seated shoulder press\r",
+      "score": 90,
+      "strongNorm": "shoulder press",
+      "ourNorm": "dumbbell seated shoulder press",
+      "strongCore": "shoulder press",
+      "ourCore": "shoulder press"
+    },
+    {
+      "strong": "Shrug (Barbell)",
+      "ourExercise": "band shrug\r",
+      "score": 90,
+      "strongNorm": "shrug",
+      "ourNorm": "band shrug",
+      "strongCore": "shrug",
+      "ourCore": "shrug"
+    },
+    {
+      "strong": "Shrug (Dumbbell)",
+      "ourExercise": "band shrug\r",
+      "score": 90,
+      "strongNorm": "shrug",
+      "ourNorm": "band shrug",
+      "strongCore": "shrug",
+      "ourCore": "shrug"
+    },
+    {
+      "strong": "Shrug (Machine)",
+      "ourExercise": "band shrug\r",
+      "score": 90,
+      "strongNorm": "shrug",
+      "ourNorm": "band shrug",
+      "strongCore": "shrug",
+      "ourCore": "shrug"
+    },
+    {
+      "strong": "Shrug (Smith Machine)",
+      "ourExercise": "band shrug\r",
+      "score": 90,
+      "strongNorm": "shrug",
+      "ourNorm": "band shrug",
+      "strongCore": "shrug",
+      "ourCore": "shrug"
+    },
+    {
+      "strong": "Side Plank",
+      "ourExercise": "bodyweight incline side plank\r",
+      "score": 90,
+      "strongNorm": "side plank",
+      "ourNorm": "bodyweight incline side plank",
+      "strongCore": "side plank",
+      "ourCore": "side plank"
+    },
+    {
+      "strong": "Squat (Band)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat (Barbell)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat (Bodyweight)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat (Dumbbell)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat (Machine)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat (Smith Machine)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 90,
+      "strongNorm": "squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Squat Row (Band)",
+      "ourExercise": "band squat row\r",
+      "score": 90,
+      "strongNorm": "squat row",
+      "ourNorm": "band squat row",
+      "strongCore": "squat row",
+      "ourCore": "squat row"
+    },
+    {
+      "strong": "Standing Calf Raise (Barbell)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "standing calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Bodyweight)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "standing calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Dumbbell)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "standing calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Machine)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "standing calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Smith Machine)",
+      "ourExercise": "barbell seated calf raise\r",
+      "score": 90,
+      "strongNorm": "standing calf raise",
+      "ourNorm": "barbell seated calf raise",
+      "strongCore": "calf raise",
+      "ourCore": "calf raise"
+    },
+    {
+      "strong": "Stiff Leg Deadlift (Barbell)",
+      "ourExercise": "dumbbell stiff leg deadlift\r",
+      "score": 90,
+      "strongNorm": "stiff leg deadlift",
+      "ourNorm": "dumbbell stiff leg deadlift",
+      "strongCore": "stiff leg deadlift",
+      "ourCore": "stiff leg deadlift"
+    },
+    {
+      "strong": "Stiff Leg Deadlift (Dumbbell)",
+      "ourExercise": "dumbbell stiff leg deadlift\r",
+      "score": 90,
+      "strongNorm": "stiff leg deadlift",
+      "ourNorm": "dumbbell stiff leg deadlift",
+      "strongCore": "stiff leg deadlift",
+      "ourCore": "stiff leg deadlift"
+    },
+    {
+      "strong": "Straight Leg Deadlift (Band)",
+      "ourExercise": "band straight leg deadlift\r",
+      "score": 90,
+      "strongNorm": "straight leg deadlift",
+      "ourNorm": "band straight leg deadlift",
+      "strongCore": "straight leg deadlift",
+      "ourCore": "straight leg deadlift"
+    },
+    {
+      "strong": "Sumo Deadlift (Barbell)",
+      "ourExercise": "barbell sumo deadlift\r",
+      "score": 90,
+      "strongNorm": "sumo deadlift",
+      "ourNorm": "barbell sumo deadlift",
+      "strongCore": "sumo deadlift",
+      "ourCore": "sumo deadlift"
+    },
+    {
+      "strong": "Upright Row (Barbell)",
+      "ourExercise": "barbell upright row\r",
+      "score": 90,
+      "strongNorm": "upright row",
+      "ourNorm": "barbell upright row",
+      "strongCore": "upright row",
+      "ourCore": "upright row"
+    },
+    {
+      "strong": "Upright Row (Cable)",
+      "ourExercise": "barbell upright row\r",
+      "score": 90,
+      "strongNorm": "upright row",
+      "ourNorm": "barbell upright row",
+      "strongCore": "upright row",
+      "ourCore": "upright row"
+    },
+    {
+      "strong": "Upright Row (Dumbbell)",
+      "ourExercise": "barbell upright row\r",
+      "score": 90,
+      "strongNorm": "upright row",
+      "ourNorm": "barbell upright row",
+      "strongCore": "upright row",
+      "ourCore": "upright row"
+    },
+    {
+      "strong": "Zercher Squat (Barbell)",
+      "ourExercise": "barbell zercher squat\r",
+      "score": 90,
+      "strongNorm": "zercher squat",
+      "ourNorm": "barbell zercher squat",
+      "strongCore": "zercher squat",
+      "ourCore": "zercher squat"
+    }
+  ],
+  "likelyMatches": [
+    {
+      "strong": "Bench Press - Close Grip",
+      "ourExercise": "barbell incline close grip bench press\r",
+      "score": 80,
+      "strongNorm": "bench press close grip",
+      "ourNorm": "barbell incline close grip bench press",
+      "strongCore": "bench press close grip",
+      "ourCore": "close grip bench press"
+    },
+    {
+      "strong": "Bench Press - Wide Grip",
+      "ourExercise": "barbell wide reverse grip bench press\r",
+      "score": 80,
+      "strongNorm": "bench press wide grip",
+      "ourNorm": "barbell wide reverse grip bench press",
+      "strongCore": "bench press wide grip",
+      "ourCore": "wide reverse grip bench press"
+    },
+    {
+      "strong": "Bent Over One Arm Row (Dumbbell)",
+      "ourExercise": "barbell one arm bent over row\r",
+      "score": 85,
+      "strongNorm": "bent over one arm row",
+      "ourNorm": "barbell one arm bent over row",
+      "strongCore": "bent over one arm row",
+      "ourCore": "one arm bent over row"
+    },
+    {
+      "strong": "Bent Over Row - Underhand (Barbell)",
+      "ourExercise": "barbell bent over row\r",
+      "score": 75,
+      "strongNorm": "bent over row underhand",
+      "ourNorm": "barbell bent over row",
+      "strongCore": "bent over row underhand",
+      "ourCore": "bent over row"
+    },
+    {
+      "strong": "Bicep Curl (Barbell)",
+      "ourExercise": "dumbbell bicep curl lunge with bowling motion\r",
+      "score": 80,
+      "strongNorm": "bicep curl",
+      "ourNorm": "dumbbell bicep curl lunge with bowling motion",
+      "strongCore": "bicep curl",
+      "ourCore": "bicep curl lunge with bowling motion"
+    },
+    {
+      "strong": "Bicep Curl (Cable)",
+      "ourExercise": "dumbbell bicep curl lunge with bowling motion\r",
+      "score": 80,
+      "strongNorm": "bicep curl",
+      "ourNorm": "dumbbell bicep curl lunge with bowling motion",
+      "strongCore": "bicep curl",
+      "ourCore": "bicep curl lunge with bowling motion"
+    },
+    {
+      "strong": "Bicep Curl (Dumbbell)",
+      "ourExercise": "dumbbell bicep curl lunge with bowling motion\r",
+      "score": 80,
+      "strongNorm": "bicep curl",
+      "ourNorm": "dumbbell bicep curl lunge with bowling motion",
+      "strongCore": "bicep curl",
+      "ourCore": "bicep curl lunge with bowling motion"
+    },
+    {
+      "strong": "Bicep Curl (Machine)",
+      "ourExercise": "dumbbell bicep curl lunge with bowling motion\r",
+      "score": 80,
+      "strongNorm": "bicep curl",
+      "ourNorm": "dumbbell bicep curl lunge with bowling motion",
+      "strongCore": "bicep curl",
+      "ourCore": "bicep curl lunge with bowling motion"
+    },
+    {
+      "strong": "Bicycle Crunch",
+      "ourExercise": "cable seated crunch\r",
+      "score": 75,
+      "strongNorm": "bicycle crunch",
+      "ourNorm": "cable seated crunch",
+      "strongCore": "bicycle crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Box Squat (Barbell)",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 75,
+      "strongNorm": "box squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "box squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Bulgarian Split Squat",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 75,
+      "strongNorm": "bulgarian split squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "bulgarian split squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Cable Crossover",
+      "ourExercise": "cable cross-over lateral pulldown\r",
+      "score": 80,
+      "strongNorm": "cable crossover",
+      "ourNorm": "cable crossover lateral pulldown",
+      "strongCore": "crossover",
+      "ourCore": "crossover lateral pulldown"
+    },
+    {
+      "strong": "Cable Twist",
+      "ourExercise": "band twisting overhead press\r",
+      "score": 80,
+      "strongNorm": "cable twist",
+      "ourNorm": "band twisting overhead press",
+      "strongCore": "twist",
+      "ourCore": "twisting overhead press"
+    },
+    {
+      "strong": "Calf Press on Leg Press",
+      "ourExercise": "barbell standing leg calf raise\r",
+      "score": 70,
+      "strongNorm": "calf press on leg press",
+      "ourNorm": "barbell standing leg calf raise",
+      "strongCore": "calf press on leg press",
+      "ourCore": "leg calf raise"
+    },
+    {
+      "strong": "Calf Press on Seated Leg Press",
+      "ourExercise": "barbell standing leg calf raise\r",
+      "score": 70,
+      "strongNorm": "calf press on seated leg press",
+      "ourNorm": "barbell standing leg calf raise",
+      "strongCore": "calf press on seated leg press",
+      "ourCore": "leg calf raise"
+    },
+    {
+      "strong": "Clean (Barbell)",
+      "ourExercise": "barbell clean and press\r",
+      "score": 80,
+      "strongNorm": "clean",
+      "ourNorm": "barbell clean and press",
+      "strongCore": "clean",
+      "ourCore": "clean and press"
+    },
+    {
+      "strong": "Clean and Jerk (Barbell)",
+      "ourExercise": "barbell clean and press\r",
+      "score": 70,
+      "strongNorm": "clean and jerk",
+      "ourNorm": "barbell clean and press",
+      "strongCore": "clean and jerk",
+      "ourCore": "clean and press"
+    },
+    {
+      "strong": "Deadlift High Pull (Barbell)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 75,
+      "strongNorm": "deadlift high pull",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deadlift high pull",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Deficit Deadlift (Barbell)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 75,
+      "strongNorm": "deficit deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "deficit deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Flat Knee Raise",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "flat knee raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "flat knee raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "Flat Leg Raise",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "flat leg raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "flat leg raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "Glute Ham Raise",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "glute ham raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "glute ham raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "Hanging Knee Raise",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "hanging knee raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "hanging knee raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "Hanging Leg Raise",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "hanging leg raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "hanging leg raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "High Knee Skips",
+      "ourExercise": "high knee against wall\r",
+      "score": 70,
+      "strongNorm": "high knee skips",
+      "ourNorm": "high knee against wall",
+      "strongCore": "high knee skips",
+      "ourCore": "high knee against wall"
+    },
+    {
+      "strong": "Jump Shrug (Barbell)",
+      "ourExercise": "band shrug\r",
+      "score": 75,
+      "strongNorm": "jump shrug",
+      "ourNorm": "band shrug",
+      "strongCore": "jump shrug",
+      "ourCore": "shrug"
+    },
+    {
+      "strong": "Knee Raise (Captain's Chair)",
+      "ourExercise": "dumbbell incline raise\r",
+      "score": 75,
+      "strongNorm": "knee raise",
+      "ourNorm": "dumbbell incline raise",
+      "strongCore": "knee raise",
+      "ourCore": "raise"
+    },
+    {
+      "strong": "Lat Pulldown (Cable)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lat Pulldown (Machine)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lat Pulldown (Single Arm)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lat Pulldown - Underhand (Band)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown underhand",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown underhand",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lat Pulldown - Underhand (Cable)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown underhand",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown underhand",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Lat Pulldown - Wide Grip (Cable)",
+      "ourExercise": "cable pulldown\r",
+      "score": 75,
+      "strongNorm": "lat pulldown wide grip",
+      "ourNorm": "cable pulldown",
+      "strongCore": "lat pulldown wide grip",
+      "ourCore": "pulldown"
+    },
+    {
+      "strong": "Leg Press",
+      "ourExercise": "lever alternate leg press\r",
+      "score": 80,
+      "strongNorm": "leg press",
+      "ourNorm": "lever alternate leg press",
+      "strongCore": "leg press",
+      "ourCore": "alternate leg press"
+    },
+    {
+      "strong": "Oblique Crunch",
+      "ourExercise": "cable seated crunch\r",
+      "score": 75,
+      "strongNorm": "oblique crunch",
+      "ourNorm": "cable seated crunch",
+      "strongCore": "oblique crunch",
+      "ourCore": "crunch"
+    },
+    {
+      "strong": "Pistol Squat",
+      "ourExercise": "barbell squat (on knees)\r",
+      "score": 75,
+      "strongNorm": "pistol squat",
+      "ourNorm": "barbell squat",
+      "strongCore": "pistol squat",
+      "ourCore": "squat"
+    },
+    {
+      "strong": "Plank",
+      "ourExercise": "bodyweight incline side plank\r",
+      "score": 80,
+      "strongNorm": "plank",
+      "ourNorm": "bodyweight incline side plank",
+      "strongCore": "plank",
+      "ourCore": "side plank"
+    },
+    {
+      "strong": "Pull Up",
+      "ourExercise": "archer pull up\r",
+      "score": 80,
+      "strongNorm": "pull up",
+      "ourNorm": "archer pull up",
+      "strongCore": "pull up",
+      "ourCore": "archer pull up"
+    },
+    {
+      "strong": "Pull Up (Assisted)",
+      "ourExercise": "archer pull up\r",
+      "score": 80,
+      "strongNorm": "pull up",
+      "ourNorm": "archer pull up",
+      "strongCore": "pull up",
+      "ourCore": "archer pull up"
+    },
+    {
+      "strong": "Pull Up (Band)",
+      "ourExercise": "archer pull up\r",
+      "score": 80,
+      "strongNorm": "pull up",
+      "ourNorm": "archer pull up",
+      "strongCore": "pull up",
+      "ourCore": "archer pull up"
+    },
+    {
+      "strong": "Push Up",
+      "ourExercise": "archer push up\r",
+      "score": 80,
+      "strongNorm": "push up",
+      "ourNorm": "archer push up",
+      "strongCore": "push up",
+      "ourCore": "archer push up"
+    },
+    {
+      "strong": "Push Up (Band)",
+      "ourExercise": "archer push up\r",
+      "score": 80,
+      "strongNorm": "push up",
+      "ourNorm": "archer push up",
+      "strongCore": "push up",
+      "ourCore": "archer push up"
+    },
+    {
+      "strong": "Push Up (Knees)",
+      "ourExercise": "archer push up\r",
+      "score": 80,
+      "strongNorm": "push up",
+      "ourNorm": "archer push up",
+      "strongCore": "push up",
+      "ourCore": "archer push up"
+    },
+    {
+      "strong": "Reverse Grip Concentration Curl (Dumbbell)",
+      "ourExercise": "barbell standing concentration curl\r",
+      "score": 75,
+      "strongNorm": "reverse grip concentration curl",
+      "ourNorm": "barbell standing concentration curl",
+      "strongCore": "reverse grip concentration curl",
+      "ourCore": "concentration curl"
+    },
+    {
+      "strong": "Seated Leg Press (Machine)",
+      "ourExercise": "lever alternate leg press\r",
+      "score": 80,
+      "strongNorm": "seated leg press",
+      "ourNorm": "lever alternate leg press",
+      "strongCore": "leg press",
+      "ourCore": "alternate leg press"
+    },
+    {
+      "strong": "Seated Palms Up Wrist Curl (Dumbbell)",
+      "ourExercise": "barbell palms up wrist curl over a bench\r",
+      "score": 80,
+      "strongNorm": "seated palms up wrist curl",
+      "ourNorm": "barbell palms up wrist curl over a bench",
+      "strongCore": "palms up wrist curl",
+      "ourCore": "palms up wrist curl over a bench"
+    },
+    {
+      "strong": "Single Leg Bridge",
+      "ourExercise": "band one arm single leg split squat\r",
+      "score": 70,
+      "strongNorm": "single leg bridge",
+      "ourNorm": "band one arm single leg split squat",
+      "strongCore": "single leg bridge",
+      "ourCore": "one arm single leg split squat"
+    },
+    {
+      "strong": "Step-up",
+      "ourExercise": "dumbbell step-up lunge\r",
+      "score": 80,
+      "strongNorm": "stepup",
+      "ourNorm": "dumbbell stepup lunge",
+      "strongCore": "stepup",
+      "ourCore": "stepup lunge"
+    },
+    {
+      "strong": "Strict Military Press (Barbell)",
+      "ourExercise": "barbell seated behind head military press\r",
+      "score": 70,
+      "strongNorm": "strict military press",
+      "ourNorm": "barbell seated behind head military press",
+      "strongCore": "strict military press",
+      "ourCore": "behind head military press"
+    },
+    {
+      "strong": "Sumo Deadlift High Pull (Barbell)",
+      "ourExercise": "barbell deadlift\r",
+      "score": 75,
+      "strongNorm": "sumo deadlift high pull",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "sumo deadlift high pull",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "T Bar Row",
+      "ourExercise": "cambered bar lying row\r",
+      "score": 70,
+      "strongNorm": "t bar row",
+      "ourNorm": "cambered bar lying row",
+      "strongCore": "t bar row",
+      "ourCore": "cambered bar lying row"
+    },
+    {
+      "strong": "Trap Bar Deadlift",
+      "ourExercise": "barbell deadlift\r",
+      "score": 75,
+      "strongNorm": "trap bar deadlift",
+      "ourNorm": "barbell deadlift",
+      "strongCore": "trap bar deadlift",
+      "ourCore": "deadlift"
+    },
+    {
+      "strong": "Triceps Dip",
+      "ourExercise": "lever overhand triceps dip\r",
+      "score": 80,
+      "strongNorm": "triceps dip",
+      "ourNorm": "lever overhand triceps dip",
+      "strongCore": "triceps dip",
+      "ourCore": "overhand triceps dip"
+    },
+    {
+      "strong": "Triceps Dip (Assisted)",
+      "ourExercise": "lever overhand triceps dip\r",
+      "score": 80,
+      "strongNorm": "triceps dip",
+      "ourNorm": "lever overhand triceps dip",
+      "strongCore": "triceps dip",
+      "ourCore": "overhand triceps dip"
+    },
+    {
+      "strong": "Triceps Extension",
+      "ourExercise": "dumbbell forward lunge triceps extension\r",
+      "score": 80,
+      "strongNorm": "triceps extension",
+      "ourNorm": "dumbbell forward lunge triceps extension",
+      "strongCore": "triceps extension",
+      "ourCore": "forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Barbell)",
+      "ourExercise": "dumbbell forward lunge triceps extension\r",
+      "score": 80,
+      "strongNorm": "triceps extension",
+      "ourNorm": "dumbbell forward lunge triceps extension",
+      "strongCore": "triceps extension",
+      "ourCore": "forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Cable)",
+      "ourExercise": "dumbbell forward lunge triceps extension\r",
+      "score": 80,
+      "strongNorm": "triceps extension",
+      "ourNorm": "dumbbell forward lunge triceps extension",
+      "strongCore": "triceps extension",
+      "ourCore": "forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Dumbbell)",
+      "ourExercise": "dumbbell forward lunge triceps extension\r",
+      "score": 80,
+      "strongNorm": "triceps extension",
+      "ourNorm": "dumbbell forward lunge triceps extension",
+      "strongCore": "triceps extension",
+      "ourCore": "forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Machine)",
+      "ourExercise": "dumbbell forward lunge triceps extension\r",
+      "score": 80,
+      "strongNorm": "triceps extension",
+      "ourNorm": "dumbbell forward lunge triceps extension",
+      "strongCore": "triceps extension",
+      "ourCore": "forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Pushdown (Cable - Straight Bar)",
+      "ourExercise": "cable incline pushdown\r",
+      "score": 75,
+      "strongNorm": "triceps pushdown",
+      "ourNorm": "cable incline pushdown",
+      "strongCore": "triceps pushdown",
+      "ourCore": "pushdown"
+    }
+  ],
+  "trulyMissing": [
+    "Ab Wheel",
+    "Aerobics",
+    "Around the World",
+    "Ball Slams",
+    "Battle Ropes",
+    "Box Jump",
+    "Cable Kickback",
+    "Cable Pull Through",
+    "Chest Fly",
+    "Chest Fly (Band)",
+    "Chest Fly (Dumbbell)",
+    "Chest Press (Band)",
+    "Chest Press (Machine)",
+    "Chin Up",
+    "Chin Up (Assisted)",
+    "Climbing",
+    "Cycling",
+    "Cycling (Indoor)",
+    "Elliptical Machine",
+    "Face Pull (Cable)",
+    "Floor Press (Barbell)",
+    "Glute Kickback (Machine)",
+    "Hammer Curl (Band)",
+    "Hammer Curl (Cable)",
+    "Hammer Curl (Dumbbell)",
+    "Hand Gripper",
+    "Handstand Push Up",
+    "Hang Snatch (Barbell)",
+    "Hiking",
+    "Hip Abductor (Machine)",
+    "Hip Adductor (Machine)",
+    "Hip Thrust (Barbell)",
+    "Hip Thrust (Bodyweight)",
+    "Incline Chest Fly (Dumbbell)",
+    "Incline Chest Press (Machine)",
+    "Incline Row (Dumbbell)",
+    "Iso-Lateral Chest Press (Machine)",
+    "Iso-Lateral Row (Machine)",
+    "Jackknife Sit Up",
+    "Jump Rope",
+    "Jumping Jack",
+    "Kettlebell Swing",
+    "Kettlebell Turkish Get Up",
+    "Kipping Pull Up",
+    "Knees to Elbows",
+    "Lateral Box Jump",
+    "Mountain Climber",
+    "Muscle Up",
+    "Pec Deck (Machine)",
+    "Power Clean",
+    "Power Snatch (Barbell)",
+    "Press Under (Barbell)",
+    "Rack Pull (Barbell)",
+    "Reverse Plank",
+    "Rowing (Machine)",
+    "Running",
+    "Running (Treadmill)",
+    "Russian Twist",
+    "Seated Row (Cable)",
+    "Seated Row (Machine)",
+    "Side Bend (Band)",
+    "Side Bend (Cable)",
+    "Side Bend (Dumbbell)",
+    "Sit Up",
+    "Skating",
+    "Skiing",
+    "Skullcrusher (Barbell)",
+    "Skullcrusher (Dumbbell)",
+    "Snatch (Barbell)",
+    "Snatch Pull (Barbell)",
+    "Snowboarding",
+    "Split Jerk (Barbell)",
+    "Stretching",
+    "Superman",
+    "Swimming",
+    "Thruster (Barbell)",
+    "Thruster (Kettlebell)",
+    "Toes To Bar",
+    "Torso Rotation (Machine)",
+    "V Up",
+    "Walking",
+    "Wide Pull Up",
+    "Wrist Roller",
+    "Yoga"
+  ],
+  "duplicatesFound": [
+    {
+      "coreMovement": "bench press",
+      "count": 9,
+      "exercises": [
+        "band bench press\r",
+        "barbell bench press\r",
+        "barbell decline bench press\r",
+        "barbell incline bench press\r",
+        "cable bench press\r",
+        "cable incline bench press\r",
+        "dumbbell bench press\r",
+        "dumbbell decline bench press\r",
+        "dumbbell incline bench press\r"
+      ]
+    },
+    {
+      "coreMovement": "shrug",
+      "count": 7,
+      "exercises": [
+        "band shrug\r",
+        "barbell shrug\r",
+        "cable shrug\r",
+        "dumbbell decline shrug\r",
+        "dumbbell incline shrug\r",
+        "dumbbell shrug\r",
+        "lever shrug\r"
+      ]
+    },
+    {
+      "coreMovement": "calf raise",
+      "count": 9,
+      "exercises": [
+        "barbell seated calf raise\r",
+        "barbell seated calf raise\r",
+        "barbell standing calf raise\r",
+        "bodyweight standing calf raise\r",
+        "cable standing calf raise\r",
+        "dumbbell seated calf raise\r",
+        "dumbbell standing calf raise\r",
+        "lever seated calf raise\r",
+        "lever standing calf raise\r"
+      ]
+    }
+  ]
+}

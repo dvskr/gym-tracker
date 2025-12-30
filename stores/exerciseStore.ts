@@ -122,7 +122,7 @@ export const useExerciseStore = create<ExerciseState>()(
             const { data, error } = await supabase
               .from('exercises')
               .select('*')
-              .eq('is_active', true)  // Only fetch the 344 active exercises
+              .eq('is_active', true)
               .order('name')
               .range(offset, offset + batchSize - 1);
 

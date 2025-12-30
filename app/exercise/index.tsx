@@ -8,6 +8,7 @@ import {
   RefreshControl,
   StyleSheet,
   ScrollView,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -15,6 +16,24 @@ import { router } from 'expo-router';
 import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc } from 'lucide-react-native';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
+
+// Helper function to get thumbnail URL from GIF URL
+const getThumbnailUrl = (gifUrl: string | null): string | null => {
+  if (!gifUrl) return null;
+  
+  // Extract filename from GIF URL
+  const filename = gifUrl.split('/').pop();
+  if (!filename) return null;
+  
+  // Convert GIF filename to PNG thumbnail filename
+  const thumbnailFilename = filename.replace('.gif', '.png');
+  
+  // Build thumbnail URL
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+  const fullThumbnailUrl = `${supabaseUrl}/storage/v1/object/public/exercise-thumbnails/${thumbnailFilename}?v=224`;
+  
+  return fullThumbnailUrl;
+};
 
 // Body part mapping for simpler chip names
 const BODY_PART_FILTERS = [
@@ -96,6 +115,7 @@ interface ExerciseItemProps {
     equipment: string;
     target: string;
     bodyPart: string;
+    gif_url?: string | null;
   };
   onPress: () => void;
   isFavorite?: boolean;
@@ -110,7 +130,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
   onToggleFavorite,
   showFavoriteIcon = true 
 }) => {
-  // Get equipment-specific icon and color
+  // Get thumbnail URL and equipment-specific icon and color
+  const thumbnailUrl = getThumbnailUrl(exercise.gifUrl || null);
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
   const iconColor = getEquipmentColor(exercise.equipment);
   
@@ -137,9 +158,19 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      {/* Equipment-Based Exercise Icon */}
-      <View style={styles.iconPlaceholder}>
-        <EquipmentIcon size={24} color={iconColor} />
+      {/* Thumbnail or Equipment-Based Icon */}
+      <View style={styles.iconWrapper}>
+        {thumbnailUrl ? (
+          <Image
+            source={{ uri: thumbnailUrl }}
+            style={styles.thumbnail}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={[styles.iconPlaceholder, { backgroundColor: iconColor + '20' }]}>
+            <EquipmentIcon size={24} color={iconColor} />
+          </View>
+        )}
       </View>
 
       {/* Exercise Info */}
@@ -214,7 +245,7 @@ export default function ExerciseLibraryScreen() {
 
   // Fetch exercises and load favorites on mount
   useEffect(() => {
-    fetchExercises();
+    clearCache();
     loadFavorites();
   }, []);
 
@@ -584,11 +615,22 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
 
-  iconPlaceholder: {
+  iconWrapper: {
+    width: 56,
+    height: 56,
+  },
+
+  thumbnail: {
     width: 56,
     height: 56,
     borderRadius: 8,
     backgroundColor: '#0f172a',
+  },
+
+  iconPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },

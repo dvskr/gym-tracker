@@ -1,0 +1,482 @@
+{
+  "found": [
+    "Arnold Press",
+    "Back Extension",
+    "Bench Dip",
+    "Burpee",
+    "Cable Crossover",
+    "Cable Twist",
+    "Chest Dip",
+    "Chest Dip (Assisted)",
+    "Chin Up",
+    "Chin Up (Assisted)",
+    "Concentration Curl (Dumbbell)",
+    "Cross Body Crunch",
+    "Crunch",
+    "Decline Bench Press (Barbell)",
+    "Decline Bench Press (Dumbbell)",
+    "Decline Bench Press (Smith Machine)",
+    "Decline Crunch",
+    "Glute Ham Raise",
+    "Hack Squat",
+    "Incline Bench Press (Barbell)",
+    "Incline Bench Press (Cable)",
+    "Incline Bench Press (Dumbbell)",
+    "Incline Bench Press (Smith Machine)",
+    "Inverted Row (Bodyweight)",
+    "Jump Squat",
+    "Leg Press",
+    "Plank",
+    "Pull Up",
+    "Push Press",
+    "Push Up",
+    "Reverse Crunch",
+    "Romanian Deadlift (Barbell)",
+    "Romanian Deadlift (Dumbbell)",
+    "Seated Calf Raise (Machine)",
+    "Seated Calf Raise (Plate Loaded)",
+    "Seated Overhead Press (Barbell)",
+    "Seated Overhead Press (Dumbbell)",
+    "Seated Wide-Grip Row (Cable)",
+    "Side Plank",
+    "Standing Calf Raise (Barbell)",
+    "Standing Calf Raise (Bodyweight)",
+    "Standing Calf Raise (Dumbbell)",
+    "Standing Calf Raise (Machine)",
+    "Standing Calf Raise (Smith Machine)",
+    "Step-up",
+    "Stiff Leg Deadlift (Barbell)",
+    "Stiff Leg Deadlift (Dumbbell)",
+    "Straight Leg Deadlift (Band)",
+    "Triceps Dip",
+    "Triceps Extension",
+    "Triceps Extension (Barbell)",
+    "Triceps Extension (Cable)",
+    "Triceps Extension (Dumbbell)",
+    "Triceps Extension (Machine)",
+    "Yoga"
+  ],
+  "missing": [
+    "Ab Wheel",
+    "Aerobics",
+    "Around the World",
+    "Back Extension (Machine)",
+    "Ball Slams",
+    "Battle Ropes",
+    "Bench Press (Barbell)",
+    "Bench Press (Cable)",
+    "Bench Press (Dumbbell)",
+    "Bench Press (Smith Machine)",
+    "Bench Press - Close Grip",
+    "Bench Press - Wide Grip",
+    "Bent Over One Arm Row (Dumbbell)",
+    "Bent Over Row (Band)",
+    "Bent Over Row (Barbell)",
+    "Bent Over Row (Dumbbell)",
+    "Bent Over Row - Underhand (Barbell)",
+    "Bicep Curl (Barbell)",
+    "Bicep Curl (Cable)",
+    "Bicep Curl (Dumbbell)",
+    "Bicep Curl (Machine)",
+    "Bicycle Crunch",
+    "Box Jump",
+    "Box Squat (Barbell)",
+    "Bulgarian Split Squat",
+    "Cable Crunch",
+    "Cable Kickback",
+    "Cable Pull Through",
+    "Calf Press on Leg Press",
+    "Calf Press on Seated Leg Press",
+    "Chest Fly",
+    "Chest Fly (Band)",
+    "Chest Fly (Dumbbell)",
+    "Chest Press (Band)",
+    "Chest Press (Machine)",
+    "Clean (Barbell)",
+    "Clean and Jerk (Barbell)",
+    "Climbing",
+    "Crunch (Machine)",
+    "Crunch (Stability Ball)",
+    "Cycling",
+    "Cycling (Indoor)",
+    "Deadlift (Band)",
+    "Deadlift (Barbell)",
+    "Deadlift (Dumbbell)",
+    "Deadlift (Smith Machine)",
+    "Deadlift High Pull (Barbell)",
+    "Deficit Deadlift (Barbell)",
+    "Elliptical Machine",
+    "Face Pull (Cable)",
+    "Flat Knee Raise",
+    "Flat Leg Raise",
+    "Floor Press (Barbell)",
+    "Front Raise (Band)",
+    "Front Raise (Barbell)",
+    "Front Raise (Cable)",
+    "Front Raise (Dumbbell)",
+    "Front Raise (Plate)",
+    "Front Squat (Barbell)",
+    "Glute Kickback (Machine)",
+    "Goblet Squat (Kettlebell)",
+    "Good Morning (Barbell)",
+    "Hack Squat (Barbell)",
+    "Hammer Curl (Band)",
+    "Hammer Curl (Cable)",
+    "Hammer Curl (Dumbbell)",
+    "Hand Gripper",
+    "Handstand Push Up",
+    "Hang Clean (Barbell)",
+    "Hang Snatch (Barbell)",
+    "Hanging Knee Raise",
+    "Hanging Leg Raise",
+    "High Knee Skips",
+    "Hiking",
+    "Hip Abductor (Machine)",
+    "Hip Adductor (Machine)",
+    "Hip Thrust (Barbell)",
+    "Hip Thrust (Bodyweight)",
+    "Incline Chest Fly (Dumbbell)",
+    "Incline Chest Press (Machine)",
+    "Incline Curl (Dumbbell)",
+    "Incline Row (Dumbbell)",
+    "Iso-Lateral Chest Press (Machine)",
+    "Iso-Lateral Row (Machine)",
+    "Jackknife Sit Up",
+    "Jump Rope",
+    "Jump Shrug (Barbell)",
+    "Jumping Jack",
+    "Kettlebell Swing",
+    "Kettlebell Turkish Get Up",
+    "Kipping Pull Up",
+    "Knee Raise (Captain's Chair)",
+    "Kneeling Pulldown (Band)",
+    "Knees to Elbows",
+    "Lat Pulldown (Cable)",
+    "Lat Pulldown (Machine)",
+    "Lat Pulldown (Single Arm)",
+    "Lat Pulldown - Underhand (Band)",
+    "Lat Pulldown - Underhand (Cable)",
+    "Lat Pulldown - Wide Grip (Cable)",
+    "Lateral Box Jump",
+    "Lateral Raise (Band)",
+    "Lateral Raise (Cable)",
+    "Lateral Raise (Dumbbell)",
+    "Lateral Raise (Machine)",
+    "Leg Extension (Machine)",
+    "Lunge (Barbell)",
+    "Lunge (Bodyweight)",
+    "Lunge (Dumbbell)",
+    "Lying Leg Curl (Machine)",
+    "Mountain Climber",
+    "Muscle Up",
+    "Oblique Crunch",
+    "Overhead Press (Barbell)",
+    "Overhead Press (Cable)",
+    "Overhead Press (Dumbbell)",
+    "Overhead Press (Smith Machine)",
+    "Overhead Squat (Barbell)",
+    "Pec Deck (Machine)",
+    "Pendlay Row (Barbell)",
+    "Pistol Squat",
+    "Power Clean",
+    "Power Snatch (Barbell)",
+    "Preacher Curl (Barbell)",
+    "Preacher Curl (Dumbbell)",
+    "Preacher Curl (Machine)",
+    "Press Under (Barbell)",
+    "Pull Up (Assisted)",
+    "Pull Up (Band)",
+    "Pullover (Dumbbell)",
+    "Pullover (Machine)",
+    "Push Up (Band)",
+    "Push Up (Knees)",
+    "Rack Pull (Barbell)",
+    "Reverse Curl (Band)",
+    "Reverse Curl (Barbell)",
+    "Reverse Curl (Dumbbell)",
+    "Reverse Fly (Cable)",
+    "Reverse Fly (Dumbbell)",
+    "Reverse Fly (Machine)",
+    "Reverse Grip Concentration Curl (Dumbbell)",
+    "Reverse Plank",
+    "Rowing (Machine)",
+    "Running",
+    "Running (Treadmill)",
+    "Russian Twist",
+    "Seated Leg Curl (Machine)",
+    "Seated Leg Press (Machine)",
+    "Seated Palms Up Wrist Curl (Dumbbell)",
+    "Seated Row (Cable)",
+    "Seated Row (Machine)",
+    "Shoulder Press (Machine)",
+    "Shoulder Press (Plate Loaded)",
+    "Shrug (Barbell)",
+    "Shrug (Dumbbell)",
+    "Shrug (Machine)",
+    "Shrug (Smith Machine)",
+    "Side Bend (Band)",
+    "Side Bend (Cable)",
+    "Side Bend (Dumbbell)",
+    "Single Leg Bridge",
+    "Sit Up",
+    "Skating",
+    "Skiing",
+    "Skullcrusher (Barbell)",
+    "Skullcrusher (Dumbbell)",
+    "Snatch (Barbell)",
+    "Snatch Pull (Barbell)",
+    "Snowboarding",
+    "Split Jerk (Barbell)",
+    "Squat (Band)",
+    "Squat (Barbell)",
+    "Squat (Bodyweight)",
+    "Squat (Dumbbell)",
+    "Squat (Machine)",
+    "Squat (Smith Machine)",
+    "Squat Row (Band)",
+    "Stretching",
+    "Strict Military Press (Barbell)",
+    "Sumo Deadlift (Barbell)",
+    "Sumo Deadlift High Pull (Barbell)",
+    "Superman",
+    "Swimming",
+    "T Bar Row",
+    "Thruster (Barbell)",
+    "Thruster (Kettlebell)",
+    "Toes To Bar",
+    "Torso Rotation (Machine)",
+    "Trap Bar Deadlift",
+    "Triceps Dip (Assisted)",
+    "Triceps Pushdown (Cable - Straight Bar)",
+    "Upright Row (Barbell)",
+    "Upright Row (Cable)",
+    "Upright Row (Dumbbell)",
+    "V Up",
+    "Walking",
+    "Wide Pull Up",
+    "Wrist Roller",
+    "Zercher Squat (Barbell)"
+  ],
+  "matchDetails": [
+    {
+      "strong": "Arnold Press",
+      "ours": "dumbbell arnold press"
+    },
+    {
+      "strong": "Back Extension",
+      "ours": "back extension on exercise ball"
+    },
+    {
+      "strong": "Bench Dip",
+      "ours": "bench dip (knees bent)"
+    },
+    {
+      "strong": "Burpee",
+      "ours": "burpee"
+    },
+    {
+      "strong": "Cable Crossover",
+      "ours": "cable cross-over lateral pulldown"
+    },
+    {
+      "strong": "Cable Twist",
+      "ours": "cable twisting pull"
+    },
+    {
+      "strong": "Chest Dip",
+      "ours": "chest dip"
+    },
+    {
+      "strong": "Chest Dip (Assisted)",
+      "ours": "chest dip"
+    },
+    {
+      "strong": "Chin Up",
+      "ours": "chin-up"
+    },
+    {
+      "strong": "Chin Up (Assisted)",
+      "ours": "chin-up"
+    },
+    {
+      "strong": "Concentration Curl (Dumbbell)",
+      "ours": "barbell standing concentration curl"
+    },
+    {
+      "strong": "Cross Body Crunch",
+      "ours": "cross body crunch"
+    },
+    {
+      "strong": "Crunch",
+      "ours": "cable reverse crunch"
+    },
+    {
+      "strong": "Decline Bench Press (Barbell)",
+      "ours": "barbell decline bench press"
+    },
+    {
+      "strong": "Decline Bench Press (Dumbbell)",
+      "ours": "barbell decline bench press"
+    },
+    {
+      "strong": "Decline Bench Press (Smith Machine)",
+      "ours": "barbell decline bench press"
+    },
+    {
+      "strong": "Decline Crunch",
+      "ours": "decline crunch"
+    },
+    {
+      "strong": "Glute Ham Raise",
+      "ours": "glute-ham raise"
+    },
+    {
+      "strong": "Hack Squat",
+      "ours": "barbell hack squat"
+    },
+    {
+      "strong": "Incline Bench Press (Barbell)",
+      "ours": "barbell incline bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Cable)",
+      "ours": "barbell incline bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Dumbbell)",
+      "ours": "barbell incline bench press"
+    },
+    {
+      "strong": "Incline Bench Press (Smith Machine)",
+      "ours": "barbell incline bench press"
+    },
+    {
+      "strong": "Inverted Row (Bodyweight)",
+      "ours": "inverted row"
+    },
+    {
+      "strong": "Jump Squat",
+      "ours": "barbell jump squat"
+    },
+    {
+      "strong": "Leg Press",
+      "ours": "lever alternate leg press"
+    },
+    {
+      "strong": "Plank",
+      "ours": "bodyweight incline side plank"
+    },
+    {
+      "strong": "Pull Up",
+      "ours": "archer pull up"
+    },
+    {
+      "strong": "Push Press",
+      "ours": "dumbbell push press"
+    },
+    {
+      "strong": "Push Up",
+      "ours": "archer push up"
+    },
+    {
+      "strong": "Reverse Crunch",
+      "ours": "cable reverse crunch"
+    },
+    {
+      "strong": "Romanian Deadlift (Barbell)",
+      "ours": "barbell romanian deadlift"
+    },
+    {
+      "strong": "Romanian Deadlift (Dumbbell)",
+      "ours": "barbell romanian deadlift"
+    },
+    {
+      "strong": "Seated Calf Raise (Machine)",
+      "ours": "barbell seated calf raise"
+    },
+    {
+      "strong": "Seated Calf Raise (Plate Loaded)",
+      "ours": "barbell seated calf raise"
+    },
+    {
+      "strong": "Seated Overhead Press (Barbell)",
+      "ours": "barbell seated overhead press"
+    },
+    {
+      "strong": "Seated Overhead Press (Dumbbell)",
+      "ours": "barbell seated overhead press"
+    },
+    {
+      "strong": "Seated Wide-Grip Row (Cable)",
+      "ours": "cable seated wide-grip row"
+    },
+    {
+      "strong": "Side Plank",
+      "ours": "bodyweight incline side plank"
+    },
+    {
+      "strong": "Standing Calf Raise (Barbell)",
+      "ours": "barbell standing calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Bodyweight)",
+      "ours": "barbell standing calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Dumbbell)",
+      "ours": "barbell standing calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Machine)",
+      "ours": "barbell standing calf raise"
+    },
+    {
+      "strong": "Standing Calf Raise (Smith Machine)",
+      "ours": "barbell standing calf raise"
+    },
+    {
+      "strong": "Step-up",
+      "ours": "dumbbell step-up lunge"
+    },
+    {
+      "strong": "Stiff Leg Deadlift (Barbell)",
+      "ours": "dumbbell stiff leg deadlift"
+    },
+    {
+      "strong": "Stiff Leg Deadlift (Dumbbell)",
+      "ours": "dumbbell stiff leg deadlift"
+    },
+    {
+      "strong": "Straight Leg Deadlift (Band)",
+      "ours": "band straight leg deadlift"
+    },
+    {
+      "strong": "Triceps Dip",
+      "ours": "lever overhand triceps dip"
+    },
+    {
+      "strong": "Triceps Extension",
+      "ours": "dumbbell forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Barbell)",
+      "ours": "dumbbell forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Cable)",
+      "ours": "dumbbell forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Dumbbell)",
+      "ours": "dumbbell forward lunge triceps extension"
+    },
+    {
+      "strong": "Triceps Extension (Machine)",
+      "ours": "dumbbell forward lunge triceps extension"
+    },
+    {
+      "strong": "Yoga",
+      "ours": "butterfly yoga pose"
+    }
+  ]
+}

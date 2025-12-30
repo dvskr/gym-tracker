@@ -1,0 +1,477 @@
+[
+  {
+    "id": "8ec6c269-89f5-45ef-a32b-cf9a85bb45f4",
+    "name": "face pull",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "2987b16c-ac3b-4fd5-bffa-2fb1329b04a1",
+    "name": "cable fly",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "e657d21d-5766-4c8c-8771-add63b26fdf9",
+    "name": "hip thrust",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "0f01320d-7c3d-43e5-b042-0bda184d315e",
+    "name": "hip thrust bodyweight",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "b092e90a-c48c-484f-a8da-08e797f7b2ac",
+    "name": "bulgarian split squat",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "27f1ddbb-bc59-4d4f-bf40-30b8b5193082",
+    "name": "hammer curl band",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "565139de-a8a1-47b2-9bbf-122385a18bff",
+    "name": "hammer curl cable",
+    "external_id": "0165"
+  },
+  {
+    "id": "e8bf35be-ab80-435a-a810-3d4c83dca824",
+    "name": "hammer curl dumbbell",
+    "external_id": "0312"
+  },
+  {
+    "id": "3aaae27f-1f80-4d6f-a36e-ece2171c0e10",
+    "name": "box jump",
+    "external_id": "1374"
+  },
+  {
+    "id": "8a59691d-e878-4b8d-99b0-e5342767e72b",
+    "name": "jump rope",
+    "external_id": "2612"
+  },
+  {
+    "id": "a45305f6-9943-48e7-81de-572e324698f7",
+    "name": "pec deck",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "75ba71c8-140a-4d8a-89cf-989dca81446a",
+    "name": "lat pulldown cable",
+    "external_id": "2330"
+  },
+  {
+    "id": "ea460baa-43ce-4a12-8555-ddaa588fb9f5",
+    "name": "lat pulldown machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "a39a1cdb-c371-45e9-9627-13c5b77860a5",
+    "name": "lat pulldown underhand",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "6cba099d-fd16-4640-a3cc-5ebafb92adb5",
+    "name": "lat pulldown wide grip",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "27ea51dc-14dd-4897-86b7-266be3e4a9c7",
+    "name": "leg extension machine",
+    "external_id": "0585"
+  },
+  {
+    "id": "ef1cc00f-59a5-4e64-afc3-de2467ca9d26",
+    "name": "lying leg curl machine",
+    "external_id": "0586"
+  },
+  {
+    "id": "9cc36963-90c9-4924-80c3-60276ca742ce",
+    "name": "overhead press barbell",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "7cec1f65-9dad-4899-96d9-91814127ed7f",
+    "name": "overhead press dumbbell",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "32f885f6-9cf1-45ac-bb7b-b950df281b0d",
+    "name": "overhead press cable",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "8f6f176d-e8a7-4102-b784-41a1341b64c0",
+    "name": "t bar row",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "e362c78d-7b77-445d-9294-0a21bd703c7e",
+    "name": "trap bar deadlift",
+    "external_id": "0811"
+  },
+  {
+    "id": "5204b38b-4f72-4e5b-932b-73484f7bed31",
+    "name": "cable crunch",
+    "external_id": "0175"
+  },
+  {
+    "id": "f393269c-0d04-4fd7-9f8a-bdb2309b8838",
+    "name": "cable kickback",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "96aa4d35-7604-4852-aee2-786b3735acbe",
+    "name": "reverse fly cable",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "053115ca-dd00-438e-a653-a4a55c15fd97",
+    "name": "reverse fly dumbbell",
+    "external_id": "0383"
+  },
+  {
+    "id": "af06939f-5692-4e13-a231-7dd92d13b9a9",
+    "name": "reverse fly machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "9fe053f0-1e6e-4654-964b-6b8ccef871af",
+    "name": "russian twist",
+    "external_id": "0014"
+  },
+  {
+    "id": "8d4349ac-858e-4de7-b994-81d2f46a86d3",
+    "name": "mountain climber",
+    "external_id": "0630"
+  },
+  {
+    "id": "1a2a27c0-d4e9-4660-aa0d-0dcfede41527",
+    "name": "oblique crunch",
+    "external_id": "0635"
+  },
+  {
+    "id": "9aa2229d-b587-4b99-bf89-5974f71380d2",
+    "name": "v up",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "7b61cac8-91da-4043-8fae-53eaf1d04f72",
+    "name": "single leg bridge",
+    "external_id": "3645"
+  },
+  {
+    "id": "fab85904-f7a1-49f2-a6bc-03d783ff4858",
+    "name": "pistol squat",
+    "external_id": "0544"
+  },
+  {
+    "id": "6caa38c2-609d-4858-b06c-1369fd1f831d",
+    "name": "muscle up",
+    "external_id": "0558"
+  },
+  {
+    "id": "71d0cf3d-c651-49f5-97e7-78141ac1d813",
+    "name": "handstand push up",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "8f953fc3-a0fb-42b2-ac2c-4d58ea064333",
+    "name": "running",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "fb012465-772f-46f4-b19d-7dbd6adae9e8",
+    "name": "running treadmill",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "cb606a14-a684-4433-ba83-c26cb72e863c",
+    "name": "cycling",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "3a6639e1-afba-4eba-8504-ba012045663e",
+    "name": "cycling indoor",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "1a9c7894-aff0-4c54-9fa5-f225675a97f1",
+    "name": "swimming",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "aee5e108-e224-4c75-b616-1524d00c83e7",
+    "name": "rowing machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "b01838b8-8785-457a-a470-1dc594aa7685",
+    "name": "elliptical machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "080fcc35-542c-4e5b-9a01-adea7a0771c9",
+    "name": "walking",
+    "external_id": "1460"
+  },
+  {
+    "id": "97e4a943-ae9c-43f1-8e9f-bddb2ea1c088",
+    "name": "hiking",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "c19d0c61-2e3e-4ae9-b1a0-4714da4f06a8",
+    "name": "climbing",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "dffe5563-db4b-4000-a797-5a9d3d668936",
+    "name": "stretching",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "8006cdff-c7d4-4181-b922-f3acafe439af",
+    "name": "yoga",
+    "external_id": "1494"
+  },
+  {
+    "id": "ecb3f8a5-5979-4528-b5a1-8090d90269d0",
+    "name": "aerobics",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "c85a7963-aaf8-411d-be9c-7c3b48903108",
+    "name": "skating",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "b4915993-45a9-4f1d-936a-fafad52094d7",
+    "name": "skiing",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "33a25d15-33c0-4651-8c05-0688d4cfc5f4",
+    "name": "snowboarding",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "7acca52a-fec0-4b87-843f-445c0f9bb1ad",
+    "name": "ab wheel",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "90ba0f83-063e-4e0e-9787-b436a5b6d3c6",
+    "name": "battle ropes",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "0feb134c-b1c9-4a77-b640-cdffeecfb118",
+    "name": "hand gripper",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "4164281a-ebb7-4159-b288-0c80d041a85b",
+    "name": "wrist roller",
+    "external_id": "0859"
+  },
+  {
+    "id": "88c10f5b-4735-49c5-894a-bfdd32e9a958",
+    "name": "kettlebell swing",
+    "external_id": "0549"
+  },
+  {
+    "id": "2c233faf-a3c2-4bdf-affa-c7417e4fa018",
+    "name": "kettlebell turkish get up",
+    "external_id": "0551"
+  },
+  {
+    "id": "cd7905a2-aef8-478f-b544-9c018ff0890a",
+    "name": "kipping pull up",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "70a3eb75-6285-4d09-b2ac-83254efea257",
+    "name": "seated row cable",
+    "external_id": "0861"
+  },
+  {
+    "id": "b7b00ca6-a565-44a0-a412-4f59ca99d3f1",
+    "name": "seated row machine",
+    "external_id": "1350"
+  },
+  {
+    "id": "b569e7bb-733e-48a1-bc7e-30b25f2342f6",
+    "name": "shoulder press machine",
+    "external_id": "0603"
+  },
+  {
+    "id": "91e73183-a7a5-4626-8fed-22ddf7757966",
+    "name": "clean barbell",
+    "external_id": "0028"
+  },
+  {
+    "id": "8068607f-d7ad-4e1f-924f-d788b8f42ad1",
+    "name": "clean and jerk",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "a10d404f-1594-46ad-a032-0caaa24c985a",
+    "name": "power clean",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "a63b0fbb-ba9b-4a40-9ba3-8fd2efc92ccc",
+    "name": "snatch barbell",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "e68c40b3-94d2-4142-87c7-a129877416e1",
+    "name": "floor press barbell",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "ab53c0dc-ce26-46a7-8cda-fff692a550de",
+    "name": "deficit deadlift",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "79b7d2ad-258f-44c1-9d0e-850d5e6ea31c",
+    "name": "rack pull",
+    "external_id": "0074"
+  },
+  {
+    "id": "a305025b-06ef-45c5-ba8c-46772f80cb51",
+    "name": "chest press machine",
+    "external_id": "0576"
+  },
+  {
+    "id": "9ce161af-d391-4a17-9f48-c10686910c2b",
+    "name": "glute kickback machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "56eacddd-fce1-498f-8faa-c8f07b034c4f",
+    "name": "hip abductor machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "6fe3058a-470b-4b48-8b2b-027454cc9e35",
+    "name": "hip adductor machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "be5d0b85-d183-442f-aa4a-ab7ad0ffb660",
+    "name": "torso rotation machine",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "cb0a3074-73da-46e1-a007-f73db5ebced8",
+    "name": "around the world",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "7713326d-18bc-4f59-ae8b-b68fd193401f",
+    "name": "ball slams",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "fbce382f-bbdc-41b3-b2d3-7f23a138a4dc",
+    "name": "knees to elbows",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "5686c5e4-ff2c-425d-acb1-2760f18c7511",
+    "name": "toes to bar",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "55a04f45-6741-4900-9661-459043ac9c2b",
+    "name": "hang clean",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "5cb6aa64-dcd9-401c-b121-376e28dbf289",
+    "name": "hang snatch",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "b40da184-b50f-4bda-8d67-e74ba1c96ceb",
+    "name": "split jerk",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "8eff6c64-b330-483a-97d5-6f893041cf18",
+    "name": "thruster barbell",
+    "external_id": "3305"
+  },
+  {
+    "id": "31e4a7ae-b96a-4c30-985b-d3fb226fb6ec",
+    "name": "thruster kettlebell",
+    "external_id": "0550"
+  },
+  {
+    "id": "b283a54c-ec87-42e2-8c67-43e22a09b7df",
+    "name": "superman",
+    "external_id": null,
+    "gif_url": null
+  },
+  {
+    "id": "5997cb52-75f1-4407-822d-d47edd9f9067",
+    "name": "press under",
+    "external_id": null,
+    "gif_url": null
+  }
+]

@@ -16,7 +16,22 @@
     "upload:gifs": "npx tsx scripts/upload-to-supabase.ts",
     "update:urls": "npx tsx scripts/update-gif-urls.ts",
     "upload:remaining": "npx tsx scripts/upload-remaining-37.ts",
-    "migrate": "npx tsx scripts/run-migration.ts"
+    "migrate": "npx tsx scripts/run-migration.ts",
+    "compare:exercises": "npx tsx scripts/compare-with-strong.ts",
+    "compare:smart": "npx tsx scripts/smart-comparison.ts",
+    "add:truly-missing": "npx tsx scripts/add-truly-missing.ts",
+    "find:ids": "npx tsx scripts/find-exercise-ids.ts",
+    "download:new-gifs": "npx tsx scripts/download-new-gifs.ts",
+    "update:gif-urls-new": "npx tsx scripts/update-gif-urls-new.ts",
+    "quick:update-gifs": "npx tsx scripts/quick-update-gifs.ts",
+    "upload:new-gifs": "npx tsx scripts/upload-new-gifs.ts",
+    "generate:thumbnails": "npx tsx scripts/generate-thumbnails.ts",
+    "upload:thumbnails": "npx tsx scripts/upload-thumbnails.ts",
+    "check:gif-quality": "npx tsx scripts/check-gif-quality.ts",
+    "fix:gif-urls": "npx tsx scripts/fix-gif-urls.ts",
+    "diagnose:gifs": "npx tsx scripts/diagnose-and-fix-gifs.ts",
+    "verify:thumbnails": "npx tsx scripts/verify-thumbnail-sizes.ts",
+    "verify:supabase": "npx tsx scripts/verify-supabase-quality.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -58,6 +73,7 @@
     "react-native-svg": "15.12.1",
     "react-native-url-polyfill": "^3.0.0",
     "react-native-web": "^0.21.0",
+    "sharp": "^0.34.5",
     "uuid": "^13.0.0",
     "zod": "^4.2.1",
     "zustand": "^5.0.9"
@@ -65,6 +81,7 @@
   "devDependencies": {
     "@types/node": "^20.19.27",
     "@types/react": "~19.1.0",
+    "@types/sharp": "^0.31.1",
     "@types/uuid": "^10.0.0",
     "dotenv": "^16.6.1",
     "tailwindcss": "^3.3.2",
