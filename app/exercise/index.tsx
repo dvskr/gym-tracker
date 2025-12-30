@@ -1,0 +1,690 @@
+import React, { useEffect, useCallback, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
+import { Search, Dumbbell, X, Star } from 'lucide-react-native';
+import { useExerciseStore } from '@/stores/exerciseStore';
+import { lightHaptic } from '@/lib/utils/haptics';
+
+// Body part mapping for simpler chip names
+const BODY_PART_FILTERS = [
+  { label: 'All', value: null },
+  { label: 'Chest', value: 'chest' },
+  { label: 'Back', value: 'back' },
+  { label: 'Shoulders', value: 'shoulders' },
+  { label: 'Arms', value: 'upper arms' },
+  { label: 'Legs', value: 'upper legs' },
+  { label: 'Core', value: 'waist' },
+  { label: 'Cardio', value: 'cardio' },
+] as const;
+
+interface ExerciseItemProps {
+  exercise: {
+    id: string;
+    name: string;
+    equipment: string;
+    target: string;
+    bodyPart: string;
+  };
+  onPress: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  showFavoriteIcon?: boolean;
+}
+
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ 
+  exercise, 
+  onPress, 
+  isFavorite = false,
+  onToggleFavorite,
+  showFavoriteIcon = true 
+}) => {
+  // Get color for body part tag
+  const getBodyPartColor = (bodyPart: string) => {
+    const colors: Record<string, string> = {
+      chest: '#3b82f6',
+      back: '#10b981',
+      shoulders: '#f59e0b',
+      'upper arms': '#8b5cf6',
+      'lower arms': '#8b5cf6',
+      'upper legs': '#ec4899',
+      'lower legs': '#ec4899',
+      waist: '#ef4444',
+      cardio: '#14b8a6',
+      neck: '#6366f1',
+    };
+    return colors[bodyPart.toLowerCase()] || '#64748b';
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.exerciseItem}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      {/* Icon Placeholder (will be replaced with GIF thumbnails later) */}
+      <View style={styles.iconPlaceholder}>
+        <Dumbbell size={24} color="#64748b" />
+      </View>
+
+      {/* Exercise Info */}
+      <View style={styles.exerciseInfo}>
+        <Text style={styles.exerciseName} numberOfLines={1}>
+          {exercise.name}
+        </Text>
+        <Text style={styles.exerciseEquipment} numberOfLines={1}>
+          {exercise.equipment}
+        </Text>
+        <View style={styles.tagContainer}>
+          <View
+            style={[
+              styles.muscleTag,
+              { backgroundColor: `${getBodyPartColor(exercise.bodyPart)}20` },
+            ]}
+          >
+            <Text
+              style={[
+                styles.muscleTagText,
+                { color: getBodyPartColor(exercise.bodyPart) },
+              ]}
+              numberOfLines={1}
+            >
+              {exercise.target}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Favorite Star */}
+      {showFavoriteIcon && onToggleFavorite && (
+        <TouchableOpacity
+          style={styles.favoriteButton}
+          onPress={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Star
+            size={20}
+            color={isFavorite ? '#fbbf24' : '#64748b'}
+            fill={isFavorite ? '#fbbf24' : 'transparent'}
+          />
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+export default function ExerciseLibraryScreen() {
+  const {
+    isLoading,
+    searchQuery,
+    selectedBodyPart,
+    error,
+    fetchExercises,
+    searchExercises,
+    filterByBodyPart,
+    getFilteredExercises,
+    clearFilters,
+    getRecentlyUsedExercises,
+    getFavoriteExercises,
+    isFavorite,
+    toggleFavorite,
+    loadFavorites,
+  } = useExerciseStore();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Fetch exercises and load favorites on mount
+  useEffect(() => {
+    fetchExercises();
+    loadFavorites();
+  }, []);
+
+  // Get filtered exercises
+  const exercises = getFilteredExercises();
+  const recentlyUsed = getRecentlyUsedExercises();
+  const favorites = getFavoriteExercises();
+
+  // Handle refresh
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchExercises(true); // Force refresh
+    setRefreshing(false);
+  }, [fetchExercises]);
+
+  // Handle search input
+  const handleSearchChange = useCallback(
+    (text: string) => {
+      searchExercises(text);
+    },
+    [searchExercises]
+  );
+
+  // Handle clear search
+  const handleClearSearch = useCallback(() => {
+    searchExercises('');
+  }, [searchExercises]);
+
+  // Handle body part filter
+  const handleBodyPartPress = useCallback(
+    (bodyPart: string | null) => {
+      if (selectedBodyPart === bodyPart) {
+        filterByBodyPart(null);
+      } else {
+        filterByBodyPart(bodyPart as any);
+      }
+    },
+    [selectedBodyPart, filterByBodyPart]
+  );
+
+  // Handle exercise press
+  const handleExercisePress = useCallback((exerciseId: string) => {
+    router.push(`/exercise/${exerciseId}`);
+  }, []);
+
+  // Handle toggle favorite
+  const handleToggleFavorite = useCallback((exerciseId: string) => {
+    lightHaptic();
+    toggleFavorite(exerciseId);
+  }, [toggleFavorite]);
+
+  // Render exercise item
+  const renderExerciseItem = useCallback(
+    ({ item }: { item: any }) => (
+      <ExerciseItem
+        exercise={item}
+        onPress={() => handleExercisePress(item.id)}
+        isFavorite={isFavorite(item.id)}
+        onToggleFavorite={() => handleToggleFavorite(item.id)}
+      />
+    ),
+    [handleExercisePress, handleToggleFavorite, isFavorite]
+  );
+
+  // Key extractor
+  const keyExtractor = useCallback((item: any) => item.id, []);
+
+  // List empty component
+  const ListEmptyComponent = useCallback(() => {
+    if (isLoading && !refreshing) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Dumbbell size={48} color="#64748b" />
+          <Text style={styles.emptyText}>Loading exercises...</Text>
+        </View>
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={() => fetchExercises(true)}
+          >
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.emptyContainer}>
+        <Dumbbell size={48} color="#64748b" />
+        <Text style={styles.emptyText}>No exercises found</Text>
+        <Text style={styles.emptySubtext}>
+          Try adjusting your search or filters
+        </Text>
+      </View>
+    );
+  }, [isLoading, refreshing, error, fetchExercises]);
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar style="light" />
+
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Exercise Library</Text>
+      </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Search size={20} color="#64748b" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={handleSearchChange}
+          placeholder="Search exercises..."
+          placeholderTextColor="#64748b"
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="search"
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity
+            onPress={handleClearSearch}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <X size={18} color="#64748b" />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Body Part Filter Chips */}
+      <View style={styles.filtersContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipsContent}
+        >
+          {BODY_PART_FILTERS.map((filter) => {
+            const isSelected = selectedBodyPart === filter.value;
+            return (
+              <TouchableOpacity
+                key={filter.label}
+                style={[styles.chip, isSelected && styles.chipSelected]}
+                onPress={() => handleBodyPartPress(filter.value)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    isSelected && styles.chipTextSelected,
+                  ]}
+                >
+                  {filter.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      {/* Results Count */}
+      <View style={styles.resultsRow}>
+        <Text style={styles.resultsText}>
+          {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
+        </Text>
+      </View>
+
+      {/* Recently Used Section */}
+      {recentlyUsed.length > 0 && !searchQuery && !selectedBodyPart && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Recently Used</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+          >
+            {recentlyUsed.slice(0, 10).map((exercise) => (
+              <TouchableOpacity
+                key={exercise.id}
+                style={styles.horizontalCard}
+                onPress={() => handleExercisePress(exercise.id)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.horizontalIcon}>
+                  <Dumbbell size={20} color="#64748b" />
+                </View>
+                <Text style={styles.horizontalCardName} numberOfLines={2}>
+                  {exercise.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* Favorites Section */}
+      {favorites.length > 0 && !searchQuery && !selectedBodyPart && (
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Favorites</Text>
+            <Star size={16} color="#fbbf24" fill="#fbbf24" />
+          </View>
+          <View style={styles.favoritesGrid}>
+            {favorites.slice(0, 6).map((exercise) => (
+              <TouchableOpacity
+                key={exercise.id}
+                style={styles.favoriteCard}
+                onPress={() => handleExercisePress(exercise.id)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.favoriteIcon}>
+                  <Dumbbell size={18} color="#64748b" />
+                </View>
+                <Text style={styles.favoriteCardName} numberOfLines={2}>
+                  {exercise.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* All Exercises Header */}
+      {(recentlyUsed.length > 0 || favorites.length > 0) && 
+       !searchQuery && 
+       !selectedBodyPart && (
+        <Text style={styles.allExercisesTitle}>All Exercises</Text>
+      )}
+
+      {/* Exercise List */}
+      <FlatList
+        data={exercises}
+        renderItem={renderExerciseItem}
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={ListEmptyComponent}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor="#3b82f6"
+            colors={['#3b82f6']}
+          />
+        }
+        initialNumToRender={15}
+        maxToRenderPerBatch={10}
+        windowSize={10}
+      />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#020617',
+  },
+
+  header: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
+  },
+
+  title: {
+    color: '#ffffff',
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    marginHorizontal: 20,
+    marginTop: 16,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    minHeight: 48,
+  },
+
+  searchIcon: {
+    marginRight: 12,
+  },
+
+  searchInput: {
+    flex: 1,
+    color: '#ffffff',
+    fontSize: 16,
+    paddingVertical: 12,
+  },
+
+  filtersContainer: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+
+  chipsContent: {
+    paddingHorizontal: 20,
+    gap: 8,
+  },
+
+  chip: {
+    backgroundColor: '#1e293b',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+
+  chipSelected: {
+    backgroundColor: '#3b82f6',
+    borderColor: '#3b82f6',
+  },
+
+  chipText: {
+    color: '#94a3b8',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+
+  chipTextSelected: {
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+
+  resultsRow: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+
+  resultsText: {
+    color: '#64748b',
+    fontSize: 13,
+  },
+
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+
+  exerciseItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 8,
+    minHeight: 80,
+  },
+
+  iconPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    backgroundColor: '#0f172a',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  exerciseInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  favoriteButton: {
+    padding: 8,
+    marginLeft: 8,
+  },
+
+  exerciseName: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+    marginBottom: 4,
+  },
+
+  exerciseEquipment: {
+    color: '#94a3b8',
+    fontSize: 13,
+    textTransform: 'capitalize',
+    marginBottom: 6,
+  },
+
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+
+  muscleTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+
+  muscleTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    gap: 12,
+  },
+
+  emptyText: {
+    color: '#94a3b8',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+
+  emptySubtext: {
+    color: '#64748b',
+    fontSize: 14,
+  },
+
+  errorText: {
+    color: '#ef4444',
+    fontSize: 14,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+
+  retryButton: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+
+  retryText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  // Recently Used & Favorites Sections
+  section: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+
+  sectionTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  horizontalList: {
+    gap: 12,
+  },
+
+  horizontalCard: {
+    width: 140,
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+  },
+
+  horizontalIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    backgroundColor: '#0f172a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+
+  horizontalCardName: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+  },
+
+  favoritesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+
+  favoriteCard: {
+    width: '31%',
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+  },
+
+  favoriteIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: '#0f172a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+
+  favoriteCardName: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'capitalize',
+  },
+
+  allExercisesTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+});
+

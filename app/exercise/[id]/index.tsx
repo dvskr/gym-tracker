@@ -18,9 +18,12 @@ import {
   TrendingUp,
   Calendar,
   ChevronRight,
+  Star,
 } from 'lucide-react-native';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
+import { useExerciseStore } from '@/stores/exerciseStore';
+import { lightHaptic } from '@/lib/utils/haptics';
 import { Card, LoadingSpinner, Skeleton } from '@/components/ui';
 import {
   getExerciseById,
@@ -385,6 +388,7 @@ const RecordsTab: React.FC<{
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
+  const { isFavorite, toggleFavorite, loadFavorites } = useExerciseStore();
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [history, setHistory] = useState<ExerciseHistoryEntry[]>([]);
@@ -392,6 +396,11 @@ export default function ExerciseDetailScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('about');
   const [isLoading, setIsLoading] = useState(true);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+
+  // Load favorites on mount
+  useEffect(() => {
+    loadFavorites();
+  }, []);
 
   // Fetch exercise details
   useEffect(() => {
@@ -444,6 +453,16 @@ export default function ExerciseDetailScreen() {
     { key: 'records', label: 'Records' },
   ];
 
+  // Handle toggle favorite
+  const handleToggleFavorite = () => {
+    if (id) {
+      lightHaptic();
+      toggleFavorite(id);
+    }
+  };
+
+  const favorited = id ? isFavorite(id) : false;
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -475,6 +494,17 @@ export default function ExerciseDetailScreen() {
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <ArrowLeft size={24} color="#ffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.favoriteButton}
+          onPress={handleToggleFavorite}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Star
+            size={24}
+            color={favorited ? '#fbbf24' : '#64748b'}
+            fill={favorited ? '#fbbf24' : 'transparent'}
+          />
         </TouchableOpacity>
       </View>
 
@@ -554,11 +584,19 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
 
   backButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  favoriteButton: {
     width: 44,
     height: 44,
     alignItems: 'center',

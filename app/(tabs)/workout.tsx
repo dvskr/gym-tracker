@@ -225,6 +225,50 @@ export default function WorkoutScreen() {
               <ChevronRight size={20} color="#64748b" />
             </TouchableOpacity>
 
+            {/* Library Section */}
+            <View style={styles.librarySection}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionTitleRow}>
+                  <Dumbbell size={18} color="#3b82f6" />
+                  <Text style={styles.sectionTitle}>LIBRARY</Text>
+                </View>
+              </View>
+
+              <View style={styles.libraryList}>
+                {/* Exercise Library Button */}
+                <TouchableOpacity
+                  style={styles.libraryRow}
+                  onPress={() => router.push('/exercise')}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.libraryIcon}>
+                    <Dumbbell size={20} color="#3b82f6" />
+                  </View>
+                  <View style={styles.libraryInfo}>
+                    <Text style={styles.libraryName}>Exercise Library</Text>
+                    <Text style={styles.libraryMeta}>344 exercises</Text>
+                  </View>
+                  <ChevronRight size={18} color="#475569" />
+                </TouchableOpacity>
+
+                {/* Templates Button */}
+                <TouchableOpacity
+                  style={[styles.libraryRow, styles.libraryRowLast]}
+                  onPress={() => router.push('/template')}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.libraryIcon}>
+                    <Zap size={20} color="#22c55e" />
+                  </View>
+                  <View style={styles.libraryInfo}>
+                    <Text style={styles.libraryName}>Workout Templates</Text>
+                    <Text style={styles.libraryMeta}>Build custom routines</Text>
+                  </View>
+                  <ChevronRight size={18} color="#475569" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
             {/* Recent Activity Section */}
             <View style={styles.recentSection}>
               <View style={styles.sectionHeader}>
@@ -405,6 +449,56 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontSize: 15,
     fontWeight: '600',
+  },
+
+  // Library Section
+  librarySection: {
+    marginTop: 12,
+    marginBottom: 32,
+  },
+
+  libraryList: {
+    backgroundColor: '#1e293b',
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+
+  libraryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
+  },
+
+  libraryRowLast: {
+    borderBottomWidth: 0,
+  },
+
+  libraryIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#334155',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+
+  libraryInfo: {
+    flex: 1,
+  },
+
+  libraryName: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 2,
+  },
+
+  libraryMeta: {
+    fontSize: 12,
+    color: '#64748b',
   },
 
   // Recent Activity Section

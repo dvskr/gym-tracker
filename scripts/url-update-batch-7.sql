@@ -1,0 +1,7 @@
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b4756129-12e5-4748-bb56-ae03f0127845.gif' WHERE id = 'b4756129-12e5-4748-bb56-ae03f0127845';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fb4a4f6f-2d63-4298-b648-420c99023fd1.gif' WHERE id = 'fb4a4f6f-2d63-4298-b648-420c99023fd1';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6418c13f-70f3-4f13-af53-c24ec1ed83ac.gif' WHERE id = '6418c13f-70f3-4f13-af53-c24ec1ed83ac';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/137b0025-de5e-4178-abc0-323f1643788e.gif' WHERE id = '137b0025-de5e-4178-abc0-323f1643788e';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e09739cb-3b6e-4fca-9fef-62bacab80601.gif' WHERE id = 'e09739cb-3b6e-4fca-9fef-62bacab80601';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bfe4bf3f-8031-4897-9f87-5781777b096c.gif' WHERE id = 'bfe4bf3f-8031-4897-9f87-5781777b096c';
+UPDATE exercises SET gif_url = 'https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b960b951-8695-451e-be0c-58184f98164e.gif' WHERE id = 'b960b951-8695-451e-be0c-58184f98164e';

@@ -36,6 +36,8 @@ interface ExerciseState {
   selectedBodyPart: BodyPart | null;
   lastFetched: number | null;
   error: string | null;
+  recentlyUsedIds: string[]; // Track last 20 exercise IDs used
+  favoriteIds: string[]; // Track favorited exercise IDs
 
   // Actions
   fetchExercises: (force?: boolean) => Promise<void>;
@@ -44,6 +46,16 @@ interface ExerciseState {
   getFilteredExercises: () => DisplayExercise[];
   clearFilters: () => void;
   clearError: () => void;
+  
+  // Recently Used
+  addToRecentlyUsed: (exerciseId: string) => void;
+  getRecentlyUsedExercises: () => DisplayExercise[];
+  
+  // Favorites
+  loadFavorites: () => Promise<void>;
+  toggleFavorite: (exerciseId: string) => Promise<void>;
+  isFavorite: (exerciseId: string) => boolean;
+  getFavoriteExercises: () => DisplayExercise[];
 }
 
 // Cache duration: 24 hours
@@ -73,6 +85,8 @@ export const useExerciseStore = create<ExerciseState>()(
       selectedBodyPart: null,
       lastFetched: null,
       error: null,
+      recentlyUsedIds: [],
+      favoriteIds: [],
 
       // Fetch all exercises from Supabase
       fetchExercises: async (force = false) => {
@@ -105,6 +119,7 @@ export const useExerciseStore = create<ExerciseState>()(
             const { data, error } = await supabase
               .from('exercises')
               .select('*')
+              .eq('is_active', true)  // Only fetch the 344 active exercises
               .order('name')
               .range(offset, offset + batchSize - 1);
 
@@ -190,14 +205,114 @@ export const useExerciseStore = create<ExerciseState>()(
       clearError: () => {
         set({ error: null });
       },
+
+      // ==========================================
+      // RECENTLY USED
+      // ==========================================
+      
+      // Add exercise to recently used list
+      addToRecentlyUsed: (exerciseId: string) => {
+        const { recentlyUsedIds } = get();
+        
+        // Remove if already exists (to move to front)
+        const filtered = recentlyUsedIds.filter(id => id !== exerciseId);
+        
+        // Add to front
+        const updated = [exerciseId, ...filtered];
+        
+        // Keep max 20
+        const trimmed = updated.slice(0, 20);
+        
+        set({ recentlyUsedIds: trimmed });
+      },
+      
+      // Get recently used exercises in order
+      getRecentlyUsedExercises: () => {
+        const { exercises, recentlyUsedIds } = get();
+        
+        return recentlyUsedIds
+          .map(id => exercises.find(ex => ex.id === id))
+          .filter((ex): ex is DisplayExercise => ex !== undefined);
+      },
+
+      // ==========================================
+      // FAVORITES
+      // ==========================================
+      
+      // Load favorites from database
+      loadFavorites: async () => {
+        try {
+          const { data, error } = await supabase
+            .from('user_exercise_favorites')
+            .select('exercise_id');
+          
+          if (error) throw error;
+          
+          const favoriteIds = data?.map(f => f.exercise_id) || [];
+          set({ favoriteIds });
+        } catch (error) {
+          console.error('Failed to load favorites:', error);
+        }
+      },
+      
+      // Toggle favorite (optimistic update)
+      toggleFavorite: async (exerciseId: string) => {
+        const { favoriteIds } = get();
+        const isFavorited = favoriteIds.includes(exerciseId);
+        
+        // Optimistic update
+        if (isFavorited) {
+          set({ favoriteIds: favoriteIds.filter(id => id !== exerciseId) });
+        } else {
+          set({ favoriteIds: [...favoriteIds, exerciseId] });
+        }
+        
+        // Update database
+        try {
+          if (isFavorited) {
+            // Remove from favorites
+            const { error } = await supabase
+              .from('user_exercise_favorites')
+              .delete()
+              .eq('exercise_id', exerciseId);
+            
+            if (error) throw error;
+          } else {
+            // Add to favorites
+            const { error } = await supabase
+              .from('user_exercise_favorites')
+              .insert({ exercise_id: exerciseId });
+            
+            if (error) throw error;
+          }
+        } catch (error) {
+          console.error('Failed to toggle favorite:', error);
+          // Revert optimistic update on error
+          set({ favoriteIds });
+        }
+      },
+      
+      // Check if exercise is favorited
+      isFavorite: (exerciseId: string) => {
+        const { favoriteIds } = get();
+        return favoriteIds.includes(exerciseId);
+      },
+      
+      // Get favorited exercises
+      getFavoriteExercises: () => {
+        const { exercises, favoriteIds } = get();
+        
+        return exercises.filter(ex => favoriteIds.includes(ex.id));
+      },
     }),
     {
       name: 'exercise-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      // Only persist exercises and lastFetched, not UI state
+      // Persist exercises, lastFetched, and recentlyUsedIds
       partialize: (state) => ({
         exercises: state.exercises,
         lastFetched: state.lastFetched,
+        recentlyUsedIds: state.recentlyUsedIds,
       }),
     }
   )

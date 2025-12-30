@@ -1,0 +1,1537 @@
+[
+  {
+    "id": "5b867e65-f3ea-45b6-9e90-07f7d43fd1f3",
+    "name": "barbell bench front squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5b867e65-f3ea-45b6-9e90-07f7d43fd1f3.gif"
+  },
+  {
+    "id": "30238275-0e60-4eb8-9a87-5328b82589d6",
+    "name": "barbell squat jump step rear lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/30238275-0e60-4eb8-9a87-5328b82589d6.gif"
+  },
+  {
+    "id": "59f4e819-dbad-459e-9f19-2ce9c3464acb",
+    "name": "barbell bench squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/59f4e819-dbad-459e-9f19-2ce9c3464acb.gif"
+  },
+  {
+    "id": "5835a495-0cad-4b9d-b871-b4fb2172e795",
+    "name": "barbell one leg squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5835a495-0cad-4b9d-b871-b4fb2172e795.gif"
+  },
+  {
+    "id": "8d05ec90-95a6-4166-a8ee-73642e8aa01f",
+    "name": "barbell overhead squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8d05ec90-95a6-4166-a8ee-73642e8aa01f.gif"
+  },
+  {
+    "id": "38694dd3-7649-4311-9ebe-d589b3a25c64",
+    "name": "barbell side split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/38694dd3-7649-4311-9ebe-d589b3a25c64.gif"
+  },
+  {
+    "id": "d6f06b43-e840-4c82-9f65-9805d27167c9",
+    "name": "barbell squat (on knees)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d6f06b43-e840-4c82-9f65-9805d27167c9.gif"
+  },
+  {
+    "id": "60e627ac-d7de-4fba-adc6-c3150b4e928f",
+    "name": "barbell straight leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/60e627ac-d7de-4fba-adc6-c3150b4e928f.gif"
+  },
+  {
+    "id": "e97837a8-c3b6-455a-a9bd-d57bd6b7590b",
+    "name": "barbell wide squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e97837a8-c3b6-455a-a9bd-d57bd6b7590b.gif"
+  },
+  {
+    "id": "4c9cc873-4150-426f-8711-4a4f93c0067c",
+    "name": "lever alternate leg press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4c9cc873-4150-426f-8711-4a4f93c0067c.gif"
+  },
+  {
+    "id": "4b1b2076-b799-4bfd-a14d-430c1dd58ba9",
+    "name": "lever leg extension",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4b1b2076-b799-4bfd-a14d-430c1dd58ba9.gif"
+  },
+  {
+    "id": "453e47bf-d7fc-41b4-aad7-1e2b5220c015",
+    "name": "lever lying leg curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/453e47bf-d7fc-41b4-aad7-1e2b5220c015.gif"
+  },
+  {
+    "id": "e8976bbf-8217-4f79-9595-921468bceac1",
+    "name": "lever seated leg curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e8976bbf-8217-4f79-9595-921468bceac1.gif"
+  },
+  {
+    "id": "ad851b32-8982-42b7-9f2a-7138362ae956",
+    "name": "barbell clean-grip front squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ad851b32-8982-42b7-9f2a-7138362ae956.gif"
+  },
+  {
+    "id": "303841c0-12f2-4729-86cf-1f880115c45f",
+    "name": "barbell front chest squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/303841c0-12f2-4729-86cf-1f880115c45f.gif"
+  },
+  {
+    "id": "ce90978c-bd88-46b7-aeae-70d9519d92e6",
+    "name": "barbell front squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ce90978c-bd88-46b7-aeae-70d9519d92e6.gif"
+  },
+  {
+    "id": "53580006-5aab-4993-a980-52783a4f79be",
+    "name": "barbell lateral lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/53580006-5aab-4993-a980-52783a4f79be.gif"
+  },
+  {
+    "id": "1087f9d1-d7d9-45fb-906e-c9e0d2228166",
+    "name": "barbell narrow stance squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1087f9d1-d7d9-45fb-906e-c9e0d2228166.gif"
+  },
+  {
+    "id": "b39a4cd5-4392-4340-83e6-d951020a5970",
+    "name": "barbell rear lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b39a4cd5-4392-4340-83e6-d951020a5970.gif"
+  },
+  {
+    "id": "928da5df-e240-419b-a53c-8272821419ab",
+    "name": "cable assisted inverse leg curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/928da5df-e240-419b-a53c-8272821419ab.gif"
+  },
+  {
+    "id": "66229d1e-97d0-4711-b8bf-11cde2d9dfbe",
+    "name": "dumbbell goblet squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/66229d1e-97d0-4711-b8bf-11cde2d9dfbe.gif"
+  },
+  {
+    "id": "79c2ec83-b51a-416b-a4c4-cf2da1ec2662",
+    "name": "dumbbell step-up lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/79c2ec83-b51a-416b-a4c4-cf2da1ec2662.gif"
+  },
+  {
+    "id": "f8de3a90-3a89-46e5-8703-8dcfd0a3f950",
+    "name": "dumbbell step-up split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f8de3a90-3a89-46e5-8703-8dcfd0a3f950.gif"
+  },
+  {
+    "id": "7b31f357-69e2-44f6-bcb5-5c43a830f9f8",
+    "name": "dumbbell supported squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7b31f357-69e2-44f6-bcb5-5c43a830f9f8.gif"
+  },
+  {
+    "id": "3b348243-7cd7-4c3b-b0bd-83f91050e84f",
+    "name": "inverse leg curl (bench support)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3b348243-7cd7-4c3b-b0bd-83f91050e84f.gif"
+  },
+  {
+    "id": "de406b92-2cac-4a8a-9288-420e37891eb6",
+    "name": "barbell single leg split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/de406b92-2cac-4a8a-9288-420e37891eb6.gif"
+  },
+  {
+    "id": "b04dc7aa-768e-4359-8935-594227c7e861",
+    "name": "dumbbell contralateral forward lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b04dc7aa-768e-4359-8935-594227c7e861.gif"
+  },
+  {
+    "id": "de3713f6-84ea-449f-8191-746da3cc4649",
+    "name": "dumbbell rear lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/de3713f6-84ea-449f-8191-746da3cc4649.gif"
+  },
+  {
+    "id": "4b1aed9d-7091-4c1e-a516-131112393fc1",
+    "name": "inverse leg curl (on pull-up cable machine)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4b1aed9d-7091-4c1e-a516-131112393fc1.gif"
+  },
+  {
+    "id": "0a034b4e-a5c8-46c7-b8ba-c38449ca1f36",
+    "name": "lever lying two-one leg curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0a034b4e-a5c8-46c7-b8ba-c38449ca1f36.gif"
+  },
+  {
+    "id": "2b0eb6fb-f038-4b1d-ba8e-4df7be9a17d6",
+    "name": "barbell bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2b0eb6fb-f038-4b1d-ba8e-4df7be9a17d6.gif"
+  },
+  {
+    "id": "dd54b095-f754-4935-9cd1-faebc712a6cd",
+    "name": "barbell decline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dd54b095-f754-4935-9cd1-faebc712a6cd.gif"
+  },
+  {
+    "id": "99ed4f72-fc94-4f42-9047-1278d86d86e6",
+    "name": "barbell guillotine bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/99ed4f72-fc94-4f42-9047-1278d86d86e6.gif"
+  },
+  {
+    "id": "8dec0625-0899-40af-8a75-7b159104a176",
+    "name": "barbell incline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8dec0625-0899-40af-8a75-7b159104a176.gif"
+  },
+  {
+    "id": "38e35308-6281-4510-960d-8c69a464035a",
+    "name": "barbell seated overhead press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/38e35308-6281-4510-960d-8c69a464035a.gif"
+  },
+  {
+    "id": "05fe0cfa-71e6-4d03-b0ff-c2b2f7402a6a",
+    "name": "barbell wide bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/05fe0cfa-71e6-4d03-b0ff-c2b2f7402a6a.gif"
+  },
+  {
+    "id": "a390c3b5-145b-4651-8280-0c60b79c9c17",
+    "name": "bench pull-ups",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a390c3b5-145b-4651-8280-0c60b79c9c17.gif"
+  },
+  {
+    "id": "eb2db474-46f9-47fa-bde7-cbcbd1173602",
+    "name": "bodyweight squatting row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/eb2db474-46f9-47fa-bde7-cbcbd1173602.gif"
+  },
+  {
+    "id": "89f1abbe-b338-452f-982b-9f4ab06db024",
+    "name": "chin-ups (narrow parallel grip)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/89f1abbe-b338-452f-982b-9f4ab06db024.gif"
+  },
+  {
+    "id": "92eb66ea-9c12-4b49-a187-9d718fb45e36",
+    "name": "dumbbell single leg split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/92eb66ea-9c12-4b49-a187-9d718fb45e36.gif"
+  },
+  {
+    "id": "fa71af71-7659-4c22-9929-3b1297e3a332",
+    "name": "l-pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fa71af71-7659-4c22-9929-3b1297e3a332.gif"
+  },
+  {
+    "id": "456869b7-f4a6-4335-a6e0-12b8629be7a3",
+    "name": "assisted pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/456869b7-f4a6-4335-a6e0-12b8629be7a3.gif"
+  },
+  {
+    "id": "c06ec08c-4533-4246-8ac9-5313895d0c28",
+    "name": "barbell deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c06ec08c-4533-4246-8ac9-5313895d0c28.gif"
+  },
+  {
+    "id": "ac16502a-108a-4af2-b38c-ea8ffafdc343",
+    "name": "barbell floor calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ac16502a-108a-4af2-b38c-ea8ffafdc343.gif"
+  },
+  {
+    "id": "9ee55b44-aade-4186-ab3b-3a16713bc548",
+    "name": "barbell full squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9ee55b44-aade-4186-ab3b-3a16713bc548.gif"
+  },
+  {
+    "id": "72fe108d-2e33-4d92-8136-9833c2fe75f3",
+    "name": "barbell full zercher squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/72fe108d-2e33-4d92-8136-9833c2fe75f3.gif"
+  },
+  {
+    "id": "223975bb-353f-4bdd-942f-d2c263e88d4a",
+    "name": "barbell hack squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/223975bb-353f-4bdd-942f-d2c263e88d4a.gif"
+  },
+  {
+    "id": "5d4757b7-0cca-432c-90b7-7ff305a702e6",
+    "name": "barbell high bar squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5d4757b7-0cca-432c-90b7-7ff305a702e6.gif"
+  },
+  {
+    "id": "17556155-bda0-4a1d-9f9d-a41617e7c5f7",
+    "name": "barbell jefferson squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/17556155-bda0-4a1d-9f9d-a41617e7c5f7.gif"
+  },
+  {
+    "id": "d0871377-1046-48a0-aff5-ee2c464f4ce1",
+    "name": "barbell jump squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d0871377-1046-48a0-aff5-ee2c464f4ce1.gif"
+  },
+  {
+    "id": "812e0e18-03e8-49b5-8708-32d2164751ca",
+    "name": "barbell low bar squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/812e0e18-03e8-49b5-8708-32d2164751ca.gif"
+  },
+  {
+    "id": "ff50ef69-c5ac-4909-8491-612f64bd161e",
+    "name": "barbell lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ff50ef69-c5ac-4909-8491-612f64bd161e.gif"
+  },
+  {
+    "id": "456d9a22-d318-40d5-8b46-868e9913d235",
+    "name": "barbell romanian deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/456d9a22-d318-40d5-8b46-868e9913d235.gif"
+  },
+  {
+    "id": "39dba5da-b6b4-4c96-91a0-3795d137bd4f",
+    "name": "barbell seated calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/39dba5da-b6b4-4c96-91a0-3795d137bd4f.gif"
+  },
+  {
+    "id": "bce81249-3a26-43c4-9cd1-4b455fbeb345",
+    "name": "barbell seated calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bce81249-3a26-43c4-9cd1-4b455fbeb345.gif"
+  },
+  {
+    "id": "b2e85eea-ede8-4b2d-b40b-7c17690b3031",
+    "name": "barbell single leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b2e85eea-ede8-4b2d-b40b-7c17690b3031.gif"
+  },
+  {
+    "id": "fa9b7861-aad3-4630-ab82-4eb843be93a7",
+    "name": "barbell speed squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fa9b7861-aad3-4630-ab82-4eb843be93a7.gif"
+  },
+  {
+    "id": "3a3cb55b-118b-4340-8b3c-3c003fa94b45",
+    "name": "barbell standing calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3a3cb55b-118b-4340-8b3c-3c003fa94b45.gif"
+  },
+  {
+    "id": "780f3b77-6f27-4600-b302-6a746352ef7d",
+    "name": "barbell sumo deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/780f3b77-6f27-4600-b302-6a746352ef7d.gif"
+  },
+  {
+    "id": "fd7ed7d1-5682-496c-8283-712594a4df37",
+    "name": "barbell zercher squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fd7ed7d1-5682-496c-8283-712594a4df37.gif"
+  },
+  {
+    "id": "e4823bb4-6d21-44ff-94b8-256f158ea68f",
+    "name": "dumbbell bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e4823bb4-6d21-44ff-94b8-256f158ea68f.gif"
+  },
+  {
+    "id": "16438b85-6569-44c8-af1a-956062272e9b",
+    "name": "dumbbell decline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/16438b85-6569-44c8-af1a-956062272e9b.gif"
+  },
+  {
+    "id": "e3222289-ca72-4c14-b656-4d14b3558f41",
+    "name": "dumbbell incline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e3222289-ca72-4c14-b656-4d14b3558f41.gif"
+  },
+  {
+    "id": "131bacff-0439-4a7e-bac6-cd078ee29e0f",
+    "name": "dumbbell reverse bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/131bacff-0439-4a7e-bac6-cd078ee29e0f.gif"
+  },
+  {
+    "id": "ff8130f5-e2f1-46f8-a474-5b0e87cc7758",
+    "name": "dumbbell side plank with rear fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ff8130f5-e2f1-46f8-a474-5b0e87cc7758.gif"
+  },
+  {
+    "id": "0423d48d-3f68-4fb0-bc5a-00ff80e06203",
+    "name": "dumbbell standing overhead press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0423d48d-3f68-4fb0-bc5a-00ff80e06203.gif"
+  },
+  {
+    "id": "9472bc8e-54d1-4667-83dc-72611fdfb74f",
+    "name": "frankenstein squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9472bc8e-54d1-4667-83dc-72611fdfb74f.gif"
+  },
+  {
+    "id": "9e132ac0-e3f7-445f-8adc-8bde7e27e466",
+    "name": "barbell close-grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9e132ac0-e3f7-445f-8adc-8bde7e27e466.gif"
+  },
+  {
+    "id": "ae67d1c2-63cf-430a-a922-c757d1dc7582",
+    "name": "barbell jm bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ae67d1c2-63cf-430a-a922-c757d1dc7582.gif"
+  },
+  {
+    "id": "a7827c14-6359-4ebf-9a83-0d4405f0f839",
+    "name": "barbell reverse grip decline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a7827c14-6359-4ebf-9a83-0d4405f0f839.gif"
+  },
+  {
+    "id": "53b9d425-9d6e-4e8b-a733-023704927828",
+    "name": "barbell reverse grip incline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/53b9d425-9d6e-4e8b-a733-023704927828.gif"
+  },
+  {
+    "id": "8658c72b-7cc1-4e89-9571-27cd11545745",
+    "name": "barbell wide reverse grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8658c72b-7cc1-4e89-9571-27cd11545745.gif"
+  },
+  {
+    "id": "bd068632-a439-4a50-b074-38da15b55fc1",
+    "name": "cable bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bd068632-a439-4a50-b074-38da15b55fc1.gif"
+  },
+  {
+    "id": "8d6a5f07-44bc-4de8-8d65-e65491c7f5c2",
+    "name": "cable incline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8d6a5f07-44bc-4de8-8d65-e65491c7f5c2.gif"
+  },
+  {
+    "id": "628aa6c7-67c1-4c78-b794-df79f453c793",
+    "name": "cable squat row (with rope attachment)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/628aa6c7-67c1-4c78-b794-df79f453c793.gif"
+  },
+  {
+    "id": "b7c76f56-e75d-471b-bfd2-bd64f5d7ea11",
+    "name": "dumbbell bench squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b7c76f56-e75d-471b-bfd2-bd64f5d7ea11.gif"
+  },
+  {
+    "id": "fdb818e2-93bb-409d-90ed-086acc437684",
+    "name": "dumbbell deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fdb818e2-93bb-409d-90ed-086acc437684.gif"
+  },
+  {
+    "id": "bb2ab3c4-377b-4230-9b13-71af653e7ee5",
+    "name": "dumbbell lunge",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bb2ab3c4-377b-4230-9b13-71af653e7ee5.gif"
+  },
+  {
+    "id": "f24abc3e-bc0e-481f-a82c-951474afa227",
+    "name": "dumbbell plyo squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f24abc3e-bc0e-481f-a82c-951474afa227.gif"
+  },
+  {
+    "id": "9a9b3977-5e2f-4c29-902e-71de97065f02",
+    "name": "dumbbell romanian deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9a9b3977-5e2f-4c29-902e-71de97065f02.gif"
+  },
+  {
+    "id": "d53e1c98-ac9b-419c-9867-081dbbee2da9",
+    "name": "dumbbell seated calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d53e1c98-ac9b-419c-9867-081dbbee2da9.gif"
+  },
+  {
+    "id": "d560c079-68bf-4c53-9029-d0eb66d22350",
+    "name": "dumbbell single leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d560c079-68bf-4c53-9029-d0eb66d22350.gif"
+  },
+  {
+    "id": "38a15c71-d73e-486e-8ebe-07cdcd4e048d",
+    "name": "dumbbell single leg squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/38a15c71-d73e-486e-8ebe-07cdcd4e048d.gif"
+  },
+  {
+    "id": "dc4593b2-5d35-4c4b-ad41-82852aa84948",
+    "name": "dumbbell squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dc4593b2-5d35-4c4b-ad41-82852aa84948.gif"
+  },
+  {
+    "id": "ee949959-2e6a-48f5-8db1-de58b91ebe74",
+    "name": "dumbbell standing calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ee949959-2e6a-48f5-8db1-de58b91ebe74.gif"
+  },
+  {
+    "id": "a8111933-c69c-439f-8351-1b5913a7c882",
+    "name": "dumbbell stiff leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a8111933-c69c-439f-8351-1b5913a7c882.gif"
+  },
+  {
+    "id": "152ecc75-6cf0-4ea6-b945-a7e4faf5b108",
+    "name": "dumbbell straight leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/152ecc75-6cf0-4ea6-b945-a7e4faf5b108.gif"
+  },
+  {
+    "id": "544b3573-ed18-4860-ba92-ec7c5255864f",
+    "name": "ez-bar close-grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/544b3573-ed18-4860-ba92-ec7c5255864f.gif"
+  },
+  {
+    "id": "d4b95eed-12c5-4d9c-a9c9-a236138e5a5c",
+    "name": "assisted parallel close grip pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d4b95eed-12c5-4d9c-a9c9-a236138e5a5c.gif"
+  },
+  {
+    "id": "af6c9027-faee-47ee-b8c9-d11462ae17d1",
+    "name": "band assisted pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/af6c9027-faee-47ee-b8c9-d11462ae17d1.gif"
+  },
+  {
+    "id": "8807a42a-82bf-43cb-b36f-f8ba27efcd6c",
+    "name": "band squat row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8807a42a-82bf-43cb-b36f-f8ba27efcd6c.gif"
+  },
+  {
+    "id": "6d39eb20-b4f9-4a41-8dff-3b59d6d68725",
+    "name": "barbell full squat (back pov)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6d39eb20-b4f9-4a41-8dff-3b59d6d68725.gif"
+  },
+  {
+    "id": "d84c76cf-3a1f-402a-8089-4301e6e62e46",
+    "name": "barbell full squat (side pov)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d84c76cf-3a1f-402a-8089-4301e6e62e46.gif"
+  },
+  {
+    "id": "3e882567-3408-481f-84cf-fe9c6ce7579b",
+    "name": "barbell one arm side deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3e882567-3408-481f-84cf-fe9c6ce7579b.gif"
+  },
+  {
+    "id": "91423918-3b5f-49fe-8398-fe5cd6610970",
+    "name": "barbell standing leg calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/91423918-3b5f-49fe-8398-fe5cd6610970.gif"
+  },
+  {
+    "id": "44dd1632-6fef-4072-b428-67e6d62079aa",
+    "name": "barbell standing rocking leg calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/44dd1632-6fef-4072-b428-67e6d62079aa.gif"
+  },
+  {
+    "id": "b95a9f2b-18ec-418b-92d2-39b71e8a3096",
+    "name": "bodyweight drop jump squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b95a9f2b-18ec-418b-92d2-39b71e8a3096.gif"
+  },
+  {
+    "id": "43c27c63-59cb-463c-bf6f-4cf1b4bf9a51",
+    "name": "bodyweight standing calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/43c27c63-59cb-463c-bf6f-4cf1b4bf9a51.gif"
+  },
+  {
+    "id": "d966091d-547d-421d-a2c6-876f6de88cac",
+    "name": "cable deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d966091d-547d-421d-a2c6-876f6de88cac.gif"
+  },
+  {
+    "id": "7acfa11e-5d42-421c-8247-9be3b28626f8",
+    "name": "cable standing calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7acfa11e-5d42-421c-8247-9be3b28626f8.gif"
+  },
+  {
+    "id": "4a941c21-2025-4f55-b98f-7381cde54593",
+    "name": "chin-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4a941c21-2025-4f55-b98f-7381cde54593.gif"
+  },
+  {
+    "id": "b3e9873c-a2fb-4024-b7af-85f76b38307d",
+    "name": "close grip chin-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b3e9873c-a2fb-4024-b7af-85f76b38307d.gif"
+  },
+  {
+    "id": "b5fcdf74-e4e1-42e5-a152-941adf8739aa",
+    "name": "curtsey squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b5fcdf74-e4e1-42e5-a152-941adf8739aa.gif"
+  },
+  {
+    "id": "f69312b3-5222-42fc-b38f-837f1d364022",
+    "name": "donkey calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f69312b3-5222-42fc-b38f-837f1d364022.gif"
+  },
+  {
+    "id": "bed4862f-17d8-43c2-b93c-eec4848903cb",
+    "name": "dumbbell biceps curl squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bed4862f-17d8-43c2-b93c-eec4848903cb.gif"
+  },
+  {
+    "id": "3b82d86f-73d7-43c9-85c4-a2a5fa39a0dc",
+    "name": "dumbbell standing alternate overhead press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3b82d86f-73d7-43c9-85c4-a2a5fa39a0dc.gif"
+  },
+  {
+    "id": "7b2cbb30-0df3-4334-af67-750fce028b22",
+    "name": "dumbbell twisting bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7b2cbb30-0df3-4334-af67-750fce028b22.gif"
+  },
+  {
+    "id": "3b9af854-bf44-422e-a3b8-200291dfc913",
+    "name": "front plank with twist",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3b9af854-bf44-422e-a3b8-200291dfc913.gif"
+  },
+  {
+    "id": "30919a1f-c1ac-4262-be34-795622bc769b",
+    "name": "band single leg split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/30919a1f-c1ac-4262-be34-795622bc769b.gif"
+  },
+  {
+    "id": "205e319e-b97c-4fe4-a137-45e8e42044cb",
+    "name": "barbell incline close grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/205e319e-b97c-4fe4-a137-45e8e42044cb.gif"
+  },
+  {
+    "id": "f58a5a33-30ef-4755-a5c3-e903b3b7473f",
+    "name": "barbell reverse close-grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f58a5a33-30ef-4755-a5c3-e903b3b7473f.gif"
+  },
+  {
+    "id": "d8a3ccc7-e6b4-4b14-bc7c-b9a7c77073ae",
+    "name": "biceps narrow pull-ups",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d8a3ccc7-e6b4-4b14-bc7c-b9a7c77073ae.gif"
+  },
+  {
+    "id": "859f4709-91f0-41ec-a059-a673bd47ddd4",
+    "name": "biceps pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/859f4709-91f0-41ec-a059-a673bd47ddd4.gif"
+  },
+  {
+    "id": "e0b3fafc-dad9-4d4a-a5a2-5e426843c79e",
+    "name": "cable squatting curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e0b3fafc-dad9-4d4a-a5a2-5e426843c79e.gif"
+  },
+  {
+    "id": "243b9621-bfca-4b11-b221-9eb4ad8db98f",
+    "name": "chest dip (on dip-pull-up cage)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/243b9621-bfca-4b11-b221-9eb4ad8db98f.gif"
+  },
+  {
+    "id": "8c93307f-43b0-4eed-bdb6-dbc4a1382bf2",
+    "name": "dumbbell seated one leg calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8c93307f-43b0-4eed-bdb6-dbc4a1382bf2.gif"
+  },
+  {
+    "id": "bacef3b1-5485-4683-8d51-4190934003ed",
+    "name": "dumbbell single leg calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bacef3b1-5485-4683-8d51-4190934003ed.gif"
+  },
+  {
+    "id": "dd045edb-26c9-4296-b97e-700130ed9754",
+    "name": "ez barbell jm bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dd045edb-26c9-4296-b97e-700130ed9754.gif"
+  },
+  {
+    "id": "da93049f-d85f-4d61-b093-3479ce75a3bc",
+    "name": "hack calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/da93049f-d85f-4d61-b093-3479ce75a3bc.gif"
+  },
+  {
+    "id": "c0687b17-8845-443c-92ee-56482b4f87e6",
+    "name": "lever assisted chin-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c0687b17-8845-443c-92ee-56482b4f87e6.gif"
+  },
+  {
+    "id": "12189163-d3f1-492b-be1a-0f3896025e55",
+    "name": "lever donkey calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/12189163-d3f1-492b-be1a-0f3896025e55.gif"
+  },
+  {
+    "id": "6e991c38-8b96-4637-9b62-a6f295b16216",
+    "name": "lever seated calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6e991c38-8b96-4637-9b62-a6f295b16216.gif"
+  },
+  {
+    "id": "bd025764-cee1-435f-a324-7692d30f8c27",
+    "name": "lever standing calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bd025764-cee1-435f-a324-7692d30f8c27.gif"
+  },
+  {
+    "id": "ae50f351-f4f0-4026-930f-5e9de7ed7843",
+    "name": "band bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ae50f351-f4f0-4026-930f-5e9de7ed7843.gif"
+  },
+  {
+    "id": "6f622452-41bf-4e01-9021-4f8388db6069",
+    "name": "band one arm single leg split squat",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6f622452-41bf-4e01-9021-4f8388db6069.gif"
+  },
+  {
+    "id": "d757e227-f836-4022-ad40-199621f01d3f",
+    "name": "band twisting overhead press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d757e227-f836-4022-ad40-199621f01d3f.gif"
+  },
+  {
+    "id": "2cd90c5e-476e-4e4f-841d-ae94aadc28c9",
+    "name": "cable standing one leg calf raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2cd90c5e-476e-4e4f-841d-ae94aadc28c9.gif"
+  },
+  {
+    "id": "f53fe384-0cc4-4254-9db0-f2ba90932731",
+    "name": "chest dip",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f53fe384-0cc4-4254-9db0-f2ba90932731.gif"
+  },
+  {
+    "id": "f10450d7-c7f7-4dba-aa90-4f2805c0be85",
+    "name": "dumbbell forward lunge triceps extension",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f10450d7-c7f7-4dba-aa90-4f2805c0be85.gif"
+  },
+  {
+    "id": "a9c69c6d-87c2-43f8-9e03-aac23091085e",
+    "name": "dumbbell lunge with bicep curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a9c69c6d-87c2-43f8-9e03-aac23091085e.gif"
+  },
+  {
+    "id": "683fdd9d-f8d0-4351-b0e3-b89f0da6d9ab",
+    "name": "dumbbell neutral grip bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/683fdd9d-f8d0-4351-b0e3-b89f0da6d9ab.gif"
+  },
+  {
+    "id": "e1c1a1ce-4bbe-4e6a-8dae-53f819cf05e5",
+    "name": "dumbbell palms in incline bench press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e1c1a1ce-4bbe-4e6a-8dae-53f819cf05e5.gif"
+  },
+  {
+    "id": "e134f1e5-5570-4d60-9606-177bf99117b9",
+    "name": "dumbbell seated one leg calf raise - hammer grip",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e134f1e5-5570-4d60-9606-177bf99117b9.gif"
+  },
+  {
+    "id": "93cdadc3-d8e5-421d-9ba1-9f00992f6483",
+    "name": "dumbbell seated one leg calf raise - palm up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/93cdadc3-d8e5-421d-9ba1-9f00992f6483.gif"
+  },
+  {
+    "id": "7d13b8a1-4744-405f-89fa-d3ff413d91dc",
+    "name": "korean dips",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7d13b8a1-4744-405f-89fa-d3ff413d91dc.gif"
+  },
+  {
+    "id": "f6872212-5966-4714-be99-0d80d3a9d5a5",
+    "name": "bodyweight incline side plank",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f6872212-5966-4714-be99-0d80d3a9d5a5.gif"
+  },
+  {
+    "id": "6b6110da-c18c-4021-8bf1-0ac7bc59d5c1",
+    "name": "cable reverse crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6b6110da-c18c-4021-8bf1-0ac7bc59d5c1.gif"
+  },
+  {
+    "id": "502666bb-cd62-4da7-9201-cba438e3c6e3",
+    "name": "cable seated crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/502666bb-cd62-4da7-9201-cba438e3c6e3.gif"
+  },
+  {
+    "id": "da5f462c-a2ad-445c-a73f-6f09e7e21d1d",
+    "name": "cable side crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/da5f462c-a2ad-445c-a73f-6f09e7e21d1d.gif"
+  },
+  {
+    "id": "2f4f5129-ada9-4c00-a552-130ae2afa64b",
+    "name": "cable standing crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2f4f5129-ada9-4c00-a552-130ae2afa64b.gif"
+  },
+  {
+    "id": "498e76f3-32ac-447b-ae01-a0ee70601050",
+    "name": "cable tuck reverse crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/498e76f3-32ac-447b-ae01-a0ee70601050.gif"
+  },
+  {
+    "id": "a9a6f764-6978-4d52-8489-d5de70cf85a3",
+    "name": "cross body crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a9a6f764-6978-4d52-8489-d5de70cf85a3.gif"
+  },
+  {
+    "id": "3b3202dc-2b11-467b-9493-738890727f96",
+    "name": "crunch (hands overhead)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3b3202dc-2b11-467b-9493-738890727f96.gif"
+  },
+  {
+    "id": "28b531fb-de75-4d6d-877c-42a3fa951169",
+    "name": "crunch floor",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/28b531fb-de75-4d6d-877c-42a3fa951169.gif"
+  },
+  {
+    "id": "aa7d0c07-7c7b-47e9-bee0-4565ae30453b",
+    "name": "decline crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/aa7d0c07-7c7b-47e9-bee0-4565ae30453b.gif"
+  },
+  {
+    "id": "b6f9cf30-5975-4d7a-a5ac-f96190ed54e7",
+    "name": "dumbbell bicep curl lunge with bowling motion",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b6f9cf30-5975-4d7a-a5ac-f96190ed54e7.gif"
+  },
+  {
+    "id": "db896e50-9d17-4a5f-9c64-ba130ef9bae9",
+    "name": "frog crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/db896e50-9d17-4a5f-9c64-ba130ef9bae9.gif"
+  },
+  {
+    "id": "4b12d0ed-ff67-46fd-8ee0-a152f68a943b",
+    "name": "groin crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4b12d0ed-ff67-46fd-8ee0-a152f68a943b.gif"
+  },
+  {
+    "id": "c1382f20-14c4-44da-9d3d-b34685748a7e",
+    "name": "knee touch crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c1382f20-14c4-44da-9d3d-b34685748a7e.gif"
+  },
+  {
+    "id": "863b900d-15e3-4f12-8991-8ee2bb987db5",
+    "name": "lever seated leg raise crunch",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/863b900d-15e3-4f12-8991-8ee2bb987db5.gif"
+  },
+  {
+    "id": "8ece21cc-9eaa-4a2a-af73-e50a02fb6538",
+    "name": "bench dip (knees bent)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8ece21cc-9eaa-4a2a-af73-e50a02fb6538.gif"
+  },
+  {
+    "id": "8c883e00-595a-4193-a4d7-9de1b5e84d14",
+    "name": "bench dip on floor",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8c883e00-595a-4193-a4d7-9de1b5e84d14.gif"
+  },
+  {
+    "id": "c3e311c7-d9f0-4850-9f01-376c037a7684",
+    "name": "chest dip on straight bar",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c3e311c7-d9f0-4850-9f01-376c037a7684.gif"
+  },
+  {
+    "id": "82a69625-971d-4e7b-a26c-c04e1ebf7180",
+    "name": "elbow dips",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/82a69625-971d-4e7b-a26c-c04e1ebf7180.gif"
+  },
+  {
+    "id": "8ada58c2-f509-42aa-b57a-e7850d90f9e7",
+    "name": "impossible dips",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8ada58c2-f509-42aa-b57a-e7850d90f9e7.gif"
+  },
+  {
+    "id": "3990209f-150e-41e0-a962-9d94ec336130",
+    "name": "lever overhand triceps dip",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3990209f-150e-41e0-a962-9d94ec336130.gif"
+  },
+  {
+    "id": "ecb726ae-cf85-4106-a6ea-f410adf881e7",
+    "name": "lever seated dip",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ecb726ae-cf85-4106-a6ea-f410adf881e7.gif"
+  },
+  {
+    "id": "09d1289b-9bf2-4168-8a31-45b47b7fdf11",
+    "name": "band straight leg deadlift",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/09d1289b-9bf2-4168-8a31-45b47b7fdf11.gif"
+  },
+  {
+    "id": "0d27f05c-8edd-408a-8c13-7f1997e637ed",
+    "name": "exercise ball dip",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0d27f05c-8edd-408a-8c13-7f1997e637ed.gif"
+  },
+  {
+    "id": "49ad2eaf-e342-453d-a941-e4b449bfe5b9",
+    "name": "barbell clean and press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/49ad2eaf-e342-453d-a941-e4b449bfe5b9.gif"
+  },
+  {
+    "id": "ee43632c-4a38-44da-8756-0af4d8f01271",
+    "name": "glute-ham raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ee43632c-4a38-44da-8756-0af4d8f01271.gif"
+  },
+  {
+    "id": "09d6f7ea-beea-4c28-98c1-6a6da546b933",
+    "name": "barbell good morning",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/09d6f7ea-beea-4c28-98c1-6a6da546b933.gif"
+  },
+  {
+    "id": "189257ce-4c5c-47e5-8d54-204fd208025f",
+    "name": "lever kneeling leg curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/189257ce-4c5c-47e5-8d54-204fd208025f.gif"
+  },
+  {
+    "id": "cbdfb352-58b4-48de-8e41-11c9c31b3a47",
+    "name": "barbell bent arm pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cbdfb352-58b4-48de-8e41-11c9c31b3a47.gif"
+  },
+  {
+    "id": "9538a71e-07a2-4cf5-a0bc-501521b9774d",
+    "name": "barbell bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9538a71e-07a2-4cf5-a0bc-501521b9774d.gif"
+  },
+  {
+    "id": "2d1c99d4-be4c-4495-a7d0-a6f04952a87e",
+    "name": "barbell decline wide-grip pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2d1c99d4-be4c-4495-a7d0-a6f04952a87e.gif"
+  },
+  {
+    "id": "abdfbcea-1be8-4397-95b9-32acb7e90b46",
+    "name": "barbell incline row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/abdfbcea-1be8-4397-95b9-32acb7e90b46.gif"
+  },
+  {
+    "id": "f6215f42-21d2-4504-9d45-1401cf3c20a2",
+    "name": "barbell pendlay row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f6215f42-21d2-4504-9d45-1401cf3c20a2.gif"
+  },
+  {
+    "id": "8ce0e0b3-bf08-4eb7-ad23-e6c3f78e11b1",
+    "name": "barbell pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8ce0e0b3-bf08-4eb7-ad23-e6c3f78e11b1.gif"
+  },
+  {
+    "id": "dbda8b6d-88b7-440e-a72b-99a4357356e4",
+    "name": "barbell pullover to press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dbda8b6d-88b7-440e-a72b-99a4357356e4.gif"
+  },
+  {
+    "id": "9b70b9e2-b856-4ecf-a140-9f576bdceda3",
+    "name": "cambered bar lying row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9b70b9e2-b856-4ecf-a140-9f576bdceda3.gif"
+  },
+  {
+    "id": "c54e7519-6a52-417b-af48-a9512968ff36",
+    "name": "dumbbell lying femoral",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c54e7519-6a52-417b-af48-a9512968ff36.gif"
+  },
+  {
+    "id": "194b9e26-af8d-4f55-a72c-22c9bba9c4e9",
+    "name": "farmers walk",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/194b9e26-af8d-4f55-a72c-22c9bba9c4e9.gif"
+  },
+  {
+    "id": "47c2fdd6-eab3-433d-82d4-a1321b991f89",
+    "name": "lever bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/47c2fdd6-eab3-433d-82d4-a1321b991f89.gif"
+  },
+  {
+    "id": "f66a6c36-314d-443a-9468-384f3c72a75c",
+    "name": "backward jump",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f66a6c36-314d-443a-9468-384f3c72a75c.gif"
+  },
+  {
+    "id": "4ea67c5f-0629-40a6-81b7-cc020d73e58e",
+    "name": "balance board",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4ea67c5f-0629-40a6-81b7-cc020d73e58e.gif"
+  },
+  {
+    "id": "187c4fb6-0465-4653-b9b0-9329da0de6f5",
+    "name": "barbell side split squat v. 2",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/187c4fb6-0465-4653-b9b0-9329da0de6f5.gif"
+  },
+  {
+    "id": "2a136c20-6367-44fc-9177-ea718fd66694",
+    "name": "barbell split squat v. 2",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2a136c20-6367-44fc-9177-ea718fd66694.gif"
+  },
+  {
+    "id": "bb2dd24e-8d68-49f5-9ca2-cbd48465a59d",
+    "name": "cable hip adduction",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bb2dd24e-8d68-49f5-9ca2-cbd48465a59d.gif"
+  },
+  {
+    "id": "a8828b5a-656a-4e28-b481-9254aae51b5a",
+    "name": "dumbbell bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a8828b5a-656a-4e28-b481-9254aae51b5a.gif"
+  },
+  {
+    "id": "83a97699-c0ff-4d38-b2c3-76a894712999",
+    "name": "dumbbell incline row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/83a97699-c0ff-4d38-b2c3-76a894712999.gif"
+  },
+  {
+    "id": "4bb4db65-1862-411c-972a-48cf05ffa3fd",
+    "name": "dumbbell incline y-raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4bb4db65-1862-411c-972a-48cf05ffa3fd.gif"
+  },
+  {
+    "id": "bce9d46c-5fff-419a-87d1-21f54b9ad692",
+    "name": "forward jump",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bce9d46c-5fff-419a-87d1-21f54b9ad692.gif"
+  },
+  {
+    "id": "d41e6720-166b-47f8-9c68-f69ddf2a6504",
+    "name": "kick out sit",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d41e6720-166b-47f8-9c68-f69ddf2a6504.gif"
+  },
+  {
+    "id": "c92142a6-57a0-40a9-953d-c6e6895b1592",
+    "name": "alternate lateral pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c92142a6-57a0-40a9-953d-c6e6895b1592.gif"
+  },
+  {
+    "id": "92814f64-d72e-4a1d-87c8-1edd20b86c68",
+    "name": "archer pull up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/92814f64-d72e-4a1d-87c8-1edd20b86c68.gif"
+  },
+  {
+    "id": "cd68d02a-521c-45bd-ba36-899f9516996c",
+    "name": "barbell decline bent arm pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cd68d02a-521c-45bd-ba36-899f9516996c.gif"
+  },
+  {
+    "id": "be399c4b-6586-48fa-b652-50637e16abfb",
+    "name": "barbell decline pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/be399c4b-6586-48fa-b652-50637e16abfb.gif"
+  },
+  {
+    "id": "cd7d5911-ed42-40af-8d24-89cc38ecf350",
+    "name": "barbell decline wide-grip press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cd7d5911-ed42-40af-8d24-89cc38ecf350.gif"
+  },
+  {
+    "id": "921b9fb5-7e1d-4603-b733-1c0dcc9ba159",
+    "name": "barbell front raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/921b9fb5-7e1d-4603-b733-1c0dcc9ba159.gif"
+  },
+  {
+    "id": "1ad893b3-5213-4e98-a259-8774aa5a22f2",
+    "name": "barbell one arm bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1ad893b3-5213-4e98-a259-8774aa5a22f2.gif"
+  },
+  {
+    "id": "784913e3-f6e3-44c0-b9dc-c9b9f3b5126d",
+    "name": "barbell rear delt raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/784913e3-f6e3-44c0-b9dc-c9b9f3b5126d.gif"
+  },
+  {
+    "id": "97196d0d-7574-43db-bb0b-94fa3c8769fc",
+    "name": "barbell rear delt row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/97196d0d-7574-43db-bb0b-94fa3c8769fc.gif"
+  },
+  {
+    "id": "77b9c89b-1e38-468c-b412-02a65e458e30",
+    "name": "barbell reverse grip bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/77b9c89b-1e38-468c-b412-02a65e458e30.gif"
+  },
+  {
+    "id": "d152f697-98e3-4c2e-850e-3f597b8de072",
+    "name": "barbell reverse grip incline bench row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d152f697-98e3-4c2e-850e-3f597b8de072.gif"
+  },
+  {
+    "id": "09712751-eab9-4cb1-bde4-74821bd94c9f",
+    "name": "barbell standing bradford press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/09712751-eab9-4cb1-bde4-74821bd94c9f.gif"
+  },
+  {
+    "id": "9d3735ac-dfb1-45ce-aca2-ea7ef0f69afc",
+    "name": "barbell upright row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9d3735ac-dfb1-45ce-aca2-ea7ef0f69afc.gif"
+  },
+  {
+    "id": "2ddaf3be-803b-4e30-8d6d-40b13eb36ebe",
+    "name": "barbell wide-grip upright row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2ddaf3be-803b-4e30-8d6d-40b13eb36ebe.gif"
+  },
+  {
+    "id": "bec6de0c-de43-4896-b389-f84e696ffa99",
+    "name": "bodyweight standing close-grip row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bec6de0c-de43-4896-b389-f84e696ffa99.gif"
+  },
+  {
+    "id": "8b7277c2-9ed5-4577-ba13-4e76be5b568c",
+    "name": "bodyweight standing row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8b7277c2-9ed5-4577-ba13-4e76be5b568c.gif"
+  },
+  {
+    "id": "0f6f3384-4714-473d-a8b6-2b4ad41445a7",
+    "name": "cable bar lateral pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0f6f3384-4714-473d-a8b6-2b4ad41445a7.gif"
+  },
+  {
+    "id": "3badc97c-92f1-40f9-85ed-58ea4d24d903",
+    "name": "cable cross-over lateral pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3badc97c-92f1-40f9-85ed-58ea4d24d903.gif"
+  },
+  {
+    "id": "00ca8296-e5ef-4385-9988-634bc5694fe8",
+    "name": "cable incline bench row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/00ca8296-e5ef-4385-9988-634bc5694fe8.gif"
+  },
+  {
+    "id": "1c4c1889-0e61-43c9-bccb-bd207fa5bb1c",
+    "name": "cable incline pushdown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1c4c1889-0e61-43c9-bccb-bd207fa5bb1c.gif"
+  },
+  {
+    "id": "4a19fb7c-f663-41f6-9bca-355367fceb2c",
+    "name": "cable low seated row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4a19fb7c-f663-41f6-9bca-355367fceb2c.gif"
+  },
+  {
+    "id": "c0c96921-839e-4dce-809b-6066180151bc",
+    "name": "cable one arm pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c0c96921-839e-4dce-809b-6066180151bc.gif"
+  },
+  {
+    "id": "ce4b0395-eaad-4821-a4f2-48357eb9990a",
+    "name": "cable palm rotational row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ce4b0395-eaad-4821-a4f2-48357eb9990a.gif"
+  },
+  {
+    "id": "63f7cab9-8c17-42dd-b6c3-102df9ef44b8",
+    "name": "cable pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/63f7cab9-8c17-42dd-b6c3-102df9ef44b8.gif"
+  },
+  {
+    "id": "0e9dba39-d3bb-4814-b3ad-d25ec1c63090",
+    "name": "cable rear pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0e9dba39-d3bb-4814-b3ad-d25ec1c63090.gif"
+  },
+  {
+    "id": "f177b96e-2ad5-4fb0-b577-cac28a18d1dc",
+    "name": "cable rope seated row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/f177b96e-2ad5-4fb0-b577-cac28a18d1dc.gif"
+  },
+  {
+    "id": "802d7191-fce4-44bb-9732-18d18c0b8988",
+    "name": "cable seated row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/802d7191-fce4-44bb-9732-18d18c0b8988.gif"
+  },
+  {
+    "id": "97bac6cf-f015-4c38-ad73-083ccb5c3c69",
+    "name": "cable seated wide-grip row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/97bac6cf-f015-4c38-ad73-083ccb5c3c69.gif"
+  },
+  {
+    "id": "46cead7a-2331-45fc-996f-db4fde142e79",
+    "name": "cable standing row (v-bar)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/46cead7a-2331-45fc-996f-db4fde142e79.gif"
+  },
+  {
+    "id": "8be1f8b5-3e9b-4f97-a9da-0b05915980aa",
+    "name": "cable straight arm pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8be1f8b5-3e9b-4f97-a9da-0b05915980aa.gif"
+  },
+  {
+    "id": "af3a12f6-e1c1-419d-ab7d-1b8f7f3e3298",
+    "name": "cable thibaudeau kayak row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/af3a12f6-e1c1-419d-ab7d-1b8f7f3e3298.gif"
+  },
+  {
+    "id": "61f9e9e9-3473-4cc2-83f2-30dfc982b210",
+    "name": "cable twisting pull",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/61f9e9e9-3473-4cc2-83f2-30dfc982b210.gif"
+  },
+  {
+    "id": "c1370f34-5188-427b-a917-075b1867d4f6",
+    "name": "cable underhand pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c1370f34-5188-427b-a917-075b1867d4f6.gif"
+  },
+  {
+    "id": "caf0bdf8-df7e-4fd7-9bc6-c80b71a37e7e",
+    "name": "cable upper row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/caf0bdf8-df7e-4fd7-9bc6-c80b71a37e7e.gif"
+  },
+  {
+    "id": "1c2efb44-6386-4f2c-91fd-cfde19cff867",
+    "name": "ez bar lying bent arms pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1c2efb44-6386-4f2c-91fd-cfde19cff867.gif"
+  },
+  {
+    "id": "e68f53bf-3490-49ca-a428-2874e7e61a18",
+    "name": "floor fly (with barbell)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e68f53bf-3490-49ca-a428-2874e7e61a18.gif"
+  },
+  {
+    "id": "ab47546c-79e9-4b11-94c8-24a1f1447745",
+    "name": "front lever reps",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ab47546c-79e9-4b11-94c8-24a1f1447745.gif"
+  },
+  {
+    "id": "7913bf10-6e44-459c-a539-47204b47bb1d",
+    "name": "inverted row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7913bf10-6e44-459c-a539-47204b47bb1d.gif"
+  },
+  {
+    "id": "4dadbad2-6e13-41b0-b8ab-7b240f6d3e69",
+    "name": "inverted row bent knees",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4dadbad2-6e13-41b0-b8ab-7b240f6d3e69.gif"
+  },
+  {
+    "id": "4f25d478-3956-49f4-8fcc-c440678799d3",
+    "name": "inverted row on bench",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4f25d478-3956-49f4-8fcc-c440678799d3.gif"
+  },
+  {
+    "id": "e6ded03d-f766-49d9-9a04-cd72e14b5e27",
+    "name": "inverted row with straps",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e6ded03d-f766-49d9-9a04-cd72e14b5e27.gif"
+  },
+  {
+    "id": "dcff146a-92ec-473e-8053-3cf8231baa04",
+    "name": "landmine lateral raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dcff146a-92ec-473e-8053-3cf8231baa04.gif"
+  },
+  {
+    "id": "32e4cb96-ffdd-41cf-98fc-365519b9e780",
+    "name": "lever one arm bent over row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/32e4cb96-ffdd-41cf-98fc-365519b9e780.gif"
+  },
+  {
+    "id": "e28fb9fc-72f8-4cee-8408-9d70e6214192",
+    "name": "lever seated hip abduction",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e28fb9fc-72f8-4cee-8408-9d70e6214192.gif"
+  },
+  {
+    "id": "18ee671b-b219-4a3b-9caa-78fb7a17502a",
+    "name": "lever seated hip adduction",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/18ee671b-b219-4a3b-9caa-78fb7a17502a.gif"
+  },
+  {
+    "id": "5957af8d-2ed5-4e60-8c5a-346a21c77f3c",
+    "name": "assisted standing pull-up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5957af8d-2ed5-4e60-8c5a-346a21c77f3c.gif"
+  },
+  {
+    "id": "56e5390b-22da-47cd-9c38-a7e398a050e9",
+    "name": "barbell incline shoulder raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/56e5390b-22da-47cd-9c38-a7e398a050e9.gif"
+  },
+  {
+    "id": "534b5827-a554-4cf4-b52b-f26644b60f07",
+    "name": "barbell reverse wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/534b5827-a554-4cf4-b52b-f26644b60f07.gif"
+  },
+  {
+    "id": "3810b72c-0895-402b-b153-8bd7d6cbc0a1",
+    "name": "barbell wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3810b72c-0895-402b-b153-8bd7d6cbc0a1.gif"
+  },
+  {
+    "id": "48b4c378-7401-4026-9505-895a8aad7d16",
+    "name": "deep push up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/48b4c378-7401-4026-9505-895a8aad7d16.gif"
+  },
+  {
+    "id": "07448aa1-a9ca-4ede-a847-060dc58e5c41",
+    "name": "dumbbell alternate side press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/07448aa1-a9ca-4ede-a847-060dc58e5c41.gif"
+  },
+  {
+    "id": "c5c699c7-01c9-4809-9898-1b7c769b9e2c",
+    "name": "dumbbell arnold press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c5c699c7-01c9-4809-9898-1b7c769b9e2c.gif"
+  },
+  {
+    "id": "d008bde6-1fed-45ac-bd69-c82f72464708",
+    "name": "dumbbell around pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d008bde6-1fed-45ac-bd69-c82f72464708.gif"
+  },
+  {
+    "id": "a56ba147-c2e9-4a66-bcc7-1bde6eee1788",
+    "name": "dumbbell bench seated press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a56ba147-c2e9-4a66-bcc7-1bde6eee1788.gif"
+  },
+  {
+    "id": "1063d786-4ce0-4a4a-8f07-281e9d0a105f",
+    "name": "dumbbell cuban press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1063d786-4ce0-4a4a-8f07-281e9d0a105f.gif"
+  },
+  {
+    "id": "86184201-87ec-4719-b4fb-dd8de8d38d74",
+    "name": "dumbbell decline fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/86184201-87ec-4719-b4fb-dd8de8d38d74.gif"
+  },
+  {
+    "id": "44684300-25d7-428b-9f2f-88bddcfc3eef",
+    "name": "dumbbell decline hammer press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/44684300-25d7-428b-9f2f-88bddcfc3eef.gif"
+  },
+  {
+    "id": "edc7895b-d9b0-4065-92d9-919a21a8b9a9",
+    "name": "dumbbell decline twist fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/edc7895b-d9b0-4065-92d9-919a21a8b9a9.gif"
+  },
+  {
+    "id": "76d214db-b557-41f1-8e02-075cdc5a2c89",
+    "name": "dumbbell fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/76d214db-b557-41f1-8e02-075cdc5a2c89.gif"
+  },
+  {
+    "id": "b99618eb-7d1d-402f-ba2d-8d4c7d46b2ec",
+    "name": "dumbbell front raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b99618eb-7d1d-402f-ba2d-8d4c7d46b2ec.gif"
+  },
+  {
+    "id": "9adffacf-c70d-48c3-9dc0-090fd420b22c",
+    "name": "dumbbell incline alternate press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9adffacf-c70d-48c3-9dc0-090fd420b22c.gif"
+  },
+  {
+    "id": "9a30dd7e-01c6-4230-83d6-e53d79ea05dd",
+    "name": "dumbbell incline fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9a30dd7e-01c6-4230-83d6-e53d79ea05dd.gif"
+  },
+  {
+    "id": "9543cf61-696c-4967-8cc6-0fe1b75d4b74",
+    "name": "dumbbell incline hammer press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9543cf61-696c-4967-8cc6-0fe1b75d4b74.gif"
+  },
+  {
+    "id": "949ab2ee-6d97-4c16-a148-cb2031f9bd39",
+    "name": "dumbbell incline palm-in press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/949ab2ee-6d97-4c16-a148-cb2031f9bd39.gif"
+  },
+  {
+    "id": "2f7c5c4f-c331-4ebb-9039-217e6384b1a7",
+    "name": "dumbbell incline raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2f7c5c4f-c331-4ebb-9039-217e6384b1a7.gif"
+  },
+  {
+    "id": "219a75de-72dc-44cf-91f1-21c292ab98c3",
+    "name": "dumbbell incline t-raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/219a75de-72dc-44cf-91f1-21c292ab98c3.gif"
+  },
+  {
+    "id": "070bbf94-5896-4816-837c-c7e1b27a7585",
+    "name": "dumbbell incline twisted flyes",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/070bbf94-5896-4816-837c-c7e1b27a7585.gif"
+  },
+  {
+    "id": "61214fa6-1dc6-494e-9b42-2ede63f038f0",
+    "name": "dumbbell lateral raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/61214fa6-1dc6-494e-9b42-2ede63f038f0.gif"
+  },
+  {
+    "id": "84603b4d-e272-4310-92ce-0bb5caf48874",
+    "name": "dumbbell lying hammer press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/84603b4d-e272-4310-92ce-0bb5caf48874.gif"
+  },
+  {
+    "id": "5bfe9da5-cf87-43ce-b5c5-75b87029baab",
+    "name": "dumbbell pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5bfe9da5-cf87-43ce-b5c5-75b87029baab.gif"
+  },
+  {
+    "id": "6d99e847-3c2f-4330-8170-c2822ea74487",
+    "name": "dumbbell push press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6d99e847-3c2f-4330-8170-c2822ea74487.gif"
+  },
+  {
+    "id": "b7e70da7-25c6-4d5c-80f1-2591b78b0b54",
+    "name": "dumbbell raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b7e70da7-25c6-4d5c-80f1-2591b78b0b54.gif"
+  },
+  {
+    "id": "2880e2ac-1c88-4df9-a612-625af2bc799b",
+    "name": "dumbbell rear delt raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/2880e2ac-1c88-4df9-a612-625af2bc799b.gif"
+  },
+  {
+    "id": "6b6e37a5-a47c-4327-b530-bd7216a5f2a5",
+    "name": "dumbbell rear fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6b6e37a5-a47c-4327-b530-bd7216a5f2a5.gif"
+  },
+  {
+    "id": "0476c4fe-7b74-4497-9f0e-0a1491ca410f",
+    "name": "dumbbell rear lateral raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0476c4fe-7b74-4497-9f0e-0a1491ca410f.gif"
+  },
+  {
+    "id": "4483a5e9-29b0-4beb-8ca5-ecd66c98e5be",
+    "name": "dumbbell reverse fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4483a5e9-29b0-4beb-8ca5-ecd66c98e5be.gif"
+  },
+  {
+    "id": "ae39c73e-4ebd-4ebc-b22a-ef96b192a032",
+    "name": "dumbbell rotation reverse fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ae39c73e-4ebd-4ebc-b22a-ef96b192a032.gif"
+  },
+  {
+    "id": "371a805e-4c74-4eb9-9cc5-ea2784c7d115",
+    "name": "dumbbell scott press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/371a805e-4c74-4eb9-9cc5-ea2784c7d115.gif"
+  },
+  {
+    "id": "1fce1ac4-1968-45d3-a3b2-01ce3d7f67ab",
+    "name": "dumbbell seated alternate press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1fce1ac4-1968-45d3-a3b2-01ce3d7f67ab.gif"
+  },
+  {
+    "id": "8bf62edb-71b8-42a1-bc59-22cae256b707",
+    "name": "dumbbell seated front raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8bf62edb-71b8-42a1-bc59-22cae256b707.gif"
+  },
+  {
+    "id": "238d5721-d924-4358-8161-928cc729fa66",
+    "name": "dumbbell seated lateral raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/238d5721-d924-4358-8161-928cc729fa66.gif"
+  },
+  {
+    "id": "0b6ab2aa-72a4-4268-9b84-27fbdae98a7e",
+    "name": "dumbbell seated shoulder press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0b6ab2aa-72a4-4268-9b84-27fbdae98a7e.gif"
+  },
+  {
+    "id": "e855481d-2e2e-475e-b12b-2cbbd189af07",
+    "name": "dumbbell standing alternate raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e855481d-2e2e-475e-b12b-2cbbd189af07.gif"
+  },
+  {
+    "id": "e50a7618-52b2-46e1-ab23-b834dcd568ed",
+    "name": "dumbbell straight arm pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e50a7618-52b2-46e1-ab23-b834dcd568ed.gif"
+  },
+  {
+    "id": "be9218a6-f364-4e8d-b70e-c2f8d8fac685",
+    "name": "dumbbell upright row",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/be9218a6-f364-4e8d-b70e-c2f8d8fac685.gif"
+  },
+  {
+    "id": "ab9047aa-061e-47df-b71c-6e1ad5d26573",
+    "name": "dumbbell w-press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/ab9047aa-061e-47df-b71c-6e1ad5d26573.gif"
+  },
+  {
+    "id": "8bb8eefc-0ff8-4661-9222-e4594a75e0d4",
+    "name": "finger curls",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/8bb8eefc-0ff8-4661-9222-e4594a75e0d4.gif"
+  },
+  {
+    "id": "68532225-499f-45c7-8b8f-dfdefb0bb818",
+    "name": "hyght dumbbell fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/68532225-499f-45c7-8b8f-dfdefb0bb818.gif"
+  },
+  {
+    "id": "45bdd910-9812-4d27-8e1f-80ee8abcb7f3",
+    "name": "lever front pulldown",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/45bdd910-9812-4d27-8e1f-80ee8abcb7f3.gif"
+  },
+  {
+    "id": "4023d453-dea7-4fd0-9b04-f53b79e0de84",
+    "name": "lever pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4023d453-dea7-4fd0-9b04-f53b79e0de84.gif"
+  },
+  {
+    "id": "cb0606ad-9bd9-4bc8-9b34-64713e5b6b38",
+    "name": "archer push up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cb0606ad-9bd9-4bc8-9b34-64713e5b6b38.gif"
+  },
+  {
+    "id": "217cd571-9f41-4b77-9f80-332697d2953f",
+    "name": "barbell alternate biceps curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/217cd571-9f41-4b77-9f80-332697d2953f.gif"
+  },
+  {
+    "id": "a06cfe54-a22a-4c52-9783-5dd3a26659f9",
+    "name": "barbell curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/a06cfe54-a22a-4c52-9783-5dd3a26659f9.gif"
+  },
+  {
+    "id": "51e53e3f-bc1c-443d-a107-5e2fbddb2f83",
+    "name": "barbell drag curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/51e53e3f-bc1c-443d-a107-5e2fbddb2f83.gif"
+  },
+  {
+    "id": "7d82fc62-c87d-4649-9f82-2c8c1dc0e6f9",
+    "name": "barbell front raise and pullover",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7d82fc62-c87d-4649-9f82-2c8c1dc0e6f9.gif"
+  },
+  {
+    "id": "238725c1-d10e-4486-a375-f2acdfbe6ed4",
+    "name": "barbell incline reverse-grip press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/238725c1-d10e-4486-a375-f2acdfbe6ed4.gif"
+  },
+  {
+    "id": "cee0123e-1ec7-48a0-b4a6-1c8f905e9922",
+    "name": "barbell lying close-grip press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cee0123e-1ec7-48a0-b4a6-1c8f905e9922.gif"
+  },
+  {
+    "id": "770eaf26-0eea-4fc8-a065-29b0e6e542e9",
+    "name": "barbell lying extension",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/770eaf26-0eea-4fc8-a065-29b0e6e542e9.gif"
+  },
+  {
+    "id": "5fa4d2f1-3aac-4f4b-b20e-d3f5e466d53a",
+    "name": "barbell lying preacher curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/5fa4d2f1-3aac-4f4b-b20e-d3f5e466d53a.gif"
+  },
+  {
+    "id": "cdcacf6d-af2b-45b9-8363-150fc073f754",
+    "name": "barbell preacher curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/cdcacf6d-af2b-45b9-8363-150fc073f754.gif"
+  },
+  {
+    "id": "4d091826-9504-47c7-85ce-72b28c16d86a",
+    "name": "barbell prone incline curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/4d091826-9504-47c7-85ce-72b28c16d86a.gif"
+  },
+  {
+    "id": "00bccf52-29cf-4f72-8c73-860f21555567",
+    "name": "barbell reverse curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/00bccf52-29cf-4f72-8c73-860f21555567.gif"
+  },
+  {
+    "id": "7b028019-e22b-4aab-91c9-f7a8102bde74",
+    "name": "barbell reverse preacher curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/7b028019-e22b-4aab-91c9-f7a8102bde74.gif"
+  },
+  {
+    "id": "dcc98659-78b4-4bc8-bb51-e2d2561206d6",
+    "name": "barbell seated behind head military press",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/dcc98659-78b4-4bc8-bb51-e2d2561206d6.gif"
+  },
+  {
+    "id": "d54aa39c-4495-462d-91c4-5189ece472fd",
+    "name": "barbell standing concentration curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d54aa39c-4495-462d-91c4-5189ece472fd.gif"
+  },
+  {
+    "id": "15594242-bf3c-4eec-ac4d-7f30c0cd8d60",
+    "name": "barbell standing wide-grip curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/15594242-bf3c-4eec-ac4d-7f30c0cd8d60.gif"
+  },
+  {
+    "id": "9f8f3ddf-51b3-417c-abc2-03e34cbec695",
+    "name": "cable decline fly",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/9f8f3ddf-51b3-417c-abc2-03e34cbec695.gif"
+  },
+  {
+    "id": "777ac820-6914-4ed0-a205-70a4a9459025",
+    "name": "dumbbell finger curls",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/777ac820-6914-4ed0-a205-70a4a9459025.gif"
+  },
+  {
+    "id": "de4a0dcb-d303-4287-8c66-95888b8022fa",
+    "name": "dumbbell incline shoulder raise",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/de4a0dcb-d303-4287-8c66-95888b8022fa.gif"
+  },
+  {
+    "id": "82110d9f-0c0f-46a7-98e8-daf8063030c6",
+    "name": "dumbbell reverse wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/82110d9f-0c0f-46a7-98e8-daf8063030c6.gif"
+  },
+  {
+    "id": "99f649b3-c1be-40b2-a8c9-3bab110666d3",
+    "name": "ez barbell close-grip curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/99f649b3-c1be-40b2-a8c9-3bab110666d3.gif"
+  },
+  {
+    "id": "3b0e9e15-996e-4ccd-b369-605140594683",
+    "name": "ez barbell curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3b0e9e15-996e-4ccd-b369-605140594683.gif"
+  },
+  {
+    "id": "d367c45e-07c5-42d4-821d-92f00cfc01f2",
+    "name": "ez barbell seated curls",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/d367c45e-07c5-42d4-821d-92f00cfc01f2.gif"
+  },
+  {
+    "id": "11816808-a59d-4470-9dbd-2d218781fea9",
+    "name": "ez barbell spider curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/11816808-a59d-4470-9dbd-2d218781fea9.gif"
+  },
+  {
+    "id": "e21f7220-6e83-441c-8e4a-b3103e31bded",
+    "name": "kettlebell hang clean",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e21f7220-6e83-441c-8e4a-b3103e31bded.gif"
+  },
+  {
+    "id": "c9832460-618b-4921-a8be-260b19e0060b",
+    "name": "assisted prone hamstring",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/c9832460-618b-4921-a8be-260b19e0060b.gif"
+  },
+  {
+    "id": "b4756129-12e5-4748-bb56-ae03f0127845",
+    "name": "barbell standing back wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b4756129-12e5-4748-bb56-ae03f0127845.gif"
+  },
+  {
+    "id": "fb4a4f6f-2d63-4298-b648-420c99023fd1",
+    "name": "cable reverse wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/fb4a4f6f-2d63-4298-b648-420c99023fd1.gif"
+  },
+  {
+    "id": "6418c13f-70f3-4f13-af53-c24ec1ed83ac",
+    "name": "cable wrist curl",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/6418c13f-70f3-4f13-af53-c24ec1ed83ac.gif"
+  },
+  {
+    "id": "137b0025-de5e-4178-abc0-323f1643788e",
+    "name": "hyperextension",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/137b0025-de5e-4178-abc0-323f1643788e.gif"
+  },
+  {
+    "id": "e09739cb-3b6e-4fca-9fef-62bacab80601",
+    "name": "hyperextension (on bench)",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/e09739cb-3b6e-4fca-9fef-62bacab80601.gif"
+  },
+  {
+    "id": "bfe4bf3f-8031-4897-9f87-5781777b096c",
+    "name": "incline scapula push up",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/bfe4bf3f-8031-4897-9f87-5781777b096c.gif"
+  },
+  {
+    "id": "b960b951-8695-451e-be0c-58184f98164e",
+    "name": "barbell palms down wrist curl over a bench",
+    "url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/b960b951-8695-451e-be0c-58184f98164e.gif"
+  }
+]

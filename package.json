@@ -7,7 +7,16 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "seed:exercises": "npx tsx scripts/seed-exercises.ts"
+    "seed:exercises": "npx tsx scripts/seed-exercises.ts",
+    "analyze:exercises": "npx tsx scripts/analyze-exercises.ts",
+    "select:exercises": "npx tsx scripts/select-400-exercises.ts",
+    "clean:names": "npx tsx scripts/clean-exercise-names.ts",
+    "update:database": "npx tsx scripts/update-database.ts",
+    "download:gifs": "npx tsx scripts/download-gifs.ts",
+    "upload:gifs": "npx tsx scripts/upload-to-supabase.ts",
+    "update:urls": "npx tsx scripts/update-gif-urls.ts",
+    "upload:remaining": "npx tsx scripts/upload-remaining-37.ts",
+    "migrate": "npx tsx scripts/run-migration.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
