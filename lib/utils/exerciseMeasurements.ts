@@ -1,328 +1,186 @@
 /**
- * Exercise Measurement Configuration Utility
+ * Exercise Measurement Utilities
  * 
- * Intelligently determines the appropriate measurement type and tracking fields
- * for different exercises based on their category, name, and equipment.
+ * Provides helper functions and configurations for different exercise measurement types
  */
 
-import type { 
-  Exercise, 
-  ExerciseMeasurementConfig, 
-  MeasurementType,
-  FormattedMeasurement 
-} from '@/types/exercise-measurements';
+export type MeasurementType = 
+  | 'reps_weight'    // Standard: Bench Press, Squat - tracks weight + reps
+  | 'time'           // Timed holds: Plank, Wall Sit - tracks duration only
+  | 'time_distance'  // Cardio: Running, Cycling - tracks time + distance
+  | 'time_weight'    // Weighted carries: Farmer's Walk - tracks time + weight
+  | 'reps_only'      // Bodyweight: Push-ups, Pull-ups - tracks reps only
+  | 'assisted';      // Assisted exercises: Assisted Pull-ups - tracks reps + assistance
+
+export interface MeasurementConfig {
+  type: MeasurementType;
+  fields: string[];
+  displayFormat: (set: any) => string;
+  shortFormat: (set: any) => string;
+  icon: string;
+}
 
 /**
- * Get measurement configuration for an exercise
- * Analyzes exercise properties to determine optimal tracking method
+ * Get measurement configuration for a specific type
  */
-export const getMeasurementConfig = (
-  exercise: Exercise
-): ExerciseMeasurementConfig => {
-  // Use explicit measurement type if set
-  if (exercise.measurement_type) {
-    return getConfigByType(exercise.measurement_type);
-  }
-
-  // Otherwise, intelligently determine based on exercise properties
-  const category = exercise.category.toLowerCase();
-  const name = exercise.name.toLowerCase();
-  const equipment = exercise.equipment.toLowerCase();
-
-  // Cardio exercises - track time and distance
-  if (isCardioExercise(category, name)) {
-    return {
-      type: 'distance',
-      tracks: { time: true, distance: true },
-      defaultUnit: 'minutes',
-      label: 'Cardio',
-      placeholder: {
-        time: 'Duration (min)',
-        distance: 'Distance (km)'
-      }
-    };
-  }
-
-  // Assisted exercises - track reps with assistance weight
-  if (name.includes('assisted')) {
-    return {
-      type: 'assisted',
-      tracks: { reps: true, assistance: true },
-      label: 'Assisted',
-      placeholder: {
-        reps: 'Reps',
-        assistance: 'Assistance (kg)'
-      }
-    };
-  }
-
-  // Timed holds - only track duration
-  if (isTimedHold(name)) {
-    return {
-      type: 'time',
-      tracks: { time: true },
-      defaultUnit: 'seconds',
-      label: 'Timed Hold',
-      placeholder: {
-        time: 'Duration (sec)'
-      }
-    };
-  }
-
-  // Weighted carries/walks - track time and weight
-  if (isWeightedCarry(name)) {
-    return {
-      type: 'time_weight',
-      tracks: { time: true, weight: true },
-      defaultUnit: 'seconds',
-      label: 'Weighted Carry',
-      placeholder: {
-        time: 'Duration (sec)',
-        weight: 'Weight (kg)'
-      }
-    };
-  }
-
-  // Bodyweight exercises - only reps
-  if (isBodyweightOnly(equipment, name)) {
-    return {
-      type: 'reps_only',
-      tracks: { reps: true },
-      label: 'Bodyweight',
-      placeholder: {
-        reps: 'Reps'
-      }
-    };
-  }
-
-  // Default: traditional strength training (reps + weight)
-  return {
-    type: 'reps_weight',
-    tracks: { reps: true, weight: true },
-    label: 'Strength',
-    placeholder: {
-      reps: 'Reps',
-      weight: 'Weight (kg)'
-    }
-  };
-};
-
-/**
- * Get configuration by explicit measurement type
- */
-function getConfigByType(type: MeasurementType): ExerciseMeasurementConfig {
-  const configs: Record<MeasurementType, ExerciseMeasurementConfig> = {
+export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig => {
+  const configs: Record<MeasurementType, MeasurementConfig> = {
     reps_weight: {
       type: 'reps_weight',
-      tracks: { reps: true, weight: true },
-      label: 'Strength',
-      placeholder: { reps: 'Reps', weight: 'Weight (kg)' }
+      fields: ['weight', 'reps'],
+      displayFormat: (set) => `${set.weight || 0} lbs × ${set.reps || 0} reps`,
+      shortFormat: (set) => `${set.weight || 0} × ${set.reps || 0}`,
+      icon: '🏋️',
     },
     time: {
       type: 'time',
-      tracks: { time: true },
-      defaultUnit: 'seconds',
-      label: 'Timed',
-      placeholder: { time: 'Duration (sec)' }
+      fields: ['duration_seconds'],
+      displayFormat: (set) => {
+        const secs = set.duration_seconds || 0;
+        const mins = Math.floor(secs / 60);
+        const remainingSecs = secs % 60;
+        return mins > 0 
+          ? `${mins}:${remainingSecs.toString().padStart(2, '0')} hold`
+          : `${secs} seconds`;
+      },
+      shortFormat: (set) => {
+        const secs = set.duration_seconds || 0;
+        const mins = Math.floor(secs / 60);
+        const remainingSecs = secs % 60;
+        return mins > 0 ? `${mins}:${remainingSecs.toString().padStart(2, '0')}` : `${secs}s`;
+      },
+      icon: '⏱️',
+    },
+    time_distance: {
+      type: 'time_distance',
+      fields: ['duration_seconds', 'distance_meters'],
+      displayFormat: (set) => {
+        const secs = set.duration_seconds || 0;
+        const mins = Math.floor(secs / 60);
+        const remainingSecs = secs % 60;
+        const miles = ((set.distance_meters || 0) / 1609.34).toFixed(2);
+        const timeStr = mins > 0 ? `${mins}:${remainingSecs.toString().padStart(2, '0')}` : `${secs}s`;
+        return `${miles} mi in ${timeStr}`;
+      },
+      shortFormat: (set) => {
+        const miles = ((set.distance_meters || 0) / 1609.34).toFixed(2);
+        return `${miles} mi`;
+      },
+      icon: '🏃',
     },
     time_weight: {
       type: 'time_weight',
-      tracks: { time: true, weight: true },
-      defaultUnit: 'seconds',
-      label: 'Weighted Time',
-      placeholder: { time: 'Duration (sec)', weight: 'Weight (kg)' }
-    },
-    distance: {
-      type: 'distance',
-      tracks: { time: true, distance: true },
-      defaultUnit: 'minutes',
-      label: 'Cardio',
-      placeholder: { time: 'Duration (min)', distance: 'Distance (km)' }
+      fields: ['weight', 'duration_seconds'],
+      displayFormat: (set) => {
+        const secs = set.duration_seconds || 0;
+        const mins = Math.floor(secs / 60);
+        const remainingSecs = secs % 60;
+        const timeStr = mins > 0 ? `${mins}:${remainingSecs.toString().padStart(2, '0')}` : `${secs}s`;
+        return `${set.weight || 0} lbs for ${timeStr}`;
+      },
+      shortFormat: (set) => `${set.weight || 0} lbs × ${set.duration_seconds || 0}s`,
+      icon: '🚶',
     },
     reps_only: {
       type: 'reps_only',
-      tracks: { reps: true },
-      label: 'Bodyweight',
-      placeholder: { reps: 'Reps' }
+      fields: ['reps'],
+      displayFormat: (set) => `${set.reps || 0} reps`,
+      shortFormat: (set) => `${set.reps || 0}`,
+      icon: '💪',
     },
     assisted: {
       type: 'assisted',
-      tracks: { reps: true, assistance: true },
-      label: 'Assisted',
-      placeholder: { reps: 'Reps', assistance: 'Assistance (kg)' }
+      fields: ['reps', 'assistance_weight'],
+      displayFormat: (set) => `${set.reps || 0} reps @ -${set.assistance_weight || 0} lbs assist`,
+      shortFormat: (set) => `${set.reps || 0} (-${set.assistance_weight || 0})`,
+      icon: '🤝',
     },
-    amrap: {
-      type: 'amrap',
-      tracks: { reps: true, time: true },
-      defaultUnit: 'seconds',
-      label: 'AMRAP',
-      placeholder: { reps: 'Reps', time: 'Time Limit (sec)' }
-    }
   };
 
-  return configs[type];
-}
-
-/**
- * Helper: Check if exercise is cardio
- */
-function isCardioExercise(category: string, name: string): boolean {
-  return (
-    category === 'cardio' ||
-    name.includes('running') ||
-    name.includes('cycling') ||
-    name.includes('rowing') ||
-    name.includes('swimming') ||
-    name.includes('walking') ||
-    name.includes('hiking') ||
-    name.includes('elliptical') ||
-    name.includes('treadmill') ||
-    name.includes('bike')
-  );
-}
-
-/**
- * Helper: Check if exercise is a timed hold
- */
-function isTimedHold(name: string): boolean {
-  return (
-    name.includes('plank') ||
-    name.includes('hold') ||
-    name.includes('hang') ||
-    name.includes('static') ||
-    name.includes('isometric')
-  );
-}
-
-/**
- * Helper: Check if exercise is a weighted carry
- */
-function isWeightedCarry(name: string): boolean {
-  return (
-    name.includes('carry') ||
-    name.includes('farmer') ||
-    name.includes('walk') && name.includes('weight')
-  );
-}
-
-/**
- * Helper: Check if exercise is bodyweight only
- */
-function isBodyweightOnly(equipment: string, name: string): boolean {
-  if (equipment !== 'body weight' && equipment !== 'bodyweight') {
-    return false;
-  }
-
-  // Bodyweight exercises that typically don't use added weight
-  const bodyweightExercises = [
-    'push up', 'push-up', 'pushup',
-    'pull up', 'pull-up', 'pullup',
-    'chin up', 'chin-up', 'chinup',
-    'sit up', 'sit-up', 'situp',
-    'crunch',
-    'squat', // bodyweight squat
-    'lunge', // bodyweight lunge
-    'dip',
-    'burpee',
-    'jumping jack',
-    'mountain climber',
-    'leg raise'
-  ];
-
-  return bodyweightExercises.some(ex => name.includes(ex));
-}
-
-/**
- * Format a set's measurements for display
- */
-export const formatSetMeasurements = (
-  set: any,
-  config: ExerciseMeasurementConfig
-): FormattedMeasurement[] => {
-  const measurements: FormattedMeasurement[] = [];
-
-  if (config.tracks.reps && set.reps != null) {
-    measurements.push({
-      value: set.reps,
-      unit: 'reps',
-      label: 'Reps'
-    });
-  }
-
-  if (config.tracks.weight && set.weight != null) {
-    measurements.push({
-      value: set.weight,
-      unit: 'kg',
-      label: 'Weight'
-    });
-  }
-
-  if (config.tracks.time && set.duration_seconds != null) {
-    const minutes = Math.floor(set.duration_seconds / 60);
-    const seconds = set.duration_seconds % 60;
-    const displayValue = minutes > 0 
-      ? `${minutes}:${seconds.toString().padStart(2, '0')}`
-      : `${seconds}`;
-    const displayUnit = minutes > 0 ? 'min' : 'sec';
-    
-    measurements.push({
-      value: displayValue,
-      unit: displayUnit,
-      label: 'Duration'
-    });
-  }
-
-  if (config.tracks.distance && set.distance_meters != null) {
-    const km = (set.distance_meters / 1000).toFixed(2);
-    measurements.push({
-      value: km,
-      unit: 'km',
-      label: 'Distance'
-    });
-  }
-
-  if (config.tracks.assistance && set.assistance_weight != null) {
-    measurements.push({
-      value: Math.abs(set.assistance_weight),
-      unit: 'kg',
-      label: 'Assistance'
-    });
-  }
-
-  return measurements;
+  return configs[type] || configs.reps_weight;
 };
 
 /**
- * Calculate volume for different measurement types
+ * Format a set for display based on measurement type
  */
-export const calculateSetVolume = (
-  set: any,
-  config: ExerciseMeasurementConfig
-): number => {
-  switch (config.type) {
+export const formatSet = (set: any, measurementType: MeasurementType): string => {
+  const config = getMeasurementConfig(measurementType);
+  return config.displayFormat(set);
+};
+
+/**
+ * Format a set for compact display (e.g., in lists)
+ */
+export const formatSetShort = (set: any, measurementType: MeasurementType): string => {
+  const config = getMeasurementConfig(measurementType);
+  return config.shortFormat(set);
+};
+
+/**
+ * Get the icon for a measurement type
+ */
+export const getMeasurementIcon = (measurementType: MeasurementType): string => {
+  const config = getMeasurementConfig(measurementType);
+  return config.icon;
+};
+
+/**
+ * Validate if a set has all required fields for its measurement type
+ */
+export const validateSet = (set: any, measurementType: MeasurementType): boolean => {
+  const config = getMeasurementConfig(measurementType);
+  
+  return config.fields.every(field => {
+    const value = set[field];
+    return value !== undefined && value !== null && value > 0;
+  });
+};
+
+/**
+ * Get placeholder values for a new set based on measurement type
+ */
+export const getEmptySet = (measurementType: MeasurementType) => {
+  const emptySet: any = {
+    reps: undefined,
+    weight: undefined,
+    duration_seconds: undefined,
+    distance_meters: undefined,
+    assistance_weight: undefined,
+  };
+
+  const config = getMeasurementConfig(measurementType);
+  
+  // Initialize only the fields needed for this measurement type
+  config.fields.forEach(field => {
+    emptySet[field] = 0;
+  });
+
+  return emptySet;
+};
+
+/**
+ * Calculate volume for different exercise types
+ */
+export const calculateVolume = (set: any, measurementType: MeasurementType): number => {
+  switch (measurementType) {
     case 'reps_weight':
-      return (set.reps || 0) * (set.weight || 0);
-    
-    case 'time_weight':
-      return (set.duration_seconds || 0) * (set.weight || 0);
-    
-    case 'reps_only':
-      return set.reps || 0;
+      return (set.weight || 0) * (set.reps || 0);
     
     case 'time':
       return set.duration_seconds || 0;
     
-    case 'distance':
+    case 'time_distance':
       return set.distance_meters || 0;
     
-    case 'assisted':
-      // For assisted exercises, higher assistance = easier = lower volume
-      // Volume = reps * (bodyweight - assistance)
-      // Simplified: just use reps as base volume
+    case 'time_weight':
+      return (set.weight || 0) * (set.duration_seconds || 0);
+    
+    case 'reps_only':
       return set.reps || 0;
     
-    case 'amrap':
-      return set.reps || 0;
+    case 'assisted':
+      // For assisted exercises, higher assistance = easier, so subtract from volume
+      return (set.reps || 0) * Math.max(0, 100 - (set.assistance_weight || 0));
     
     default:
       return 0;
@@ -330,37 +188,33 @@ export const calculateSetVolume = (
 };
 
 /**
- * Validate set data based on measurement configuration
+ * Get user-friendly label for measurement type
  */
-export const validateSetData = (
-  set: any,
-  config: ExerciseMeasurementConfig
-): { valid: boolean; errors: string[] } => {
-  const errors: string[] = [];
-
-  if (config.tracks.reps && (set.reps == null || set.reps <= 0)) {
-    errors.push('Reps must be greater than 0');
-  }
-
-  if (config.tracks.weight && (set.weight == null || set.weight < 0)) {
-    errors.push('Weight must be 0 or greater');
-  }
-
-  if (config.tracks.time && (set.duration_seconds == null || set.duration_seconds <= 0)) {
-    errors.push('Duration must be greater than 0');
-  }
-
-  if (config.tracks.distance && (set.distance_meters == null || set.distance_meters <= 0)) {
-    errors.push('Distance must be greater than 0');
-  }
-
-  if (config.tracks.assistance && set.assistance_weight == null) {
-    errors.push('Assistance weight is required');
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
+export const getMeasurementTypeLabel = (type: MeasurementType): string => {
+  const labels: Record<MeasurementType, string> = {
+    reps_weight: 'Weight & Reps',
+    time: 'Timed Hold',
+    time_distance: 'Time & Distance',
+    time_weight: 'Weighted Carry',
+    reps_only: 'Reps Only',
+    assisted: 'Assisted',
   };
+
+  return labels[type] || 'Standard';
 };
 
+/**
+ * Get description for measurement type
+ */
+export const getMeasurementTypeDescription = (type: MeasurementType): string => {
+  const descriptions: Record<MeasurementType, string> = {
+    reps_weight: 'Track weight and repetitions',
+    time: 'Track duration of hold',
+    time_distance: 'Track time and distance covered',
+    time_weight: 'Track weight carried for a duration',
+    reps_only: 'Track repetitions only (bodyweight)',
+    assisted: 'Track reps with assistance weight',
+  };
+
+  return descriptions[type] || 'Standard exercise tracking';
+};

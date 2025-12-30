@@ -14,6 +14,7 @@ interface DisplayExercise {
   gifUrl: string;
   secondaryMuscles: string[];
   instructions: string[];
+  measurementType?: string; // ADD THIS FIELD
 }
 
 type BodyPart = 
@@ -75,6 +76,7 @@ function transformExercise(exercise: Exercise): DisplayExercise {
     gifUrl: exercise.gif_url || '',
     secondaryMuscles: exercise.secondary_muscles || [],
     instructions: exercise.instructions || [],
+    measurementType: exercise.measurement_type || 'reps_weight',
   };
 }
 

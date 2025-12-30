@@ -31,7 +31,9 @@
     "fix:gif-urls": "npx tsx scripts/fix-gif-urls.ts",
     "diagnose:gifs": "npx tsx scripts/diagnose-and-fix-gifs.ts",
     "verify:thumbnails": "npx tsx scripts/verify-thumbnail-sizes.ts",
-    "verify:supabase": "npx tsx scripts/verify-supabase-quality.ts"
+    "verify:supabase": "npx tsx scripts/verify-supabase-quality.ts",
+    "assign:measurements": "npx tsx scripts/assign-measurement-types.ts",
+    "verify:measurements": "npx tsx scripts/verify-measurement-types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

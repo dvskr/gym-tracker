@@ -15,6 +15,7 @@ import {
   ChevronUp,
   ChevronDown,
   Trash2,
+  Lightbulb,
 } from 'lucide-react-native';
 import { WorkoutExercise, WorkoutSet } from '@/stores/workoutStore';
 import { SetRow } from './SetRow';
@@ -62,10 +63,13 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 }) => {
   const { exercise, sets } = workoutExercise;
   const { user } = useAuthStore();
-  const { showFormTips, showProgressiveOverload } = useSettingsStore();
+  const { showFormTips: showFormTipsEnabled, showProgressiveOverload } = useSettingsStore();
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
+  
+  // State for form tips collapse
+  const [formTipsExpanded, setFormTipsExpanded] = useState(false);
 
   // Fetch previous workout data for this exercise
   const { data: previousWorkout, getPreviousSet, daysAgo } = usePreviousWorkout(exercise.id);
@@ -186,31 +190,88 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           </View>
         </View>
 
-        {/* Remove Button */}
-        <TouchableOpacity
-          style={styles.removeButton}
-          onPress={onRemove}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <X size={20} color="#ef4444" />
-        </TouchableOpacity>
+        {/* Header Actions */}
+        <View style={styles.headerActions}>
+          {/* Form Tips Button */}
+          {showFormTipsEnabled && (
+            <TouchableOpacity
+              style={styles.formTipsButton}
+              onPress={() => {
+                lightHaptic();
+                setFormTipsExpanded(!formTipsExpanded);
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Lightbulb 
+                size={20} 
+                color="#F59E0B"
+                fill={formTipsExpanded ? '#F59E0B' : 'transparent'}
+              />
+            </TouchableOpacity>
+          )}
+
+          {/* Remove Button */}
+          <TouchableOpacity
+            style={styles.removeButton}
+            onPress={onRemove}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <X size={20} color="#ef4444" />
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {/* Form Tips - Collapsible */}
+      {showFormTipsEnabled && formTipsExpanded && (
+        <View style={styles.formTipsSection}>
+          <FormTips exerciseName={exercise.name} />
+        </View>
+      )}
 
       {/* Column Headers */}
       <View style={styles.columnHeader}>
         <Text style={[styles.columnHeaderText, styles.colSet]}>SET</Text>
         <Text style={[styles.columnHeaderText, styles.colPrevious]}>PREVIOUS</Text>
-        <Text style={[styles.columnHeaderText, styles.colWeight]}>LBS</Text>
-        <Text style={[styles.columnHeaderText, styles.colReps]}>REPS</Text>
+        {/* Dynamic column headers based on measurement type */}
+        {(() => {
+          const measurementType = exercise.measurementType || 'reps_weight';
+          switch (measurementType) {
+            case 'time':
+              return <Text style={[styles.columnHeaderText, styles.colWeight]}>SEC</Text>;
+            case 'time_distance':
+              return (
+                <>
+                  <Text style={[styles.columnHeaderText, styles.colWeight]}>SEC</Text>
+                  <Text style={[styles.columnHeaderText, styles.colReps]}>MILES</Text>
+                </>
+              );
+            case 'time_weight':
+              return (
+                <>
+                  <Text style={[styles.columnHeaderText, styles.colWeight]}>SEC</Text>
+                  <Text style={[styles.columnHeaderText, styles.colReps]}>LBS</Text>
+                </>
+              );
+            case 'assisted':
+              return (
+                <>
+                  <Text style={[styles.columnHeaderText, styles.colWeight]}>REPS</Text>
+                  <Text style={[styles.columnHeaderText, styles.colReps]}>ASSIST</Text>
+                </>
+              );
+            case 'reps_only':
+              return <Text style={[styles.columnHeaderText, styles.colWeight]}>REPS</Text>;
+            default: // 'reps_weight'
+              return (
+                <>
+                  <Text style={[styles.columnHeaderText, styles.colWeight]}>LBS</Text>
+                  <Text style={[styles.columnHeaderText, styles.colReps]}>REPS</Text>
+                </>
+              );
+          }
+        })()}
         <View style={styles.colCheck} />
       </View>
-
-      {/* Form Tips */}
-      {showFormTips && (
-        <View style={styles.formTipsContainer}>
-          <FormTips exerciseName={exercise.name} />
-        </View>
-      )}
 
       {/* Sets List */}
       <View style={styles.setsContainer}>
@@ -241,6 +302,10 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 previousWeight={prevSet?.weight?.toString()}
                 previousReps={prevSet?.reps?.toString()}
                 isCompleted={set.isCompleted}
+                measurementType={exercise.measurementType || 'reps_weight'}
+                durationSeconds={set.durationSeconds}
+                distanceMeters={set.distanceMeters}
+                assistanceWeight={set.assistanceWeight}
                 onWeightChange={(value) => {
                   const numValue = parseFloat(value) || 0;
                   onUpdateSet(set.id, { weight: numValue });
@@ -248,6 +313,15 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 onRepsChange={(value) => {
                   const numValue = parseInt(value, 10) || 0;
                   onUpdateSet(set.id, { reps: numValue });
+                }}
+                onDurationChange={(value) => {
+                  onUpdateSet(set.id, { durationSeconds: value });
+                }}
+                onDistanceChange={(value) => {
+                  onUpdateSet(set.id, { distanceMeters: value });
+                }}
+                onAssistanceChange={(value) => {
+                  onUpdateSet(set.id, { assistanceWeight: value });
                 }}
                 onPreviousTap={() => handleCopyPrevious(set.id, set.setNumber)}
                 onComplete={() => onCompleteSet(set.id)}
@@ -481,6 +555,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  // Header Actions
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+
+  formTipsButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  // Form Tips Section
+  formTipsSection: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+  },
+
   // Column Header
   columnHeader: {
     flexDirection: 'row',
@@ -528,12 +624,6 @@ const styles = StyleSheet.create({
   // Suggestion Wrapper
   suggestionWrapper: {
     paddingHorizontal: 12,
-    paddingTop: 12,
-  },
-
-  // Form Tips Container
-  formTipsContainer: {
-    paddingHorizontal: 16,
     paddingTop: 12,
   },
 

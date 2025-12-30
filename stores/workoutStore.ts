@@ -26,6 +26,10 @@ export interface WorkoutSet {
   completedAt: string | null;
   isPR: boolean;
   prType: 'max_weight' | 'max_reps' | 'max_volume' | null;
+  // New measurement fields
+  durationSeconds?: number | null;
+  distanceMeters?: number | null;
+  assistanceWeight?: number | null;
 }
 
 export interface WorkoutExercise {

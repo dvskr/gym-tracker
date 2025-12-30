@@ -13,6 +13,8 @@ import * as Haptics from 'expo-haptics';
 // Types
 // ============================================
 
+type MeasurementType = 'reps_weight' | 'reps_only' | 'time' | 'time_distance' | 'time_weight' | 'assisted';
+
 interface SetRowProps {
   setNumber: number;
   previousWeight?: string;
@@ -24,6 +26,14 @@ interface SetRowProps {
   onRepsChange: (value: string) => void;
   onComplete: () => void;
   onPreviousTap: () => void;
+  // New props for flexible measurements
+  measurementType?: MeasurementType;
+  durationSeconds?: number;
+  distanceMeters?: number;
+  assistanceWeight?: number;
+  onDurationChange?: (value: number) => void;
+  onDistanceChange?: (value: number) => void;
+  onAssistanceChange?: (value: number) => void;
 }
 
 // ============================================
@@ -41,10 +51,20 @@ function SetRowComponent({
   onRepsChange,
   onComplete,
   onPreviousTap,
+  measurementType = 'reps_weight',
+  durationSeconds,
+  distanceMeters,
+  assistanceWeight,
+  onDurationChange,
+  onDistanceChange,
+  onAssistanceChange,
 }: SetRowProps) {
   // Local state for immediate UI feedback
   const [weightInput, setWeightInput] = useState(weight);
   const [repsInput, setRepsInput] = useState(reps);
+  const [durationInput, setDurationInput] = useState(durationSeconds?.toString() || '');
+  const [distanceInput, setDistanceInput] = useState(distanceMeters ? (distanceMeters / 1609.34).toFixed(2) : '');
+  const [assistanceInput, setAssistanceInput] = useState(assistanceWeight?.toString() || '');
 
   // Sync local state when props change (from outside updates like "copy previous")
   useEffect(() => {
@@ -55,13 +75,49 @@ function SetRowComponent({
     setRepsInput(reps);
   }, [reps]);
 
-  // Format previous text
-  const previousText =
-    previousWeight && previousReps
+  useEffect(() => {
+    setDurationInput(durationSeconds?.toString() || '');
+  }, [durationSeconds]);
+
+  useEffect(() => {
+    setDistanceInput(distanceMeters ? (distanceMeters / 1609.34).toFixed(2) : '');
+  }, [distanceMeters]);
+
+  useEffect(() => {
+    setAssistanceInput(assistanceWeight?.toString() || '');
+  }, [assistanceWeight]);
+
+  // Format previous text based on measurement type
+  const getPreviousText = () => {
+    if (measurementType === 'time') {
+      return durationSeconds ? `${durationSeconds}s` : '—';
+    }
+    if (measurementType === 'time_distance') {
+      return durationSeconds && distanceMeters 
+        ? `${durationSeconds}s / ${(distanceMeters / 1609.34).toFixed(2)}mi` 
+        : '—';
+    }
+    if (measurementType === 'time_weight') {
+      return durationSeconds && previousWeight
+        ? `${durationSeconds}s × ${previousWeight}`
+        : '—';
+    }
+    if (measurementType === 'assisted') {
+      return previousReps && assistanceWeight
+        ? `${previousReps} @ -${assistanceWeight}`
+        : '—';
+    }
+    if (measurementType === 'reps_only') {
+      return previousReps || '—';
+    }
+    // Default: reps_weight
+    return previousWeight && previousReps
       ? `${previousWeight}×${previousReps}`
       : '—';
+  };
 
-  const hasPrevious = Boolean(previousWeight && previousReps);
+  const previousText = getPreviousText();
+  const hasPrevious = previousText !== '—';
 
   // Handle previous tap
   const handlePreviousTap = useCallback(() => {
@@ -106,6 +162,218 @@ function SetRowComponent({
     onRepsChange(repsInput);
   }, [repsInput, onRepsChange]);
 
+  // Handle duration input
+  const handleDurationChange = useCallback((text: string) => {
+    const cleaned = text.replace(/[^0-9]/g, '');
+    setDurationInput(cleaned);
+  }, []);
+
+  const handleDurationBlur = useCallback(() => {
+    if (onDurationChange) {
+      onDurationChange(parseInt(durationInput) || 0);
+    }
+  }, [durationInput, onDurationChange]);
+
+  // Handle distance input
+  const handleDistanceChange = useCallback((text: string) => {
+    const cleaned = text.replace(/[^0-9.]/g, '');
+    const parts = cleaned.split('.');
+    const sanitized = parts.length > 2 
+      ? parts[0] + '.' + parts.slice(1).join('')
+      : cleaned;
+    setDistanceInput(sanitized);
+  }, []);
+
+  const handleDistanceBlur = useCallback(() => {
+    if (onDistanceChange) {
+      const miles = parseFloat(distanceInput) || 0;
+      onDistanceChange(miles * 1609.34); // Convert miles to meters
+    }
+  }, [distanceInput, onDistanceChange]);
+
+  // Handle assistance input
+  const handleAssistanceChange = useCallback((text: string) => {
+    const cleaned = text.replace(/[^0-9.]/g, '');
+    const parts = cleaned.split('.');
+    const sanitized = parts.length > 2 
+      ? parts[0] + '.' + parts.slice(1).join('')
+      : cleaned;
+    setAssistanceInput(sanitized);
+  }, []);
+
+  const handleAssistanceBlur = useCallback(() => {
+    if (onAssistanceChange) {
+      onAssistanceChange(parseFloat(assistanceInput) || 0);
+    }
+  }, [assistanceInput, onAssistanceChange]);
+
+  // Render input fields based on measurement type
+  const renderInputs = () => {
+    switch (measurementType) {
+      case 'time':
+        return (
+          <View style={styles.inputColumn}>
+            <TextInput
+              style={styles.input}
+              value={durationInput}
+              onChangeText={handleDurationChange}
+              onBlur={handleDurationBlur}
+              keyboardType="number-pad"
+              placeholder="sec"
+              placeholderTextColor="#64748b"
+              selectTextOnFocus={true}
+              editable={!isCompleted}
+            />
+          </View>
+        );
+
+      case 'time_distance':
+        return (
+          <>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={durationInput}
+                onChangeText={handleDurationChange}
+                onBlur={handleDurationBlur}
+                keyboardType="number-pad"
+                placeholder="sec"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={distanceInput}
+                onChangeText={handleDistanceChange}
+                onBlur={handleDistanceBlur}
+                keyboardType="decimal-pad"
+                placeholder="mi"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+          </>
+        );
+
+      case 'time_weight':
+        return (
+          <>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={durationInput}
+                onChangeText={handleDurationChange}
+                onBlur={handleDurationBlur}
+                keyboardType="number-pad"
+                placeholder="sec"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={weightInput}
+                onChangeText={handleWeightInputChange}
+                onBlur={handleWeightBlur}
+                keyboardType="decimal-pad"
+                placeholder="lbs"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+          </>
+        );
+
+      case 'assisted':
+        return (
+          <>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={repsInput}
+                onChangeText={handleRepsInputChange}
+                onBlur={handleRepsBlur}
+                keyboardType="number-pad"
+                placeholder="reps"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={assistanceInput}
+                onChangeText={handleAssistanceChange}
+                onBlur={handleAssistanceBlur}
+                keyboardType="decimal-pad"
+                placeholder="assist"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+          </>
+        );
+
+      case 'reps_only':
+        return (
+          <View style={styles.inputColumn}>
+            <TextInput
+              style={styles.input}
+              value={repsInput}
+              onChangeText={handleRepsInputChange}
+              onBlur={handleRepsBlur}
+              keyboardType="number-pad"
+              placeholder="reps"
+              placeholderTextColor="#64748b"
+              selectTextOnFocus={true}
+              editable={!isCompleted}
+            />
+          </View>
+        );
+
+      default: // 'reps_weight'
+        return (
+          <>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={weightInput}
+                onChangeText={handleWeightInputChange}
+                onBlur={handleWeightBlur}
+                keyboardType="decimal-pad"
+                placeholder="lbs"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+            <View style={styles.inputColumn}>
+              <TextInput
+                style={styles.input}
+                value={repsInput}
+                onChangeText={handleRepsInputChange}
+                onBlur={handleRepsBlur}
+                keyboardType="number-pad"
+                placeholder="reps"
+                placeholderTextColor="#64748b"
+                selectTextOnFocus={true}
+                editable={!isCompleted}
+              />
+            </View>
+          </>
+        );
+    }
+  };
+
   return (
     <View style={[styles.row, isCompleted && styles.rowCompleted]}>
       {/* SET */}
@@ -124,35 +392,8 @@ function SetRowComponent({
         </Text>
       </Pressable>
 
-      {/* WEIGHT */}
-      <View style={styles.inputColumn}>
-        <TextInput
-          style={styles.input}
-          value={weightInput}
-          onChangeText={handleWeightInputChange}
-          onBlur={handleWeightBlur}
-          keyboardType="decimal-pad"
-          placeholder="0"
-          placeholderTextColor="#64748b"
-          selectTextOnFocus={true}
-          editable={!isCompleted}
-        />
-      </View>
-
-      {/* REPS */}
-      <View style={styles.inputColumn}>
-        <TextInput
-          style={styles.input}
-          value={repsInput}
-          onChangeText={handleRepsInputChange}
-          onBlur={handleRepsBlur}
-          keyboardType="number-pad"
-          placeholder="0"
-          placeholderTextColor="#64748b"
-          selectTextOnFocus={true}
-          editable={!isCompleted}
-        />
-      </View>
+      {/* DYNAMIC INPUTS */}
+      {renderInputs()}
 
       {/* CHECKMARK */}
       <Pressable
@@ -177,7 +418,11 @@ export const SetRow = memo(SetRowComponent, (prev, next) => {
     prev.reps === next.reps &&
     prev.isCompleted === next.isCompleted &&
     prev.previousWeight === next.previousWeight &&
-    prev.previousReps === next.previousReps
+    prev.previousReps === next.previousReps &&
+    prev.measurementType === next.measurementType &&
+    prev.durationSeconds === next.durationSeconds &&
+    prev.distanceMeters === next.distanceMeters &&
+    prev.assistanceWeight === next.assistanceWeight
   );
 });
 

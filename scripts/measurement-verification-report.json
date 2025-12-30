@@ -1,0 +1,6024 @@
+{
+  "timestamp": "2025-12-30T22:25:08.973Z",
+  "total_exercises": 428,
+  "distribution": {
+    "reps_weight": 349,
+    "time": 13,
+    "time_distance": 28,
+    "time_weight": 1,
+    "reps_only": 30,
+    "assisted": 7,
+    "null": 0
+  },
+  "issues_found": 0,
+  "all_exercises": [
+    {
+      "id": "7acca52a-fec0-4b87-843f-445c0f9bb1ad",
+      "name": "ab wheel",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ecb3f8a5-5979-4528-b5a1-8090d90269d0",
+      "name": "aerobics",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "1a89f96f-cbf8-4524-84ef-cfd9caba290d",
+      "name": "all fours squad stretch",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "c92142a6-57a0-40a9-953d-c6e6895b1592",
+      "name": "alternate lateral pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "92814f64-d72e-4a1d-87c8-1edd20b86c68",
+      "name": "archer pull up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "cb0606ad-9bd9-4bc8-9b34-64713e5b6b38",
+      "name": "archer push up",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "cb0a3074-73da-46e1-a007-f73db5ebced8",
+      "name": "around the world",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d4b95eed-12c5-4d9c-a9c9-a236138e5a5c",
+      "name": "assisted parallel close grip pull-up",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "c9832460-618b-4921-a8be-260b19e0060b",
+      "name": "assisted prone hamstring",
+      "category": "upper legs",
+      "equipment": "assisted",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "07af85f7-d184-4897-a1d9-ec0acef62deb",
+      "name": "assisted prone lying quads stretch",
+      "category": "upper legs",
+      "equipment": "assisted",
+      "measurement_type": "time"
+    },
+    {
+      "id": "456869b7-f4a6-4335-a6e0-12b8629be7a3",
+      "name": "assisted pull-up",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "3c3ce9ff-a4dd-484c-ad0a-31a0d8c19ab7",
+      "name": "assisted side lying adductor stretch",
+      "category": "upper legs",
+      "equipment": "assisted",
+      "measurement_type": "time"
+    },
+    {
+      "id": "5957af8d-2ed5-4e60-8c5a-346a21c77f3c",
+      "name": "assisted standing pull-up",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "612e6bb6-9f0d-4829-b7f2-991420bc1930",
+      "name": "astride jumps (male)",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "eeee9400-fb28-4eb9-b333-4b99dcba56af",
+      "name": "back and forth step",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "6edda779-773c-4dbc-9eff-9224f96ea275",
+      "name": "back extension on exercise ball",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f66a6c36-314d-443a-9468-384f3c72a75c",
+      "name": "backward jump",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "4ea67c5f-0629-40a6-81b7-cc020d73e58e",
+      "name": "balance board",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7713326d-18bc-4f59-ae8b-b68fd193401f",
+      "name": "ball slams",
+      "category": "full body",
+      "equipment": "weighted",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "af6c9027-faee-47ee-b8c9-d11462ae17d1",
+      "name": "band assisted pull-up",
+      "category": "back",
+      "equipment": "band",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "ae50f351-f4f0-4026-930f-5e9de7ed7843",
+      "name": "band bench press",
+      "category": "chest",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6f622452-41bf-4e01-9021-4f8388db6069",
+      "name": "band one arm single leg split squat",
+      "category": "upper legs",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c99e142c-dae1-40df-aa10-f012a881e517",
+      "name": "band shrug",
+      "category": "back",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "30919a1f-c1ac-4262-be34-795622bc769b",
+      "name": "band single leg split squat",
+      "category": "upper legs",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8807a42a-82bf-43cb-b36f-f8ba27efcd6c",
+      "name": "band squat row",
+      "category": "upper legs",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "09d1289b-9bf2-4168-8a31-45b47b7fdf11",
+      "name": "band straight leg deadlift",
+      "category": "back",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d757e227-f836-4022-ad40-199621f01d3f",
+      "name": "band twisting overhead press",
+      "category": "shoulders",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "217cd571-9f41-4b77-9f80-332697d2953f",
+      "name": "barbell alternate biceps curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5b867e65-f3ea-45b6-9e90-07f7d43fd1f3",
+      "name": "barbell bench front squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2b0eb6fb-f038-4b1d-ba8e-4df7be9a17d6",
+      "name": "barbell bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "59f4e819-dbad-459e-9f19-2ce9c3464acb",
+      "name": "barbell bench squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cbdfb352-58b4-48de-8e41-11c9c31b3a47",
+      "name": "barbell bent arm pullover",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9538a71e-07a2-4cf5-a0bc-501521b9774d",
+      "name": "barbell bent over row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "49ad2eaf-e342-453d-a941-e4b449bfe5b9",
+      "name": "barbell clean and press",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ad851b32-8982-42b7-9f2a-7138362ae956",
+      "name": "barbell clean-grip front squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9e132ac0-e3f7-445f-8adc-8bde7e27e466",
+      "name": "barbell close-grip bench press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a06cfe54-a22a-4c52-9783-5dd3a26659f9",
+      "name": "barbell curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c06ec08c-4533-4246-8ac9-5313895d0c28",
+      "name": "barbell deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dd54b095-f754-4935-9cd1-faebc712a6cd",
+      "name": "barbell decline bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cd68d02a-521c-45bd-ba36-899f9516996c",
+      "name": "barbell decline bent arm pullover",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "be399c4b-6586-48fa-b652-50637e16abfb",
+      "name": "barbell decline pullover",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cd7d5911-ed42-40af-8d24-89cc38ecf350",
+      "name": "barbell decline wide-grip press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2d1c99d4-be4c-4495-a7d0-a6f04952a87e",
+      "name": "barbell decline wide-grip pullover",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "51e53e3f-bc1c-443d-a107-5e2fbddb2f83",
+      "name": "barbell drag curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ac16502a-108a-4af2-b38c-ea8ffafdc343",
+      "name": "barbell floor calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "303841c0-12f2-4729-86cf-1f880115c45f",
+      "name": "barbell front chest squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "921b9fb5-7e1d-4603-b733-1c0dcc9ba159",
+      "name": "barbell front raise",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7d82fc62-c87d-4649-9f82-2c8c1dc0e6f9",
+      "name": "barbell front raise and pullover",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ce90978c-bd88-46b7-aeae-70d9519d92e6",
+      "name": "barbell front squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9ee55b44-aade-4186-ab3b-3a16713bc548",
+      "name": "barbell full squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6d39eb20-b4f9-4a41-8dff-3b59d6d68725",
+      "name": "barbell full squat (back pov)",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d84c76cf-3a1f-402a-8089-4301e6e62e46",
+      "name": "barbell full squat (side pov)",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "72fe108d-2e33-4d92-8136-9833c2fe75f3",
+      "name": "barbell full zercher squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "09d6f7ea-beea-4c28-98c1-6a6da546b933",
+      "name": "barbell good morning",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "99ed4f72-fc94-4f42-9047-1278d86d86e6",
+      "name": "barbell guillotine bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "223975bb-353f-4bdd-942f-d2c263e88d4a",
+      "name": "barbell hack squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5d4757b7-0cca-432c-90b7-7ff305a702e6",
+      "name": "barbell high bar squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8dec0625-0899-40af-8a75-7b159104a176",
+      "name": "barbell incline bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "205e319e-b97c-4fe4-a137-45e8e42044cb",
+      "name": "barbell incline close grip bench press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "238725c1-d10e-4486-a375-f2acdfbe6ed4",
+      "name": "barbell incline reverse-grip press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "abdfbcea-1be8-4397-95b9-32acb7e90b46",
+      "name": "barbell incline row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "56e5390b-22da-47cd-9c38-a7e398a050e9",
+      "name": "barbell incline shoulder raise",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "17556155-bda0-4a1d-9f9d-a41617e7c5f7",
+      "name": "barbell jefferson squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ae67d1c2-63cf-430a-a922-c757d1dc7582",
+      "name": "barbell jm bench press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d0871377-1046-48a0-aff5-ee2c464f4ce1",
+      "name": "barbell jump squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "53580006-5aab-4993-a980-52783a4f79be",
+      "name": "barbell lateral lunge",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "812e0e18-03e8-49b5-8708-32d2164751ca",
+      "name": "barbell low bar squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ff50ef69-c5ac-4909-8491-612f64bd161e",
+      "name": "barbell lunge",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cee0123e-1ec7-48a0-b4a6-1c8f905e9922",
+      "name": "barbell lying close-grip press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "770eaf26-0eea-4fc8-a065-29b0e6e542e9",
+      "name": "barbell lying extension",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5fa4d2f1-3aac-4f4b-b20e-d3f5e466d53a",
+      "name": "barbell lying preacher curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1087f9d1-d7d9-45fb-906e-c9e0d2228166",
+      "name": "barbell narrow stance squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1ad893b3-5213-4e98-a259-8774aa5a22f2",
+      "name": "barbell one arm bent over row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3e882567-3408-481f-84cf-fe9c6ce7579b",
+      "name": "barbell one arm side deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5835a495-0cad-4b9d-b871-b4fb2172e795",
+      "name": "barbell one leg squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8d05ec90-95a6-4166-a8ee-73642e8aa01f",
+      "name": "barbell overhead squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b960b951-8695-451e-be0c-58184f98164e",
+      "name": "barbell palms down wrist curl over a bench",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "88154744-e25d-489f-a16b-7f4966d4e715",
+      "name": "barbell palms up wrist curl over a bench",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f6215f42-21d2-4504-9d45-1401cf3c20a2",
+      "name": "barbell pendlay row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cdcacf6d-af2b-45b9-8363-150fc073f754",
+      "name": "barbell preacher curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4d091826-9504-47c7-85ce-72b28c16d86a",
+      "name": "barbell prone incline curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8ce0e0b3-bf08-4eb7-ad23-e6c3f78e11b1",
+      "name": "barbell pullover",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dbda8b6d-88b7-440e-a72b-99a4357356e4",
+      "name": "barbell pullover to press",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "784913e3-f6e3-44c0-b9dc-c9b9f3b5126d",
+      "name": "barbell rear delt raise",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "97196d0d-7574-43db-bb0b-94fa3c8769fc",
+      "name": "barbell rear delt row",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b39a4cd5-4392-4340-83e6-d951020a5970",
+      "name": "barbell rear lunge",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f58a5a33-30ef-4755-a5c3-e903b3b7473f",
+      "name": "barbell reverse close-grip bench press",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "00bccf52-29cf-4f72-8c73-860f21555567",
+      "name": "barbell reverse curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "77b9c89b-1e38-468c-b412-02a65e458e30",
+      "name": "barbell reverse grip bent over row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a7827c14-6359-4ebf-9a83-0d4405f0f839",
+      "name": "barbell reverse grip decline bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "53b9d425-9d6e-4e8b-a733-023704927828",
+      "name": "barbell reverse grip incline bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d152f697-98e3-4c2e-850e-3f597b8de072",
+      "name": "barbell reverse grip incline bench row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7b028019-e22b-4aab-91c9-f7a8102bde74",
+      "name": "barbell reverse preacher curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "534b5827-a554-4cf4-b52b-f26644b60f07",
+      "name": "barbell reverse wrist curl",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "456d9a22-d318-40d5-8b46-868e9913d235",
+      "name": "barbell romanian deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dcc98659-78b4-4bc8-bb51-e2d2561206d6",
+      "name": "barbell seated behind head military press",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bce81249-3a26-43c4-9cd1-4b455fbeb345",
+      "name": "barbell seated calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "39dba5da-b6b4-4c96-91a0-3795d137bd4f",
+      "name": "barbell seated calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "38e35308-6281-4510-960d-8c69a464035a",
+      "name": "barbell seated overhead press",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e680e2de-1648-4143-8688-964b817159d8",
+      "name": "barbell shrug",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "38694dd3-7649-4311-9ebe-d589b3a25c64",
+      "name": "barbell side split squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "187c4fb6-0465-4653-b9b0-9329da0de6f5",
+      "name": "barbell side split squat v. 2",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b2e85eea-ede8-4b2d-b40b-7c17690b3031",
+      "name": "barbell single leg deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "de406b92-2cac-4a8a-9288-420e37891eb6",
+      "name": "barbell single leg split squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "fa9b7861-aad3-4630-ab82-4eb843be93a7",
+      "name": "barbell speed squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2a136c20-6367-44fc-9177-ea718fd66694",
+      "name": "barbell split squat v. 2",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d6f06b43-e840-4c82-9f65-9805d27167c9",
+      "name": "barbell squat (on knees)",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "30238275-0e60-4eb8-9a87-5328b82589d6",
+      "name": "barbell squat jump step rear lunge",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b4756129-12e5-4748-bb56-ae03f0127845",
+      "name": "barbell standing back wrist curl",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "09712751-eab9-4cb1-bde4-74821bd94c9f",
+      "name": "barbell standing bradford press",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3a3cb55b-118b-4340-8b3c-3c003fa94b45",
+      "name": "barbell standing calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d54aa39c-4495-462d-91c4-5189ece472fd",
+      "name": "barbell standing concentration curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "91423918-3b5f-49fe-8398-fe5cd6610970",
+      "name": "barbell standing leg calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "44dd1632-6fef-4072-b428-67e6d62079aa",
+      "name": "barbell standing rocking leg calf raise",
+      "category": "lower legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "15594242-bf3c-4eec-ac4d-7f30c0cd8d60",
+      "name": "barbell standing wide-grip curl",
+      "category": "upper arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "60e627ac-d7de-4fba-adc6-c3150b4e928f",
+      "name": "barbell straight leg deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "780f3b77-6f27-4600-b302-6a746352ef7d",
+      "name": "barbell sumo deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9d3735ac-dfb1-45ce-aca2-ea7ef0f69afc",
+      "name": "barbell upright row",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "05fe0cfa-71e6-4d03-b0ff-c2b2f7402a6a",
+      "name": "barbell wide bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8658c72b-7cc1-4e89-9571-27cd11545745",
+      "name": "barbell wide reverse grip bench press",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e97837a8-c3b6-455a-a9bd-d57bd6b7590b",
+      "name": "barbell wide squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2ddaf3be-803b-4e30-8d6d-40b13eb36ebe",
+      "name": "barbell wide-grip upright row",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3810b72c-0895-402b-b153-8bd7d6cbc0a1",
+      "name": "barbell wrist curl",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "fd7ed7d1-5682-496c-8283-712594a4df37",
+      "name": "barbell zercher squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "90ba0f83-063e-4e0e-9787-b436a5b6d3c6",
+      "name": "battle ropes",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "e7c9bf82-4187-440e-9179-61b58d85626a",
+      "name": "bear crawl",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "8ece21cc-9eaa-4a2a-af73-e50a02fb6538",
+      "name": "bench dip (knees bent)",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "8c883e00-595a-4193-a4d7-9de1b5e84d14",
+      "name": "bench dip on floor",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "a390c3b5-145b-4651-8280-0c60b79c9c17",
+      "name": "bench pull-ups",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d8a3ccc7-e6b4-4b14-bc7c-b9a7c77073ae",
+      "name": "biceps narrow pull-ups",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "859f4709-91f0-41ec-a059-a673bd47ddd4",
+      "name": "biceps pull-up",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b95a9f2b-18ec-418b-92d2-39b71e8a3096",
+      "name": "bodyweight drop jump squat",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "f6872212-5966-4714-be99-0d80d3a9d5a5",
+      "name": "bodyweight incline side plank",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "eb2db474-46f9-47fa-bde7-cbcbd1173602",
+      "name": "bodyweight squatting row",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "43c27c63-59cb-463c-bf6f-4cf1b4bf9a51",
+      "name": "bodyweight standing calf raise",
+      "category": "lower legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bec6de0c-de43-4896-b389-f84e696ffa99",
+      "name": "bodyweight standing close-grip row",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8b7277c2-9ed5-4577-ba13-4e76be5b568c",
+      "name": "bodyweight standing row",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3aaae27f-1f80-4d6f-a36e-ece2171c0e10",
+      "name": "box jump",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "b092e90a-c48c-484f-a8da-08e797f7b2ac",
+      "name": "bulgarian split squat",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "586bbf42-1a51-4262-8cb2-f26e691af17f",
+      "name": "burpee",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "8fc01d04-4997-4a6f-abfb-e6d4c311f57e",
+      "name": "butterfly yoga pose",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "928da5df-e240-419b-a53c-8272821419ab",
+      "name": "cable assisted inverse leg curl",
+      "category": "upper legs",
+      "equipment": "cable",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "0f6f3384-4714-473d-a8b6-2b4ad41445a7",
+      "name": "cable bar lateral pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bd068632-a439-4a50-b074-38da15b55fc1",
+      "name": "cable bench press",
+      "category": "chest",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3badc97c-92f1-40f9-85ed-58ea4d24d903",
+      "name": "cable cross-over lateral pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5204b38b-4f72-4e5b-932b-73484f7bed31",
+      "name": "cable crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d966091d-547d-421d-a2c6-876f6de88cac",
+      "name": "cable deadlift",
+      "category": "upper legs",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9f8f3ddf-51b3-417c-abc2-03e34cbec695",
+      "name": "cable decline fly",
+      "category": "chest",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2987b16c-ac3b-4fd5-bffa-2fb1329b04a1",
+      "name": "cable fly",
+      "category": "chest",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bb2dd24e-8d68-49f5-9ca2-cbd48465a59d",
+      "name": "cable hip adduction",
+      "category": "upper legs",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8d6a5f07-44bc-4de8-8d65-e65491c7f5c2",
+      "name": "cable incline bench press",
+      "category": "chest",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "00ca8296-e5ef-4385-9988-634bc5694fe8",
+      "name": "cable incline bench row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1c4c1889-0e61-43c9-bccb-bd207fa5bb1c",
+      "name": "cable incline pushdown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f393269c-0d04-4fd7-9f8a-bdb2309b8838",
+      "name": "cable kickback",
+      "category": "upper legs",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4a19fb7c-f663-41f6-9bca-355367fceb2c",
+      "name": "cable low seated row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c0c96921-839e-4dce-809b-6066180151bc",
+      "name": "cable one arm pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ce4b0395-eaad-4821-a4f2-48357eb9990a",
+      "name": "cable palm rotational row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "63f7cab9-8c17-42dd-b6c3-102df9ef44b8",
+      "name": "cable pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0e9dba39-d3bb-4814-b3ad-d25ec1c63090",
+      "name": "cable rear pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6b6110da-c18c-4021-8bf1-0ac7bc59d5c1",
+      "name": "cable reverse crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "fb4a4f6f-2d63-4298-b648-420c99023fd1",
+      "name": "cable reverse wrist curl",
+      "category": "lower arms",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f177b96e-2ad5-4fb0-b577-cac28a18d1dc",
+      "name": "cable rope seated row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "502666bb-cd62-4da7-9201-cba438e3c6e3",
+      "name": "cable seated crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "802d7191-fce4-44bb-9732-18d18c0b8988",
+      "name": "cable seated row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "97bac6cf-f015-4c38-ad73-083ccb5c3c69",
+      "name": "cable seated wide-grip row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e362b57b-fe40-4d39-b061-6b3c0d3c31a9",
+      "name": "cable shrug",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "da5f462c-a2ad-445c-a73f-6f09e7e21d1d",
+      "name": "cable side crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "628aa6c7-67c1-4c78-b794-df79f453c793",
+      "name": "cable squat row (with rope attachment)",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e0b3fafc-dad9-4d4a-a5a2-5e426843c79e",
+      "name": "cable squatting curl",
+      "category": "upper arms",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7acfa11e-5d42-421c-8247-9be3b28626f8",
+      "name": "cable standing calf raise",
+      "category": "lower legs",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2f4f5129-ada9-4c00-a552-130ae2afa64b",
+      "name": "cable standing crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2cd90c5e-476e-4e4f-841d-ae94aadc28c9",
+      "name": "cable standing one leg calf raise",
+      "category": "lower legs",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "46cead7a-2331-45fc-996f-db4fde142e79",
+      "name": "cable standing row (v-bar)",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8be1f8b5-3e9b-4f97-a9da-0b05915980aa",
+      "name": "cable straight arm pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "af3a12f6-e1c1-419d-ab7d-1b8f7f3e3298",
+      "name": "cable thibaudeau kayak row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "498e76f3-32ac-447b-ae01-a0ee70601050",
+      "name": "cable tuck reverse crunch",
+      "category": "waist",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "61f9e9e9-3473-4cc2-83f2-30dfc982b210",
+      "name": "cable twisting pull",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c1370f34-5188-427b-a917-075b1867d4f6",
+      "name": "cable underhand pulldown",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "caf0bdf8-df7e-4fd7-9bc6-c80b71a37e7e",
+      "name": "cable upper row",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6418c13f-70f3-4f13-af53-c24ec1ed83ac",
+      "name": "cable wrist curl",
+      "category": "lower arms",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9b70b9e2-b856-4ecf-a140-9f576bdceda3",
+      "name": "cambered bar lying row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3f021d8d-ea4f-4d04-90fa-2e56399a7f40",
+      "name": "chair leg extended stretch",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "f53fe384-0cc4-4254-9db0-f2ba90932731",
+      "name": "chest dip",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "243b9621-bfca-4b11-b221-9eb4ad8db98f",
+      "name": "chest dip (on dip-pull-up cage)",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "c3e311c7-d9f0-4850-9f01-376c037a7684",
+      "name": "chest dip on straight bar",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "a305025b-06ef-45c5-ba8c-46772f80cb51",
+      "name": "chest press machine",
+      "category": "chest",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4a941c21-2025-4f55-b98f-7381cde54593",
+      "name": "chin-up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "89f1abbe-b338-452f-982b-9f4ab06db024",
+      "name": "chin-ups (narrow parallel grip)",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8068607f-d7ad-4e1f-924f-d788b8f42ad1",
+      "name": "clean and jerk",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "91e73183-a7a5-4626-8fed-22ddf7757966",
+      "name": "clean barbell",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c19d0c61-2e3e-4ae9-b1a0-4714da4f06a8",
+      "name": "climbing",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "b3e9873c-a2fb-4024-b7af-85f76b38307d",
+      "name": "close grip chin-up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a9a6f764-6978-4d52-8489-d5de70cf85a3",
+      "name": "cross body crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "3b3202dc-2b11-467b-9493-738890727f96",
+      "name": "crunch (hands overhead)",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "28b531fb-de75-4d6d-877c-42a3fa951169",
+      "name": "crunch floor",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "b5fcdf74-e4e1-42e5-a152-941adf8739aa",
+      "name": "curtsey squat",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "856aa69b-dd3c-43d0-baf7-01f8f58bfc70",
+      "name": "cycle cross trainer",
+      "category": "cardio",
+      "equipment": "leverage machine",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "cb606a14-a684-4433-ba83-c26cb72e863c",
+      "name": "cycling",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "3a6639e1-afba-4eba-8504-ba012045663e",
+      "name": "cycling indoor",
+      "category": "cardio",
+      "equipment": "machine",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "aa7d0c07-7c7b-47e9-bee0-4565ae30453b",
+      "name": "decline crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "48b4c378-7401-4026-9505-895a8aad7d16",
+      "name": "deep push up",
+      "category": "chest",
+      "equipment": "dumbbell (used as handles for deeper range)",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ab53c0dc-ce26-46a7-8cda-fff692a550de",
+      "name": "deficit deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f69312b3-5222-42fc-b38f-837f1d364022",
+      "name": "donkey calf raise",
+      "category": "lower legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "07448aa1-a9ca-4ede-a847-060dc58e5c41",
+      "name": "dumbbell alternate side press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c5c699c7-01c9-4809-9898-1b7c769b9e2c",
+      "name": "dumbbell arnold press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d008bde6-1fed-45ac-bd69-c82f72464708",
+      "name": "dumbbell around pullover",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e4823bb4-6d21-44ff-94b8-256f158ea68f",
+      "name": "dumbbell bench press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a56ba147-c2e9-4a66-bcc7-1bde6eee1788",
+      "name": "dumbbell bench seated press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b7c76f56-e75d-471b-bfd2-bd64f5d7ea11",
+      "name": "dumbbell bench squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a8828b5a-656a-4e28-b481-9254aae51b5a",
+      "name": "dumbbell bent over row",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b6f9cf30-5975-4d7a-a5ac-f96190ed54e7",
+      "name": "dumbbell bicep curl lunge with bowling motion",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bed4862f-17d8-43c2-b93c-eec4848903cb",
+      "name": "dumbbell biceps curl squat",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1cfea776-c464-418a-84dd-c68bf0c2f35b",
+      "name": "dumbbell burpee",
+      "category": "cardio",
+      "equipment": "dumbbell",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "b04dc7aa-768e-4359-8935-594227c7e861",
+      "name": "dumbbell contralateral forward lunge",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1063d786-4ce0-4a4a-8f07-281e9d0a105f",
+      "name": "dumbbell cuban press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "fdb818e2-93bb-409d-90ed-086acc437684",
+      "name": "dumbbell deadlift",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "16438b85-6569-44c8-af1a-956062272e9b",
+      "name": "dumbbell decline bench press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "86184201-87ec-4719-b4fb-dd8de8d38d74",
+      "name": "dumbbell decline fly",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "44684300-25d7-428b-9f2f-88bddcfc3eef",
+      "name": "dumbbell decline hammer press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e745c2de-b835-4c9f-bb64-ee0db9cead87",
+      "name": "dumbbell decline shrug",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "09f9cedf-3a20-46d9-b282-51c5c12ffee0",
+      "name": "dumbbell decline shrug v. 2",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "edc7895b-d9b0-4065-92d9-919a21a8b9a9",
+      "name": "dumbbell decline twist fly",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "777ac820-6914-4ed0-a205-70a4a9459025",
+      "name": "dumbbell finger curls",
+      "category": "lower arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "76d214db-b557-41f1-8e02-075cdc5a2c89",
+      "name": "dumbbell fly",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f10450d7-c7f7-4dba-aa90-4f2805c0be85",
+      "name": "dumbbell forward lunge triceps extension",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b99618eb-7d1d-402f-ba2d-8d4c7d46b2ec",
+      "name": "dumbbell front raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "66229d1e-97d0-4711-b8bf-11cde2d9dfbe",
+      "name": "dumbbell goblet squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9adffacf-c70d-48c3-9dc0-090fd420b22c",
+      "name": "dumbbell incline alternate press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e3222289-ca72-4c14-b656-4d14b3558f41",
+      "name": "dumbbell incline bench press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9a30dd7e-01c6-4230-83d6-e53d79ea05dd",
+      "name": "dumbbell incline fly",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9543cf61-696c-4967-8cc6-0fe1b75d4b74",
+      "name": "dumbbell incline hammer press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "949ab2ee-6d97-4c16-a148-cb2031f9bd39",
+      "name": "dumbbell incline palm-in press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2f7c5c4f-c331-4ebb-9039-217e6384b1a7",
+      "name": "dumbbell incline raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "83a97699-c0ff-4d38-b2c3-76a894712999",
+      "name": "dumbbell incline row",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "de4a0dcb-d303-4287-8c66-95888b8022fa",
+      "name": "dumbbell incline shoulder raise",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "288f49fd-5056-41c9-b6d3-f41f46ccaf48",
+      "name": "dumbbell incline shrug",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "219a75de-72dc-44cf-91f1-21c292ab98c3",
+      "name": "dumbbell incline t-raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "070bbf94-5896-4816-837c-c7e1b27a7585",
+      "name": "dumbbell incline twisted flyes",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4bb4db65-1862-411c-972a-48cf05ffa3fd",
+      "name": "dumbbell incline y-raise",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "61214fa6-1dc6-494e-9b42-2ede63f038f0",
+      "name": "dumbbell lateral raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bb2ab3c4-377b-4230-9b13-71af653e7ee5",
+      "name": "dumbbell lunge",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a9c69c6d-87c2-43f8-9e03-aac23091085e",
+      "name": "dumbbell lunge with bicep curl",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c54e7519-6a52-417b-af48-a9512968ff36",
+      "name": "dumbbell lying femoral",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "84603b4d-e272-4310-92ce-0bb5caf48874",
+      "name": "dumbbell lying hammer press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "683fdd9d-f8d0-4351-b0e3-b89f0da6d9ab",
+      "name": "dumbbell neutral grip bench press",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e1c1a1ce-4bbe-4e6a-8dae-53f819cf05e5",
+      "name": "dumbbell palms in incline bench press",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f24abc3e-bc0e-481f-a82c-951474afa227",
+      "name": "dumbbell plyo squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5bfe9da5-cf87-43ce-b5c5-75b87029baab",
+      "name": "dumbbell pullover",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6d99e847-3c2f-4330-8170-c2822ea74487",
+      "name": "dumbbell push press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b7e70da7-25c6-4d5c-80f1-2591b78b0b54",
+      "name": "dumbbell raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2880e2ac-1c88-4df9-a612-625af2bc799b",
+      "name": "dumbbell rear delt raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6b6e37a5-a47c-4327-b530-bd7216a5f2a5",
+      "name": "dumbbell rear fly",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0476c4fe-7b74-4497-9f0e-0a1491ca410f",
+      "name": "dumbbell rear lateral raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "de3713f6-84ea-449f-8191-746da3cc4649",
+      "name": "dumbbell rear lunge",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "131bacff-0439-4a7e-bac6-cd078ee29e0f",
+      "name": "dumbbell reverse bench press",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4483a5e9-29b0-4beb-8ca5-ecd66c98e5be",
+      "name": "dumbbell reverse fly",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "82110d9f-0c0f-46a7-98e8-daf8063030c6",
+      "name": "dumbbell reverse wrist curl",
+      "category": "lower arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9a9b3977-5e2f-4c29-902e-71de97065f02",
+      "name": "dumbbell romanian deadlift",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ae39c73e-4ebd-4ebc-b22a-ef96b192a032",
+      "name": "dumbbell rotation reverse fly",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "371a805e-4c74-4eb9-9cc5-ea2784c7d115",
+      "name": "dumbbell scott press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1fce1ac4-1968-45d3-a3b2-01ce3d7f67ab",
+      "name": "dumbbell seated alternate press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d53e1c98-ac9b-419c-9867-081dbbee2da9",
+      "name": "dumbbell seated calf raise",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8bf62edb-71b8-42a1-bc59-22cae256b707",
+      "name": "dumbbell seated front raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "238d5721-d924-4358-8161-928cc729fa66",
+      "name": "dumbbell seated lateral raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8c93307f-43b0-4eed-bdb6-dbc4a1382bf2",
+      "name": "dumbbell seated one leg calf raise",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e134f1e5-5570-4d60-9606-177bf99117b9",
+      "name": "dumbbell seated one leg calf raise - hammer grip",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "93cdadc3-d8e5-421d-9ba1-9f00992f6483",
+      "name": "dumbbell seated one leg calf raise - palm up",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0b6ab2aa-72a4-4268-9b84-27fbdae98a7e",
+      "name": "dumbbell seated shoulder press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "49a79ac1-2224-43ac-84b3-e7e5df86d87b",
+      "name": "dumbbell shrug",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ff8130f5-e2f1-46f8-a474-5b0e87cc7758",
+      "name": "dumbbell side plank with rear fly",
+      "category": "back",
+      "equipment": "dumbbell",
+      "measurement_type": "time"
+    },
+    {
+      "id": "bacef3b1-5485-4683-8d51-4190934003ed",
+      "name": "dumbbell single leg calf raise",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d560c079-68bf-4c53-9029-d0eb66d22350",
+      "name": "dumbbell single leg deadlift",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "92eb66ea-9c12-4b49-a187-9d718fb45e36",
+      "name": "dumbbell single leg split squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "38a15c71-d73e-486e-8ebe-07cdcd4e048d",
+      "name": "dumbbell single leg squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dc4593b2-5d35-4c4b-ad41-82852aa84948",
+      "name": "dumbbell squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3b82d86f-73d7-43c9-85c4-a2a5fa39a0dc",
+      "name": "dumbbell standing alternate overhead press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e855481d-2e2e-475e-b12b-2cbbd189af07",
+      "name": "dumbbell standing alternate raise",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ee949959-2e6a-48f5-8db1-de58b91ebe74",
+      "name": "dumbbell standing calf raise",
+      "category": "lower legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0423d48d-3f68-4fb0-bc5a-00ff80e06203",
+      "name": "dumbbell standing overhead press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "79c2ec83-b51a-416b-a4c4-cf2da1ec2662",
+      "name": "dumbbell step-up lunge",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "f8de3a90-3a89-46e5-8703-8dcfd0a3f950",
+      "name": "dumbbell step-up split squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a8111933-c69c-439f-8351-1b5913a7c882",
+      "name": "dumbbell stiff leg deadlift",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e50a7618-52b2-46e1-ab23-b834dcd568ed",
+      "name": "dumbbell straight arm pullover",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "152ecc75-6cf0-4ea6-b945-a7e4faf5b108",
+      "name": "dumbbell straight leg deadlift",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7b31f357-69e2-44f6-bcb5-5c43a830f9f8",
+      "name": "dumbbell supported squat",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7b2cbb30-0df3-4334-af67-750fce028b22",
+      "name": "dumbbell twisting bench press",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "be9218a6-f364-4e8d-b70e-c2f8d8fac685",
+      "name": "dumbbell upright row",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ab9047aa-061e-47df-b71c-6e1ad5d26573",
+      "name": "dumbbell w-press",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "82a69625-971d-4e7b-a26c-c04e1ebf7180",
+      "name": "elbow dips",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "b01838b8-8785-457a-a470-1dc594aa7685",
+      "name": "elliptical machine",
+      "category": "cardio",
+      "equipment": "machine",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "342037be-2fbb-40a5-8dc1-1665eea37e59",
+      "name": "exercise ball back extension with arms extended",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "28bee6b8-95da-4e1f-95c9-dd71bc4909c9",
+      "name": "exercise ball back extension with hands behind head",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "55a13df9-4cff-446c-9b8a-c7de2ebb7371",
+      "name": "exercise ball back extension with knees off ground",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "572883b4-9ddf-4ee0-90da-51fa60cba8dc",
+      "name": "exercise ball back extension with rotation",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0d27f05c-8edd-408a-8c13-7f1997e637ed",
+      "name": "exercise ball dip",
+      "category": "upper arms",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "228571ed-f178-4d4e-afbc-a696f6e90745",
+      "name": "exercise ball prone leg raise",
+      "category": "back",
+      "equipment": "stability ball",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "64c23694-f5e4-4567-b14b-d90f883717ef",
+      "name": "exercise ball seated hamstring stretch",
+      "category": "upper legs",
+      "equipment": "stability ball",
+      "measurement_type": "time"
+    },
+    {
+      "id": "1c2efb44-6386-4f2c-91fd-cfde19cff867",
+      "name": "ez bar lying bent arms pullover",
+      "category": "back",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "99f649b3-c1be-40b2-a8c9-3bab110666d3",
+      "name": "ez barbell close-grip curl",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3b0e9e15-996e-4ccd-b369-605140594683",
+      "name": "ez barbell curl",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dd045edb-26c9-4296-b97e-700130ed9754",
+      "name": "ez barbell jm bench press",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d367c45e-07c5-42d4-821d-92f00cfc01f2",
+      "name": "ez barbell seated curls",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "11816808-a59d-4470-9dbd-2d218781fea9",
+      "name": "ez barbell spider curl",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "544b3573-ed18-4860-ba92-ec7c5255864f",
+      "name": "ez-bar close-grip bench press",
+      "category": "upper arms",
+      "equipment": "ez barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8ec6c269-89f5-45ef-a32b-cf9a85bb45f4",
+      "name": "face pull",
+      "category": "shoulders",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "194b9e26-af8d-4f55-a72c-22c9bba9c4e9",
+      "name": "farmers walk",
+      "category": "upper legs",
+      "equipment": "dumbbell",
+      "measurement_type": "time_weight"
+    },
+    {
+      "id": "8bb8eefc-0ff8-4661-9222-e4594a75e0d4",
+      "name": "finger curls",
+      "category": "lower arms",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e68f53bf-3490-49ca-a428-2874e7e61a18",
+      "name": "floor fly (with barbell)",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e68c40b3-94d2-4142-87c7-a129877416e1",
+      "name": "floor press barbell",
+      "category": "chest",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bce9d46c-5fff-419a-87d1-21f54b9ad692",
+      "name": "forward jump",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "9472bc8e-54d1-4667-83dc-72611fdfb74f",
+      "name": "frankenstein squat",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "db896e50-9d17-4a5f-9c64-ba130ef9bae9",
+      "name": "frog crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "ab47546c-79e9-4b11-94c8-24a1f1447745",
+      "name": "front lever reps",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3b9af854-bf44-422e-a3b8-200291dfc913",
+      "name": "front plank with twist",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "9ce161af-d391-4a17-9f48-c10686910c2b",
+      "name": "glute kickback machine",
+      "category": "upper legs",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ee43632c-4a38-44da-8756-0af4d8f01271",
+      "name": "glute-ham raise",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4b12d0ed-ff67-46fd-8ee0-a152f68a943b",
+      "name": "groin crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "da93049f-d85f-4d61-b093-3479ce75a3bc",
+      "name": "hack calf raise",
+      "category": "lower legs",
+      "equipment": "sled machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "13c34d5f-6cf0-4bb8-81a3-d3cad94e8f14",
+      "name": "half knee bends (male)",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "27f1ddbb-bc59-4d4f-bf40-30b8b5193082",
+      "name": "hammer curl band",
+      "category": "upper arms",
+      "equipment": "band",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "565139de-a8a1-47b2-9bbf-122385a18bff",
+      "name": "hammer curl cable",
+      "category": "upper arms",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e8bf35be-ab80-435a-a810-3d4c83dca824",
+      "name": "hammer curl dumbbell",
+      "category": "upper arms",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7284e525-b186-421d-9271-6d7a71c0c1c4",
+      "name": "hamstring stretch",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "0feb134c-b1c9-4a77-b640-cdffeecfb118",
+      "name": "hand gripper",
+      "category": "lower arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "71d0cf3d-c651-49f5-97e7-78141ac1d813",
+      "name": "handstand push up",
+      "category": "shoulders",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "55a04f45-6741-4900-9661-459043ac9c2b",
+      "name": "hang clean",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5cb6aa64-dcd9-401c-b121-376e28dbf289",
+      "name": "hang snatch",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "138d0530-3603-48bb-99c5-e5d49277d1f6",
+      "name": "high knee against wall",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "97e4a943-ae9c-43f1-8e9f-bddb2ea1c088",
+      "name": "hiking",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "56eacddd-fce1-498f-8faa-c8f07b034c4f",
+      "name": "hip abductor machine",
+      "category": "upper legs",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6fe3058a-470b-4b48-8b2b-027454cc9e35",
+      "name": "hip adductor machine",
+      "category": "upper legs",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e657d21d-5766-4c8c-8771-add63b26fdf9",
+      "name": "hip thrust",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0f01320d-7c3d-43e5-b042-0bda184d315e",
+      "name": "hip thrust bodyweight",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "68532225-499f-45c7-8b8f-dfdefb0bb818",
+      "name": "hyght dumbbell fly",
+      "category": "chest",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "137b0025-de5e-4178-abc0-323f1643788e",
+      "name": "hyperextension",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e09739cb-3b6e-4fca-9fef-62bacab80601",
+      "name": "hyperextension (on bench)",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8ada58c2-f509-42aa-b57a-e7850d90f9e7",
+      "name": "impossible dips",
+      "category": "upper arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "bfe4bf3f-8031-4897-9f87-5781777b096c",
+      "name": "incline scapula push up",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "95985af5-dc04-4d71-a329-3eedaa3ab56a",
+      "name": "intermediate hip flexor and quad stretch",
+      "category": "upper legs",
+      "equipment": "rope",
+      "measurement_type": "time"
+    },
+    {
+      "id": "3b348243-7cd7-4c3b-b0bd-83f91050e84f",
+      "name": "inverse leg curl (bench support)",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4b1aed9d-7091-4c1e-a516-131112393fc1",
+      "name": "inverse leg curl (on pull-up cable machine)",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7913bf10-6e44-459c-a539-47204b47bb1d",
+      "name": "inverted row",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4dadbad2-6e13-41b0-b8ab-7b240f6d3e69",
+      "name": "inverted row bent knees",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4f25d478-3956-49f4-8fcc-c440678799d3",
+      "name": "inverted row on bench",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e6ded03d-f766-49d9-9a04-cd72e14b5e27",
+      "name": "inverted row with straps",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "19de968d-2a21-4152-aaea-573e1b74b40c",
+      "name": "jack burpee",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "1b6ed88a-b521-470e-bb79-f586187abb43",
+      "name": "jack jump (male)",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "8a59691d-e878-4b8d-99b0-e5342767e72b",
+      "name": "jump rope",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "e21f7220-6e83-441c-8e4a-b3103e31bded",
+      "name": "kettlebell hang clean",
+      "category": "upper legs",
+      "equipment": "kettlebell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7d2de010-5a09-49f1-8253-d142c02aa81d",
+      "name": "kettlebell sumo high pull",
+      "category": "back",
+      "equipment": "kettlebell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "88c10f5b-4735-49c5-894a-bfdd32e9a958",
+      "name": "kettlebell swing",
+      "category": "full body",
+      "equipment": "kettlebell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "2c233faf-a3c2-4bdf-affa-c7417e4fa018",
+      "name": "kettlebell turkish get up",
+      "category": "full body",
+      "equipment": "kettlebell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "d41e6720-166b-47f8-9c68-f69ddf2a6504",
+      "name": "kick out sit",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "cd7905a2-aef8-478f-b544-9c018ff0890a",
+      "name": "kipping pull up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "c1382f20-14c4-44da-9d3d-b34685748a7e",
+      "name": "knee touch crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "fbce382f-bbdc-41b3-b2d3-7f23a138a4dc",
+      "name": "knees to elbows",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7d13b8a1-4744-405f-89fa-d3ff413d91dc",
+      "name": "korean dips",
+      "category": "chest",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "fa71af71-7659-4c22-9929-3b1297e3a332",
+      "name": "l-pull-up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dcff146a-92ec-473e-8053-3cf8231baa04",
+      "name": "landmine lateral raise",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "75ba71c8-140a-4d8a-89cf-989dca81446a",
+      "name": "lat pulldown cable",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ea460baa-43ce-4a12-8555-ddaa588fb9f5",
+      "name": "lat pulldown machine",
+      "category": "back",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a39a1cdb-c371-45e9-9627-13c5b77860a5",
+      "name": "lat pulldown underhand",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6cba099d-fd16-4640-a3cc-5ebafb92adb5",
+      "name": "lat pulldown wide grip",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "27ea51dc-14dd-4897-86b7-266be3e4a9c7",
+      "name": "leg extension machine",
+      "category": "upper legs",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5e26d998-0f2a-42a8-9933-3740c0753868",
+      "name": "leg up hamstring stretch",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "4c9cc873-4150-426f-8711-4a4f93c0067c",
+      "name": "lever alternate leg press",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c0687b17-8845-443c-92ee-56482b4f87e6",
+      "name": "lever assisted chin-up",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "assisted"
+    },
+    {
+      "id": "8df94312-feaf-4356-84d7-e536b3cd922a",
+      "name": "lever back extension",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "47c2fdd6-eab3-433d-82d4-a1321b991f89",
+      "name": "lever bent over row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "12189163-d3f1-492b-be1a-0f3896025e55",
+      "name": "lever donkey calf raise",
+      "category": "lower legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "45bdd910-9812-4d27-8e1f-80ee8abcb7f3",
+      "name": "lever front pulldown",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "62e94432-d415-48d1-9a65-32aa020e6aea",
+      "name": "lever gripless shrug",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "189257ce-4c5c-47e5-8d54-204fd208025f",
+      "name": "lever kneeling leg curl",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4b1b2076-b799-4bfd-a14d-430c1dd58ba9",
+      "name": "lever leg extension",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "453e47bf-d7fc-41b4-aad7-1e2b5220c015",
+      "name": "lever lying leg curl",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "0a034b4e-a5c8-46c7-b8ba-c38449ca1f36",
+      "name": "lever lying two-one leg curl",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "32e4cb96-ffdd-41cf-98fc-365519b9e780",
+      "name": "lever one arm bent over row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "3990209f-150e-41e0-a962-9d94ec336130",
+      "name": "lever overhand triceps dip",
+      "category": "upper arms",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "4023d453-dea7-4fd0-9b04-f53b79e0de84",
+      "name": "lever pullover",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "6e991c38-8b96-4637-9b62-a6f295b16216",
+      "name": "lever seated calf raise",
+      "category": "lower legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ecb726ae-cf85-4106-a6ea-f410adf881e7",
+      "name": "lever seated dip",
+      "category": "upper arms",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e28fb9fc-72f8-4cee-8408-9d70e6214192",
+      "name": "lever seated hip abduction",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "18ee671b-b219-4a3b-9caa-78fb7a17502a",
+      "name": "lever seated hip adduction",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e8976bbf-8217-4f79-9595-921468bceac1",
+      "name": "lever seated leg curl",
+      "category": "upper legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "863b900d-15e3-4f12-8991-8ee2bb987db5",
+      "name": "lever seated leg raise crunch",
+      "category": "waist",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b63136b7-627d-4d78-9107-1cd7a16d58a4",
+      "name": "lever shrug",
+      "category": "back",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "bd025764-cee1-435f-a324-7692d30f8c27",
+      "name": "lever standing calf raise",
+      "category": "lower legs",
+      "equipment": "leverage machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "ef1cc00f-59a5-4e64-afc3-de2467ca9d26",
+      "name": "lying leg curl machine",
+      "category": "upper legs",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8d4349ac-858e-4de7-b994-81d2f46a86d3",
+      "name": "mountain climber",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "6caa38c2-609d-4858-b06c-1369fd1f831d",
+      "name": "muscle up",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "1a2a27c0-d4e9-4660-aa0d-0dcfede41527",
+      "name": "oblique crunch",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "9cc36963-90c9-4924-80c3-60276ca742ce",
+      "name": "overhead press barbell",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "32f885f6-9cf1-45ac-bb7b-b950df281b0d",
+      "name": "overhead press cable",
+      "category": "shoulders",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7cec1f65-9dad-4899-96d9-91814127ed7f",
+      "name": "overhead press dumbbell",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "a45305f6-9943-48e7-81de-572e324698f7",
+      "name": "pec deck",
+      "category": "chest",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "fab85904-f7a1-49f2-a6bc-03d783ff4858",
+      "name": "pistol squat",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_only"
+    },
+    {
+      "id": "a10d404f-1594-46ad-a032-0caaa24c985a",
+      "name": "power clean",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5997cb52-75f1-4407-822d-d47edd9f9067",
+      "name": "press under",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "79b7d2ad-258f-44c1-9d0e-850d5e6ea31c",
+      "name": "rack pull",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "96aa4d35-7604-4852-aee2-786b3735acbe",
+      "name": "reverse fly cable",
+      "category": "shoulders",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "053115ca-dd00-438e-a653-a4a55c15fd97",
+      "name": "reverse fly dumbbell",
+      "category": "shoulders",
+      "equipment": "dumbbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "af06939f-5692-4e13-a231-7dd92d13b9a9",
+      "name": "reverse fly machine",
+      "category": "shoulders",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "aee5e108-e224-4c75-b616-1524d00c83e7",
+      "name": "rowing machine",
+      "category": "cardio",
+      "equipment": "machine",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "8f953fc3-a0fb-42b2-ac2c-4d58ea064333",
+      "name": "running",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "fb012465-772f-46f4-b19d-7dbd6adae9e8",
+      "name": "running treadmill",
+      "category": "cardio",
+      "equipment": "machine",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "9fe053f0-1e6e-4654-964b-6b8ccef871af",
+      "name": "russian twist",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "70a3eb75-6285-4d09-b2ac-83254efea257",
+      "name": "seated row cable",
+      "category": "back",
+      "equipment": "cable",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b7b00ca6-a565-44a0-a412-4f59ca99d3f1",
+      "name": "seated row machine",
+      "category": "back",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "b569e7bb-733e-48a1-bc7e-30b25f2342f6",
+      "name": "shoulder press machine",
+      "category": "shoulders",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "7b61cac8-91da-4043-8fae-53eaf1d04f72",
+      "name": "single leg bridge",
+      "category": "upper legs",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "c85a7963-aaf8-411d-be9c-7c3b48903108",
+      "name": "skating",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "b4915993-45a9-4f1d-936a-fafad52094d7",
+      "name": "skiing",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "a63b0fbb-ba9b-4a40-9ba3-8fd2efc92ccc",
+      "name": "snatch barbell",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "33a25d15-33c0-4651-8c05-0688d4cfc5f4",
+      "name": "snowboarding",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "b40da184-b50f-4bda-8d67-e74ba1c96ceb",
+      "name": "split jerk",
+      "category": "shoulders",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "dffe5563-db4b-4000-a797-5a9d3d668936",
+      "name": "stretching",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time"
+    },
+    {
+      "id": "b283a54c-ec87-42e2-8c67-43e22a09b7df",
+      "name": "superman",
+      "category": "back",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "1a9c7894-aff0-4c54-9fa5-f225675a97f1",
+      "name": "swimming",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "8f6f176d-e8a7-4102-b784-41a1341b64c0",
+      "name": "t bar row",
+      "category": "back",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8eff6c64-b330-483a-97d5-6f893041cf18",
+      "name": "thruster barbell",
+      "category": "full body",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "31e4a7ae-b96a-4c30-985b-d3fb226fb6ec",
+      "name": "thruster kettlebell",
+      "category": "full body",
+      "equipment": "kettlebell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "5686c5e4-ff2c-425d-acb1-2760f18c7511",
+      "name": "toes to bar",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "be5d0b85-d183-442f-aa4a-ab7ad0ffb660",
+      "name": "torso rotation machine",
+      "category": "waist",
+      "equipment": "machine",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "e362c78d-7b77-445d-9294-0a21bd703c7e",
+      "name": "trap bar deadlift",
+      "category": "upper legs",
+      "equipment": "barbell",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "9aa2229d-b587-4b99-bf89-5974f71380d2",
+      "name": "v up",
+      "category": "waist",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "080fcc35-542c-4e5b-9a01-adea7a0771c9",
+      "name": "walking",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    },
+    {
+      "id": "4164281a-ebb7-4159-b288-0c80d041a85b",
+      "name": "wrist roller",
+      "category": "lower arms",
+      "equipment": "body weight",
+      "measurement_type": "reps_weight"
+    },
+    {
+      "id": "8006cdff-c7d4-4181-b922-f3acafe439af",
+      "name": "yoga",
+      "category": "cardio",
+      "equipment": "body weight",
+      "measurement_type": "time_distance"
+    }
+  ],
+  "grouped_exercises": {
+    "reps_weight": [
+      {
+        "id": "7acca52a-fec0-4b87-843f-445c0f9bb1ad",
+        "name": "ab wheel",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c92142a6-57a0-40a9-953d-c6e6895b1592",
+        "name": "alternate lateral pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cb0a3074-73da-46e1-a007-f73db5ebced8",
+        "name": "around the world",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6edda779-773c-4dbc-9eff-9224f96ea275",
+        "name": "back extension on exercise ball",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4ea67c5f-0629-40a6-81b7-cc020d73e58e",
+        "name": "balance board",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7713326d-18bc-4f59-ae8b-b68fd193401f",
+        "name": "ball slams",
+        "category": "full body",
+        "equipment": "weighted",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ae50f351-f4f0-4026-930f-5e9de7ed7843",
+        "name": "band bench press",
+        "category": "chest",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6f622452-41bf-4e01-9021-4f8388db6069",
+        "name": "band one arm single leg split squat",
+        "category": "upper legs",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c99e142c-dae1-40df-aa10-f012a881e517",
+        "name": "band shrug",
+        "category": "back",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "30919a1f-c1ac-4262-be34-795622bc769b",
+        "name": "band single leg split squat",
+        "category": "upper legs",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8807a42a-82bf-43cb-b36f-f8ba27efcd6c",
+        "name": "band squat row",
+        "category": "upper legs",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "09d1289b-9bf2-4168-8a31-45b47b7fdf11",
+        "name": "band straight leg deadlift",
+        "category": "back",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d757e227-f836-4022-ad40-199621f01d3f",
+        "name": "band twisting overhead press",
+        "category": "shoulders",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "217cd571-9f41-4b77-9f80-332697d2953f",
+        "name": "barbell alternate biceps curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5b867e65-f3ea-45b6-9e90-07f7d43fd1f3",
+        "name": "barbell bench front squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2b0eb6fb-f038-4b1d-ba8e-4df7be9a17d6",
+        "name": "barbell bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "59f4e819-dbad-459e-9f19-2ce9c3464acb",
+        "name": "barbell bench squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cbdfb352-58b4-48de-8e41-11c9c31b3a47",
+        "name": "barbell bent arm pullover",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9538a71e-07a2-4cf5-a0bc-501521b9774d",
+        "name": "barbell bent over row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "49ad2eaf-e342-453d-a941-e4b449bfe5b9",
+        "name": "barbell clean and press",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ad851b32-8982-42b7-9f2a-7138362ae956",
+        "name": "barbell clean-grip front squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9e132ac0-e3f7-445f-8adc-8bde7e27e466",
+        "name": "barbell close-grip bench press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a06cfe54-a22a-4c52-9783-5dd3a26659f9",
+        "name": "barbell curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c06ec08c-4533-4246-8ac9-5313895d0c28",
+        "name": "barbell deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dd54b095-f754-4935-9cd1-faebc712a6cd",
+        "name": "barbell decline bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cd68d02a-521c-45bd-ba36-899f9516996c",
+        "name": "barbell decline bent arm pullover",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "be399c4b-6586-48fa-b652-50637e16abfb",
+        "name": "barbell decline pullover",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cd7d5911-ed42-40af-8d24-89cc38ecf350",
+        "name": "barbell decline wide-grip press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2d1c99d4-be4c-4495-a7d0-a6f04952a87e",
+        "name": "barbell decline wide-grip pullover",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "51e53e3f-bc1c-443d-a107-5e2fbddb2f83",
+        "name": "barbell drag curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ac16502a-108a-4af2-b38c-ea8ffafdc343",
+        "name": "barbell floor calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "303841c0-12f2-4729-86cf-1f880115c45f",
+        "name": "barbell front chest squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "921b9fb5-7e1d-4603-b733-1c0dcc9ba159",
+        "name": "barbell front raise",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7d82fc62-c87d-4649-9f82-2c8c1dc0e6f9",
+        "name": "barbell front raise and pullover",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ce90978c-bd88-46b7-aeae-70d9519d92e6",
+        "name": "barbell front squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9ee55b44-aade-4186-ab3b-3a16713bc548",
+        "name": "barbell full squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6d39eb20-b4f9-4a41-8dff-3b59d6d68725",
+        "name": "barbell full squat (back pov)",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d84c76cf-3a1f-402a-8089-4301e6e62e46",
+        "name": "barbell full squat (side pov)",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "72fe108d-2e33-4d92-8136-9833c2fe75f3",
+        "name": "barbell full zercher squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "09d6f7ea-beea-4c28-98c1-6a6da546b933",
+        "name": "barbell good morning",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "99ed4f72-fc94-4f42-9047-1278d86d86e6",
+        "name": "barbell guillotine bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "223975bb-353f-4bdd-942f-d2c263e88d4a",
+        "name": "barbell hack squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5d4757b7-0cca-432c-90b7-7ff305a702e6",
+        "name": "barbell high bar squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8dec0625-0899-40af-8a75-7b159104a176",
+        "name": "barbell incline bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "205e319e-b97c-4fe4-a137-45e8e42044cb",
+        "name": "barbell incline close grip bench press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "238725c1-d10e-4486-a375-f2acdfbe6ed4",
+        "name": "barbell incline reverse-grip press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "abdfbcea-1be8-4397-95b9-32acb7e90b46",
+        "name": "barbell incline row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "56e5390b-22da-47cd-9c38-a7e398a050e9",
+        "name": "barbell incline shoulder raise",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "17556155-bda0-4a1d-9f9d-a41617e7c5f7",
+        "name": "barbell jefferson squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ae67d1c2-63cf-430a-a922-c757d1dc7582",
+        "name": "barbell jm bench press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d0871377-1046-48a0-aff5-ee2c464f4ce1",
+        "name": "barbell jump squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "53580006-5aab-4993-a980-52783a4f79be",
+        "name": "barbell lateral lunge",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "812e0e18-03e8-49b5-8708-32d2164751ca",
+        "name": "barbell low bar squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ff50ef69-c5ac-4909-8491-612f64bd161e",
+        "name": "barbell lunge",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cee0123e-1ec7-48a0-b4a6-1c8f905e9922",
+        "name": "barbell lying close-grip press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "770eaf26-0eea-4fc8-a065-29b0e6e542e9",
+        "name": "barbell lying extension",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5fa4d2f1-3aac-4f4b-b20e-d3f5e466d53a",
+        "name": "barbell lying preacher curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1087f9d1-d7d9-45fb-906e-c9e0d2228166",
+        "name": "barbell narrow stance squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1ad893b3-5213-4e98-a259-8774aa5a22f2",
+        "name": "barbell one arm bent over row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3e882567-3408-481f-84cf-fe9c6ce7579b",
+        "name": "barbell one arm side deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5835a495-0cad-4b9d-b871-b4fb2172e795",
+        "name": "barbell one leg squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8d05ec90-95a6-4166-a8ee-73642e8aa01f",
+        "name": "barbell overhead squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b960b951-8695-451e-be0c-58184f98164e",
+        "name": "barbell palms down wrist curl over a bench",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "88154744-e25d-489f-a16b-7f4966d4e715",
+        "name": "barbell palms up wrist curl over a bench",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f6215f42-21d2-4504-9d45-1401cf3c20a2",
+        "name": "barbell pendlay row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "cdcacf6d-af2b-45b9-8363-150fc073f754",
+        "name": "barbell preacher curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4d091826-9504-47c7-85ce-72b28c16d86a",
+        "name": "barbell prone incline curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8ce0e0b3-bf08-4eb7-ad23-e6c3f78e11b1",
+        "name": "barbell pullover",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dbda8b6d-88b7-440e-a72b-99a4357356e4",
+        "name": "barbell pullover to press",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "784913e3-f6e3-44c0-b9dc-c9b9f3b5126d",
+        "name": "barbell rear delt raise",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "97196d0d-7574-43db-bb0b-94fa3c8769fc",
+        "name": "barbell rear delt row",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b39a4cd5-4392-4340-83e6-d951020a5970",
+        "name": "barbell rear lunge",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f58a5a33-30ef-4755-a5c3-e903b3b7473f",
+        "name": "barbell reverse close-grip bench press",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "00bccf52-29cf-4f72-8c73-860f21555567",
+        "name": "barbell reverse curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "77b9c89b-1e38-468c-b412-02a65e458e30",
+        "name": "barbell reverse grip bent over row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a7827c14-6359-4ebf-9a83-0d4405f0f839",
+        "name": "barbell reverse grip decline bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "53b9d425-9d6e-4e8b-a733-023704927828",
+        "name": "barbell reverse grip incline bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d152f697-98e3-4c2e-850e-3f597b8de072",
+        "name": "barbell reverse grip incline bench row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7b028019-e22b-4aab-91c9-f7a8102bde74",
+        "name": "barbell reverse preacher curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "534b5827-a554-4cf4-b52b-f26644b60f07",
+        "name": "barbell reverse wrist curl",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "456d9a22-d318-40d5-8b46-868e9913d235",
+        "name": "barbell romanian deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dcc98659-78b4-4bc8-bb51-e2d2561206d6",
+        "name": "barbell seated behind head military press",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bce81249-3a26-43c4-9cd1-4b455fbeb345",
+        "name": "barbell seated calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "39dba5da-b6b4-4c96-91a0-3795d137bd4f",
+        "name": "barbell seated calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "38e35308-6281-4510-960d-8c69a464035a",
+        "name": "barbell seated overhead press",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e680e2de-1648-4143-8688-964b817159d8",
+        "name": "barbell shrug",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "38694dd3-7649-4311-9ebe-d589b3a25c64",
+        "name": "barbell side split squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "187c4fb6-0465-4653-b9b0-9329da0de6f5",
+        "name": "barbell side split squat v. 2",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b2e85eea-ede8-4b2d-b40b-7c17690b3031",
+        "name": "barbell single leg deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "de406b92-2cac-4a8a-9288-420e37891eb6",
+        "name": "barbell single leg split squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fa9b7861-aad3-4630-ab82-4eb843be93a7",
+        "name": "barbell speed squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2a136c20-6367-44fc-9177-ea718fd66694",
+        "name": "barbell split squat v. 2",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d6f06b43-e840-4c82-9f65-9805d27167c9",
+        "name": "barbell squat (on knees)",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "30238275-0e60-4eb8-9a87-5328b82589d6",
+        "name": "barbell squat jump step rear lunge",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b4756129-12e5-4748-bb56-ae03f0127845",
+        "name": "barbell standing back wrist curl",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "09712751-eab9-4cb1-bde4-74821bd94c9f",
+        "name": "barbell standing bradford press",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3a3cb55b-118b-4340-8b3c-3c003fa94b45",
+        "name": "barbell standing calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d54aa39c-4495-462d-91c4-5189ece472fd",
+        "name": "barbell standing concentration curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "91423918-3b5f-49fe-8398-fe5cd6610970",
+        "name": "barbell standing leg calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "44dd1632-6fef-4072-b428-67e6d62079aa",
+        "name": "barbell standing rocking leg calf raise",
+        "category": "lower legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "15594242-bf3c-4eec-ac4d-7f30c0cd8d60",
+        "name": "barbell standing wide-grip curl",
+        "category": "upper arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "60e627ac-d7de-4fba-adc6-c3150b4e928f",
+        "name": "barbell straight leg deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "780f3b77-6f27-4600-b302-6a746352ef7d",
+        "name": "barbell sumo deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9d3735ac-dfb1-45ce-aca2-ea7ef0f69afc",
+        "name": "barbell upright row",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "05fe0cfa-71e6-4d03-b0ff-c2b2f7402a6a",
+        "name": "barbell wide bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8658c72b-7cc1-4e89-9571-27cd11545745",
+        "name": "barbell wide reverse grip bench press",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e97837a8-c3b6-455a-a9bd-d57bd6b7590b",
+        "name": "barbell wide squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2ddaf3be-803b-4e30-8d6d-40b13eb36ebe",
+        "name": "barbell wide-grip upright row",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3810b72c-0895-402b-b153-8bd7d6cbc0a1",
+        "name": "barbell wrist curl",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fd7ed7d1-5682-496c-8283-712594a4df37",
+        "name": "barbell zercher squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a390c3b5-145b-4651-8280-0c60b79c9c17",
+        "name": "bench pull-ups",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d8a3ccc7-e6b4-4b14-bc7c-b9a7c77073ae",
+        "name": "biceps narrow pull-ups",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "859f4709-91f0-41ec-a059-a673bd47ddd4",
+        "name": "biceps pull-up",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "43c27c63-59cb-463c-bf6f-4cf1b4bf9a51",
+        "name": "bodyweight standing calf raise",
+        "category": "lower legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bec6de0c-de43-4896-b389-f84e696ffa99",
+        "name": "bodyweight standing close-grip row",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8b7277c2-9ed5-4577-ba13-4e76be5b568c",
+        "name": "bodyweight standing row",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0f6f3384-4714-473d-a8b6-2b4ad41445a7",
+        "name": "cable bar lateral pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bd068632-a439-4a50-b074-38da15b55fc1",
+        "name": "cable bench press",
+        "category": "chest",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3badc97c-92f1-40f9-85ed-58ea4d24d903",
+        "name": "cable cross-over lateral pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5204b38b-4f72-4e5b-932b-73484f7bed31",
+        "name": "cable crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d966091d-547d-421d-a2c6-876f6de88cac",
+        "name": "cable deadlift",
+        "category": "upper legs",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9f8f3ddf-51b3-417c-abc2-03e34cbec695",
+        "name": "cable decline fly",
+        "category": "chest",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2987b16c-ac3b-4fd5-bffa-2fb1329b04a1",
+        "name": "cable fly",
+        "category": "chest",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bb2dd24e-8d68-49f5-9ca2-cbd48465a59d",
+        "name": "cable hip adduction",
+        "category": "upper legs",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8d6a5f07-44bc-4de8-8d65-e65491c7f5c2",
+        "name": "cable incline bench press",
+        "category": "chest",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "00ca8296-e5ef-4385-9988-634bc5694fe8",
+        "name": "cable incline bench row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1c4c1889-0e61-43c9-bccb-bd207fa5bb1c",
+        "name": "cable incline pushdown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f393269c-0d04-4fd7-9f8a-bdb2309b8838",
+        "name": "cable kickback",
+        "category": "upper legs",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4a19fb7c-f663-41f6-9bca-355367fceb2c",
+        "name": "cable low seated row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c0c96921-839e-4dce-809b-6066180151bc",
+        "name": "cable one arm pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ce4b0395-eaad-4821-a4f2-48357eb9990a",
+        "name": "cable palm rotational row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "63f7cab9-8c17-42dd-b6c3-102df9ef44b8",
+        "name": "cable pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0e9dba39-d3bb-4814-b3ad-d25ec1c63090",
+        "name": "cable rear pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6b6110da-c18c-4021-8bf1-0ac7bc59d5c1",
+        "name": "cable reverse crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fb4a4f6f-2d63-4298-b648-420c99023fd1",
+        "name": "cable reverse wrist curl",
+        "category": "lower arms",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f177b96e-2ad5-4fb0-b577-cac28a18d1dc",
+        "name": "cable rope seated row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "502666bb-cd62-4da7-9201-cba438e3c6e3",
+        "name": "cable seated crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "802d7191-fce4-44bb-9732-18d18c0b8988",
+        "name": "cable seated row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "97bac6cf-f015-4c38-ad73-083ccb5c3c69",
+        "name": "cable seated wide-grip row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e362b57b-fe40-4d39-b061-6b3c0d3c31a9",
+        "name": "cable shrug",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "da5f462c-a2ad-445c-a73f-6f09e7e21d1d",
+        "name": "cable side crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "628aa6c7-67c1-4c78-b794-df79f453c793",
+        "name": "cable squat row (with rope attachment)",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e0b3fafc-dad9-4d4a-a5a2-5e426843c79e",
+        "name": "cable squatting curl",
+        "category": "upper arms",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7acfa11e-5d42-421c-8247-9be3b28626f8",
+        "name": "cable standing calf raise",
+        "category": "lower legs",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2f4f5129-ada9-4c00-a552-130ae2afa64b",
+        "name": "cable standing crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2cd90c5e-476e-4e4f-841d-ae94aadc28c9",
+        "name": "cable standing one leg calf raise",
+        "category": "lower legs",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "46cead7a-2331-45fc-996f-db4fde142e79",
+        "name": "cable standing row (v-bar)",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8be1f8b5-3e9b-4f97-a9da-0b05915980aa",
+        "name": "cable straight arm pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "af3a12f6-e1c1-419d-ab7d-1b8f7f3e3298",
+        "name": "cable thibaudeau kayak row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "498e76f3-32ac-447b-ae01-a0ee70601050",
+        "name": "cable tuck reverse crunch",
+        "category": "waist",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "61f9e9e9-3473-4cc2-83f2-30dfc982b210",
+        "name": "cable twisting pull",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c1370f34-5188-427b-a917-075b1867d4f6",
+        "name": "cable underhand pulldown",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "caf0bdf8-df7e-4fd7-9bc6-c80b71a37e7e",
+        "name": "cable upper row",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6418c13f-70f3-4f13-af53-c24ec1ed83ac",
+        "name": "cable wrist curl",
+        "category": "lower arms",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9b70b9e2-b856-4ecf-a140-9f576bdceda3",
+        "name": "cambered bar lying row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a305025b-06ef-45c5-ba8c-46772f80cb51",
+        "name": "chest press machine",
+        "category": "chest",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4a941c21-2025-4f55-b98f-7381cde54593",
+        "name": "chin-up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "89f1abbe-b338-452f-982b-9f4ab06db024",
+        "name": "chin-ups (narrow parallel grip)",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8068607f-d7ad-4e1f-924f-d788b8f42ad1",
+        "name": "clean and jerk",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "91e73183-a7a5-4626-8fed-22ddf7757966",
+        "name": "clean barbell",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b3e9873c-a2fb-4024-b7af-85f76b38307d",
+        "name": "close grip chin-up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "48b4c378-7401-4026-9505-895a8aad7d16",
+        "name": "deep push up",
+        "category": "chest",
+        "equipment": "dumbbell (used as handles for deeper range)",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ab53c0dc-ce26-46a7-8cda-fff692a550de",
+        "name": "deficit deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f69312b3-5222-42fc-b38f-837f1d364022",
+        "name": "donkey calf raise",
+        "category": "lower legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "07448aa1-a9ca-4ede-a847-060dc58e5c41",
+        "name": "dumbbell alternate side press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c5c699c7-01c9-4809-9898-1b7c769b9e2c",
+        "name": "dumbbell arnold press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d008bde6-1fed-45ac-bd69-c82f72464708",
+        "name": "dumbbell around pullover",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e4823bb4-6d21-44ff-94b8-256f158ea68f",
+        "name": "dumbbell bench press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a56ba147-c2e9-4a66-bcc7-1bde6eee1788",
+        "name": "dumbbell bench seated press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b7c76f56-e75d-471b-bfd2-bd64f5d7ea11",
+        "name": "dumbbell bench squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a8828b5a-656a-4e28-b481-9254aae51b5a",
+        "name": "dumbbell bent over row",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b6f9cf30-5975-4d7a-a5ac-f96190ed54e7",
+        "name": "dumbbell bicep curl lunge with bowling motion",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bed4862f-17d8-43c2-b93c-eec4848903cb",
+        "name": "dumbbell biceps curl squat",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b04dc7aa-768e-4359-8935-594227c7e861",
+        "name": "dumbbell contralateral forward lunge",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1063d786-4ce0-4a4a-8f07-281e9d0a105f",
+        "name": "dumbbell cuban press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fdb818e2-93bb-409d-90ed-086acc437684",
+        "name": "dumbbell deadlift",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "16438b85-6569-44c8-af1a-956062272e9b",
+        "name": "dumbbell decline bench press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "86184201-87ec-4719-b4fb-dd8de8d38d74",
+        "name": "dumbbell decline fly",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "44684300-25d7-428b-9f2f-88bddcfc3eef",
+        "name": "dumbbell decline hammer press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e745c2de-b835-4c9f-bb64-ee0db9cead87",
+        "name": "dumbbell decline shrug",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "09f9cedf-3a20-46d9-b282-51c5c12ffee0",
+        "name": "dumbbell decline shrug v. 2",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "edc7895b-d9b0-4065-92d9-919a21a8b9a9",
+        "name": "dumbbell decline twist fly",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "777ac820-6914-4ed0-a205-70a4a9459025",
+        "name": "dumbbell finger curls",
+        "category": "lower arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "76d214db-b557-41f1-8e02-075cdc5a2c89",
+        "name": "dumbbell fly",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f10450d7-c7f7-4dba-aa90-4f2805c0be85",
+        "name": "dumbbell forward lunge triceps extension",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b99618eb-7d1d-402f-ba2d-8d4c7d46b2ec",
+        "name": "dumbbell front raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "66229d1e-97d0-4711-b8bf-11cde2d9dfbe",
+        "name": "dumbbell goblet squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9adffacf-c70d-48c3-9dc0-090fd420b22c",
+        "name": "dumbbell incline alternate press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e3222289-ca72-4c14-b656-4d14b3558f41",
+        "name": "dumbbell incline bench press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9a30dd7e-01c6-4230-83d6-e53d79ea05dd",
+        "name": "dumbbell incline fly",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9543cf61-696c-4967-8cc6-0fe1b75d4b74",
+        "name": "dumbbell incline hammer press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "949ab2ee-6d97-4c16-a148-cb2031f9bd39",
+        "name": "dumbbell incline palm-in press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2f7c5c4f-c331-4ebb-9039-217e6384b1a7",
+        "name": "dumbbell incline raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "83a97699-c0ff-4d38-b2c3-76a894712999",
+        "name": "dumbbell incline row",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "de4a0dcb-d303-4287-8c66-95888b8022fa",
+        "name": "dumbbell incline shoulder raise",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "288f49fd-5056-41c9-b6d3-f41f46ccaf48",
+        "name": "dumbbell incline shrug",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "219a75de-72dc-44cf-91f1-21c292ab98c3",
+        "name": "dumbbell incline t-raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "070bbf94-5896-4816-837c-c7e1b27a7585",
+        "name": "dumbbell incline twisted flyes",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4bb4db65-1862-411c-972a-48cf05ffa3fd",
+        "name": "dumbbell incline y-raise",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "61214fa6-1dc6-494e-9b42-2ede63f038f0",
+        "name": "dumbbell lateral raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bb2ab3c4-377b-4230-9b13-71af653e7ee5",
+        "name": "dumbbell lunge",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a9c69c6d-87c2-43f8-9e03-aac23091085e",
+        "name": "dumbbell lunge with bicep curl",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "c54e7519-6a52-417b-af48-a9512968ff36",
+        "name": "dumbbell lying femoral",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "84603b4d-e272-4310-92ce-0bb5caf48874",
+        "name": "dumbbell lying hammer press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "683fdd9d-f8d0-4351-b0e3-b89f0da6d9ab",
+        "name": "dumbbell neutral grip bench press",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e1c1a1ce-4bbe-4e6a-8dae-53f819cf05e5",
+        "name": "dumbbell palms in incline bench press",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f24abc3e-bc0e-481f-a82c-951474afa227",
+        "name": "dumbbell plyo squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5bfe9da5-cf87-43ce-b5c5-75b87029baab",
+        "name": "dumbbell pullover",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6d99e847-3c2f-4330-8170-c2822ea74487",
+        "name": "dumbbell push press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b7e70da7-25c6-4d5c-80f1-2591b78b0b54",
+        "name": "dumbbell raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2880e2ac-1c88-4df9-a612-625af2bc799b",
+        "name": "dumbbell rear delt raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6b6e37a5-a47c-4327-b530-bd7216a5f2a5",
+        "name": "dumbbell rear fly",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0476c4fe-7b74-4497-9f0e-0a1491ca410f",
+        "name": "dumbbell rear lateral raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "de3713f6-84ea-449f-8191-746da3cc4649",
+        "name": "dumbbell rear lunge",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "131bacff-0439-4a7e-bac6-cd078ee29e0f",
+        "name": "dumbbell reverse bench press",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4483a5e9-29b0-4beb-8ca5-ecd66c98e5be",
+        "name": "dumbbell reverse fly",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "82110d9f-0c0f-46a7-98e8-daf8063030c6",
+        "name": "dumbbell reverse wrist curl",
+        "category": "lower arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9a9b3977-5e2f-4c29-902e-71de97065f02",
+        "name": "dumbbell romanian deadlift",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ae39c73e-4ebd-4ebc-b22a-ef96b192a032",
+        "name": "dumbbell rotation reverse fly",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "371a805e-4c74-4eb9-9cc5-ea2784c7d115",
+        "name": "dumbbell scott press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1fce1ac4-1968-45d3-a3b2-01ce3d7f67ab",
+        "name": "dumbbell seated alternate press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d53e1c98-ac9b-419c-9867-081dbbee2da9",
+        "name": "dumbbell seated calf raise",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8bf62edb-71b8-42a1-bc59-22cae256b707",
+        "name": "dumbbell seated front raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "238d5721-d924-4358-8161-928cc729fa66",
+        "name": "dumbbell seated lateral raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8c93307f-43b0-4eed-bdb6-dbc4a1382bf2",
+        "name": "dumbbell seated one leg calf raise",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e134f1e5-5570-4d60-9606-177bf99117b9",
+        "name": "dumbbell seated one leg calf raise - hammer grip",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "93cdadc3-d8e5-421d-9ba1-9f00992f6483",
+        "name": "dumbbell seated one leg calf raise - palm up",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0b6ab2aa-72a4-4268-9b84-27fbdae98a7e",
+        "name": "dumbbell seated shoulder press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "49a79ac1-2224-43ac-84b3-e7e5df86d87b",
+        "name": "dumbbell shrug",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bacef3b1-5485-4683-8d51-4190934003ed",
+        "name": "dumbbell single leg calf raise",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d560c079-68bf-4c53-9029-d0eb66d22350",
+        "name": "dumbbell single leg deadlift",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "92eb66ea-9c12-4b49-a187-9d718fb45e36",
+        "name": "dumbbell single leg split squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "38a15c71-d73e-486e-8ebe-07cdcd4e048d",
+        "name": "dumbbell single leg squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dc4593b2-5d35-4c4b-ad41-82852aa84948",
+        "name": "dumbbell squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3b82d86f-73d7-43c9-85c4-a2a5fa39a0dc",
+        "name": "dumbbell standing alternate overhead press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e855481d-2e2e-475e-b12b-2cbbd189af07",
+        "name": "dumbbell standing alternate raise",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ee949959-2e6a-48f5-8db1-de58b91ebe74",
+        "name": "dumbbell standing calf raise",
+        "category": "lower legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0423d48d-3f68-4fb0-bc5a-00ff80e06203",
+        "name": "dumbbell standing overhead press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "79c2ec83-b51a-416b-a4c4-cf2da1ec2662",
+        "name": "dumbbell step-up lunge",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "f8de3a90-3a89-46e5-8703-8dcfd0a3f950",
+        "name": "dumbbell step-up split squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a8111933-c69c-439f-8351-1b5913a7c882",
+        "name": "dumbbell stiff leg deadlift",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e50a7618-52b2-46e1-ab23-b834dcd568ed",
+        "name": "dumbbell straight arm pullover",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "152ecc75-6cf0-4ea6-b945-a7e4faf5b108",
+        "name": "dumbbell straight leg deadlift",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7b31f357-69e2-44f6-bcb5-5c43a830f9f8",
+        "name": "dumbbell supported squat",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7b2cbb30-0df3-4334-af67-750fce028b22",
+        "name": "dumbbell twisting bench press",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "be9218a6-f364-4e8d-b70e-c2f8d8fac685",
+        "name": "dumbbell upright row",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ab9047aa-061e-47df-b71c-6e1ad5d26573",
+        "name": "dumbbell w-press",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "342037be-2fbb-40a5-8dc1-1665eea37e59",
+        "name": "exercise ball back extension with arms extended",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "28bee6b8-95da-4e1f-95c9-dd71bc4909c9",
+        "name": "exercise ball back extension with hands behind head",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "55a13df9-4cff-446c-9b8a-c7de2ebb7371",
+        "name": "exercise ball back extension with knees off ground",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "572883b4-9ddf-4ee0-90da-51fa60cba8dc",
+        "name": "exercise ball back extension with rotation",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0d27f05c-8edd-408a-8c13-7f1997e637ed",
+        "name": "exercise ball dip",
+        "category": "upper arms",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "228571ed-f178-4d4e-afbc-a696f6e90745",
+        "name": "exercise ball prone leg raise",
+        "category": "back",
+        "equipment": "stability ball",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "1c2efb44-6386-4f2c-91fd-cfde19cff867",
+        "name": "ez bar lying bent arms pullover",
+        "category": "back",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "99f649b3-c1be-40b2-a8c9-3bab110666d3",
+        "name": "ez barbell close-grip curl",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3b0e9e15-996e-4ccd-b369-605140594683",
+        "name": "ez barbell curl",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dd045edb-26c9-4296-b97e-700130ed9754",
+        "name": "ez barbell jm bench press",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d367c45e-07c5-42d4-821d-92f00cfc01f2",
+        "name": "ez barbell seated curls",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "11816808-a59d-4470-9dbd-2d218781fea9",
+        "name": "ez barbell spider curl",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "544b3573-ed18-4860-ba92-ec7c5255864f",
+        "name": "ez-bar close-grip bench press",
+        "category": "upper arms",
+        "equipment": "ez barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8ec6c269-89f5-45ef-a32b-cf9a85bb45f4",
+        "name": "face pull",
+        "category": "shoulders",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8bb8eefc-0ff8-4661-9222-e4594a75e0d4",
+        "name": "finger curls",
+        "category": "lower arms",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e68f53bf-3490-49ca-a428-2874e7e61a18",
+        "name": "floor fly (with barbell)",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e68c40b3-94d2-4142-87c7-a129877416e1",
+        "name": "floor press barbell",
+        "category": "chest",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9472bc8e-54d1-4667-83dc-72611fdfb74f",
+        "name": "frankenstein squat",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ab47546c-79e9-4b11-94c8-24a1f1447745",
+        "name": "front lever reps",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9ce161af-d391-4a17-9f48-c10686910c2b",
+        "name": "glute kickback machine",
+        "category": "upper legs",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ee43632c-4a38-44da-8756-0af4d8f01271",
+        "name": "glute-ham raise",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "da93049f-d85f-4d61-b093-3479ce75a3bc",
+        "name": "hack calf raise",
+        "category": "lower legs",
+        "equipment": "sled machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "27f1ddbb-bc59-4d4f-bf40-30b8b5193082",
+        "name": "hammer curl band",
+        "category": "upper arms",
+        "equipment": "band",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "565139de-a8a1-47b2-9bbf-122385a18bff",
+        "name": "hammer curl cable",
+        "category": "upper arms",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e8bf35be-ab80-435a-a810-3d4c83dca824",
+        "name": "hammer curl dumbbell",
+        "category": "upper arms",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0feb134c-b1c9-4a77-b640-cdffeecfb118",
+        "name": "hand gripper",
+        "category": "lower arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "55a04f45-6741-4900-9661-459043ac9c2b",
+        "name": "hang clean",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5cb6aa64-dcd9-401c-b121-376e28dbf289",
+        "name": "hang snatch",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "56eacddd-fce1-498f-8faa-c8f07b034c4f",
+        "name": "hip abductor machine",
+        "category": "upper legs",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6fe3058a-470b-4b48-8b2b-027454cc9e35",
+        "name": "hip adductor machine",
+        "category": "upper legs",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e657d21d-5766-4c8c-8771-add63b26fdf9",
+        "name": "hip thrust",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0f01320d-7c3d-43e5-b042-0bda184d315e",
+        "name": "hip thrust bodyweight",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "68532225-499f-45c7-8b8f-dfdefb0bb818",
+        "name": "hyght dumbbell fly",
+        "category": "chest",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "137b0025-de5e-4178-abc0-323f1643788e",
+        "name": "hyperextension",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e09739cb-3b6e-4fca-9fef-62bacab80601",
+        "name": "hyperextension (on bench)",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3b348243-7cd7-4c3b-b0bd-83f91050e84f",
+        "name": "inverse leg curl (bench support)",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4b1aed9d-7091-4c1e-a516-131112393fc1",
+        "name": "inverse leg curl (on pull-up cable machine)",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7913bf10-6e44-459c-a539-47204b47bb1d",
+        "name": "inverted row",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4dadbad2-6e13-41b0-b8ab-7b240f6d3e69",
+        "name": "inverted row bent knees",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4f25d478-3956-49f4-8fcc-c440678799d3",
+        "name": "inverted row on bench",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e6ded03d-f766-49d9-9a04-cd72e14b5e27",
+        "name": "inverted row with straps",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e21f7220-6e83-441c-8e4a-b3103e31bded",
+        "name": "kettlebell hang clean",
+        "category": "upper legs",
+        "equipment": "kettlebell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7d2de010-5a09-49f1-8253-d142c02aa81d",
+        "name": "kettlebell sumo high pull",
+        "category": "back",
+        "equipment": "kettlebell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "88c10f5b-4735-49c5-894a-bfdd32e9a958",
+        "name": "kettlebell swing",
+        "category": "full body",
+        "equipment": "kettlebell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "2c233faf-a3c2-4bdf-affa-c7417e4fa018",
+        "name": "kettlebell turkish get up",
+        "category": "full body",
+        "equipment": "kettlebell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "d41e6720-166b-47f8-9c68-f69ddf2a6504",
+        "name": "kick out sit",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fbce382f-bbdc-41b3-b2d3-7f23a138a4dc",
+        "name": "knees to elbows",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "fa71af71-7659-4c22-9929-3b1297e3a332",
+        "name": "l-pull-up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "dcff146a-92ec-473e-8053-3cf8231baa04",
+        "name": "landmine lateral raise",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "75ba71c8-140a-4d8a-89cf-989dca81446a",
+        "name": "lat pulldown cable",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ea460baa-43ce-4a12-8555-ddaa588fb9f5",
+        "name": "lat pulldown machine",
+        "category": "back",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a39a1cdb-c371-45e9-9627-13c5b77860a5",
+        "name": "lat pulldown underhand",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6cba099d-fd16-4640-a3cc-5ebafb92adb5",
+        "name": "lat pulldown wide grip",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "27ea51dc-14dd-4897-86b7-266be3e4a9c7",
+        "name": "leg extension machine",
+        "category": "upper legs",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4c9cc873-4150-426f-8711-4a4f93c0067c",
+        "name": "lever alternate leg press",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8df94312-feaf-4356-84d7-e536b3cd922a",
+        "name": "lever back extension",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "47c2fdd6-eab3-433d-82d4-a1321b991f89",
+        "name": "lever bent over row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "12189163-d3f1-492b-be1a-0f3896025e55",
+        "name": "lever donkey calf raise",
+        "category": "lower legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "45bdd910-9812-4d27-8e1f-80ee8abcb7f3",
+        "name": "lever front pulldown",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "62e94432-d415-48d1-9a65-32aa020e6aea",
+        "name": "lever gripless shrug",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "189257ce-4c5c-47e5-8d54-204fd208025f",
+        "name": "lever kneeling leg curl",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4b1b2076-b799-4bfd-a14d-430c1dd58ba9",
+        "name": "lever leg extension",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "453e47bf-d7fc-41b4-aad7-1e2b5220c015",
+        "name": "lever lying leg curl",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "0a034b4e-a5c8-46c7-b8ba-c38449ca1f36",
+        "name": "lever lying two-one leg curl",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "32e4cb96-ffdd-41cf-98fc-365519b9e780",
+        "name": "lever one arm bent over row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "3990209f-150e-41e0-a962-9d94ec336130",
+        "name": "lever overhand triceps dip",
+        "category": "upper arms",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4023d453-dea7-4fd0-9b04-f53b79e0de84",
+        "name": "lever pullover",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "6e991c38-8b96-4637-9b62-a6f295b16216",
+        "name": "lever seated calf raise",
+        "category": "lower legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ecb726ae-cf85-4106-a6ea-f410adf881e7",
+        "name": "lever seated dip",
+        "category": "upper arms",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e28fb9fc-72f8-4cee-8408-9d70e6214192",
+        "name": "lever seated hip abduction",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "18ee671b-b219-4a3b-9caa-78fb7a17502a",
+        "name": "lever seated hip adduction",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e8976bbf-8217-4f79-9595-921468bceac1",
+        "name": "lever seated leg curl",
+        "category": "upper legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "863b900d-15e3-4f12-8991-8ee2bb987db5",
+        "name": "lever seated leg raise crunch",
+        "category": "waist",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b63136b7-627d-4d78-9107-1cd7a16d58a4",
+        "name": "lever shrug",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "bd025764-cee1-435f-a324-7692d30f8c27",
+        "name": "lever standing calf raise",
+        "category": "lower legs",
+        "equipment": "leverage machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "ef1cc00f-59a5-4e64-afc3-de2467ca9d26",
+        "name": "lying leg curl machine",
+        "category": "upper legs",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9cc36963-90c9-4924-80c3-60276ca742ce",
+        "name": "overhead press barbell",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "32f885f6-9cf1-45ac-bb7b-b950df281b0d",
+        "name": "overhead press cable",
+        "category": "shoulders",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7cec1f65-9dad-4899-96d9-91814127ed7f",
+        "name": "overhead press dumbbell",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a45305f6-9943-48e7-81de-572e324698f7",
+        "name": "pec deck",
+        "category": "chest",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a10d404f-1594-46ad-a032-0caaa24c985a",
+        "name": "power clean",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5997cb52-75f1-4407-822d-d47edd9f9067",
+        "name": "press under",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "79b7d2ad-258f-44c1-9d0e-850d5e6ea31c",
+        "name": "rack pull",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "96aa4d35-7604-4852-aee2-786b3735acbe",
+        "name": "reverse fly cable",
+        "category": "shoulders",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "053115ca-dd00-438e-a653-a4a55c15fd97",
+        "name": "reverse fly dumbbell",
+        "category": "shoulders",
+        "equipment": "dumbbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "af06939f-5692-4e13-a231-7dd92d13b9a9",
+        "name": "reverse fly machine",
+        "category": "shoulders",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9fe053f0-1e6e-4654-964b-6b8ccef871af",
+        "name": "russian twist",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "70a3eb75-6285-4d09-b2ac-83254efea257",
+        "name": "seated row cable",
+        "category": "back",
+        "equipment": "cable",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b7b00ca6-a565-44a0-a412-4f59ca99d3f1",
+        "name": "seated row machine",
+        "category": "back",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b569e7bb-733e-48a1-bc7e-30b25f2342f6",
+        "name": "shoulder press machine",
+        "category": "shoulders",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "7b61cac8-91da-4043-8fae-53eaf1d04f72",
+        "name": "single leg bridge",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "a63b0fbb-ba9b-4a40-9ba3-8fd2efc92ccc",
+        "name": "snatch barbell",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b40da184-b50f-4bda-8d67-e74ba1c96ceb",
+        "name": "split jerk",
+        "category": "shoulders",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "b283a54c-ec87-42e2-8c67-43e22a09b7df",
+        "name": "superman",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8f6f176d-e8a7-4102-b784-41a1341b64c0",
+        "name": "t bar row",
+        "category": "back",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "8eff6c64-b330-483a-97d5-6f893041cf18",
+        "name": "thruster barbell",
+        "category": "full body",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "31e4a7ae-b96a-4c30-985b-d3fb226fb6ec",
+        "name": "thruster kettlebell",
+        "category": "full body",
+        "equipment": "kettlebell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "5686c5e4-ff2c-425d-acb1-2760f18c7511",
+        "name": "toes to bar",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "be5d0b85-d183-442f-aa4a-ab7ad0ffb660",
+        "name": "torso rotation machine",
+        "category": "waist",
+        "equipment": "machine",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "e362c78d-7b77-445d-9294-0a21bd703c7e",
+        "name": "trap bar deadlift",
+        "category": "upper legs",
+        "equipment": "barbell",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "9aa2229d-b587-4b99-bf89-5974f71380d2",
+        "name": "v up",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      },
+      {
+        "id": "4164281a-ebb7-4159-b288-0c80d041a85b",
+        "name": "wrist roller",
+        "category": "lower arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_weight"
+      }
+    ],
+    "time": [
+      {
+        "id": "1a89f96f-cbf8-4524-84ef-cfd9caba290d",
+        "name": "all fours squad stretch",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "07af85f7-d184-4897-a1d9-ec0acef62deb",
+        "name": "assisted prone lying quads stretch",
+        "category": "upper legs",
+        "equipment": "assisted",
+        "measurement_type": "time"
+      },
+      {
+        "id": "3c3ce9ff-a4dd-484c-ad0a-31a0d8c19ab7",
+        "name": "assisted side lying adductor stretch",
+        "category": "upper legs",
+        "equipment": "assisted",
+        "measurement_type": "time"
+      },
+      {
+        "id": "f6872212-5966-4714-be99-0d80d3a9d5a5",
+        "name": "bodyweight incline side plank",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "8fc01d04-4997-4a6f-abfb-e6d4c311f57e",
+        "name": "butterfly yoga pose",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "3f021d8d-ea4f-4d04-90fa-2e56399a7f40",
+        "name": "chair leg extended stretch",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "ff8130f5-e2f1-46f8-a474-5b0e87cc7758",
+        "name": "dumbbell side plank with rear fly",
+        "category": "back",
+        "equipment": "dumbbell",
+        "measurement_type": "time"
+      },
+      {
+        "id": "64c23694-f5e4-4567-b14b-d90f883717ef",
+        "name": "exercise ball seated hamstring stretch",
+        "category": "upper legs",
+        "equipment": "stability ball",
+        "measurement_type": "time"
+      },
+      {
+        "id": "3b9af854-bf44-422e-a3b8-200291dfc913",
+        "name": "front plank with twist",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "7284e525-b186-421d-9271-6d7a71c0c1c4",
+        "name": "hamstring stretch",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "95985af5-dc04-4d71-a329-3eedaa3ab56a",
+        "name": "intermediate hip flexor and quad stretch",
+        "category": "upper legs",
+        "equipment": "rope",
+        "measurement_type": "time"
+      },
+      {
+        "id": "5e26d998-0f2a-42a8-9933-3740c0753868",
+        "name": "leg up hamstring stretch",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      },
+      {
+        "id": "dffe5563-db4b-4000-a797-5a9d3d668936",
+        "name": "stretching",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time"
+      }
+    ],
+    "time_distance": [
+      {
+        "id": "ecb3f8a5-5979-4528-b5a1-8090d90269d0",
+        "name": "aerobics",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "612e6bb6-9f0d-4829-b7f2-991420bc1930",
+        "name": "astride jumps (male)",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "eeee9400-fb28-4eb9-b333-4b99dcba56af",
+        "name": "back and forth step",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "90ba0f83-063e-4e0e-9787-b436a5b6d3c6",
+        "name": "battle ropes",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "e7c9bf82-4187-440e-9179-61b58d85626a",
+        "name": "bear crawl",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "586bbf42-1a51-4262-8cb2-f26e691af17f",
+        "name": "burpee",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "c19d0c61-2e3e-4ae9-b1a0-4714da4f06a8",
+        "name": "climbing",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "856aa69b-dd3c-43d0-baf7-01f8f58bfc70",
+        "name": "cycle cross trainer",
+        "category": "cardio",
+        "equipment": "leverage machine",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "cb606a14-a684-4433-ba83-c26cb72e863c",
+        "name": "cycling",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "3a6639e1-afba-4eba-8504-ba012045663e",
+        "name": "cycling indoor",
+        "category": "cardio",
+        "equipment": "machine",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "1cfea776-c464-418a-84dd-c68bf0c2f35b",
+        "name": "dumbbell burpee",
+        "category": "cardio",
+        "equipment": "dumbbell",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "b01838b8-8785-457a-a470-1dc594aa7685",
+        "name": "elliptical machine",
+        "category": "cardio",
+        "equipment": "machine",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "13c34d5f-6cf0-4bb8-81a3-d3cad94e8f14",
+        "name": "half knee bends (male)",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "138d0530-3603-48bb-99c5-e5d49277d1f6",
+        "name": "high knee against wall",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "97e4a943-ae9c-43f1-8e9f-bddb2ea1c088",
+        "name": "hiking",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "19de968d-2a21-4152-aaea-573e1b74b40c",
+        "name": "jack burpee",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "1b6ed88a-b521-470e-bb79-f586187abb43",
+        "name": "jack jump (male)",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "8a59691d-e878-4b8d-99b0-e5342767e72b",
+        "name": "jump rope",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "8d4349ac-858e-4de7-b994-81d2f46a86d3",
+        "name": "mountain climber",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "aee5e108-e224-4c75-b616-1524d00c83e7",
+        "name": "rowing machine",
+        "category": "cardio",
+        "equipment": "machine",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "8f953fc3-a0fb-42b2-ac2c-4d58ea064333",
+        "name": "running",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "fb012465-772f-46f4-b19d-7dbd6adae9e8",
+        "name": "running treadmill",
+        "category": "cardio",
+        "equipment": "machine",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "c85a7963-aaf8-411d-be9c-7c3b48903108",
+        "name": "skating",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "b4915993-45a9-4f1d-936a-fafad52094d7",
+        "name": "skiing",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "33a25d15-33c0-4651-8c05-0688d4cfc5f4",
+        "name": "snowboarding",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "1a9c7894-aff0-4c54-9fa5-f225675a97f1",
+        "name": "swimming",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "080fcc35-542c-4e5b-9a01-adea7a0771c9",
+        "name": "walking",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      },
+      {
+        "id": "8006cdff-c7d4-4181-b922-f3acafe439af",
+        "name": "yoga",
+        "category": "cardio",
+        "equipment": "body weight",
+        "measurement_type": "time_distance"
+      }
+    ],
+    "time_weight": [
+      {
+        "id": "194b9e26-af8d-4f55-a72c-22c9bba9c4e9",
+        "name": "farmers walk",
+        "category": "upper legs",
+        "equipment": "dumbbell",
+        "measurement_type": "time_weight"
+      }
+    ],
+    "reps_only": [
+      {
+        "id": "92814f64-d72e-4a1d-87c8-1edd20b86c68",
+        "name": "archer pull up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "cb0606ad-9bd9-4bc8-9b34-64713e5b6b38",
+        "name": "archer push up",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "f66a6c36-314d-443a-9468-384f3c72a75c",
+        "name": "backward jump",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "8ece21cc-9eaa-4a2a-af73-e50a02fb6538",
+        "name": "bench dip (knees bent)",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "8c883e00-595a-4193-a4d7-9de1b5e84d14",
+        "name": "bench dip on floor",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "b95a9f2b-18ec-418b-92d2-39b71e8a3096",
+        "name": "bodyweight drop jump squat",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "eb2db474-46f9-47fa-bde7-cbcbd1173602",
+        "name": "bodyweight squatting row",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "3aaae27f-1f80-4d6f-a36e-ece2171c0e10",
+        "name": "box jump",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "b092e90a-c48c-484f-a8da-08e797f7b2ac",
+        "name": "bulgarian split squat",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "f53fe384-0cc4-4254-9db0-f2ba90932731",
+        "name": "chest dip",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "243b9621-bfca-4b11-b221-9eb4ad8db98f",
+        "name": "chest dip (on dip-pull-up cage)",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "c3e311c7-d9f0-4850-9f01-376c037a7684",
+        "name": "chest dip on straight bar",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "a9a6f764-6978-4d52-8489-d5de70cf85a3",
+        "name": "cross body crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "3b3202dc-2b11-467b-9493-738890727f96",
+        "name": "crunch (hands overhead)",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "28b531fb-de75-4d6d-877c-42a3fa951169",
+        "name": "crunch floor",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "b5fcdf74-e4e1-42e5-a152-941adf8739aa",
+        "name": "curtsey squat",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "aa7d0c07-7c7b-47e9-bee0-4565ae30453b",
+        "name": "decline crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "82a69625-971d-4e7b-a26c-c04e1ebf7180",
+        "name": "elbow dips",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "bce9d46c-5fff-419a-87d1-21f54b9ad692",
+        "name": "forward jump",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "db896e50-9d17-4a5f-9c64-ba130ef9bae9",
+        "name": "frog crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "4b12d0ed-ff67-46fd-8ee0-a152f68a943b",
+        "name": "groin crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "71d0cf3d-c651-49f5-97e7-78141ac1d813",
+        "name": "handstand push up",
+        "category": "shoulders",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "8ada58c2-f509-42aa-b57a-e7850d90f9e7",
+        "name": "impossible dips",
+        "category": "upper arms",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "bfe4bf3f-8031-4897-9f87-5781777b096c",
+        "name": "incline scapula push up",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "cd7905a2-aef8-478f-b544-9c018ff0890a",
+        "name": "kipping pull up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "c1382f20-14c4-44da-9d3d-b34685748a7e",
+        "name": "knee touch crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "7d13b8a1-4744-405f-89fa-d3ff413d91dc",
+        "name": "korean dips",
+        "category": "chest",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "6caa38c2-609d-4858-b06c-1369fd1f831d",
+        "name": "muscle up",
+        "category": "back",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "1a2a27c0-d4e9-4660-aa0d-0dcfede41527",
+        "name": "oblique crunch",
+        "category": "waist",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      },
+      {
+        "id": "fab85904-f7a1-49f2-a6bc-03d783ff4858",
+        "name": "pistol squat",
+        "category": "upper legs",
+        "equipment": "body weight",
+        "measurement_type": "reps_only"
+      }
+    ],
+    "assisted": [
+      {
+        "id": "d4b95eed-12c5-4d9c-a9c9-a236138e5a5c",
+        "name": "assisted parallel close grip pull-up",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "c9832460-618b-4921-a8be-260b19e0060b",
+        "name": "assisted prone hamstring",
+        "category": "upper legs",
+        "equipment": "assisted",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "456869b7-f4a6-4335-a6e0-12b8629be7a3",
+        "name": "assisted pull-up",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "5957af8d-2ed5-4e60-8c5a-346a21c77f3c",
+        "name": "assisted standing pull-up",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "af6c9027-faee-47ee-b8c9-d11462ae17d1",
+        "name": "band assisted pull-up",
+        "category": "back",
+        "equipment": "band",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "928da5df-e240-419b-a53c-8272821419ab",
+        "name": "cable assisted inverse leg curl",
+        "category": "upper legs",
+        "equipment": "cable",
+        "measurement_type": "assisted"
+      },
+      {
+        "id": "c0687b17-8845-443c-92ee-56482b4f87e6",
+        "name": "lever assisted chin-up",
+        "category": "back",
+        "equipment": "leverage machine",
+        "measurement_type": "assisted"
+      }
+    ],
+    "null": []
+  },
+  "fix_queries": []
+}
