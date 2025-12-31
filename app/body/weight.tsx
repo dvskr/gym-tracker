@@ -38,6 +38,8 @@ import {
   WeightEntry,
   WeightEntryWithChange,
 } from '@/lib/api/bodyWeight';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -326,6 +328,9 @@ const LogWeightModal: React.FC<LogWeightModalProps> = ({
 
 export default function BodyWeightScreen() {
   const { user } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   const [todayEntry, setTodayEntry] = useState<WeightEntry | null>(null);
   const [recentEntries, setRecentEntries] = useState<WeightEntryWithChange[]>([]);
@@ -393,12 +398,14 @@ export default function BodyWeightScreen() {
   };
 
   const handleLogPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (todayEntry) {
-      setEditingEntry(todayEntry);
-    } else {
-      setShowLogModal(true);
-    }
+    requireAuth(() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      if (todayEntry) {
+        setEditingEntry(todayEntry);
+      } else {
+        setShowLogModal(true);
+      }
+    }, 'Sign in to log your weight and track your progress.');
   };
 
   // Get latest weight for initial value
@@ -559,6 +566,13 @@ export default function BodyWeightScreen() {
         initialNotes={editingEntry?.notes || ''}
         isEditing
         onDelete={handleDeleteWeight}
+      />
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
       />
     </SafeAreaView>
   );

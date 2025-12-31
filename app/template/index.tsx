@@ -468,7 +468,7 @@ const EmptyState: React.FC<{ onCreatePress: () => void }> = ({ onCreatePress }) 
 // ============================================
 
 export default function TemplatesScreen() {
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
   const { startWorkout, addExerciseWithSets, isWorkoutActive } = useWorkoutStore();
 
   const [folders, setFolders] = useState<Array<TemplateFolder & { templates: Template[] }>>([]);
@@ -490,7 +490,11 @@ export default function TemplatesScreen() {
 
   // Fetch data
   const fetchData = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
 
     try {
       const data = await getTemplatesGroupedByFolder(user.id);
@@ -502,7 +506,7 @@ export default function TemplatesScreen() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id]);
+  }, [user?.id, session]);
 
   useEffect(() => {
     fetchData();
@@ -707,6 +711,36 @@ export default function TemplatesScreen() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
           <Text style={styles.loadingText}>Loading templates...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Guest mode UI
+  if (!session) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <StatusBar style="light" />
+        
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Templates</Text>
+        </View>
+
+        {/* Guest Empty State */}
+        <View style={styles.guestContainer}>
+          <Folder size={64} color="#334155" />
+          <Text style={styles.guestTitle}>Workout Templates</Text>
+          <Text style={styles.guestSubtitle}>
+            Sign in to create and manage your custom workout templates
+          </Text>
+          <TouchableOpacity
+            style={styles.signInButton}
+            onPress={() => router.push('/(auth)/login')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -991,6 +1025,43 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: '#94a3b8',
     fontSize: 14,
+  },
+
+  // Guest Mode
+  guestContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+
+  guestTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#f1f5f9',
+    marginTop: 24,
+    marginBottom: 12,
+  },
+
+  guestSubtitle: {
+    fontSize: 16,
+    color: '#64748b',
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 24,
+  },
+
+  signInButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+  },
+
+  signInButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
   },
 
   // Header

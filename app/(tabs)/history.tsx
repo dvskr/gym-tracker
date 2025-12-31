@@ -35,6 +35,8 @@ import {
 } from '@/lib/api/history';
 import { Skeleton } from '@/components/ui';
 import { lightHaptic } from '@/lib/utils/haptics';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Constants
@@ -209,7 +211,10 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = tru
 // ============================================
 
 export default function HistoryScreen() {
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   // View mode
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -236,6 +241,14 @@ export default function HistoryScreen() {
   // Fetch workouts for list view
   const fetchWorkouts = useCallback(
     async (pageNum: number = 0, refresh: boolean = false) => {
+      // KEY FIX: If no session, stop loading immediately
+      if (!session) {
+        setIsLoading(false);
+        setIsRefreshing(false);
+        setIsLoadingMore(false);
+        return;
+      }
+      
       if (!user?.id) return;
 
       if (refresh) {
@@ -273,12 +286,14 @@ export default function HistoryScreen() {
         setIsLoadingMore(false);
       }
     },
-    [user?.id, filter]
+    [user?.id, filter, session]
   );
 
   // Fetch workout dates for calendar
   const fetchWorkoutDates = useCallback(
     async (month: number, year: number) => {
+      // KEY FIX: If no session, return early
+      if (!session) return;
       if (!user?.id) return;
 
       try {
@@ -391,9 +406,11 @@ export default function HistoryScreen() {
 
   // Handle workout press
   const handleWorkoutPress = (workoutId: string) => {
-    lightHaptic();
-    setShowDateSheet(false);
-    router.push(`/workout/${workoutId}`);
+    requireAuth(() => {
+      lightHaptic();
+      setShowDateSheet(false);
+      router.push(`/workout/${workoutId}`);
+    }, 'Sign in to view your workout history and details.');
   };
 
   // Handle refresh
@@ -646,6 +663,13 @@ export default function HistoryScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }
@@ -739,6 +763,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 16,
     paddingBottom: 100,
+    flexGrow: 1,
   },
 
   // Workout Card
@@ -1024,3 +1049,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

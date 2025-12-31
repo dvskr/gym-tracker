@@ -33,6 +33,8 @@ import {
   MeasurementEntry,
 } from '@/lib/api/measurements';
 import { getTodayWeight } from '@/lib/api/bodyWeight';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -98,6 +100,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 
 export default function MeasurementsScreen() {
   const { user } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState<FormData>(emptyFormData);
@@ -202,7 +207,11 @@ export default function MeasurementsScreen() {
 
   // Save measurements
   const handleSave = async () => {
-    if (!user?.id) return;
+    // Require auth before saving
+    if (!user?.id) {
+      requireAuth(() => {}, 'Sign in to save your body measurements.');
+      return;
+    }
 
     // Check if any field has data
     const hasData = Object.entries(formData).some(([key, value]) => {
@@ -547,6 +556,13 @@ export default function MeasurementsScreen() {
           )}
         </TouchableOpacity>
       </View>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

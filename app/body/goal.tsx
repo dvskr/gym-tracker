@@ -45,6 +45,8 @@ import {
   formatWeightChange,
   formatTimeToGoal,
 } from '@/lib/utils/goalCalculations';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -136,6 +138,9 @@ const GoalTypeSelector: React.FC<GoalTypeSelectorProps> = ({ selected, onSelect 
 
 export default function WeightGoalScreen() {
   const { user } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   // State
   const [currentGoal, setCurrentGoal] = useState<WeightGoal | null>(null);
@@ -206,7 +211,12 @@ export default function WeightGoalScreen() {
 
   // Handle save goal
   const handleSaveGoal = async () => {
-    if (!user?.id || !currentWeight) return;
+    // Require auth before saving goal
+    if (!user?.id) {
+      requireAuth(() => {}, 'Sign in to set your weight goal.');
+      return;
+    }
+    if (!currentWeight) return;
 
     const targetWeightNum = parseFloat(targetWeight);
     if (isNaN(targetWeightNum) || targetWeightNum <= 0) {
@@ -548,6 +558,13 @@ export default function WeightGoalScreen() {
         {/* Bottom spacer */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

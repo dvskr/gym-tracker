@@ -11,6 +11,8 @@ import { Button, Card } from '@/components/ui';
 import { getWorkoutHistory } from '@/lib/api/workouts';
 import { lightHaptic } from '@/lib/utils/haptics';
 import { WorkoutSuggestion } from '@/components/ai';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -69,7 +71,10 @@ export default function WorkoutScreen() {
   const startWorkout = useWorkoutStore((state) => state.startWorkout);
   const discardWorkout = useWorkoutStore((state) => state.discardWorkout);
   const getTotalSets = useWorkoutStore((state) => state.getTotalSets);
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   // Recent workouts state
   const [recentWorkouts, setRecentWorkouts] = useState<RecentWorkout[]>([]);
@@ -77,10 +82,16 @@ export default function WorkoutScreen() {
 
   // Fetch recent workouts
   useEffect(() => {
+    // KEY FIX: If no session, stop loading immediately
+    if (!session) {
+      setIsLoadingRecent(false);
+      return;
+    }
+    
     if (user?.id) {
       fetchRecentWorkouts();
     }
-  }, [user?.id]);
+  }, [user?.id, session]);
 
   const fetchRecentWorkouts = async () => {
     if (!user?.id) return;
@@ -105,16 +116,20 @@ export default function WorkoutScreen() {
 
   // Handle start empty workout
   const handleStartWorkout = useCallback(() => {
-    lightHaptic();
-    startWorkout('New Workout');
-    router.push('/workout/active');
-  }, [startWorkout]);
+    requireAuth(() => {
+      lightHaptic();
+      startWorkout('New Workout');
+      router.push('/workout/active');
+    }, 'Sign in to start tracking your workouts and save your progress.');
+  }, [requireAuth, startWorkout]);
 
   // Handle continue workout
   const handleContinueWorkout = useCallback(() => {
-    lightHaptic();
-    router.push('/workout/active');
-  }, []);
+    requireAuth(() => {
+      lightHaptic();
+      router.push('/workout/active');
+    }, 'Sign in to access your active workout.');
+  }, [requireAuth]);
 
   // Handle discard workout
   const handleDiscardWorkout = useCallback(() => {
@@ -134,8 +149,10 @@ export default function WorkoutScreen() {
 
   // Navigate to workout detail
   const handleViewWorkout = (workoutId: string) => {
-    lightHaptic();
-    router.push(`/workout/${workoutId}`);
+    requireAuth(() => {
+      lightHaptic();
+      router.push(`/workout/${workoutId}`);
+    }, 'Sign in to view your workout details.');
   };
 
   // Navigate to history
@@ -311,6 +328,13 @@ export default function WorkoutScreen() {
           </View>
         )}
       </ScrollView>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

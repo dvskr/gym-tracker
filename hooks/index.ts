@@ -41,4 +41,5 @@ export {
   useHeartRateZone,
 } from './useHeartRate';
 export { useHealthSync } from './useHealthSync';
+export { useAuthGuard } from './useAuthGuard';
 

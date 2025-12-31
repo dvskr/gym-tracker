@@ -27,6 +27,12 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchWeights = useCallback(async () => {
+    // KEY FIX: Don't fetch if no userId (guest mode)
+    if (!userId) {
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       const history = await getWeightHistory(userId, 7);
       // Sort by date ascending for chart

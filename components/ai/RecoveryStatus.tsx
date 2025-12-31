@@ -23,7 +23,12 @@ export function RecoveryStatus() {
   const [expanded, setExpanded] = useState(false);
 
   const fetchStatus = useCallback(async (forceRefresh = false) => {
-    if (!user) return;
+    // KEY FIX: Don't fetch if no user (guest mode)
+    if (!user) {
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
 
     try {
       if (forceRefresh) {

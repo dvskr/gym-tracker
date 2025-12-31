@@ -60,7 +60,11 @@ export function PlateauAlerts() {
   };
 
   const checkPlateaus = async () => {
-    if (!user) return;
+    // KEY FIX: Don't fetch if no user (guest mode)
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
     
     setIsLoading(true);
     try {

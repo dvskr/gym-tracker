@@ -191,7 +191,7 @@ const EmptyTemplates: React.FC<{ onCreateTemplate: () => void; onStartEmpty: () 
 // ============================================
 
 export default function HomeScreen() {
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
   
   // Use selectors for optimized re-renders
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
@@ -220,6 +220,13 @@ export default function HomeScreen() {
 
   // Fetch data
   const fetchData = useCallback(async () => {
+    // KEY FIX: If no session, stop loading immediately
+    if (!session) {
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
+    
     if (!user?.id) return;
 
     try {
@@ -246,7 +253,7 @@ export default function HomeScreen() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id]);
+  }, [user?.id, session]);
 
   useEffect(() => {
     fetchData();
@@ -416,13 +423,13 @@ export default function HomeScreen() {
 
         {/* Recovery Status */}
         {/* Daily Check-in Prompt */}
-        <CheckinPrompt />
+        {session && <CheckinPrompt />}
 
         {/* Recovery Status */}
-        <RecoveryStatus />
+        {session && <RecoveryStatus />}
 
         {/* Plateau Detection Alerts */}
-        <PlateauAlerts />
+        {session && <PlateauAlerts />}
 
         {/* Quick Start Section */}
         {templates.length > 0 ? (
@@ -482,22 +489,26 @@ export default function HomeScreen() {
 
             {/* Quick Weight Log */}
             <View style={styles.bodyStatsGrid}>
-              <View style={styles.bodyStatsLeft}>
-                <QuickWeightLog
-                  userId={user.id}
-                  onWeightLogged={handleWeightLogged}
-                />
-              </View>
+              {session && user?.id && (
+                <View style={styles.bodyStatsLeft}>
+                  <QuickWeightLog
+                    userId={user.id}
+                    onWeightLogged={handleWeightLogged}
+                  />
+                </View>
+              )}
             </View>
 
             {/* Weight Sparkline */}
-            <View style={styles.sparklineSection}>
-              <WeightSparkline
-                userId={user.id}
-                goalType="lose"
-                refreshTrigger={weightRefreshTrigger}
-              />
-            </View>
+            {session && user?.id && (
+              <View style={styles.sparklineSection}>
+                <WeightSparkline
+                  userId={user.id}
+                  goalType="lose"
+                  refreshTrigger={weightRefreshTrigger}
+                />
+              </View>
+            )}
 
             {/* Quick Links */}
             <View style={styles.quickLinksRow}>

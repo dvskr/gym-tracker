@@ -34,6 +34,8 @@ import {
 } from '@/lib/services/photoService';
 import { PhotoGrid } from '@/components/body/PhotoGrid';
 import { PhotoViewer } from '@/components/body/PhotoViewer';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -225,6 +227,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onTakePhoto }) => (
 
 export default function PhotoGalleryScreen() {
   const { user } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   const [photos, setPhotos] = useState<ProgressPhoto[]>([]);
   const [filteredPhotos, setFilteredPhotos] = useState<ProgressPhoto[]>([]);
@@ -294,8 +299,10 @@ export default function PhotoGalleryScreen() {
 
   // Navigate to capture
   const handleTakePhoto = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push('/body/photos/capture');
+    requireAuth(() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      router.push('/body/photos/capture');
+    }, 'Sign in to capture and track your progress photos.');
   };
 
   // Loading
@@ -365,6 +372,13 @@ export default function PhotoGalleryScreen() {
         initialIndex={selectedPhotoIndex}
         onClose={() => setViewerVisible(false)}
         onDelete={handleDelete}
+      />
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
       />
     </SafeAreaView>
   );

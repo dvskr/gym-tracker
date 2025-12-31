@@ -10,3 +10,6 @@ export * from './exercise';
 // Achievement Components
 export { AchievementCard, AchievementBadge, AchievementListItem, AchievementToast } from './AchievementCard';
 
+// Modals
+export { AuthPromptModal } from './modals/AuthPromptModal';
+

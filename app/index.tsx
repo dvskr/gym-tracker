@@ -5,7 +5,7 @@ import { useAuthStore } from '../stores/authStore';
 import { useEffect, useState } from 'react';
 
 export default function Index() {
-  const { user, isInitialized, isLoading, initialize } = useAuthStore();
+  const { user, isInitialized, isLoading, initialize, session } = useAuthStore();
   const [isReady, setIsReady] = useState(false);
 
   // Initialize auth on mount
@@ -34,7 +34,7 @@ export default function Index() {
   }
 
   // Redirect if logged in
-  if (user) {
+  if (user && session) {
     return <Redirect href="/(tabs)" />;
   }
 
@@ -65,6 +65,17 @@ export default function Index() {
             }}
           >
             <Text style={styles.secondaryButtonText}>Create Account</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.guestButton}
+            onPress={() => {
+              const { router } = require('expo-router');
+              // Navigate to app as guest
+              router.replace('/(tabs)');
+            }}
+          >
+            <Text style={styles.guestButtonText}>Continue as Guest</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -126,5 +137,18 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  guestButton: {
+    backgroundColor: 'transparent',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  guestButtonText: {
+    color: '#64748b',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

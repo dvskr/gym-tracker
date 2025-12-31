@@ -46,6 +46,8 @@ import {
   Achievement,
 } from '@/lib/api/achievements';
 import { AchievementCard } from '@/components/AchievementCard';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 // ============================================
 // Types
@@ -179,7 +181,10 @@ const StatsGridSkeleton = () => (
 // ============================================
 
 export default function ProgressScreen() {
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   const [weeklyStats, setWeeklyStats] = useState<WeeklyStats | null>(null);
   const [allTimeStats, setAllTimeStats] = useState<AllTimeStats | null>(null);
@@ -191,6 +196,13 @@ export default function ProgressScreen() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchData = useCallback(async () => {
+    // KEY FIX: If no session, stop loading immediately
+    if (!session) {
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
+    
     if (!user?.id) return;
 
     try {
@@ -215,7 +227,7 @@ export default function ProgressScreen() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id]);
+  }, [user?.id, session]);
 
   useEffect(() => {
     fetchData();
@@ -388,8 +400,10 @@ export default function ProgressScreen() {
                 key={pr.id}
                 pr={pr}
                 onPress={() => {
-                  lightHaptic();
-                  router.push(`/exercise/${pr.exerciseId}`);
+                  requireAuth(() => {
+                    lightHaptic();
+                    router.push(`/exercise/${pr.exerciseId}`);
+                  }, 'Sign in to view your personal records and exercise details.');
                 }}
               />
             ))}
@@ -493,6 +507,13 @@ export default function ProgressScreen() {
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

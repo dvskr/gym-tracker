@@ -24,6 +24,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { supabase } from '@/lib/supabase';
 import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 interface Message {
   id: string;
@@ -52,6 +54,9 @@ export default function CoachScreen() {
   const flatListRef = useRef<FlatList>(null);
   const { user } = useAuthStore();
   const { startWorkout, addExercise } = useWorkoutStore();
+  
+  // Auth guard
+  const { isAuthenticated, requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   // Load user context on mount
   useEffect(() => {
@@ -195,6 +200,12 @@ export default function CoachScreen() {
   };
 
   const sendMessage = async (messageText?: string) => {
+    // Require auth to send messages
+    if (!isAuthenticated) {
+      requireAuth(() => {}, 'Sign in to chat with your AI fitness coach and get personalized advice.');
+      return;
+    }
+    
     const textToSend = messageText || input.trim();
     if (!textToSend || isLoading) return;
 
@@ -507,6 +518,13 @@ Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
           </KeyboardAvoidingView>
         </>
       )}
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

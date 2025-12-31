@@ -34,6 +34,8 @@ import { getLatestMeasurements } from '@/lib/api/measurements';
 import { getWeightGoal } from '@/lib/api/goals';
 import { getPhotos } from '@/lib/api/photos';
 import { calculateProgress } from '@/lib/utils/goalCalculations';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -371,6 +373,9 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
 export default function BodyHubScreen() {
   const { user } = useAuthStore();
+  
+  // Auth guard
+  const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
 
   // State
   const [isLoading, setIsLoading] = useState(true);
@@ -484,8 +489,10 @@ export default function BodyHubScreen() {
   }, [fetchData]);
 
   const navigate = (route: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(route as any);
+    requireAuth(() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      router.push(route as any);
+    }, 'Sign in to track your body measurements and progress.');
   };
 
   // Loading
@@ -581,6 +588,13 @@ export default function BodyHubScreen() {
         {/* Bottom spacer */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+      
+      {/* Auth Modal */}
+      <AuthPromptModal
+        visible={showAuthModal}
+        onClose={closeAuthModal}
+        message={authMessage}
+      />
     </SafeAreaView>
   );
 }

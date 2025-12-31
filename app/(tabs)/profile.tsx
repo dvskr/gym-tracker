@@ -33,6 +33,8 @@ import {
   Shield,
   Mail,
   Star,
+  LogIn,
+  LogOut,
 } from 'lucide-react-native';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -101,7 +103,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { user, profile, signOut } = useAuthStore();
+  const { user, session, profile, signOut } = useAuthStore();
+  
+  const isLoggedIn = !!session;
 
   // Settings state (these would come from profile/settings store in real app)
   const [autoStartTimer, setAutoStartTimer] = useState(true);
@@ -182,6 +186,14 @@ export default function ProfileScreen() {
     );
   };
 
+  const handleAuthAction = async () => {
+    if (isLoggedIn) {
+      handleSignOut();
+    } else {
+      router.push('/(auth)/login');
+    }
+  };
+
   const handleRateApp = () => {
     router.push('/settings/about');
   };
@@ -193,22 +205,34 @@ export default function ProfileScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Profile Section */}
         <View style={styles.profileSection}>
-          <TouchableOpacity onPress={handleChangeAvatar} activeOpacity={0.7}>
-            <View style={styles.avatarContainer}>
-              {profile?.avatar_url ? (
-                <Image source={{ uri: profile.avatar_url }} style={styles.avatar} />
-              ) : (
-                <View style={styles.avatarPlaceholder}>
-                  <User size={48} color="#60a5fa" />
+          {isLoggedIn ? (
+            <>
+              <TouchableOpacity onPress={handleChangeAvatar} activeOpacity={0.7}>
+                <View style={styles.avatarContainer}>
+                  {profile?.avatar_url ? (
+                    <Image source={{ uri: profile.avatar_url }} style={styles.avatar} />
+                  ) : (
+                    <View style={styles.avatarPlaceholder}>
+                      <User size={48} color="#60a5fa" />
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          </TouchableOpacity>
-          <Text style={styles.userName}>{profile?.full_name || 'User'}</Text>
-          <Text style={styles.userEmail}>{user?.email || ''}</Text>
-          <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
-            <Text style={styles.editProfileButtonText}>Edit Profile</Text>
-          </TouchableOpacity>
+              </TouchableOpacity>
+              <Text style={styles.userName}>{profile?.full_name || 'User'}</Text>
+              <Text style={styles.userEmail}>{user?.email || ''}</Text>
+              <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
+                <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <View style={styles.guestAvatar}>
+                <User size={40} color="#6b7280" />
+              </View>
+              <Text style={styles.guestText}>Guest Mode</Text>
+              <Text style={styles.guestSubtext}>Sign in to track your workouts</Text>
+            </>
+          )}
         </View>
 
         {/* Preferences Section */}
@@ -353,9 +377,22 @@ export default function ProfileScreen() {
           />
         </View>
 
-        {/* Sign Out Button */}
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Text style={styles.signOutButtonText}>Sign Out</Text>
+        {/* Sign Out/In Button */}
+        <TouchableOpacity 
+          style={[styles.authButton, !isLoggedIn && styles.signInButton]} 
+          onPress={handleAuthAction}
+        >
+          {isLoggedIn ? (
+            <>
+              <LogOut size={20} color="#ffffff" />
+              <Text style={styles.authButtonText}>Sign Out</Text>
+            </>
+          ) : (
+            <>
+              <LogIn size={20} color="#ffffff" />
+              <Text style={styles.authButtonText}>Sign In</Text>
+            </>
+          )}
         </TouchableOpacity>
 
         <View style={styles.bottomSpacer} />
@@ -478,6 +515,44 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#94a3b8',
     marginRight: 4,
+  },
+  guestAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#334155',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  guestText: {
+    color: '#f1f5f9',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  guestSubtext: {
+    color: '#6b7280',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  authButton: {
+    marginHorizontal: 16,
+    marginTop: 32,
+    paddingVertical: 14,
+    backgroundColor: '#ef4444',
+    borderRadius: 12,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  signInButton: {
+    backgroundColor: '#3b82f6',
+  },
+  authButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
   },
   signOutButton: {
     marginHorizontal: 16,
