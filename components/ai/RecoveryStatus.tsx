@@ -17,13 +17,19 @@ export function RecoveryStatus() {
     return getCachedData<RecoveryStatusType>(user.id, 'recovery');
   });
   
-  const [isLoading, setIsLoading] = useState(!status);
+  const [hasFetched, setHasFetched] = useState(() => {
+    // If we got cached data, we've already fetched
+    if (!user) return false;
+    const cached = getCachedData<RecoveryStatusType>(user.id, 'recovery');
+    return cached !== null && cached !== undefined;
+  });
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
 
   const fetchStatus = useCallback(async (forceRefresh = false) => {
-    // KEY FIX: Don't fetch if no user (guest mode)
     if (!user) {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -40,12 +46,14 @@ export function RecoveryStatus() {
 
       const result = await recoveryService.getRecoveryStatus(user.id);
       setStatus(result);
+      setHasFetched(true);
       
       // Cache the result
       setCacheData(user.id, 'recovery', result);
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to fetch recovery status';
       setError(errorMessage);
+      setHasFetched(true);
       console.error('Failed to fetch recovery status:', err);
     } finally {
       setIsLoading(false);
@@ -54,11 +62,11 @@ export function RecoveryStatus() {
   }, [user]);
 
   useEffect(() => {
-    // Only fetch if we don't have cached data
-    if (user && !status) {
+    // Only fetch if we haven't fetched before
+    if (user && !hasFetched) {
       fetchStatus();
     }
-  }, [user, status, fetchStatus]);
+  }, [user, hasFetched, fetchStatus]);
 
   const handleRefresh = () => {
     fetchStatus(true);

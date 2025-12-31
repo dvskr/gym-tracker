@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,22 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc, PlusCircle } from 'lucide-react-native';
-import { useExerciseStore } from '@/stores/exerciseStore';
+import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc, PlusCircle, Home, Footprints, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { useDebouncedCallback } from 'use-debounce';
+import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 // Helper function to get thumbnail URL from GIF URL
 const getThumbnailUrl = (gifUrl: string | null): string | null => {
@@ -35,6 +44,15 @@ const getThumbnailUrl = (gifUrl: string | null): string | null => {
   return fullThumbnailUrl;
 };
 
+// Icon map for filter presets
+const iconMap: Record<string, any> = {
+  Home,
+  Dumbbell,
+  User,
+  Footprints,
+  Circle,
+};
+
 // Body part mapping for simpler chip names
 const BODY_PART_FILTERS = [
   { label: 'All', value: null },
@@ -45,6 +63,19 @@ const BODY_PART_FILTERS = [
   { label: 'Legs', value: 'legs' },      // Matches both upper and lower legs
   { label: 'Core', value: 'waist' },
   { label: 'Cardio', value: 'cardio' },
+] as const;
+
+// Equipment filter options
+const EQUIPMENT_FILTERS = [
+  { label: 'All', value: null },
+  { label: 'Barbell', value: 'barbell' },
+  { label: 'Dumbbell', value: 'dumbbell' },
+  { label: 'Bodyweight', value: 'body weight' },
+  { label: 'Cable', value: 'cable' },
+  { label: 'Machine', value: 'leverage machine' },
+  { label: 'Smith', value: 'smith machine' },
+  { label: 'Kettlebell', value: 'kettlebell' },
+  { label: 'Band', value: 'band' },
 ] as const;
 
 // Helper function to get category-specific icon
@@ -227,25 +258,49 @@ export default function ExerciseLibraryScreen() {
     isLoading,
     searchQuery,
     selectedBodyPart,
+    selectedEquipment,
     error,
     fetchExercises,
     clearCache,
     searchExercises,
     filterByBodyPart,
+    filterByEquipment,
     getFilteredExercises,
     clearFilters,
+    clearAllFilters,
     getRecentlyUsedExercises,
     getFavoriteExercises,
     isFavorite,
     toggleFavorite,
     loadFavorites,
+    activePreset,
+    applyFilterPreset,
+    clearPreset,
   } = useExerciseStore();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [localSearchText, setLocalSearchText] = useState(searchQuery);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
-  // Fetch exercises and load favorites on mount
+  // Calculate active filter count (excluding search)
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (selectedBodyPart) count++;
+    if (selectedEquipment) count++;
+    if (activePreset) count++;
+    return count;
+  }, [selectedBodyPart, selectedEquipment, activePreset]);
+
+  // Sync local state with store when store changes (e.g., when cleared)
   useEffect(() => {
-    clearCache();
+    setLocalSearchText(searchQuery);
+  }, [searchQuery]);
+
+  // Fetch exercises, load favorites on mount
+  useEffect(() => {
+    // Only fetch if exercises are empty (first load)
+    // Don't call clearCache() here - it forces re-fetch every mount!
+    fetchExercises(); // Uses cache if valid, only fetches if needed
     loadFavorites();
   }, []);
 
@@ -263,18 +318,26 @@ export default function ExerciseLibraryScreen() {
     setRefreshing(false);
   }, [clearCache]);
 
-  // Handle search input
+  // Create debounced search handler (300ms delay)
+  const debouncedSearch = useDebouncedCallback((text: string) => {
+    searchExercises(text);
+  }, 300);
+
+  // Handle search input with immediate local state update
   const handleSearchChange = useCallback(
     (text: string) => {
-      searchExercises(text);
+      setLocalSearchText(text); // Update local state immediately for responsive UI
+      debouncedSearch(text);     // Debounced store update for filtering
     },
-    [searchExercises]
+    [debouncedSearch]
   );
 
   // Handle clear search
   const handleClearSearch = useCallback(() => {
+    setLocalSearchText('');
     searchExercises('');
-  }, [searchExercises]);
+    debouncedSearch.cancel(); // Cancel any pending debounced calls
+  }, [searchExercises, debouncedSearch]);
 
   // Handle body part filter
   const handleBodyPartPress = useCallback(
@@ -287,6 +350,47 @@ export default function ExerciseLibraryScreen() {
     },
     [selectedBodyPart, filterByBodyPart]
   );
+
+  // Handle equipment filter
+  const handleEquipmentPress = useCallback(
+    (equipment: string | null) => {
+      if (selectedEquipment === equipment) {
+        filterByEquipment(null);
+      } else {
+        filterByEquipment(equipment);
+      }
+      lightHaptic();
+    },
+    [selectedEquipment, filterByEquipment]
+  );
+
+  // Handle clear all filters
+  const handleClearAllFilters = useCallback(() => {
+    setLocalSearchText('');
+    debouncedSearch.cancel();
+    clearAllFilters();
+    lightHaptic();
+  }, [clearAllFilters, debouncedSearch]);
+
+  // Handle preset toggle
+  const handlePresetPress = useCallback((presetKey: FilterPresetKey) => {
+    if (activePreset === presetKey) {
+      clearPreset();
+    } else {
+      applyFilterPreset(presetKey);
+    }
+    lightHaptic();
+  }, [activePreset, applyFilterPreset, clearPreset]);
+
+  // Check if any filters are active (including search)
+  const hasActiveFilters = searchQuery.length > 0 || activeFilterCount > 0;
+
+  // Toggle filter panel with animation
+  const toggleFilterPanel = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsFilterExpanded(prev => !prev);
+    lightHaptic();
+  }, []);
 
   // Handle exercise press
   const handleExercisePress = useCallback((exerciseId: string) => {
@@ -372,64 +476,212 @@ export default function ExerciseLibraryScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Search Bar */}
+      {/* Search Bar with Filter Toggle */}
       <View style={styles.searchContainer}>
-        <Search size={20} color="#64748b" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          value={searchQuery}
-          onChangeText={handleSearchChange}
-          placeholder="Search exercises..."
-          placeholderTextColor="#64748b"
-          autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="search"
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity
-            onPress={handleClearSearch}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <X size={18} color="#64748b" />
-          </TouchableOpacity>
-        )}
+        <View style={styles.searchInputWrapper}>
+          <Search size={18} color="#64748b" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            value={localSearchText}
+            onChangeText={handleSearchChange}
+            placeholder="Search exercises..."
+            placeholderTextColor="#64748b"
+            autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="search"
+          />
+          {localSearchText.length > 0 && (
+            <TouchableOpacity
+              onPress={handleClearSearch}
+              style={styles.clearButton}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <X size={18} color="#64748b" />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Filter Toggle Button */}
+        <TouchableOpacity
+          style={[
+            styles.filterToggleButton,
+            (isFilterExpanded || activeFilterCount > 0) && styles.filterToggleButtonActive,
+          ]}
+          onPress={toggleFilterPanel}
+          activeOpacity={0.7}
+        >
+          {isFilterExpanded ? (
+            <ChevronUp size={18} color={activeFilterCount > 0 ? '#ffffff' : '#64748b'} />
+          ) : (
+            <ChevronDown size={18} color={activeFilterCount > 0 ? '#ffffff' : '#64748b'} />
+          )}
+          {activeFilterCount > 0 && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{activeFilterCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
 
-      {/* Body Part Filter Chips */}
-      <View style={styles.filtersContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipsContent}
-        >
-          {BODY_PART_FILTERS.map((filter) => {
-            const isSelected = selectedBodyPart === filter.value;
-            return (
+      {/* Expandable Filter Panel */}
+      {isFilterExpanded && (
+        <View style={styles.filterPanel}>
+          {/* Body Part Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>BODY PART</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {BODY_PART_FILTERS.map((filter) => {
+                const isSelected = selectedBodyPart === filter.value;
+                return (
+                  <TouchableOpacity
+                    key={filter.label}
+                    style={[styles.chip, isSelected && styles.chipSelected]}
+                    onPress={() => {
+                      lightHaptic();
+                      filterByBodyPart(isSelected ? null : filter.value);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Equipment Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>EQUIPMENT</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {EQUIPMENT_FILTERS.map((filter) => {
+                const isSelected = selectedEquipment === filter.value;
+                return (
+                  <TouchableOpacity
+                    key={filter.label}
+                    style={[styles.chip, isSelected && styles.chipSelected]}
+                    onPress={() => {
+                      lightHaptic();
+                      filterByEquipment(isSelected ? null : filter.value);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Quick Filters Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>QUICK FILTERS</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {Object.entries(FILTER_PRESETS).map(([key, preset]) => {
+                const Icon = iconMap[preset.icon];
+                const isActive = activePreset === key;
+                
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    style={[styles.chip, styles.presetChip, isActive && styles.chipSelected]}
+                    onPress={() => {
+                      lightHaptic();
+                      isActive ? clearPreset() : applyFilterPreset(key as FilterPresetKey);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    {Icon && <Icon size={14} color={isActive ? '#ffffff' : '#9ca3af'} />}
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isActive && styles.chipTextSelected,
+                      ]}
+                    >
+                      {preset.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Bottom Row: Clear All */}
+          <View style={styles.filterBottomRow}>
+            {activeFilterCount > 0 && (
               <TouchableOpacity
-                key={filter.label}
-                style={[styles.chip, isSelected && styles.chipSelected]}
-                onPress={() => handleBodyPartPress(filter.value)}
+                style={styles.clearAllButton}
+                onPress={() => {
+                  lightHaptic();
+                  clearAllFilters();
+                }}
                 activeOpacity={0.7}
               >
-                <Text
-                  style={[
-                    styles.chipText,
-                    isSelected && styles.chipTextSelected,
-                  ]}
-                >
-                  {filter.label}
-                </Text>
+                <X size={14} color="#ef4444" />
+                <Text style={styles.clearAllText}>Clear All</Text>
               </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
+            )}
+          </View>
+        </View>
+      )}
 
-      {/* Results Count */}
-      <View style={styles.resultsRow}>
-        <Text style={styles.resultsText}>
+      {/* Result Count with Active Filters */}
+      <View style={styles.resultRow}>
+        <Text style={styles.resultCount}>
           {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
         </Text>
+        
+        {/* Active filter tags (when collapsed) */}
+        {!isFilterExpanded && activeFilterCount > 0 && (
+          <View style={styles.activeFiltersRow}>
+            {selectedBodyPart && (
+              <View style={styles.activeFilterTag}>
+                <Text style={styles.activeFilterText}>
+                  {BODY_PART_FILTERS.find(f => f.value === selectedBodyPart)?.label}
+                </Text>
+              </View>
+            )}
+            {selectedEquipment && (
+              <View style={styles.activeFilterTag}>
+                <Text style={styles.activeFilterText}>
+                  {EQUIPMENT_FILTERS.find(f => f.value === selectedEquipment)?.label}
+                </Text>
+              </View>
+            )}
+            {activePreset && (
+              <View style={styles.activeFilterTag}>
+                <Text style={styles.activeFilterText}>
+                  {FILTER_PRESETS[activePreset]?.name}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
       </View>
 
       {/* Recently Used Section */}
@@ -557,71 +809,224 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  // Search Container
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1e293b',
-    marginHorizontal: 20,
-    marginTop: 16,
-    borderRadius: 12,
     paddingHorizontal: 16,
-    minHeight: 48,
+    paddingVertical: 12,
+    gap: 10,
   },
-
+  
+  searchInputWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 44,
+  },
+  
   searchIcon: {
-    marginRight: 12,
+    marginRight: 8,
   },
-
+  
   searchInput: {
     flex: 1,
     color: '#ffffff',
     fontSize: 16,
-    paddingVertical: 12,
+  },
+  
+  clearButton: {
+    padding: 4,
+  },
+  
+  // Filter Toggle Button
+  filterToggleButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  
+  filterToggleButtonActive: {
+    backgroundColor: '#3b82f6',
+  },
+  
+  filterBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#ef4444',
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  
+  filterBadgeText: {
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  
+  // Filter Panel
+  filterPanel: {
+    backgroundColor: '#0f172a',
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
+    paddingBottom: 12,
+  },
+  
+  filterSection: {
+    marginBottom: 12,
+  },
+  
+  filterSectionLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748b',
+    letterSpacing: 0.5,
+    marginLeft: 16,
+    marginBottom: 8,
+  },
+  
+  chipsRow: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  
+  // Chips
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#1e293b',
+  },
+  
+  chipSelected: {
+    backgroundColor: '#3b82f6',
+  },
+  
+  chipText: {
+    fontSize: 14,
+    color: '#94a3b8',
+    fontWeight: '500',
+  },
+  
+  chipTextSelected: {
+    color: '#ffffff',
+  },
+  
+  presetChip: {
+    gap: 6,
+  },
+  
+  // Bottom Row
+  filterBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginTop: 4,
+  },
+  
+  clearAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    gap: 4,
+  },
+  
+  clearAllText: {
+    fontSize: 14,
+    color: '#ef4444',
+    fontWeight: '500',
+  },
+  
+  // Result Row
+  resultRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  
+  resultCount: {
+    fontSize: 13,
+    color: '#64748b',
+    fontWeight: '500',
+  },
+  
+  activeFiltersRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  
+  activeFilterTag: {
+    backgroundColor: '#1e40af',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  
+  activeFilterText: {
+    fontSize: 12,
+    color: '#93c5fd',
+    fontWeight: '500',
   },
 
-  filtersContainer: {
+  presetsContainer: {
     marginTop: 16,
     marginBottom: 8,
   },
 
-  chipsContent: {
+  presetsLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748b',
+    marginBottom: 8,
     paddingHorizontal: 20,
-    gap: 8,
+    letterSpacing: 0.5,
   },
 
-  chip: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#334155',
+  filterSection: {
+    marginBottom: 12,
   },
 
-  chipSelected: {
-    backgroundColor: '#3b82f6',
-    borderColor: '#3b82f6',
+  warningBanner: {
+    marginHorizontal: 20,
+    marginBottom: 8,
+    backgroundColor: '#fbbf2420',
+    borderLeftWidth: 3,
+    borderLeftColor: '#fbbf24',
+    padding: 12,
+    borderRadius: 8,
   },
 
-  chipText: {
-    color: '#94a3b8',
-    fontSize: 14,
+  warningText: {
+    color: '#fbbf24',
+    fontSize: 13,
     fontWeight: '500',
   },
 
-  chipTextSelected: {
-    color: '#ffffff',
-    fontWeight: '600',
-  },
-
-  resultsRow: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-
-  resultsText: {
-    color: '#64748b',
-    fontSize: 13,
+  warningLink: {
+    color: '#3b82f6',
+    textDecorationLine: 'underline',
   },
 
   listContent: {

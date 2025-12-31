@@ -48,6 +48,7 @@ import {
 import { AchievementCard } from '@/components/AchievementCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
 
 // ============================================
 // Types
@@ -192,11 +193,29 @@ export default function ProgressScreen() {
   const [muscleDistribution, setMuscleDistribution] = useState<MuscleDistribution[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [achievementStats, setAchievementStats] = useState<{ unlocked: number; total: number } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start false, only load if cache miss
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchData = useCallback(async () => {
-    // KEY FIX: If no session, stop loading immediately
+  const fetchData = useCallback(async (force = false) => {
+    const CACHE_KEY = 'progress-data';
+    
+    // Check global cache (survives component unmount)
+    if (!force) {
+      const cachedData = tabDataCache.get(CACHE_KEY);
+      if (cachedData) {
+        setWeeklyStats(cachedData.weeklyStats);
+        setAllTimeStats(cachedData.allTimeStats);
+        setRecentPRs(cachedData.recentPRs);
+        setMuscleDistribution(cachedData.muscleDistribution);
+        setAchievements(cachedData.achievements);
+        setAchievementStats(cachedData.achievementStats);
+        // No need to set isLoading to false - it's already false
+        setIsRefreshing(false);
+        return;
+      }
+    }
+    
+    // KEY FIX: If no session, stop immediately
     if (!session) {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -204,6 +223,8 @@ export default function ProgressScreen() {
     }
     
     if (!user?.id) return;
+
+    setIsLoading(true); // Only show loading on cache miss
 
     try {
       const [weekly, allTime, prs, muscles, recentAchievements, achStats] = await Promise.all([
@@ -221,13 +242,25 @@ export default function ProgressScreen() {
       setMuscleDistribution(muscles);
       setAchievements(recentAchievements);
       setAchievementStats(achStats);
+      
+      // Store in global cache
+      tabDataCache.set(CACHE_KEY, {
+        weeklyStats: weekly,
+        allTimeStats: allTime,
+        recentPRs: prs,
+        muscleDistribution: muscles,
+        achievements: recentAchievements,
+        achievementStats: achStats,
+      });
+      
+      console.log('[Progress] Data fetched successfully');
     } catch (error) {
       console.error('Failed to fetch progress stats:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id, session]);
+  }, [user?.id, session]); // Stable dependencies
 
   useEffect(() => {
     fetchData();
@@ -235,7 +268,7 @@ export default function ProgressScreen() {
 
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
-    fetchData();
+    fetchData(true); // Force refresh
   }, [fetchData]);
 
   const formatDuration = (minutes: number): string => {

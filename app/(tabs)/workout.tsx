@@ -13,6 +13,7 @@ import { lightHaptic } from '@/lib/utils/haptics';
 import { WorkoutSuggestion } from '@/components/ai';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
 
 // ============================================
 // Types
@@ -78,9 +79,9 @@ export default function WorkoutScreen() {
 
   // Recent workouts state
   const [recentWorkouts, setRecentWorkouts] = useState<RecentWorkout[]>([]);
-  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(false); // Start false, only load if cache miss
 
-  // Fetch recent workouts
+  // Fetch recent workouts with caching
   useEffect(() => {
     // KEY FIX: If no session, stop loading immediately
     if (!session) {
@@ -94,19 +95,35 @@ export default function WorkoutScreen() {
   }, [user?.id, session]);
 
   const fetchRecentWorkouts = async () => {
+    const CACHE_KEY = 'workout-recent';
+    
+    // Check global cache (survives component unmount)
+    const cachedData = tabDataCache.get(CACHE_KEY);
+    if (cachedData) {
+      setRecentWorkouts(cachedData);
+      // No need to set isLoadingRecent to false - it's already false
+      return;
+    }
+    
     if (!user?.id) return;
-    setIsLoadingRecent(true);
+    
+    setIsLoadingRecent(true); // Only show loading on cache miss
     try {
       const workoutsData = await getWorkoutHistory(user.id, 5);
-      setRecentWorkouts(
-        workoutsData.map((w: any) => ({
-          id: w.id,
-          name: w.name,
-          started_at: w.started_at,
-          duration_seconds: w.duration_seconds || 0,
-          total_sets: w.total_sets || 0,
-        }))
-      );
+      const workouts = workoutsData.map((w: any) => ({
+        id: w.id,
+        name: w.name,
+        started_at: w.started_at,
+        duration_seconds: w.duration_seconds || 0,
+        total_sets: w.total_sets || 0,
+      }));
+      
+      setRecentWorkouts(workouts);
+      
+      // Store in global cache
+      tabDataCache.set(CACHE_KEY, workouts);
+      
+      console.log('[Workout] Recent workouts fetched successfully');
     } catch (error) {
       console.error('Failed to fetch recent workouts:', error);
     } finally {
@@ -299,7 +316,8 @@ export default function WorkoutScreen() {
                 </TouchableOpacity>
               </View>
 
-              {isLoadingRecent ? (
+              {/* Only show loading if no cached data */}
+              {isLoadingRecent && recentWorkouts.length === 0 ? (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="small" color="#3b82f6" />
                 </View>

@@ -22,10 +22,18 @@ export function PlateauAlerts() {
   // Try to get cached data immediately
   const [plateaus, setPlateaus] = useState<PlateauAlert[]>(() => {
     if (!user) return [];
-    return getCachedData<PlateauAlert[]>(user.id, 'plateaus') || [];
+    const cached = getCachedData<PlateauAlert[]>(user.id, 'plateaus');
+    return cached || [];
   });
   
-  const [isLoading, setIsLoading] = useState(plateaus.length === 0);
+  const [hasFetched, setHasFetched] = useState(() => {
+    // If we got cached data (even if empty), we've already fetched
+    if (!user) return false;
+    const cached = getCachedData<PlateauAlert[]>(user.id, 'plateaus');
+    return cached !== null && cached !== undefined;
+  });
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [selectedPlateau, setSelectedPlateau] = useState<PlateauAlert | null>(null);
 
@@ -34,11 +42,11 @@ export function PlateauAlerts() {
   }, []);
 
   useEffect(() => {
-    // Only fetch if we don't have cached data
-    if (user && plateaus.length === 0) {
+    // Only fetch if we haven't fetched before
+    if (user && !hasFetched) {
       checkPlateaus();
     }
-  }, [user, plateaus.length]);
+  }, [user, hasFetched]);
 
   const loadDismissed = async () => {
     try {
@@ -60,7 +68,6 @@ export function PlateauAlerts() {
   };
 
   const checkPlateaus = async () => {
-    // KEY FIX: Don't fetch if no user (guest mode)
     if (!user) {
       setIsLoading(false);
       return;
@@ -70,11 +77,13 @@ export function PlateauAlerts() {
     try {
       const results = await plateauDetectionService.detectPlateaus(user.id);
       setPlateaus(results);
+      setHasFetched(true);
       
       // Cache the result
       setCacheData(user.id, 'plateaus', results);
     } catch (error) {
       console.error('Failed to check plateaus:', error);
+      setHasFetched(true);
     } finally {
       setIsLoading(false);
     }

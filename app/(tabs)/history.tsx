@@ -228,6 +228,8 @@ export default function HistoryScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [showLoadingSkeleton, setShowLoadingSkeleton] = useState(false); // Start false - only show if fetch > 300ms
+  const loadingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Calendar view state
@@ -246,6 +248,11 @@ export default function HistoryScreen() {
         setIsLoading(false);
         setIsRefreshing(false);
         setIsLoadingMore(false);
+        setShowLoadingSkeleton(false);
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+          loadingTimeoutRef.current = null;
+        }
         return;
       }
       
@@ -255,6 +262,11 @@ export default function HistoryScreen() {
         setIsRefreshing(true);
       } else if (pageNum === 0) {
         setIsLoading(true);
+        
+        // Only show skeleton if fetch takes > 300ms (prevents flash for quick fetches)
+        loadingTimeoutRef.current = setTimeout(() => {
+          setShowLoadingSkeleton(true);
+        }, 300);
       } else {
         setIsLoadingMore(true);
       }
@@ -268,9 +280,12 @@ export default function HistoryScreen() {
           filter
         );
 
+        // Always replace workouts for page 0 or refresh
+        // This prevents flicker by keeping old data visible until new data arrives
         if (pageNum === 0 || refresh) {
           setWorkouts(result.workouts);
         } else {
+          // For pagination, append to existing
           setWorkouts((prev) => [...prev, ...result.workouts]);
         }
 
@@ -281,12 +296,19 @@ export default function HistoryScreen() {
         console.error('Failed to fetch workouts:', err);
         setError('Failed to load workout history');
       } finally {
+        // Clear the timeout if fetch completed before 300ms
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+          loadingTimeoutRef.current = null;
+        }
+        
         setIsLoading(false);
         setIsRefreshing(false);
         setIsLoadingMore(false);
+        setShowLoadingSkeleton(false);
       }
     },
-    [user?.id, filter, session]
+    [user?.id, filter, session, workouts.length, showLoadingSkeleton]
   );
 
   // Fetch workout dates for calendar
@@ -335,18 +357,42 @@ export default function HistoryScreen() {
     [user?.id]
   );
 
-  // Initial fetch
+  // Initial fetch - use ref to prevent infinite loops
+  const initialFetchDone = React.useRef(false);
+  const previousFilterRef = React.useRef(filter);
+  const previousViewModeRef = React.useRef(viewMode);
+
   useEffect(() => {
-    if (viewMode === 'list') {
-      setPage(0);
-      setWorkouts([]);
-      fetchWorkouts(0);
-    } else {
-      const month = currentMonth.getMonth() + 1;
-      const year = currentMonth.getFullYear();
-      fetchWorkoutDates(month, year);
+    // Only run if filter or viewMode actually changed, or first mount
+    const filterChanged = previousFilterRef.current !== filter;
+    const viewModeChanged = previousViewModeRef.current !== viewMode;
+    
+    if (!initialFetchDone.current || filterChanged || viewModeChanged) {
+      previousFilterRef.current = filter;
+      previousViewModeRef.current = viewMode;
+      initialFetchDone.current = true;
+      
+      if (viewMode === 'list') {
+        // Don't reset workouts to empty array - prevents flickering
+        // Just set page to 0 and fetch fresh data
+        setPage(0);
+        fetchWorkouts(0);
+      } else {
+        const month = currentMonth.getMonth() + 1;
+        const year = currentMonth.getFullYear();
+        fetchWorkoutDates(month, year);
+      }
     }
-  }, [viewMode, filter, user?.id]);
+  }, [viewMode, filter, fetchWorkouts, fetchWorkoutDates]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Handle month change in calendar
   const handleMonthChange = (monthData: DateData) => {
@@ -357,6 +403,10 @@ export default function HistoryScreen() {
 
   // Handle date press in calendar
   const handleDatePress = (day: DateData) => {
+    // #region agent log
+    console.log('[DEBUG history.tsx:359] Date pressed', {dateString: day.dateString, markedDatesCount: Object.keys(markedDates).length, timestamp: Date.now()});
+    // #endregion
+    
     lightHaptic();
     setSelectedDate(day.dateString);
     
@@ -383,6 +433,11 @@ export default function HistoryScreen() {
         selectedColor: '#334155',
       };
     }
+    
+    // #region agent log
+    console.log('[DEBUG history.tsx:386] Updated marked dates', {newMarkedCount: Object.keys(newMarked).length, timestamp: Date.now()});
+    // #endregion
+    
     setMarkedDates(newMarked);
 
     // Fetch workouts for this date if it has workouts
@@ -443,21 +498,23 @@ export default function HistoryScreen() {
   };
 
   // Empty state
-  const EmptyState = () => (
-    <View style={styles.emptyContainer}>
-      <Dumbbell size={64} color="#334155" />
-      <Text style={styles.emptyTitle}>No workouts yet</Text>
-      <Text style={styles.emptySubtitle}>
-        Start your first workout to see it here!
-      </Text>
-      <TouchableOpacity
-        style={styles.startButton}
-        onPress={() => router.push('/(tabs)/workout')}
-      >
-        <Text style={styles.startButtonText}>Start Workout</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const EmptyState = () => {
+    return (
+      <View style={styles.emptyContainer}>
+        <Dumbbell size={64} color="#334155" />
+        <Text style={styles.emptyTitle}>No workouts yet</Text>
+        <Text style={styles.emptySubtitle}>
+          Start your first workout to see it here!
+        </Text>
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={() => router.push('/(tabs)/workout')}
+        >
+          <Text style={styles.startButtonText}>Start Workout</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   // Error state
   const ErrorState = () => (
@@ -470,13 +527,15 @@ export default function HistoryScreen() {
   );
 
   // Loading skeletons
-  const LoadingSkeletons = () => (
-    <View style={styles.skeletonContainer}>
-      {[...Array(6)].map((_, i) => (
-        <WorkoutItemSkeleton key={i} />
-      ))}
-    </View>
-  );
+  const LoadingSkeletons = () => {
+    return (
+      <View style={styles.skeletonContainer}>
+        {[...Array(6)].map((_, i) => (
+          <WorkoutItemSkeleton key={i} />
+        ))}
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -539,7 +598,7 @@ export default function HistoryScreen() {
       {/* Content */}
       {viewMode === 'list' ? (
         // List View
-        isLoading ? (
+        showLoadingSkeleton ? (
           <LoadingSkeletons />
         ) : error ? (
           <ErrorState />

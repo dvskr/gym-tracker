@@ -34,6 +34,8 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { PlateauAlerts, RecoveryStatus, CheckinPrompt } from '@/components/ai';
 import { DefaultTemplates } from '@/components/workout/DefaultTemplates';
 import { DefaultTemplate } from '@/lib/templates/defaultTemplates';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
+import { usePreloadComplete } from '@/contexts/PreloadContext';
 
 
 
@@ -194,6 +196,7 @@ const EmptyTemplates: React.FC<{ onCreateTemplate: () => void; onStartEmpty: () 
 
 export default function HomeScreen() {
   const { user, session } = useAuthStore();
+  const isPreloadComplete = usePreloadComplete(); // Check if app preload is done
   
   // Use selectors for optimized re-renders
   const activeWorkout = useWorkoutStore((state) => state.activeWorkout);
@@ -202,8 +205,9 @@ export default function HomeScreen() {
   const addExerciseWithSets = useWorkoutStore((state) => state.addExerciseWithSets);
 
   const [templates, setTemplates] = useState<Template[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start false, only load if cache miss
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [hasCheckedCache, setHasCheckedCache] = useState(false); // Track if we've checked cache
   const [userName, setUserName] = useState('');
   const [weightRefreshTrigger, setWeightRefreshTrigger] = useState(0);
   const [lastMeasurementDate, setLastMeasurementDate] = useState<string | null>(null);
@@ -221,15 +225,33 @@ export default function HomeScreen() {
   }, [user]);
 
   // Fetch data
-  const fetchData = useCallback(async () => {
-    // KEY FIX: If no session, stop loading immediately
+  const fetchData = useCallback(async (force = false) => {
+    const CACHE_KEY = 'home-data';
+    
+    // Check global cache (survives component unmount)
+    if (!force) {
+      const cachedData = tabDataCache.get(CACHE_KEY);
+      if (cachedData) {
+        setTemplates(cachedData.templates);
+        setLastMeasurementDate(cachedData.lastMeasurementDate);
+        setHasCheckedCache(true); // Mark cache as checked
+        // No need to set isLoading to false - it's already false
+        setIsRefreshing(false);
+        return;
+      }
+    }
+    
+    // KEY FIX: If no session, stop immediately
     if (!session) {
       setIsLoading(false);
       setIsRefreshing(false);
+      setHasCheckedCache(true);
       return;
     }
     
     if (!user?.id) return;
+
+    setIsLoading(true); // Only show loading on cache miss
 
     try {
       // Fetch templates (sorted by times_used)
@@ -241,21 +263,33 @@ export default function HomeScreen() {
       setTemplates(sortedTemplates);
 
       // Fetch last measurement date
+      let measurementDate = null;
       try {
         const latestMeasurement = await getLatestMeasurements(user.id);
         if (latestMeasurement?.measured_at) {
-          setLastMeasurementDate(latestMeasurement.measured_at);
+          measurementDate = latestMeasurement.measured_at;
+          setLastMeasurementDate(measurementDate);
         }
       } catch (e) {
         // Silently ignore if no measurements
       }
+      
+      // Store in global cache
+      tabDataCache.set(CACHE_KEY, {
+        templates: sortedTemplates,
+        lastMeasurementDate: measurementDate,
+      });
+      
+      setHasCheckedCache(true); // Mark cache as checked
+      console.log('[Home] Data fetched successfully');
     } catch (error) {
       console.error('Error fetching home data:', error);
+      setHasCheckedCache(true);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id, session]);
+  }, [user?.id, session]); // Stable dependencies
 
   useEffect(() => {
     fetchData();
@@ -264,7 +298,7 @@ export default function HomeScreen() {
   // Handlers
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
-    fetchData();
+    fetchData(true); // Force refresh
   }, [fetchData]);
 
   const handleStartTemplate = async (template: Template) => {
@@ -472,13 +506,13 @@ export default function HomeScreen() {
 
         {/* Recovery Status */}
         {/* Daily Check-in Prompt */}
-        {session && <CheckinPrompt />}
+        {session && isPreloadComplete && <CheckinPrompt />}
 
-        {/* Recovery Status */}
-        {session && <RecoveryStatus />}
+        {/* Recovery Status - Only render after preload to avoid loading states */}
+        {session && isPreloadComplete && <RecoveryStatus />}
 
-        {/* Plateau Detection Alerts */}
-        {session && <PlateauAlerts />}
+        {/* Plateau Detection Alerts - Only render after preload to avoid loading states */}
+        {session && isPreloadComplete && <PlateauAlerts />}
 
         {/* Quick Start Section - Always show */}
           <View style={styles.section}>
@@ -493,6 +527,7 @@ export default function HomeScreen() {
             </View>
 
           {/* Show user templates if they have any, otherwise show defaults */}
+          {/* Only show defaults AFTER we've checked cache and confirmed no user templates */}
           {templates.length > 0 ? (
             <ScrollView
               horizontal={true}
@@ -508,14 +543,14 @@ export default function HomeScreen() {
                 />
               ))}
             </ScrollView>
-          ) : (
+          ) : hasCheckedCache ? (
             <>
               <Text style={styles.defaultTemplatesHint}>
                 Get started with these popular routines • Scroll for more
               </Text>
               <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} maxItems={6} />
             </>
-          )}
+          ) : null}
 
             {/* Start Empty Workout */}
             <TouchableOpacity

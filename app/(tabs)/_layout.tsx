@@ -1,6 +1,11 @@
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Slot, usePathname, router } from 'expo-router';
 import { Home, Dumbbell, History, TrendingUp, User } from 'lucide-react-native';
+import { useAuthStore } from '@/stores/authStore';
+import { preloadAllAppData, PreloadProgress } from '@/lib/services/preloadService';
+import { AppLoadingScreen } from '@/components/AppLoadingScreen';
+import { PreloadProvider } from '@/contexts/PreloadContext';
 
 const tabs = [
   { name: 'index', title: 'Home', icon: Home, path: '/(tabs)' },
@@ -12,6 +17,33 @@ const tabs = [
 
 export default function TabsLayout() {
   const pathname = usePathname();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
+  const [isPreloading, setIsPreloading] = useState(true);
+  const [preloadProgress, setPreloadProgress] = useState<PreloadProgress>({
+    phase: 'starting',
+    percentage: 0,
+    isComplete: false,
+  });
+
+  useEffect(() => {
+    if (user && !isAuthLoading) {
+      // User is authenticated, preload all data
+      console.log('[TabsLayout] Starting app data preload...');
+      preloadAllAppData(user.id, setPreloadProgress)
+        .finally(() => {
+          console.log('[TabsLayout] Preload complete');
+          setIsPreloading(false);
+        });
+    } else if (!user && !isAuthLoading) {
+      // Not authenticated, no preload needed
+      setIsPreloading(false);
+    }
+  }, [user, isAuthLoading]);
+
+  // Show loading screen while preloading
+  if (user && isPreloading) {
+    return <AppLoadingScreen progress={preloadProgress} />;
+  }
 
   const isActive = (tabPath: string, tabName: string) => {
     if (tabName === 'index') {
@@ -21,34 +53,36 @@ export default function TabsLayout() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Slot />
+    <PreloadProvider isComplete={!isPreloading}>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Slot />
+        </View>
+        
+        <View style={styles.tabBar}>
+          {tabs.map((tab) => {
+            const active = isActive(tab.path, tab.name);
+            const Icon = tab.icon;
+            
+            return (
+              <TouchableOpacity
+                key={tab.name}
+                style={styles.tabItem}
+                onPress={() => router.push(tab.path as any)}
+              >
+                <Icon 
+                  color={active ? '#3b82f6' : '#94a3b8'} 
+                  size={24} 
+                />
+                <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>
+                  {tab.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
-      
-      <View style={styles.tabBar}>
-        {tabs.map((tab) => {
-          const active = isActive(tab.path, tab.name);
-          const Icon = tab.icon;
-          
-          return (
-            <TouchableOpacity
-              key={tab.name}
-              style={styles.tabItem}
-              onPress={() => router.push(tab.path as any)}
-            >
-              <Icon 
-                color={active ? '#3b82f6' : '#94a3b8'} 
-                size={24} 
-              />
-              <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>
-                {tab.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
+    </PreloadProvider>
   );
 }
 

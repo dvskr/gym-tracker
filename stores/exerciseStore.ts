@@ -3,10 +3,12 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
 import { Exercise } from '@/types/database';
+import { initializeFuseSearch, fuzzySearchExercises, clearFuseInstance } from '@/lib/utils/fuzzySearch';
 
 // Transform Supabase exercise to display format
 interface DisplayExercise {
-  id: string;
+  id: string; // UUID from database
+  externalId: string | null; // ExerciseDB ID (e.g., "0085")
   name: string;
   bodyPart: string;
   target: string;
@@ -14,7 +16,7 @@ interface DisplayExercise {
   gifUrl: string;
   secondaryMuscles: string[];
   instructions: string[];
-  measurementType?: string; // ADD THIS FIELD
+  measurementType?: string;
 }
 
 type BodyPart = 
@@ -31,24 +33,68 @@ type BodyPart =
   | 'arms'    // Grouped filter for both upper and lower arms
   | 'legs';   // Grouped filter for both upper and lower legs
 
+// Filter Presets - Quick access to common filter combinations
+export interface FilterPreset {
+  name: string;
+  icon: string;
+  equipment?: string[];
+  bodyParts?: string[];
+  exerciseKeywords?: string[];
+}
+
+export const FILTER_PRESETS = {
+  homeWorkout: {
+    name: 'Home Workout',
+    icon: 'Home',
+    equipment: ['body weight', 'dumbbell', 'resistance band'],
+  },
+  compoundLifts: {
+    name: 'Compound Lifts',
+    icon: 'Dumbbell',
+    equipment: ['barbell'],
+    exerciseKeywords: ['squat', 'deadlift', 'bench press', 'row', 'overhead press', 'clean', 'snatch'],
+  },
+  upperBody: {
+    name: 'Upper Body',
+    icon: 'User',
+    bodyParts: ['chest', 'back', 'shoulders', 'upper arms'],
+  },
+  lowerBody: {
+    name: 'Lower Body',
+    icon: 'Footprints',
+    bodyParts: ['upper legs', 'lower legs'],
+  },
+  coreWorkout: {
+    name: 'Core',
+    icon: 'Circle',
+    bodyParts: ['waist'],
+  },
+} as const;
+
+export type FilterPresetKey = keyof typeof FILTER_PRESETS;
+
 interface ExerciseState {
   // State
   exercises: DisplayExercise[];
   isLoading: boolean;
   searchQuery: string;
   selectedBodyPart: BodyPart | null;
+  selectedEquipment: string | null; // Currently selected equipment filter (null = all)
   lastFetched: number | null;
   error: string | null;
   recentlyUsedIds: string[]; // Track last 20 exercise IDs used
   favoriteIds: string[]; // Track favorited exercise IDs
+  activePreset: FilterPresetKey | null; // Active filter preset
 
   // Actions
   fetchExercises: (force?: boolean) => Promise<void>;
   clearCache: () => void; // Force clear cache and reload
   searchExercises: (query: string) => void;
   filterByBodyPart: (bodyPart: BodyPart | null) => void;
+  filterByEquipment: (equipment: string | null) => void;
   getFilteredExercises: () => DisplayExercise[];
   clearFilters: () => void;
+  clearAllFilters: () => void; // Clear all filters including persisted ones
   clearError: () => void;
   
   // Recently Used
@@ -60,6 +106,10 @@ interface ExerciseState {
   toggleFavorite: (exerciseId: string) => Promise<void>;
   isFavorite: (exerciseId: string) => boolean;
   getFavoriteExercises: () => DisplayExercise[];
+  
+  // Filter Presets
+  applyFilterPreset: (presetKey: FilterPresetKey) => void;
+  clearPreset: () => void;
 }
 
 // Cache duration: 24 hours
@@ -68,7 +118,8 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000;
 // Transform Supabase exercise to display format
 function transformExercise(exercise: Exercise): DisplayExercise {
   return {
-    id: exercise.external_id || exercise.id,
+    id: exercise.id, // Keep UUID for database relationships
+    externalId: exercise.external_id || null,
     name: exercise.name,
     bodyPart: exercise.category || '',
     target: exercise.primary_muscles?.[0] || '',
@@ -88,17 +139,22 @@ export const useExerciseStore = create<ExerciseState>()(
       isLoading: false,
       searchQuery: '',
       selectedBodyPart: null,
+      selectedEquipment: null,
       lastFetched: null,
       error: null,
       recentlyUsedIds: [],
       favoriteIds: [],
+      activePreset: null,
 
       // Fetch all exercises from Supabase
       fetchExercises: async (force = false) => {
         const { lastFetched, exercises, isLoading } = get();
 
         // Prevent concurrent fetches
-        if (isLoading) return;
+        if (isLoading) {
+          console.log('[ExerciseStore] Already loading, skipping');
+          return;
+        }
 
         // Check cache validity
         const isCacheValid =
@@ -107,6 +163,8 @@ export const useExerciseStore = create<ExerciseState>()(
           exercises.length > 100; // Only use cache if we have substantial data
 
         if (isCacheValid && !force) {
+          const cacheAge = Math.round((Date.now() - (lastFetched || 0)) / 1000);
+          console.log(`[ExerciseStore] Using cached data (age: ${cacheAge} seconds, count: ${exercises.length})`);
           return;
         }
 
@@ -153,7 +211,13 @@ export const useExerciseStore = create<ExerciseState>()(
             isLoading: false,
             error: null,
           });
+          
+          // Initialize fuzzy search with loaded exercises
+          initializeFuseSearch(transformedExercises);
+          
+          console.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
         } catch (error) {
+          console.error('[ExerciseStore] Error fetching exercises:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to fetch exercises',
@@ -163,6 +227,9 @@ export const useExerciseStore = create<ExerciseState>()(
 
       // Clear cache and force reload
       clearCache: () => {
+        // Clear fuzzy search instance
+        clearFuseInstance();
+        
         set({
           exercises: [],
           lastFetched: null,
@@ -183,13 +250,73 @@ export const useExerciseStore = create<ExerciseState>()(
         set({ selectedBodyPart: bodyPart });
       },
 
+      // Filter by equipment
+      filterByEquipment: (equipment: string | null) => {
+        set({ selectedEquipment: equipment });
+      },
+
       // Get filtered exercises based on search query and body part
       getFilteredExercises: () => {
-        const { exercises, searchQuery, selectedBodyPart } = get();
+        const { exercises, searchQuery, selectedBodyPart, selectedEquipment, activePreset } = get();
 
         let filtered = [...exercises];
 
-        // Filter by body part with partial matching
+        // Apply preset filters first if active
+        if (activePreset) {
+          const preset = FILTER_PRESETS[activePreset];
+          
+          // Filter by preset equipment
+          if (preset.equipment && preset.equipment.length > 0) {
+            filtered = filtered.filter((exercise) =>
+              preset.equipment!.some((equipment) =>
+                exercise.equipment.toLowerCase().includes(equipment.toLowerCase())
+              )
+            );
+          }
+          
+          // Filter by preset body parts
+          if (preset.bodyParts && preset.bodyParts.length > 0) {
+            filtered = filtered.filter((exercise) =>
+              preset.bodyParts!.some((bodyPart) =>
+                exercise.bodyPart.toLowerCase().includes(bodyPart.toLowerCase())
+              )
+            );
+          }
+          
+          // Filter by preset exercise keywords
+          if (preset.exerciseKeywords && preset.exerciseKeywords.length > 0) {
+            filtered = filtered.filter((exercise) =>
+              preset.exerciseKeywords!.some((keyword) =>
+                exercise.name.toLowerCase().includes(keyword.toLowerCase())
+              )
+            );
+          }
+        }
+
+        // Filter by search query (FUZZY SEARCH)
+        if (searchQuery.trim()) {
+          // Try fuzzy search first
+          const fuzzyResults = fuzzySearchExercises(searchQuery);
+          
+          if (fuzzyResults.length > 0) {
+            // Use fuzzy search results (already sorted by relevance)
+            // But only if they're in the current filtered set
+            const filteredIds = new Set(filtered.map(ex => ex.id));
+            filtered = fuzzyResults.filter(ex => filteredIds.has(ex.id));
+          } else {
+            // Fallback to exact .includes() matching if no fuzzy results
+            const query = searchQuery.toLowerCase().trim();
+            filtered = filtered.filter(
+              (exercise) =>
+                exercise.name.toLowerCase().includes(query) ||
+                exercise.target.toLowerCase().includes(query) ||
+                exercise.equipment.toLowerCase().includes(query) ||
+                exercise.bodyPart.toLowerCase().includes(query)
+            );
+          }
+        }
+
+        // Filter by body part with partial matching (manual filter, overrides preset)
         if (selectedBodyPart) {
           const selected = selectedBodyPart.toLowerCase();
           
@@ -203,25 +330,35 @@ export const useExerciseStore = create<ExerciseState>()(
           });
         }
 
-        // Filter by search query
-        if (searchQuery.trim()) {
-          const query = searchQuery.toLowerCase().trim();
-          filtered = filtered.filter(
-            (exercise) =>
-              exercise.name.toLowerCase().includes(query) ||
-              exercise.target.toLowerCase().includes(query) ||
-              exercise.equipment.toLowerCase().includes(query) ||
-              exercise.bodyPart.toLowerCase().includes(query)
+        // Filter by equipment (exact match)
+        if (selectedEquipment) {
+          filtered = filtered.filter((exercise) =>
+            exercise.equipment.toLowerCase() === selectedEquipment.toLowerCase()
           );
         }
 
-        // Sort alphabetically by name
-        return filtered.sort((a, b) => a.name.localeCompare(b.name));
+        // Sort alphabetically by name (only if not using fuzzy search results)
+        // Fuzzy search results are already sorted by relevance
+        if (!searchQuery.trim() || fuzzySearchExercises(searchQuery).length === 0) {
+          filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        
+        return filtered;
       },
 
       // Clear all filters
       clearFilters: () => {
         set({ searchQuery: '', selectedBodyPart: null });
+      },
+
+      // Clear all filters and reset persisted state
+      clearAllFilters: () => {
+        set({
+          searchQuery: '',
+          selectedBodyPart: null,
+          selectedEquipment: null,
+          activePreset: null,
+        });
       },
 
       // Clear error
@@ -327,15 +464,38 @@ export const useExerciseStore = create<ExerciseState>()(
         
         return exercises.filter(ex => favoriteIds.includes(ex.id));
       },
+
+      // ==========================================
+      // FILTER PRESETS
+      // ==========================================
+      
+      // Apply a filter preset
+      applyFilterPreset: (presetKey: FilterPresetKey) => {
+        set({
+          activePreset: presetKey,
+          // Clear manual filters when preset is applied
+          selectedBodyPart: null,
+        });
+      },
+      
+      // Clear active preset
+      clearPreset: () => {
+        set({ activePreset: null });
+      },
     }),
     {
       name: 'exercise-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      // Persist exercises, lastFetched, and recentlyUsedIds
+      // Persist exercises, lastFetched, recentlyUsedIds, filter state, and activePreset
       partialize: (state) => ({
         exercises: state.exercises,
         lastFetched: state.lastFetched,
         recentlyUsedIds: state.recentlyUsedIds,
+        // Filter state (persisted between sessions)
+        searchQuery: state.searchQuery,
+        selectedBodyPart: state.selectedBodyPart,
+        selectedEquipment: state.selectedEquipment,
+        activePreset: state.activePreset,
       }),
     }
   )

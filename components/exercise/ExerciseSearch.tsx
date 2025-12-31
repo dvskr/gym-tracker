@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, memo } from 'react';
+import React, { useEffect, useCallback, memo, useState } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { Search, X, Dumbbell } from 'lucide-react-native';
+import { useDebouncedCallback } from 'use-debounce';
 import { ExerciseDBExercise, BodyPart } from '@/types/database';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { ExerciseItemSkeleton } from '@/components/ui';
@@ -118,6 +119,14 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     clearError,
   } = useExerciseStore();
 
+  // Local state for immediate UI feedback
+  const [localSearchText, setLocalSearchText] = useState(searchQuery);
+
+  // Sync local state with store when store changes (e.g., when cleared)
+  useEffect(() => {
+    setLocalSearchText(searchQuery);
+  }, [searchQuery]);
+
   // Fetch exercises on mount - force refresh to get all exercises
   useEffect(() => {
     // Force=true to refresh and get all 1300+ exercises (not cached 10)
@@ -127,13 +136,26 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
   // Get filtered exercises
   const exercises = getFilteredExercises();
 
-  // Handle search input
+  // Create debounced search handler (300ms delay)
+  const debouncedSearch = useDebouncedCallback((text: string) => {
+    searchExercises(text);
+  }, 300);
+
+  // Handle search input with immediate local state update
   const handleSearchChange = useCallback(
     (text: string) => {
-      searchExercises(text);
+      setLocalSearchText(text); // Update local state immediately for responsive UI
+      debouncedSearch(text);     // Debounced store update for filtering
     },
-    [searchExercises]
+    [debouncedSearch]
   );
+
+  // Handle clear search
+  const handleClearSearch = useCallback(() => {
+    setLocalSearchText('');
+    searchExercises('');
+    debouncedSearch.cancel(); // Cancel any pending debounced calls
+  }, [searchExercises, debouncedSearch]);
 
   // Handle body part filter
   const handleBodyPartPress = useCallback(
@@ -240,7 +262,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         <Search size={20} color="#64748b" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          value={searchQuery}
+          value={localSearchText}
           onChangeText={handleSearchChange}
           placeholder="Search exercises..."
           placeholderTextColor="#64748b"
@@ -248,9 +270,9 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
           autoCorrect={false}
           returnKeyType="search"
         />
-        {searchQuery.length > 0 && (
+        {localSearchText.length > 0 && (
           <TouchableOpacity
-            onPress={() => searchExercises('')}
+            onPress={handleClearSearch}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <X size={18} color="#64748b" />
