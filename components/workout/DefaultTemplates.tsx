@@ -1,52 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Dumbbell, Play } from 'lucide-react-native';
-
-// Pre-built template definitions
-export const DEFAULT_TEMPLATES = [
-  {
-    id: 'default-push',
-    name: 'Push Day',
-    description: 'Chest, Shoulders, Triceps',
-    color: '#3b82f6',
-    exercises: [
-      { name: 'Barbell Bench Press', external_id: 'barbell-bench-press', sets: 4, reps: '8-10' },
-      { name: 'Incline Dumbbell Press', external_id: 'incline-dumbbell-press', sets: 3, reps: '10-12' },
-      { name: 'Overhead Press', external_id: 'overhead-press', sets: 3, reps: '8-10' },
-      { name: 'Lateral Raise', external_id: 'lateral-raise', sets: 3, reps: '12-15' },
-      { name: 'Tricep Pushdown', external_id: 'tricep-pushdown', sets: 3, reps: '12-15' },
-    ],
-  },
-  {
-    id: 'default-pull',
-    name: 'Pull Day',
-    description: 'Back, Biceps, Rear Delts',
-    color: '#10b981',
-    exercises: [
-      { name: 'Barbell Row', external_id: 'barbell-row', sets: 4, reps: '8-10' },
-      { name: 'Pull Up', external_id: 'pull-up', sets: 3, reps: '8-12' },
-      { name: 'Lat Pulldown', external_id: 'lat-pulldown', sets: 3, reps: '10-12' },
-      { name: 'Face Pull', external_id: 'face-pull', sets: 3, reps: '15-20' },
-      { name: 'Barbell Curl', external_id: 'barbell-curl', sets: 3, reps: '10-12' },
-    ],
-  },
-  {
-    id: 'default-legs',
-    name: 'Leg Day',
-    description: 'Quads, Hamstrings, Glutes',
-    color: '#f59e0b',
-    exercises: [
-      { name: 'Barbell Squat', external_id: 'barbell-squat', sets: 4, reps: '6-8' },
-      { name: 'Romanian Deadlift', external_id: 'romanian-deadlift', sets: 3, reps: '10-12' },
-      { name: 'Leg Press', external_id: 'leg-press', sets: 3, reps: '10-12' },
-      { name: 'Leg Curl', external_id: 'leg-curl', sets: 3, reps: '12-15' },
-      { name: 'Calf Raise', external_id: 'calf-raise', sets: 4, reps: '15-20' },
-    ],
-  },
-];
+import { useDefaultTemplates } from '@/hooks/useDefaultTemplates';
+import { DefaultTemplate } from '@/lib/templates/defaultTemplates';
 
 interface DefaultTemplateCardProps {
-  template: typeof DEFAULT_TEMPLATES[0];
+  template: DefaultTemplate;
   onStart: () => void;
 }
 
@@ -76,17 +35,39 @@ const DefaultTemplateCard: React.FC<DefaultTemplateCardProps> = ({ template, onS
 };
 
 interface DefaultTemplatesProps {
-  onStartWorkout: (template: typeof DEFAULT_TEMPLATES[0]) => void;
+  onStartWorkout: (template: DefaultTemplate) => void;
+  maxItems?: number;
 }
 
-export function DefaultTemplates({ onStartWorkout }: DefaultTemplatesProps) {
+export function DefaultTemplates({ onStartWorkout, maxItems = 3 }: DefaultTemplatesProps) {
+  const { templates, isLoading, error } = useDefaultTemplates();
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#3b82f6" />
+        <Text style={styles.loadingText}>Loading templates...</Text>
+      </View>
+    );
+  }
+
+  if (error || templates.length === 0) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Unable to load templates</Text>
+      </View>
+    );
+  }
+
+  const displayTemplates = templates.slice(0, maxItems);
+
   return (
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.quickStartRow}
     >
-      {DEFAULT_TEMPLATES.map((template) => (
+      {displayTemplates.map((template) => (
         <DefaultTemplateCard
           key={template.id}
           template={template}
@@ -143,6 +124,29 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    gap: 8,
+  },
+
+  loadingText: {
+    color: '#94a3b8',
+    fontSize: 14,
+  },
+
+  errorContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+
+  errorText: {
+    color: '#ef4444',
+    fontSize: 14,
   },
 });
 

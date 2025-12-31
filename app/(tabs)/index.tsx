@@ -32,7 +32,8 @@ import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
 import { PlateauAlerts, RecoveryStatus, CheckinPrompt } from '@/components/ai';
-import { DefaultTemplates, DEFAULT_TEMPLATES } from '@/components/workout/DefaultTemplates';
+import { DefaultTemplates } from '@/components/workout/DefaultTemplates';
+import { DefaultTemplate } from '@/lib/templates/defaultTemplates';
 
 
 
@@ -337,7 +338,7 @@ export default function HomeScreen() {
     }
   };
 
-  const handleStartDefaultTemplate = async (template: typeof DEFAULT_TEMPLATES[0]) => {
+  const handleStartDefaultTemplate = async (template: DefaultTemplate) => {
     successHaptic();
 
     try {
@@ -351,7 +352,7 @@ export default function HomeScreen() {
         if (user?.id) {
           const previousData = await fetchPreviousWorkoutData(
             user.id,
-            exercise.external_id
+            exercise.id // Use the exercise ID from database
           );
 
           if (previousData && previousData.sets.length > 0) {
@@ -363,14 +364,15 @@ export default function HomeScreen() {
           }
         }
 
-        // If no previous data, leave empty for user to fill
+        // Add exercise to workout
         addExerciseWithSets(
           {
-            id: exercise.external_id,
+            id: exercise.id,
             name: exercise.name,
             bodyPart: '',
             equipment: '',
             target: '',
+            gifUrl: exercise.gif_url,
           },
           prefillSets,
           exercise.sets
@@ -485,11 +487,9 @@ export default function HomeScreen() {
               <Zap size={18} color="#f59e0b" />
               <Text style={styles.sectionTitle}>QUICK START</Text>
             </View>
-            {templates.length > 0 && (
-              <TouchableOpacity onPress={handleViewAllTemplates}>
-                <Text style={styles.sectionLink}>View All</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={handleViewAllTemplates}>
+              <Text style={styles.sectionLink}>View All</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Show user templates if they have any, otherwise show defaults */}
@@ -499,7 +499,7 @@ export default function HomeScreen() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.quickStartRow}
             >
-              {templates.slice(0, 3).map((template, index) => (
+              {templates.slice(0, 6).map((template, index) => (
                 <QuickStartCard
                   key={template.id}
                   template={template}
@@ -511,9 +511,9 @@ export default function HomeScreen() {
           ) : (
             <>
               <Text style={styles.defaultTemplatesHint}>
-                Get started with these popular routines
+                Get started with these popular routines • Scroll for more
               </Text>
-              <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} />
+              <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} maxItems={6} />
             </>
           )}
 

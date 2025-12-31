@@ -42,4 +42,5 @@ export {
 } from './useHeartRate';
 export { useHealthSync } from './useHealthSync';
 export { useAuthGuard } from './useAuthGuard';
+export { useDefaultTemplates } from './useDefaultTemplates';
 
