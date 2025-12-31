@@ -25,6 +25,7 @@ const BODY_PARTS: BodyPart[] = [
   'back',
   'cardio',
   'chest',
+  'full body',
   'lower arms',
   'lower legs',
   'neck',

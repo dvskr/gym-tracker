@@ -62,6 +62,7 @@ const BODY_PART_FILTERS = [
   { label: 'Arms', value: 'arms' },      // Matches both upper and lower arms
   { label: 'Legs', value: 'legs' },      // Matches both upper and lower legs
   { label: 'Core', value: 'waist' },
+  { label: 'Full Body', value: 'full body' },
   { label: 'Cardio', value: 'cardio' },
 ] as const;
 
@@ -87,6 +88,7 @@ const getExerciseIcon = (bodyPart: string) => {
   if (part.includes('cardio')) return Heart;
   if (part.includes('waist') || part.includes('core') || part.includes('abs')) return Zap;
   if (part.includes('chest')) return Activity;
+  if (part.includes('full body')) return Activity;
   
   return Dumbbell; // Default for arms, shoulders, neck, etc.
 };
@@ -162,7 +164,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
   showFavoriteIcon = true 
 }) => {
   // Get thumbnail URL and equipment-specific icon and color
-  const thumbnailUrl = getThumbnailUrl(exercise.gifUrl || null);
+  const thumbnailUrl = getThumbnailUrl(exercise.gif_url || null);
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
   const iconColor = getEquipmentColor(exercise.equipment);
   
@@ -179,6 +181,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
       waist: '#ef4444',
       cardio: '#14b8a6',
       neck: '#6366f1',
+      'full body': '#f97316', // Orange for full body compound movements
     };
     return colors[bodyPart.toLowerCase()] || '#64748b';
   };
@@ -542,7 +545,7 @@ export default function ExerciseLibraryScreen() {
                     style={[styles.chip, isSelected && styles.chipSelected]}
                     onPress={() => {
                       lightHaptic();
-                      filterByBodyPart(isSelected ? null : filter.value);
+                      handleBodyPartPress(filter.value);
                     }}
                     activeOpacity={0.7}
                   >
@@ -1002,10 +1005,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingHorizontal: 20,
     letterSpacing: 0.5,
-  },
-
-  filterSection: {
-    marginBottom: 12,
   },
 
   warningBanner: {

@@ -1,6 +1,6 @@
 # Exercise Database Report
 
-**Generated:** 12/31/2025, 10:03:13 AM
+**Generated:** 12/31/2025, 3:11:11 PM
 
 **Note:** GIF availability is based on locally downloaded files in `exercise-gifs/` directory.
 
@@ -10,11 +10,11 @@
 
 | Metric | Count | Percentage |
 |--------|-------|------------|
-| **Total Exercises** | 1406 | 100% |
-| Active Exercises | 418 | 29.7% |
-| Inactive Exercises | 988 | 70.3% |
-| With Downloaded GIF | 445 | 31.7% |
-| Without Downloaded GIF | 961 | 68.3% |
+| **Total Exercises** | 1408 | 100% |
+| Active Exercises | 423 | 30.0% |
+| Inactive Exercises | 985 | 70.0% |
+| With Downloaded GIF | 448 | 31.8% |
+| Without Downloaded GIF | 960 | 68.2% |
 | **Active + Downloaded GIF** | 397 | 28.2% |
 
 ---
@@ -43,7 +43,7 @@
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **lever seated hip abduction** | abductors,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes,hamstrings |
+| 1 | **hip abduction machine** | abductors,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes,hamstrings |
 | 2 | **resistance band seated hip abduction** | abductors,upper legs | resistance band | ❌ No | ⚪ No | glutes,hamstrings |
 | 3 | **side bridge hip abduction** | abductors,upper legs | body weight | ❌ No | ⚪ No | glutes,obliques |
 | 4 | **side hip abduction** | abductors,upper legs | body weight | ❌ No | ⚪ No | glutes,quadriceps |
@@ -51,18 +51,19 @@
 
 ### Abs
 
-**Total:** 8 | **Active:** 0 | **With Downloaded GIF:** 0 | **Active + GIF:** 0
+**Total:** 9 | **Active:** 1 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **ab wheel** | abs | body weight | ❌ No | ⚪ No |  |
-| 2 | **cable crunch** | abs | cable | ❌ No | ⚪ No |  |
-| 3 | **knees to elbows** | abs | body weight | ❌ No | ⚪ No |  |
-| 4 | **oblique crunch** | abs | body weight | ❌ No | ⚪ No |  |
-| 5 | **russian twist** | abs | body weight | ❌ No | ⚪ No |  |
-| 6 | **toes to bar** | abs | body weight | ❌ No | ⚪ No |  |
-| 7 | **torso rotation machine** | abs | machine | ❌ No | ⚪ No |  |
-| 8 | **v up** | abs | body weight | ❌ No | ⚪ No |  |
+| 1 | **ghd sit-up** | abs | leverage machine | ✅ Yes | 🎬 Yes |  |
+| 2 | **ab wheel** | abs | body weight | ❌ No | ⚪ No |  |
+| 3 | **cable crunch** | abs | cable | ❌ No | ⚪ No |  |
+| 4 | **knees to elbows** | abs | body weight | ❌ No | ⚪ No |  |
+| 5 | **oblique crunch** | abs | body weight | ❌ No | ⚪ No |  |
+| 6 | **russian twist** | abs | body weight | ❌ No | ⚪ No |  |
+| 7 | **toes to bar** | abs | body weight | ❌ No | ⚪ No |  |
+| 8 | **torso rotation machine** | abs | machine | ❌ No | ⚪ No |  |
+| 9 | **v up** | abs | body weight | ❌ No | ⚪ No |  |
 
 ### Abs,waist
 
@@ -88,13 +89,13 @@
 | 16 | **knee touch crunch** | abs,waist | body weight | ✅ Yes | 🎬 Yes | hip flexors |
 | 17 | **lever seated leg raise crunch** | abs,waist | leverage machine | ✅ Yes | 🎬 Yes | hip flexors |
 | 18 | **reverse crunch** | abs,waist | body weight | ✅ Yes | 🎬 Yes | hip flexors |
-| 19 | **sit-up v. 2** | abs,waist | body weight | ✅ Yes | 🎬 Yes | hip flexors |
+| 19 | **sit-up** | abs,waist | body weight | ✅ Yes | 🎬 Yes | hip flexors |
 | 20 | **cable kneeling crunch** | abs,waist | cable | ✅ Yes | ⚪ No | obliques |
 | 21 | **elbow-to-knee** | abs,waist | body weight | ✅ Yes | ⚪ No | obliques |
 | 22 | **groin crunch** | abs,waist | body weight | ❌ No | 🎬 Yes | hip flexors,inner thighs |
 | 23 | **leg pull in flat bench** | abs,waist | body weight | ✅ Yes | ⚪ No | hip flexors,lower back |
 | 24 | **lever kneeling twist** | abs,waist | leverage machine | ✅ Yes | ⚪ No | obliques,lower back |
-| 25 | **oblique crunch v. 2** | abs,waist | body weight | ✅ Yes | ⚪ No | obliques |
+| 25 | **oblique crunch** | abs,waist | body weight | ✅ Yes | ⚪ No | obliques |
 | 26 | **straddle maltese** | abs,waist | body weight | ❌ No | 🎬 Yes | shoulders,chest |
 | 27 | **45° side bend** | abs,waist | body weight | ❌ No | ⚪ No | obliques |
 | 28 | **air bike** | abs,waist | body weight | ❌ No | ⚪ No | hip flexors |
@@ -255,7 +256,7 @@
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
 | 1 | **cable hip adduction** | adductors,upper legs | cable | ✅ Yes | 🎬 Yes | glutes,quadriceps |
-| 2 | **lever seated hip adduction** | adductors,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings,glutes |
+| 2 | **hip adduction machine** | adductors,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings,glutes |
 | 3 | **assisted side lying adductor stretch** | adductors,upper legs | assisted | ❌ No | 🎬 Yes | hamstrings,glutes |
 | 4 | **butterfly yoga pose** | adductors,upper legs | body weight | ❌ No | 🎬 Yes | hamstrings,groin |
 | 5 | **side lying hip adduction (male)** | adductors,upper legs | body weight | ❌ No | ⚪ No | glutes,hamstrings |
@@ -263,13 +264,13 @@
 
 ### Biceps
 
-**Total:** 3 | **Active:** 1 | **With Downloaded GIF:** 3 | **Active + GIF:** 1
+**Total:** 3 | **Active:** 0 | **With Downloaded GIF:** 3 | **Active + GIF:** 0
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **hammer curl dumbbell** | biceps | dumbbell | ✅ Yes | 🎬 Yes |  |
-| 2 | **hammer curl band** | biceps | band | ❌ No | 🎬 Yes |  |
-| 3 | **hammer curl cable** | biceps | cable | ❌ No | 🎬 Yes |  |
+| 1 | **hammer curl band** | biceps | band | ❌ No | 🎬 Yes |  |
+| 2 | **hammer curl cable** | biceps | cable | ❌ No | 🎬 Yes |  |
+| 3 | **hammer curl dumbbell** | biceps | dumbbell | ❌ No | 🎬 Yes |  |
 
 ### Biceps,upper arms
 
@@ -497,26 +498,29 @@
 
 ### Cardiovascular system
 
-**Total:** 16 | **Active:** 0 | **With Downloaded GIF:** 0 | **Active + GIF:** 0
+**Total:** 19 | **Active:** 3 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **aerobics** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 2 | **battle ropes** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 3 | **climbing** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 4 | **cycling** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 5 | **cycling indoor** | cardiovascular system | machine | ❌ No | ⚪ No |  |
-| 6 | **elliptical machine** | cardiovascular system | machine | ❌ No | ⚪ No |  |
-| 7 | **hiking** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 8 | **jump rope** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 9 | **rowing machine** | cardiovascular system | machine | ❌ No | ⚪ No |  |
-| 10 | **running** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 11 | **running treadmill** | cardiovascular system | machine | ❌ No | ⚪ No |  |
-| 12 | **skating** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 13 | **skiing** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 14 | **snowboarding** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 15 | **swimming** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
-| 16 | **walking** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 1 | **recumbent bike** | cardiovascular system | leverage machine | ✅ Yes | 🎬 Yes |  |
+| 2 | **air bike** | cardiovascular system | leverage machine | ✅ Yes | ⚪ No |  |
+| 3 | **rowing machine** | cardiovascular system | leverage machine | ✅ Yes | ⚪ No |  |
+| 4 | **aerobics** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 5 | **battle ropes** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 6 | **climbing** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 7 | **cycling** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 8 | **cycling indoor** | cardiovascular system | machine | ❌ No | ⚪ No |  |
+| 9 | **elliptical machine** | cardiovascular system | machine | ❌ No | ⚪ No |  |
+| 10 | **hiking** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 11 | **jump rope** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 12 | **rowing machine** | cardiovascular system | machine | ❌ No | ⚪ No |  |
+| 13 | **running** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 14 | **running treadmill** | cardiovascular system | machine | ❌ No | ⚪ No |  |
+| 15 | **skating** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 16 | **skiing** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 17 | **snowboarding** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 18 | **swimming** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
+| 19 | **walking** | cardiovascular system | body weight | ❌ No | ⚪ No |  |
 
 ### Cardiovascular system,cardio
 
@@ -529,15 +533,15 @@
 | 3 | **burpee** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves,shoulders,chest |
 | 4 | **cycle cross trainer** | cardiovascular system,cardio | leverage machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes |
 | 5 | **dumbbell burpee** | cardiovascular system,cardio | dumbbell | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves,shoulders,triceps,core |
-| 6 | **high knee against wall** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
-| 7 | **jack burpee** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves,shoulders,triceps,core |
-| 8 | **jump rope** | cardiovascular system,cardio | rope | ✅ Yes | 🎬 Yes | calves,quadriceps,hamstrings,glutes |
-| 9 | **mountain climber** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | core,shoulders,triceps |
-| 10 | **run** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
-| 11 | **run (equipment)** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
+| 6 | **elliptical machine** | cardiovascular system,cardio | elliptical machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
+| 7 | **high knee against wall** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
+| 8 | **jack burpee** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves,shoulders,triceps,core |
+| 9 | **jump rope** | cardiovascular system,cardio | rope | ✅ Yes | 🎬 Yes | calves,quadriceps,hamstrings,glutes |
+| 10 | **mountain climber** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | core,shoulders,triceps |
+| 11 | **run** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 12 | **ski step** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
-| 13 | **stationary bike walk** | cardiovascular system,cardio | leverage machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
-| 14 | **walk elliptical cross trainer** | cardiovascular system,cardio | elliptical machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
+| 13 | **stationary bike** | cardiovascular system,cardio | leverage machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
+| 14 | **treadmill** | cardiovascular system,cardio | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 15 | **walking on incline treadmill** | cardiovascular system,cardio | leverage machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 16 | **walking on stepmill** | cardiovascular system,cardio | stepmill machine | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,glutes,calves |
 | 17 | **astride jumps (male)** | cardiovascular system,cardio | body weight | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves |
@@ -556,7 +560,7 @@
 
 ### Delts
 
-**Total:** 11 | **Active:** 1 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
+**Total:** 8 | **Active:** 1 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
@@ -566,11 +570,8 @@
 | 4 | **overhead press barbell** | delts | barbell | ❌ No | ⚪ No |  |
 | 5 | **overhead press dumbbell** | delts | dumbbell | ❌ No | ⚪ No |  |
 | 6 | **press under** | delts | barbell | ❌ No | ⚪ No |  |
-| 7 | **reverse fly cable** | delts | cable | ❌ No | ⚪ No |  |
-| 8 | **reverse fly dumbbell** | delts | dumbbell | ❌ No | ⚪ No |  |
-| 9 | **reverse fly machine** | delts | machine | ❌ No | ⚪ No |  |
-| 10 | **shoulder press machine** | delts | machine | ❌ No | ⚪ No |  |
-| 11 | **split jerk** | delts | barbell | ❌ No | ⚪ No |  |
+| 7 | **shoulder press machine** | delts | machine | ❌ No | ⚪ No |  |
+| 8 | **split jerk** | delts | barbell | ❌ No | ⚪ No |  |
 
 ### Delts,shoulders
 
@@ -622,9 +623,9 @@
 | 42 | **cable cross-over reverse fly** | delts,shoulders | cable | ✅ Yes | ⚪ No | rhomboids,trapezius |
 | 43 | **dumbbell seated alternate press** | delts,shoulders | dumbbell | ❌ No | 🎬 Yes | triceps,chest |
 | 44 | **dumbbell seated lateral raise** | delts,shoulders | dumbbell | ❌ No | 🎬 Yes | traps,upper back |
-| 45 | **lever seated reverse fly** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | trapezius,rhomboids |
-| 46 | **lever seated reverse fly (parallel grip)** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | trapezius,rhomboids |
-| 47 | **lever shoulder press** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | triceps,chest |
+| 45 | **lever seated reverse fly (parallel grip)** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | trapezius,rhomboids |
+| 46 | **reverse fly machine** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | trapezius,rhomboids |
+| 47 | **shoulder press machine** | delts,shoulders | leverage machine | ✅ Yes | ⚪ No | triceps,chest |
 | 48 | **band front lateral raise** | delts,shoulders | band | ❌ No | ⚪ No | traps,upper back |
 | 49 | **band front raise** | delts,shoulders | band | ❌ No | ⚪ No | triceps,upper back |
 | 50 | **band reverse fly** | delts,shoulders | band | ❌ No | ⚪ No | upper back,trapezius |
@@ -808,7 +809,7 @@
 
 ### Glutes,upper legs
 
-**Total:** 144 | **Active:** 59 | **With Downloaded GIF:** 61 | **Active + GIF:** 56
+**Total:** 144 | **Active:** 60 | **With Downloaded GIF:** 61 | **Active + GIF:** 56
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
@@ -849,7 +850,7 @@
 | 35 | **dumbbell squat** | glutes,upper legs | dumbbell | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 36 | **dumbbell stiff leg deadlift** | glutes,upper legs | dumbbell | ✅ Yes | 🎬 Yes | hamstrings,lower back |
 | 37 | **dumbbell straight leg deadlift** | glutes,upper legs | dumbbell | ✅ Yes | 🎬 Yes | hamstrings,lower back |
-| 38 | **forward lunge (male)** | glutes,upper legs | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
+| 38 | **forward lunge** | glutes,upper legs | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 39 | **frankenstein squat** | glutes,upper legs | barbell | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 40 | **jump squat** | glutes,upper legs | body weight | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
 | 41 | **kettlebell front squat** | glutes,upper legs | kettlebell | ✅ Yes | 🎬 Yes | quadriceps,hamstrings,calves |
@@ -873,56 +874,56 @@
 | 59 | **barbell full squat (side pov)** | glutes,upper legs | barbell | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves,core |
 | 60 | **kettlebell pistol squat** | glutes,upper legs | kettlebell | ✅ Yes | ⚪ No | quadriceps,hamstrings,calves |
 | 61 | **rear decline bridge** | glutes,upper legs | body weight | ✅ Yes | ⚪ No | hamstrings,lower back |
-| 62 | **resistance band hip thrusts on knees (female)** | glutes,upper legs | resistance band | ✅ Yes | ⚪ No | hamstrings,quadriceps |
-| 63 | **sled 45° leg press (back pov)** | glutes,upper legs | sled machine | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves |
-| 64 | **sled 45° leg press (side pov)** | glutes,upper legs | sled machine | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves |
-| 65 | **assisted lying glutes stretch** | glutes,upper legs | assisted | ❌ No | ⚪ No | hamstrings |
-| 66 | **assisted lying gluteus and piriformis stretch** | glutes,upper legs | assisted | ❌ No | ⚪ No | hamstrings |
-| 67 | **band bent-over hip extension** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
-| 68 | **band hip lift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 69 | **band lying hip internal rotation** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 70 | **band pull through** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
-| 71 | **band seated hip internal rotation** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 72 | **band squat** | glutes,upper legs | band | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 73 | **band step-up** | glutes,upper legs | band | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 74 | **band stiff leg deadlift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
-| 75 | **band straight back stiff leg deadlift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
-| 76 | **barbell glute bridge** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
-| 77 | **barbell glute bridge two legs on bench (male)** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,core |
-| 78 | **barbell lying lifting (on hip)** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 79 | **barbell rack pull** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
-| 80 | **barbell rear lunge v. 2** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 81 | **barbell seated good morning** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
-| 82 | **barbell step-up** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 83 | **barbell stiff leg good morning** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
-| 84 | **basic toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,calves |
-| 85 | **bench hip extension** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings |
-| 86 | **bent knee lying twist (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | obliques,hip flexors |
-| 87 | **cable pull through (with rope)** | glutes,upper legs | cable | ❌ No | ⚪ No | hamstrings,lower back |
-| 88 | **cable standing hip extension** | glutes,upper legs | cable | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 89 | **dumbbell clean** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
-| 90 | **dumbbell one arm snatch** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,core |
-| 91 | **dumbbell single leg deadlift with stepbox support** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,lower back |
-| 92 | **dumbbell step-up** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 93 | **dumbbell sumo pull through** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,core |
-| 94 | **exercise ball hip flexor stretch** | glutes,upper legs | stability ball | ❌ No | ⚪ No | quadriceps,hamstrings |
-| 95 | **exercise ball one leg prone lower body rotation** | glutes,upper legs | stability ball | ❌ No | ⚪ No | hamstrings,quadriceps,core |
-| 96 | **exercise ball one legged diagonal kick hamstring curl** | glutes,upper legs | stability ball | ❌ No | ⚪ No | hamstrings,calves |
-| 97 | **flutter kicks** | glutes,upper legs | body weight | ❌ No | ⚪ No | hip flexors,lower abs |
-| 98 | **glute bridge march** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 99 | **glute bridge two legs on bench (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,core |
-| 100 | **hands clasped circular toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
-| 101 | **hands reversed clasped circular toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
-| 102 | **hug knees to chest** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 103 | **iron cross stretch** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 104 | **jump squat v. 2** | glutes,upper legs | body weight | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 105 | **kettlebell lunge pass through** | glutes,upper legs | kettlebell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 106 | **kettlebell turkish get up (squat style)** | glutes,upper legs | kettlebell | ❌ No | ⚪ No | quadriceps,hamstrings,core |
-| 107 | **kneeling jump squat** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 108 | **lever deadlift** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings,quadriceps |
-| 109 | **lever hip extension v. 2** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings |
-| 110 | **lever horizontal one leg press** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
-| 111 | **lever reverse hyperextension** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings,lower back |
+| 62 | **resistance band hip thrusts on knees** | glutes,upper legs | resistance band | ✅ Yes | ⚪ No | hamstrings,quadriceps |
+| 63 | **reverse hyperextension machine** | glutes,upper legs | leverage machine | ✅ Yes | ⚪ No | hamstrings,lower back |
+| 64 | **sled 45° leg press (back pov)** | glutes,upper legs | sled machine | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves |
+| 65 | **sled 45° leg press (side pov)** | glutes,upper legs | sled machine | ❌ No | 🎬 Yes | quadriceps,hamstrings,calves |
+| 66 | **assisted lying glutes stretch** | glutes,upper legs | assisted | ❌ No | ⚪ No | hamstrings |
+| 67 | **assisted lying gluteus and piriformis stretch** | glutes,upper legs | assisted | ❌ No | ⚪ No | hamstrings |
+| 68 | **band bent-over hip extension** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
+| 69 | **band hip lift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 70 | **band lying hip internal rotation** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 71 | **band pull through** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
+| 72 | **band seated hip internal rotation** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 73 | **band squat** | glutes,upper legs | band | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 74 | **band step-up** | glutes,upper legs | band | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 75 | **band stiff leg deadlift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
+| 76 | **band straight back stiff leg deadlift** | glutes,upper legs | band | ❌ No | ⚪ No | hamstrings,lower back |
+| 77 | **barbell glute bridge** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
+| 78 | **barbell glute bridge two legs on bench (male)** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,core |
+| 79 | **barbell lying lifting (on hip)** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 80 | **barbell rack pull** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
+| 81 | **barbell rear lunge v. 2** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 82 | **barbell seated good morning** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
+| 83 | **barbell step-up** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 84 | **barbell stiff leg good morning** | glutes,upper legs | barbell | ❌ No | ⚪ No | hamstrings,lower back |
+| 85 | **basic toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,calves |
+| 86 | **bench hip extension** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings |
+| 87 | **bent knee lying twist (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | obliques,hip flexors |
+| 88 | **cable pull through (with rope)** | glutes,upper legs | cable | ❌ No | ⚪ No | hamstrings,lower back |
+| 89 | **cable standing hip extension** | glutes,upper legs | cable | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 90 | **dumbbell clean** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
+| 91 | **dumbbell one arm snatch** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,core |
+| 92 | **dumbbell single leg deadlift with stepbox support** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,lower back |
+| 93 | **dumbbell step-up** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 94 | **dumbbell sumo pull through** | glutes,upper legs | dumbbell | ❌ No | ⚪ No | hamstrings,quadriceps,core |
+| 95 | **exercise ball hip flexor stretch** | glutes,upper legs | stability ball | ❌ No | ⚪ No | quadriceps,hamstrings |
+| 96 | **exercise ball one leg prone lower body rotation** | glutes,upper legs | stability ball | ❌ No | ⚪ No | hamstrings,quadriceps,core |
+| 97 | **exercise ball one legged diagonal kick hamstring curl** | glutes,upper legs | stability ball | ❌ No | ⚪ No | hamstrings,calves |
+| 98 | **flutter kicks** | glutes,upper legs | body weight | ❌ No | ⚪ No | hip flexors,lower abs |
+| 99 | **glute bridge march** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 100 | **glute bridge two legs on bench (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,core |
+| 101 | **hands clasped circular toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
+| 102 | **hands reversed clasped circular toe touch (male)** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps,calves |
+| 103 | **hug knees to chest** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 104 | **iron cross stretch** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 105 | **jump squat v. 2** | glutes,upper legs | body weight | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 106 | **kettlebell lunge pass through** | glutes,upper legs | kettlebell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 107 | **kettlebell turkish get up (squat style)** | glutes,upper legs | kettlebell | ❌ No | ⚪ No | quadriceps,hamstrings,core |
+| 108 | **kneeling jump squat** | glutes,upper legs | barbell | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
+| 109 | **lever deadlift** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings,quadriceps |
+| 110 | **lever hip extension v. 2** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings |
+| 111 | **lever horizontal one leg press** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
 | 112 | **lever seated good morning** | glutes,upper legs | leverage machine | ❌ No | ⚪ No | hamstrings,lower back |
 | 113 | **low glute bridge on floor** | glutes,upper legs | body weight | ❌ No | ⚪ No | hamstrings,core |
 | 114 | **lunge with jump** | glutes,upper legs | body weight | ❌ No | ⚪ No | quadriceps,hamstrings,calves |
@@ -959,11 +960,11 @@
 
 ### Hamstrings
 
-**Total:** 3 | **Active:** 1 | **With Downloaded GIF:** 2 | **Active + GIF:** 1
+**Total:** 3 | **Active:** 0 | **With Downloaded GIF:** 2 | **Active + GIF:** 0
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **lying leg curl machine** | hamstrings | machine | ✅ Yes | 🎬 Yes |  |
+| 1 | **lying leg curl machine** | hamstrings | machine | ❌ No | 🎬 Yes |  |
 | 2 | **trap bar deadlift** | hamstrings | barbell | ❌ No | 🎬 Yes |  |
 | 3 | **deficit deadlift** | hamstrings | barbell | ❌ No | ⚪ No |  |
 
@@ -977,14 +978,14 @@
 | 2 | **barbell straight leg deadlift** | hamstrings,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,lower back |
 | 3 | **cable assisted inverse leg curl** | hamstrings,upper legs | cable | ✅ Yes | 🎬 Yes | glutes,calves |
 | 4 | **dumbbell lying femoral** | hamstrings,upper legs | dumbbell | ✅ Yes | 🎬 Yes | glutes |
-| 5 | **glute-ham raise** | hamstrings,upper legs | body weight | ✅ Yes | 🎬 Yes | glutes,lower back |
+| 5 | **glute-ham raise** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes,lower back |
 | 6 | **inverse leg curl (bench support)** | hamstrings,upper legs | body weight | ✅ Yes | 🎬 Yes | glutes,calves |
 | 7 | **inverse leg curl (on pull-up cable machine)** | hamstrings,upper legs | body weight | ✅ Yes | 🎬 Yes | glutes,calves |
 | 8 | **kettlebell hang clean** | hamstrings,upper legs | kettlebell | ✅ Yes | 🎬 Yes | glutes,quadriceps,calves |
 | 9 | **lever kneeling leg curl** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes |
-| 10 | **lever lying leg curl** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | calves |
-| 11 | **lever lying two-one leg curl** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes |
-| 12 | **lever seated leg curl** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | calves |
+| 10 | **lever lying two-one leg curl** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | glutes |
+| 11 | **lying leg curl machine** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | calves |
+| 12 | **seated leg curl machine** | hamstrings,upper legs | leverage machine | ✅ Yes | 🎬 Yes | calves |
 | 13 | **assisted prone hamstring** | hamstrings,upper legs | assisted | ❌ No | 🎬 Yes | glutes,lower back |
 | 14 | **exercise ball seated hamstring stretch** | hamstrings,upper legs | stability ball | ❌ No | 🎬 Yes | glutes,lower back |
 | 15 | **hamstring stretch** | hamstrings,upper legs | body weight | ❌ No | 🎬 Yes | glutes |
@@ -1045,8 +1046,8 @@
 | 22 | **close grip chin-up** | lats,back | body weight | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 23 | **ez bar lying bent arms pullover** | lats,back | ez barbell | ✅ Yes | 🎬 Yes | triceps,chest |
 | 24 | **l-pull-up** | lats,back | body weight | ✅ Yes | 🎬 Yes | biceps,forearms |
-| 25 | **lever assisted chin-up** | lats,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,forearms |
-| 26 | **lever front pulldown** | lats,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,rhomboids,rear deltoids |
+| 25 | **lat pulldown machine** | lats,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,rhomboids,rear deltoids |
+| 26 | **lever assisted chin-up** | lats,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 27 | **lever pullover** | lats,back | leverage machine | ✅ Yes | 🎬 Yes | triceps,shoulders |
 | 28 | **mixed grip chin-up** | lats,back | body weight | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 29 | **pull-up** | lats,back | body weight | ✅ Yes | 🎬 Yes | biceps,forearms |
@@ -1112,9 +1113,17 @@
 | 1 | **neck side stretch** | levator scapulae,neck | body weight | ❌ No | ⚪ No | trapezius,sternocleidomastoid |
 | 2 | **side push neck stretch** | levator scapulae,neck | body weight | ❌ No | ⚪ No | trapezius,sternocleidomastoid |
 
+### Lower back
+
+**Total:** 1 | **Active:** 1 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
+
+| # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
+|---|---------------|----------|-----------|--------|----------------|-------------------|
+| 1 | **ghd back extension** | lower back | leverage machine | ✅ Yes | 🎬 Yes |  |
+
 ### Pectorals
 
-**Total:** 5 | **Active:** 2 | **With Downloaded GIF:** 2 | **Active + GIF:** 2
+**Total:** 4 | **Active:** 2 | **With Downloaded GIF:** 2 | **Active + GIF:** 2
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
@@ -1122,7 +1131,6 @@
 | 2 | **floor press barbell** | pectorals | barbell | ✅ Yes | 🎬 Yes |  |
 | 3 | **around the world** | pectorals | dumbbell | ❌ No | ⚪ No |  |
 | 4 | **chest press machine** | pectorals | machine | ❌ No | ⚪ No |  |
-| 5 | **pec deck** | pectorals | machine | ❌ No | ⚪ No |  |
 
 ### Pectorals,chest
 
@@ -1147,7 +1155,7 @@
 | 15 | **cable decline fly** | pectorals,chest | cable | ✅ Yes | 🎬 Yes | shoulders,triceps |
 | 16 | **cable incline bench press** | pectorals,chest | cable | ✅ Yes | 🎬 Yes | deltoids,triceps |
 | 17 | **chest dip** | pectorals,chest | body weight | ✅ Yes | 🎬 Yes | triceps,shoulders |
-| 18 | **deep push up** | pectorals,chest | dumbbell (used as handles for deeper range) | ✅ Yes | 🎬 Yes | triceps,shoulders |
+| 18 | **deep push up** | pectorals,chest | dumbbell | ✅ Yes | 🎬 Yes | triceps,shoulders |
 | 19 | **dumbbell around pullover** | pectorals,chest | dumbbell | ✅ Yes | 🎬 Yes | triceps,latissimus dorsi |
 | 20 | **dumbbell bench press** | pectorals,chest | dumbbell | ✅ Yes | 🎬 Yes | triceps,shoulders |
 | 21 | **dumbbell decline bench press** | pectorals,chest | dumbbell | ✅ Yes | 🎬 Yes | triceps,shoulders |
@@ -1176,10 +1184,10 @@
 | 44 | **smith incline bench press** | pectorals,chest | smith machine | ✅ Yes | 🎬 Yes | shoulders,triceps |
 | 45 | **chest dip (on dip-pull-up cage)** | pectorals,chest | body weight | ❌ No | 🎬 Yes | triceps,shoulders |
 | 46 | **chest dip on straight bar** | pectorals,chest | body weight | ❌ No | 🎬 Yes | triceps,shoulders |
-| 47 | **hyght dumbbell fly** | pectorals,chest | dumbbell | ❌ No | 🎬 Yes | shoulders |
-| 48 | **korean dips** | pectorals,chest | body weight | ❌ No | 🎬 Yes | triceps,shoulders |
-| 49 | **lever chest press** | pectorals,chest | leverage machine | ✅ Yes | ⚪ No | triceps,shoulders |
-| 50 | **lever seated fly** | pectorals,chest | leverage machine | ✅ Yes | ⚪ No | deltoids,trapezius |
+| 47 | **chest press machine** | pectorals,chest | leverage machine | ✅ Yes | ⚪ No | triceps,shoulders |
+| 48 | **hyght dumbbell fly** | pectorals,chest | dumbbell | ❌ No | 🎬 Yes | shoulders |
+| 49 | **korean dips** | pectorals,chest | body weight | ❌ No | 🎬 Yes | triceps,shoulders |
+| 50 | **pec deck machine** | pectorals,chest | leverage machine | ✅ Yes | ⚪ No | deltoids,trapezius |
 | 51 | **superman push-up** | pectorals,chest | body weight | ✅ Yes | ⚪ No | core,shoulders |
 | 52 | **assisted chest dip (kneeling)** | pectorals,chest | leverage machine | ❌ No | ⚪ No | triceps,shoulders |
 | 53 | **assisted seated pectoralis major stretch with stability ball** | pectorals,chest | assisted | ❌ No | ⚪ No | shoulders,triceps |
@@ -1207,52 +1215,52 @@
 | 75 | **cable standing up straight crossovers** | pectorals,chest | cable | ❌ No | ⚪ No | deltoids,triceps |
 | 76 | **cable upper chest crossovers** | pectorals,chest | cable | ❌ No | ⚪ No | deltoids,triceps |
 | 77 | **chest and front of shoulder stretch** | pectorals,chest | body weight | ❌ No | ⚪ No | deltoids |
-| 78 | **chest stretch with exercise ball** | pectorals,chest | stability ball | ❌ No | ⚪ No | shoulders,triceps |
-| 79 | **chest tap push-up (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 80 | **clap push up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 81 | **clock push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders,core |
-| 82 | **decline push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 83 | **drop push up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 84 | **dumbbell decline one arm fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
-| 85 | **dumbbell fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 86 | **dumbbell incline breeding** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 87 | **dumbbell incline fly on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders |
-| 88 | **dumbbell incline one arm fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | deltoids,triceps |
-| 89 | **dumbbell incline one arm fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
-| 90 | **dumbbell incline one arm press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 91 | **dumbbell incline one arm press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 92 | **dumbbell incline press on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders,triceps |
-| 93 | **dumbbell lying one arm press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
-| 94 | **dumbbell lying one arm press v. 2** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
-| 95 | **dumbbell lying pullover on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders,back |
-| 96 | **dumbbell one arm bench fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
-| 97 | **dumbbell one arm chest fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 98 | **dumbbell one arm decline chest press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
-| 99 | **dumbbell one arm fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 100 | **dumbbell one arm incline chest press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 101 | **dumbbell one arm press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps,core |
-| 102 | **dumbbell one arm pullover on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,latissimus dorsi,rhomboids |
-| 103 | **dumbbell one arm reverse grip press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
-| 104 | **dumbbell one leg fly on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders,triceps |
-| 105 | **dumbbell press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
-| 106 | **dumbbell pullover hip extension on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders,core |
-| 107 | **dumbbell pullover on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | triceps,latissimus dorsi |
-| 108 | **dynamic chest stretch (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps |
-| 109 | **exercise ball pike push up** | pectorals,chest | stability ball | ❌ No | ⚪ No | shoulders,triceps,core |
-| 110 | **full planche push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps,core |
-| 111 | **hands bike** | pectorals,chest | upper body ergometer | ❌ No | ⚪ No | triceps,shoulders |
-| 112 | **incline push up depth jump** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders,core |
-| 113 | **incline push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 114 | **incline push-up (on box)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 115 | **incline reverse grip push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 116 | **isometric chest squeeze** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 117 | **isometric wipers** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps,core |
-| 118 | **kettlebell alternating press on floor** | pectorals,chest | kettlebell | ❌ No | ⚪ No | shoulders,triceps |
-| 119 | **kettlebell extended range one arm press on floor** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders |
-| 120 | **kettlebell one arm floor press** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders |
-| 121 | **kettlebell plyo push-up** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders,core |
-| 122 | **kneeling push-up (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 123 | **lever chest press** | pectorals,chest | leverage machine | ❌ No | ⚪ No | triceps,shoulders |
+| 78 | **chest press machine** | pectorals,chest | leverage machine | ❌ No | ⚪ No | triceps,shoulders |
+| 79 | **chest stretch with exercise ball** | pectorals,chest | stability ball | ❌ No | ⚪ No | shoulders,triceps |
+| 80 | **chest tap push-up (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 81 | **clap push up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 82 | **clock push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders,core |
+| 83 | **decline push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 84 | **drop push up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 85 | **dumbbell decline one arm fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
+| 86 | **dumbbell fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 87 | **dumbbell incline breeding** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 88 | **dumbbell incline fly on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders |
+| 89 | **dumbbell incline one arm fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | deltoids,triceps |
+| 90 | **dumbbell incline one arm fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
+| 91 | **dumbbell incline one arm press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 92 | **dumbbell incline one arm press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 93 | **dumbbell incline press on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders,triceps |
+| 94 | **dumbbell lying one arm press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
+| 95 | **dumbbell lying one arm press v. 2** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
+| 96 | **dumbbell lying pullover on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders,back |
+| 97 | **dumbbell one arm bench fly** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders |
+| 98 | **dumbbell one arm chest fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 99 | **dumbbell one arm decline chest press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
+| 100 | **dumbbell one arm fly on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 101 | **dumbbell one arm incline chest press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 102 | **dumbbell one arm press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps,core |
+| 103 | **dumbbell one arm pullover on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,latissimus dorsi,rhomboids |
+| 104 | **dumbbell one arm reverse grip press** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders |
+| 105 | **dumbbell one leg fly on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | shoulders,triceps |
+| 106 | **dumbbell press on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | shoulders,triceps |
+| 107 | **dumbbell pullover hip extension on exercise ball** | pectorals,chest | dumbbell | ❌ No | ⚪ No | triceps,shoulders,core |
+| 108 | **dumbbell pullover on exercise ball** | pectorals,chest | dumbbell, exercise ball | ❌ No | ⚪ No | triceps,latissimus dorsi |
+| 109 | **dynamic chest stretch (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps |
+| 110 | **exercise ball pike push up** | pectorals,chest | stability ball | ❌ No | ⚪ No | shoulders,triceps,core |
+| 111 | **full planche push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps,core |
+| 112 | **hands bike** | pectorals,chest | upper body ergometer | ❌ No | ⚪ No | triceps,shoulders |
+| 113 | **incline push up depth jump** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders,core |
+| 114 | **incline push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 115 | **incline push-up (on box)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 116 | **incline reverse grip push-up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 117 | **isometric chest squeeze** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 118 | **isometric wipers** | pectorals,chest | body weight | ❌ No | ⚪ No | shoulders,triceps,core |
+| 119 | **kettlebell alternating press on floor** | pectorals,chest | kettlebell | ❌ No | ⚪ No | shoulders,triceps |
+| 120 | **kettlebell extended range one arm press on floor** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders |
+| 121 | **kettlebell one arm floor press** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders |
+| 122 | **kettlebell plyo push-up** | pectorals,chest | kettlebell | ❌ No | ⚪ No | triceps,shoulders,core |
+| 123 | **kneeling push-up (male)** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
 | 124 | **lever decline chest press** | pectorals,chest | leverage machine | ❌ No | ⚪ No | triceps,shoulders |
 | 125 | **lever incline chest press** | pectorals,chest | leverage machine | ❌ No | ⚪ No | shoulders,triceps |
 | 126 | **lever incline chest press v. 2** | pectorals,chest | leverage machine | ❌ No | ⚪ No | triceps,shoulders |
@@ -1289,13 +1297,21 @@
 | 157 | **wide hand push up** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
 | 158 | **wide-grip chest dip on high parallel bars** | pectorals,chest | body weight | ❌ No | ⚪ No | triceps,shoulders |
 
-### Quads
+### Quadriceps
 
-**Total:** 4 | **Active:** 1 | **With Downloaded GIF:** 1 | **Active + GIF:** 1
+**Total:** 1 | **Active:** 1 | **With Downloaded GIF:** 0 | **Active + GIF:** 0
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **leg extension machine** | quads | machine | ✅ Yes | 🎬 Yes |  |
+| 1 | **belt squat** | quadriceps | leverage machine | ✅ Yes | ⚪ No |  |
+
+### Quads
+
+**Total:** 4 | **Active:** 0 | **With Downloaded GIF:** 1 | **Active + GIF:** 0
+
+| # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
+|---|---------------|----------|-----------|--------|----------------|-------------------|
+| 1 | **leg extension machine** | quads | machine | ❌ No | 🎬 Yes |  |
 | 2 | **box jump** | quads | body weight | ❌ No | ⚪ No |  |
 | 3 | **bulgarian split squat** | quads | body weight | ❌ No | ⚪ No |  |
 | 4 | **pistol squat** | quads | body weight | ❌ No | ⚪ No |  |
@@ -1315,9 +1331,9 @@
 | 7 | **barbell one leg squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 8 | **barbell overhead squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves,core |
 | 9 | **barbell side split squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
-| 10 | **barbell side split squat v. 2** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
+| 10 | **barbell side split squat wide** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 11 | **barbell single leg split squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
-| 12 | **barbell split squat v. 2** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
+| 12 | **barbell split squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 13 | **barbell squat (on knees)** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 14 | **barbell squat jump step rear lunge** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 15 | **barbell wide squat** | quads,upper legs | barbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
@@ -1327,8 +1343,8 @@
 | 19 | **dumbbell step-up split squat** | quads,upper legs | dumbbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 20 | **dumbbell supported squat** | quads,upper legs | dumbbell | ✅ Yes | 🎬 Yes | glutes,hamstrings,calves |
 | 21 | **farmers walk** | quads,upper legs | dumbbell | ✅ Yes | 🎬 Yes | calves,forearms,core |
-| 22 | **lever alternate leg press** | quads,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings,glutes |
-| 23 | **lever leg extension** | quads,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings |
+| 22 | **leg extension machine** | quads,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings |
+| 23 | **lever alternate leg press** | quads,upper legs | leverage machine | ✅ Yes | 🎬 Yes | hamstrings,glutes |
 | 24 | **resistance band leg extension** | quads,upper legs | resistance band | ✅ Yes | 🎬 Yes | hamstrings |
 | 25 | **smith single leg split squat** | quads,upper legs | smith machine | ✅ Yes | 🎬 Yes | glutes,hamstrings |
 | 26 | **all fours squad stretch** | quads,upper legs | body weight | ❌ No | 🎬 Yes | hamstrings,glutes |
@@ -1407,7 +1423,7 @@
 | 2 | **barbell shrug** | traps,back | barbell | ✅ Yes | 🎬 Yes | shoulders |
 | 3 | **cable shrug** | traps,back | cable | ✅ Yes | 🎬 Yes | shoulders |
 | 4 | **dumbbell decline shrug** | traps,back | dumbbell | ✅ Yes | 🎬 Yes | shoulders,rhomboids |
-| 5 | **dumbbell decline shrug v. 2** | traps,back | dumbbell | ✅ Yes | 🎬 Yes | shoulders,rhomboids |
+| 5 | **dumbbell decline shrug alternate** | traps,back | dumbbell | ✅ Yes | 🎬 Yes | shoulders,rhomboids |
 | 6 | **dumbbell incline shrug** | traps,back | dumbbell | ✅ Yes | 🎬 Yes | shoulders |
 | 7 | **dumbbell shrug** | traps,back | dumbbell | ✅ Yes | 🎬 Yes | shoulders |
 | 8 | **kettlebell sumo high pull** | traps,back | kettlebell | ✅ Yes | 🎬 Yes | shoulders,glutes,hamstrings |
@@ -1425,31 +1441,31 @@
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
-| 1 | **barbell close-grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 2 | **barbell incline close grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 3 | **barbell incline reverse-grip press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 4 | **barbell jm bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 5 | **barbell lying close-grip press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 6 | **barbell lying extension** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | shoulders |
-| 7 | **barbell reverse close-grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 8 | **cable kickback** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | shoulders |
-| 9 | **cable one arm tricep pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
-| 10 | **cable pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
-| 11 | **cable pushdown (with rope attachment)** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
-| 12 | **cable reverse-grip pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
-| 13 | **cable triceps pushdown (v-bar)** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
-| 14 | **close-grip push-up** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 15 | **diamond push-up** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 16 | **dumbbell forward lunge triceps extension** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | shoulders,core |
-| 17 | **dumbbell kickback** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | shoulders |
-| 18 | **dumbbell neutral grip bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 19 | **dumbbell palms in incline bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 20 | **dumbbell twisting bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 21 | **elbow dips** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 22 | **exercise ball dip** | triceps,upper arms | stability ball | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 23 | **ez barbell jm bench press** | triceps,upper arms | ez barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 24 | **ez-bar close-grip bench press** | triceps,upper arms | ez barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
-| 25 | **impossible dips** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 1 | **advanced dips** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 2 | **barbell close-grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 3 | **barbell incline close grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 4 | **barbell incline reverse-grip press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 5 | **barbell jm bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 6 | **barbell lying close-grip press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 7 | **barbell lying extension** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | shoulders |
+| 8 | **barbell reverse close-grip bench press** | triceps,upper arms | barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 9 | **cable kickback** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | shoulders |
+| 10 | **cable one arm tricep pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
+| 11 | **cable pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
+| 12 | **cable pushdown (with rope attachment)** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
+| 13 | **cable reverse-grip pushdown** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
+| 14 | **cable triceps pushdown (v-bar)** | triceps,upper arms | cable | ✅ Yes | 🎬 Yes | forearms |
+| 15 | **close-grip push-up** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 16 | **diamond push-up** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 17 | **dumbbell forward lunge triceps extension** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | shoulders,core |
+| 18 | **dumbbell kickback** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | shoulders |
+| 19 | **dumbbell neutral grip bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 20 | **dumbbell palms in incline bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 21 | **dumbbell twisting bench press** | triceps,upper arms | dumbbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 22 | **elbow dips** | triceps,upper arms | body weight | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 23 | **exercise ball dip** | triceps,upper arms | stability ball | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 24 | **ez barbell jm bench press** | triceps,upper arms | ez barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
+| 25 | **ez-bar close-grip bench press** | triceps,upper arms | ez barbell | ✅ Yes | 🎬 Yes | chest,shoulders |
 | 26 | **lever overhand triceps dip** | triceps,upper arms | leverage machine | ✅ Yes | 🎬 Yes | chest,shoulders |
 | 27 | **lever seated dip** | triceps,upper arms | leverage machine | ✅ Yes | 🎬 Yes | chest,shoulders |
 | 28 | **smith close-grip bench press** | triceps,upper arms | smith machine | ✅ Yes | 🎬 Yes | chest,shoulders |
@@ -1580,7 +1596,7 @@
 
 ### Upper back,back
 
-**Total:** 88 | **Active:** 34 | **With Downloaded GIF:** 36 | **Active + GIF:** 33
+**Total:** 88 | **Active:** 35 | **With Downloaded GIF:** 36 | **Active + GIF:** 33
 
 | # | Exercise Name | Category | Equipment | Active | Downloaded GIF | Secondary Muscles |
 |---|---------------|----------|-----------|--------|----------------|-------------------|
@@ -1612,53 +1628,53 @@
 | 26 | **inverted row with straps** | upper back,back | body weight | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 27 | **kettlebell alternating row** | upper back,back | kettlebell | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 28 | **kettlebell one arm row** | upper back,back | kettlebell | ✅ Yes | 🎬 Yes | biceps,forearms |
-| 29 | **lever bent over row** | upper back,back | barbell | ✅ Yes | 🎬 Yes | biceps,forearms |
-| 30 | **lever one arm bent over row** | upper back,back | barbell | ✅ Yes | 🎬 Yes | biceps,forearms |
+| 29 | **lever bent over row** | upper back,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,forearms |
+| 30 | **lever one arm bent over row** | upper back,back | leverage machine | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 31 | **medicine ball overhead slam** | upper back,back | medicine ball | ✅ Yes | 🎬 Yes | shoulders,core |
 | 32 | **resistance band seated straight back row** | upper back,back | resistance band | ✅ Yes | 🎬 Yes | biceps,shoulders |
 | 33 | **smith bent over row** | upper back,back | smith machine | ✅ Yes | 🎬 Yes | biceps,forearms |
 | 34 | **bodyweight squatting row** | upper back,back | body weight | ❌ No | 🎬 Yes | biceps,shoulders |
 | 35 | **cable low seated row** | upper back,back | cable | ❌ No | 🎬 Yes | biceps,forearms |
 | 36 | **cambered bar lying row** | upper back,back | barbell | ❌ No | 🎬 Yes | biceps,forearms |
-| 37 | **lever seated row** | upper back,back | leverage machine | ✅ Yes | ⚪ No | biceps,forearms |
-| 38 | **back lever** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms,core |
-| 39 | **band one arm standing low row** | upper back,back | band | ❌ No | ⚪ No | biceps,shoulders |
-| 40 | **band one arm twisting seated row** | upper back,back | band | ❌ No | ⚪ No | biceps,shoulders |
-| 41 | **bodyweight squatting row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,shoulders |
-| 42 | **bodyweight standing close-grip one arm row** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
-| 43 | **bodyweight standing one arm row** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
-| 44 | **bodyweight standing one arm row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
-| 45 | **bodyweight standing row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,shoulders |
-| 46 | **cable decline seated wide-grip row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 47 | **cable floor seated wide-grip row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 48 | **cable high row (kneeling)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
-| 49 | **cable one arm bent over row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 50 | **cable one arm straight back high row (kneeling)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
-| 51 | **cable reverse-grip straight back seated high row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 52 | **cable rope crossover seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 53 | **cable rope elevated seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 54 | **cable rope extension incline bench row** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
-| 55 | **cable seated one arm alternate row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
-| 56 | **cable standing twist row (v-bar)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
-| 57 | **cable straight back seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms,shoulders |
-| 58 | **dumbbell lying rear delt row** | upper back,back | dumbbell | ❌ No | ⚪ No | shoulders,biceps |
-| 59 | **dumbbell palm rotational bent over row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
-| 60 | **dumbbell reverse grip incline bench one arm row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,shoulders |
-| 61 | **dumbbell reverse grip incline bench two arm row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
-| 62 | **dumbbell reverse grip row (female)** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
-| 63 | **elbow lift - reverse push-up** | upper back,back | body weight | ❌ No | ⚪ No | triceps,shoulders |
-| 64 | **elevator** | upper back,back | body weight | ❌ No | ⚪ No | shoulders,trapezius |
-| 65 | **ez bar reverse grip bent over row** | upper back,back | ez barbell | ❌ No | ⚪ No | biceps,forearms |
-| 66 | **inverted row v. 2** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
-| 67 | **kettlebell alternating renegade row** | upper back,back | kettlebell | ❌ No | ⚪ No | core,shoulders |
-| 68 | **kettlebell two arm row** | upper back,back | kettlebell | ❌ No | ⚪ No | biceps,forearms |
-| 69 | **lever alternating narrow grip seated row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
-| 70 | **lever bent-over row with v-bar** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
-| 71 | **lever high row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,rear deltoids |
-| 72 | **lever narrow grip seated row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
-| 73 | **lever one arm lateral high row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,shoulders |
-| 74 | **lever reverse grip vertical row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
-| 75 | **lever reverse t-bar row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
+| 37 | **seated row machine** | upper back,back | leverage machine | ✅ Yes | ⚪ No | biceps,forearms |
+| 38 | **t-bar row machine** | upper back,back | leverage machine | ✅ Yes | ⚪ No | biceps,forearms |
+| 39 | **back lever** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms,core |
+| 40 | **band one arm standing low row** | upper back,back | band | ❌ No | ⚪ No | biceps,shoulders |
+| 41 | **band one arm twisting seated row** | upper back,back | band | ❌ No | ⚪ No | biceps,shoulders |
+| 42 | **bodyweight squatting row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,shoulders |
+| 43 | **bodyweight standing close-grip one arm row** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
+| 44 | **bodyweight standing one arm row** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
+| 45 | **bodyweight standing one arm row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
+| 46 | **bodyweight standing row (with towel)** | upper back,back | body weight | ❌ No | ⚪ No | biceps,shoulders |
+| 47 | **cable decline seated wide-grip row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 48 | **cable floor seated wide-grip row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 49 | **cable high row (kneeling)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
+| 50 | **cable one arm bent over row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 51 | **cable one arm straight back high row (kneeling)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
+| 52 | **cable reverse-grip straight back seated high row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 53 | **cable rope crossover seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 54 | **cable rope elevated seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 55 | **cable rope extension incline bench row** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
+| 56 | **cable seated one arm alternate row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms |
+| 57 | **cable standing twist row (v-bar)** | upper back,back | cable | ❌ No | ⚪ No | biceps,shoulders |
+| 58 | **cable straight back seated row** | upper back,back | cable | ❌ No | ⚪ No | biceps,forearms,shoulders |
+| 59 | **dumbbell lying rear delt row** | upper back,back | dumbbell | ❌ No | ⚪ No | shoulders,biceps |
+| 60 | **dumbbell palm rotational bent over row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
+| 61 | **dumbbell reverse grip incline bench one arm row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,shoulders |
+| 62 | **dumbbell reverse grip incline bench two arm row** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
+| 63 | **dumbbell reverse grip row (female)** | upper back,back | dumbbell | ❌ No | ⚪ No | biceps,forearms |
+| 64 | **elbow lift - reverse push-up** | upper back,back | body weight | ❌ No | ⚪ No | triceps,shoulders |
+| 65 | **elevator** | upper back,back | body weight | ❌ No | ⚪ No | shoulders,trapezius |
+| 66 | **ez bar reverse grip bent over row** | upper back,back | ez barbell | ❌ No | ⚪ No | biceps,forearms |
+| 67 | **inverted row v. 2** | upper back,back | body weight | ❌ No | ⚪ No | biceps,forearms |
+| 68 | **kettlebell alternating renegade row** | upper back,back | kettlebell | ❌ No | ⚪ No | core,shoulders |
+| 69 | **kettlebell two arm row** | upper back,back | kettlebell | ❌ No | ⚪ No | biceps,forearms |
+| 70 | **lever alternating narrow grip seated row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
+| 71 | **lever bent-over row with v-bar** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
+| 72 | **lever high row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,rear deltoids |
+| 73 | **lever narrow grip seated row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
+| 74 | **lever one arm lateral high row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,shoulders |
+| 75 | **lever reverse grip vertical row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
 | 76 | **lever t bar row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
 | 77 | **lever t-bar reverse grip row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
 | 78 | **lever unilateral row** | upper back,back | leverage machine | ❌ No | ⚪ No | biceps,forearms |
@@ -1682,13 +1698,12 @@
 | assisted | 14 | 0 | 3 |
 | assisted (towel) | 1 | 0 | 0 |
 | band | 55 | 8 | 9 |
-| barbell | 170 | 103 | 107 |
-| body weight | 355 | 74 | 87 |
+| barbell | 168 | 101 | 105 |
+| body weight | 354 | 73 | 86 |
 | body weight (with resistance band) | 1 | 0 | 0 |
 | bosu ball | 3 | 0 | 0 |
-| cable | 168 | 49 | 52 |
-| dumbbell | 289 | 90 | 93 |
-| dumbbell (used as handles for deeper range) | 1 | 1 | 1 |
+| cable | 167 | 49 | 52 |
+| dumbbell | 289 | 90 | 94 |
 | dumbbell, exercise ball | 7 | 0 | 0 |
 | dumbbell, exercise ball, tennis ball | 1 | 0 | 0 |
 | elliptical machine | 1 | 1 | 1 |
@@ -1696,8 +1711,8 @@
 | ez barbell, exercise ball | 1 | 0 | 0 |
 | hammer | 1 | 0 | 0 |
 | kettlebell | 43 | 8 | 7 |
-| leverage machine | 81 | 34 | 27 |
-| machine | 16 | 2 | 2 |
+| leverage machine | 90 | 45 | 33 |
+| machine | 14 | 0 | 2 |
 | medicine ball | 13 | 3 | 3 |
 | olympic barbell | 2 | 0 | 0 |
 | resistance band | 7 | 6 | 5 |
@@ -1723,7 +1738,11 @@ These 397 exercises are active and have downloaded GIF animations.
 
 ### Abductors,upper legs (1)
 
-1. **lever seated hip abduction** - leverage machine
+1. **hip abduction machine** - leverage machine
+
+### Abs (1)
+
+1. **ghd sit-up** - leverage machine
 
 ### Abs,waist (19)
 
@@ -1745,16 +1764,12 @@ These 397 exercises are active and have downloaded GIF animations.
 16. **knee touch crunch** - body weight
 17. **lever seated leg raise crunch** - leverage machine
 18. **reverse crunch** - body weight
-19. **sit-up v. 2** - body weight
+19. **sit-up** - body weight
 
 ### Adductors,upper legs (2)
 
 1. **cable hip adduction** - cable
-2. **lever seated hip adduction** - leverage machine
-
-### Biceps (1)
-
-1. **hammer curl dumbbell** - dumbbell
+2. **hip adduction machine** - leverage machine
 
 ### Biceps,upper arms (27)
 
@@ -1812,6 +1827,10 @@ These 397 exercises are active and have downloaded GIF animations.
 22. **sled one leg calf press on leg press** - sled machine
 23. **smith reverse calf raises** - smith machine
 
+### Cardiovascular system (1)
+
+1. **recumbent bike** - leverage machine
+
 ### Cardiovascular system,cardio (16)
 
 1. **back and forth step** - body weight
@@ -1819,15 +1838,15 @@ These 397 exercises are active and have downloaded GIF animations.
 3. **burpee** - body weight
 4. **cycle cross trainer** - leverage machine
 5. **dumbbell burpee** - dumbbell
-6. **high knee against wall** - body weight
-7. **jack burpee** - body weight
-8. **jump rope** - rope
-9. **mountain climber** - body weight
-10. **run** - body weight
-11. **run (equipment)** - body weight
+6. **elliptical machine** - elliptical machine
+7. **high knee against wall** - body weight
+8. **jack burpee** - body weight
+9. **jump rope** - rope
+10. **mountain climber** - body weight
+11. **run** - body weight
 12. **ski step** - body weight
-13. **stationary bike walk** - leverage machine
-14. **walk elliptical cross trainer** - elliptical machine
+13. **stationary bike** - leverage machine
+14. **treadmill** - body weight
 15. **walking on incline treadmill** - leverage machine
 16. **walking on stepmill** - stepmill machine
 
@@ -1933,7 +1952,7 @@ These 397 exercises are active and have downloaded GIF animations.
 35. **dumbbell squat** - dumbbell
 36. **dumbbell stiff leg deadlift** - dumbbell
 37. **dumbbell straight leg deadlift** - dumbbell
-38. **forward lunge (male)** - body weight
+38. **forward lunge** - body weight
 39. **frankenstein squat** - barbell
 40. **jump squat** - body weight
 41. **kettlebell front squat** - kettlebell
@@ -1953,24 +1972,20 @@ These 397 exercises are active and have downloaded GIF animations.
 55. **trap bar deadlift** - trap bar
 56. **walking lunge** - body weight
 
-### Hamstrings (1)
-
-1. **lying leg curl machine** - machine
-
 ### Hamstrings,upper legs (12)
 
 1. **barbell good morning** - barbell
 2. **barbell straight leg deadlift** - barbell
 3. **cable assisted inverse leg curl** - cable
 4. **dumbbell lying femoral** - dumbbell
-5. **glute-ham raise** - body weight
+5. **glute-ham raise** - leverage machine
 6. **inverse leg curl (bench support)** - body weight
 7. **inverse leg curl (on pull-up cable machine)** - body weight
 8. **kettlebell hang clean** - kettlebell
 9. **lever kneeling leg curl** - leverage machine
-10. **lever lying leg curl** - leverage machine
-11. **lever lying two-one leg curl** - leverage machine
-12. **lever seated leg curl** - leverage machine
+10. **lever lying two-one leg curl** - leverage machine
+11. **lying leg curl machine** - leverage machine
+12. **seated leg curl machine** - leverage machine
 
 ### Lats (2)
 
@@ -2003,14 +2018,18 @@ These 397 exercises are active and have downloaded GIF animations.
 22. **close grip chin-up** - body weight
 23. **ez bar lying bent arms pullover** - ez barbell
 24. **l-pull-up** - body weight
-25. **lever assisted chin-up** - leverage machine
-26. **lever front pulldown** - leverage machine
+25. **lat pulldown machine** - leverage machine
+26. **lever assisted chin-up** - leverage machine
 27. **lever pullover** - leverage machine
 28. **mixed grip chin-up** - body weight
 29. **pull-up** - body weight
 30. **rear pull-up** - body weight
 31. **reverse grip machine lat pulldown** - leverage machine
 32. **wide grip pull-up** - body weight
+
+### Lower back (1)
+
+1. **ghd back extension** - leverage machine
 
 ### Pectorals (2)
 
@@ -2036,7 +2055,7 @@ These 397 exercises are active and have downloaded GIF animations.
 15. **cable decline fly** - cable
 16. **cable incline bench press** - cable
 17. **chest dip** - body weight
-18. **deep push up** - dumbbell (used as handles for deeper range)
+18. **deep push up** - dumbbell
 19. **dumbbell around pullover** - dumbbell
 20. **dumbbell bench press** - dumbbell
 21. **dumbbell decline bench press** - dumbbell
@@ -2064,10 +2083,6 @@ These 397 exercises are active and have downloaded GIF animations.
 43. **smith decline bench press** - smith machine
 44. **smith incline bench press** - smith machine
 
-### Quads (1)
-
-1. **leg extension machine** - machine
-
 ### Quads,upper legs (25)
 
 1. **balance board** - body weight
@@ -2079,9 +2094,9 @@ These 397 exercises are active and have downloaded GIF animations.
 7. **barbell one leg squat** - barbell
 8. **barbell overhead squat** - barbell
 9. **barbell side split squat** - barbell
-10. **barbell side split squat v. 2** - barbell
+10. **barbell side split squat wide** - barbell
 11. **barbell single leg split squat** - barbell
-12. **barbell split squat v. 2** - barbell
+12. **barbell split squat** - barbell
 13. **barbell squat (on knees)** - barbell
 14. **barbell squat jump step rear lunge** - barbell
 15. **barbell wide squat** - barbell
@@ -2091,8 +2106,8 @@ These 397 exercises are active and have downloaded GIF animations.
 19. **dumbbell step-up split squat** - dumbbell
 20. **dumbbell supported squat** - dumbbell
 21. **farmers walk** - dumbbell
-22. **lever alternate leg press** - leverage machine
-23. **lever leg extension** - leverage machine
+22. **leg extension machine** - leverage machine
+23. **lever alternate leg press** - leverage machine
 24. **resistance band leg extension** - resistance band
 25. **smith single leg split squat** - smith machine
 
@@ -2117,7 +2132,7 @@ These 397 exercises are active and have downloaded GIF animations.
 2. **barbell shrug** - barbell
 3. **cable shrug** - cable
 4. **dumbbell decline shrug** - dumbbell
-5. **dumbbell decline shrug v. 2** - dumbbell
+5. **dumbbell decline shrug alternate** - dumbbell
 6. **dumbbell incline shrug** - dumbbell
 7. **dumbbell shrug** - dumbbell
 8. **kettlebell sumo high pull** - kettlebell
@@ -2126,31 +2141,31 @@ These 397 exercises are active and have downloaded GIF animations.
 
 ### Triceps,upper arms (30)
 
-1. **barbell close-grip bench press** - barbell
-2. **barbell incline close grip bench press** - barbell
-3. **barbell incline reverse-grip press** - barbell
-4. **barbell jm bench press** - barbell
-5. **barbell lying close-grip press** - barbell
-6. **barbell lying extension** - barbell
-7. **barbell reverse close-grip bench press** - barbell
-8. **cable kickback** - cable
-9. **cable one arm tricep pushdown** - cable
-10. **cable pushdown** - cable
-11. **cable pushdown (with rope attachment)** - cable
-12. **cable reverse-grip pushdown** - cable
-13. **cable triceps pushdown (v-bar)** - cable
-14. **close-grip push-up** - body weight
-15. **diamond push-up** - body weight
-16. **dumbbell forward lunge triceps extension** - dumbbell
-17. **dumbbell kickback** - dumbbell
-18. **dumbbell neutral grip bench press** - dumbbell
-19. **dumbbell palms in incline bench press** - dumbbell
-20. **dumbbell twisting bench press** - dumbbell
-21. **elbow dips** - body weight
-22. **exercise ball dip** - stability ball
-23. **ez barbell jm bench press** - ez barbell
-24. **ez-bar close-grip bench press** - ez barbell
-25. **impossible dips** - body weight
+1. **advanced dips** - body weight
+2. **barbell close-grip bench press** - barbell
+3. **barbell incline close grip bench press** - barbell
+4. **barbell incline reverse-grip press** - barbell
+5. **barbell jm bench press** - barbell
+6. **barbell lying close-grip press** - barbell
+7. **barbell lying extension** - barbell
+8. **barbell reverse close-grip bench press** - barbell
+9. **cable kickback** - cable
+10. **cable one arm tricep pushdown** - cable
+11. **cable pushdown** - cable
+12. **cable pushdown (with rope attachment)** - cable
+13. **cable reverse-grip pushdown** - cable
+14. **cable triceps pushdown (v-bar)** - cable
+15. **close-grip push-up** - body weight
+16. **diamond push-up** - body weight
+17. **dumbbell forward lunge triceps extension** - dumbbell
+18. **dumbbell kickback** - dumbbell
+19. **dumbbell neutral grip bench press** - dumbbell
+20. **dumbbell palms in incline bench press** - dumbbell
+21. **dumbbell twisting bench press** - dumbbell
+22. **elbow dips** - body weight
+23. **exercise ball dip** - stability ball
+24. **ez barbell jm bench press** - ez barbell
+25. **ez-bar close-grip bench press** - ez barbell
 26. **lever overhand triceps dip** - leverage machine
 27. **lever seated dip** - leverage machine
 28. **smith close-grip bench press** - smith machine
@@ -2187,8 +2202,8 @@ These 397 exercises are active and have downloaded GIF animations.
 26. **inverted row with straps** - body weight
 27. **kettlebell alternating row** - kettlebell
 28. **kettlebell one arm row** - kettlebell
-29. **lever bent over row** - barbell
-30. **lever one arm bent over row** - barbell
+29. **lever bent over row** - leverage machine
+30. **lever one arm bent over row** - leverage machine
 31. **medicine ball overhead slam** - medicine ball
 32. **resistance band seated straight back row** - resistance band
 33. **smith bent over row** - smith machine
