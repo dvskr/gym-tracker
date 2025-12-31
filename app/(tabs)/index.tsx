@@ -32,6 +32,7 @@ import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
 import { PlateauAlerts, RecoveryStatus, CheckinPrompt } from '@/components/ai';
+import { DefaultTemplates, DEFAULT_TEMPLATES } from '@/components/workout/DefaultTemplates';
 
 
 
@@ -336,6 +337,52 @@ export default function HomeScreen() {
     }
   };
 
+  const handleStartDefaultTemplate = async (template: typeof DEFAULT_TEMPLATES[0]) => {
+    successHaptic();
+
+    try {
+      startWorkout(template.name);
+
+      // Add exercises from default template
+      for (const exercise of template.exercises) {
+        // Fetch previous workout data if user is logged in
+        let prefillSets: Array<{ weight?: number; reps?: number }> = [];
+        
+        if (user?.id) {
+          const previousData = await fetchPreviousWorkoutData(
+            user.id,
+            exercise.external_id
+          );
+
+          if (previousData && previousData.sets.length > 0) {
+            // Use previous workout data
+            prefillSets = previousData.sets.map((s) => ({
+              weight: s.weight,
+              reps: s.reps,
+            }));
+          }
+        }
+
+        // If no previous data, leave empty for user to fill
+        addExerciseWithSets(
+          {
+            id: exercise.external_id,
+            name: exercise.name,
+            bodyPart: '',
+            equipment: '',
+            target: '',
+          },
+          prefillSets,
+          exercise.sets
+        );
+      }
+
+      router.push('/workout/active');
+    } catch (error) {
+      console.error('Error starting default template:', error);
+    }
+  };
+
   const handleStartEmptyWorkout = () => {
     lightHaptic();
     startWorkout();
@@ -431,19 +478,22 @@ export default function HomeScreen() {
         {/* Plateau Detection Alerts */}
         {session && <PlateauAlerts />}
 
-        {/* Quick Start Section */}
-        {templates.length > 0 ? (
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionTitleRow}>
-                <Zap size={18} color="#f59e0b" />
-                <Text style={styles.sectionTitle}>QUICK START</Text>
-              </View>
+        {/* Quick Start Section - Always show */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionTitleRow}>
+              <Zap size={18} color="#f59e0b" />
+              <Text style={styles.sectionTitle}>QUICK START</Text>
+            </View>
+            {templates.length > 0 && (
               <TouchableOpacity onPress={handleViewAllTemplates}>
                 <Text style={styles.sectionLink}>View All</Text>
               </TouchableOpacity>
-            </View>
+            )}
+          </View>
 
+          {/* Show user templates if they have any, otherwise show defaults */}
+          {templates.length > 0 ? (
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -458,24 +508,26 @@ export default function HomeScreen() {
                 />
               ))}
             </ScrollView>
+          ) : (
+            <>
+              <Text style={styles.defaultTemplatesHint}>
+                Get started with these popular routines
+              </Text>
+              <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} />
+            </>
+          )}
 
-            {/* Start Empty Workout */}
-            <TouchableOpacity
-              style={styles.startEmptyButton}
-              onPress={handleStartEmptyWorkout}
-              activeOpacity={0.7}
-            >
-              <Plus size={18} color="#3b82f6" />
-              <Text style={styles.startEmptyText}>Or start empty workout</Text>
-              <ChevronRight size={16} color="#475569" />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <EmptyTemplates
-            onCreateTemplate={handleCreateTemplate}
-            onStartEmpty={handleStartEmptyWorkout}
-          />
-        )}
+          {/* Start Empty Workout */}
+          <TouchableOpacity
+            style={styles.startEmptyButton}
+            onPress={handleStartEmptyWorkout}
+            activeOpacity={0.7}
+          >
+            <Plus size={18} color="#3b82f6" />
+            <Text style={styles.startEmptyText}>Or start empty workout</Text>
+            <ChevronRight size={16} color="#475569" />
+          </TouchableOpacity>
+        </View>
 
         {/* Body Stats Section */}
         {user?.id && (
@@ -784,6 +836,14 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  // Default Templates Hint
+  defaultTemplatesHint: {
+    fontSize: 13,
+    color: '#64748b',
+    marginBottom: 12,
+    marginTop: 4,
   },
 
   // Start Empty Button
