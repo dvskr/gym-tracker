@@ -399,12 +399,12 @@ export default function BodyWeightScreen() {
 
   const handleLogPress = () => {
     requireAuth(() => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      if (todayEntry) {
-        setEditingEntry(todayEntry);
-      } else {
-        setShowLogModal(true);
-      }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (todayEntry) {
+      setEditingEntry(todayEntry);
+    } else {
+      setShowLogModal(true);
+    }
     }, 'Sign in to log your weight and track your progress.');
   };
 

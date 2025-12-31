@@ -481,16 +481,16 @@ export default function HomeScreen() {
         {session && <PlateauAlerts />}
 
         {/* Quick Start Section - Always show */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <Zap size={18} color="#f59e0b" />
-              <Text style={styles.sectionTitle}>QUICK START</Text>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionTitleRow}>
+                <Zap size={18} color="#f59e0b" />
+                <Text style={styles.sectionTitle}>QUICK START</Text>
+              </View>
+              <TouchableOpacity onPress={handleViewAllTemplates}>
+                <Text style={styles.sectionLink}>View All</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleViewAllTemplates}>
-              <Text style={styles.sectionLink}>View All</Text>
-            </TouchableOpacity>
-          </View>
 
           {/* Show user templates if they have any, otherwise show defaults */}
           {templates.length > 0 ? (
@@ -517,17 +517,17 @@ export default function HomeScreen() {
             </>
           )}
 
-          {/* Start Empty Workout */}
-          <TouchableOpacity
-            style={styles.startEmptyButton}
-            onPress={handleStartEmptyWorkout}
-            activeOpacity={0.7}
-          >
-            <Plus size={18} color="#3b82f6" />
-            <Text style={styles.startEmptyText}>Or start empty workout</Text>
-            <ChevronRight size={16} color="#475569" />
-          </TouchableOpacity>
-        </View>
+            {/* Start Empty Workout */}
+            <TouchableOpacity
+              style={styles.startEmptyButton}
+              onPress={handleStartEmptyWorkout}
+              activeOpacity={0.7}
+            >
+              <Plus size={18} color="#3b82f6" />
+              <Text style={styles.startEmptyText}>Or start empty workout</Text>
+              <ChevronRight size={16} color="#475569" />
+            </TouchableOpacity>
+          </View>
 
         {/* Body Stats Section */}
         {user?.id && (
@@ -542,24 +542,24 @@ export default function HomeScreen() {
             {/* Quick Weight Log */}
             <View style={styles.bodyStatsGrid}>
               {session && user?.id && (
-                <View style={styles.bodyStatsLeft}>
-                  <QuickWeightLog
-                    userId={user.id}
-                    onWeightLogged={handleWeightLogged}
-                  />
-                </View>
+              <View style={styles.bodyStatsLeft}>
+                <QuickWeightLog
+                  userId={user.id}
+                  onWeightLogged={handleWeightLogged}
+                />
+              </View>
               )}
             </View>
 
             {/* Weight Sparkline */}
             {session && user?.id && (
-              <View style={styles.sparklineSection}>
-                <WeightSparkline
-                  userId={user.id}
-                  goalType="lose"
-                  refreshTrigger={weightRefreshTrigger}
-                />
-              </View>
+            <View style={styles.sparklineSection}>
+              <WeightSparkline
+                userId={user.id}
+                goalType="lose"
+                refreshTrigger={weightRefreshTrigger}
+              />
+            </View>
             )}
 
             {/* Quick Links */}

@@ -1,0 +1,520 @@
+[
+  {
+    "id": "decb4e07-c1a0-417e-bed5-d02a9698c47f",
+    "name": "push-up",
+    "equipment": "body weight",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0662"
+  },
+  {
+    "id": "b787764c-18d9-4b87-9120-7149bd1f4f85",
+    "name": "close-grip push-up",
+    "equipment": "body weight",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0259"
+  },
+  {
+    "id": "39473307-0f69-48e3-9bd7-d3cbe690df59",
+    "name": "forward lunge (male)",
+    "equipment": "body weight",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3470"
+  },
+  {
+    "id": "5acff466-ed10-4d48-af94-46ef635524bd",
+    "name": "triceps dip",
+    "equipment": "body weight",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0814"
+  },
+  {
+    "id": "98e46ecf-d534-4595-9fe3-4fab56042dbf",
+    "name": "triceps dip (bench leg)",
+    "equipment": "body weight",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0812"
+  },
+  {
+    "id": "c0d44381-ba59-41e0-b6d9-e36cc6b4c9a0",
+    "name": "jump squat",
+    "equipment": "body weight",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0514"
+  },
+  {
+    "id": "e0dcc414-a0c3-41a0-a02f-009d650e1c79",
+    "name": "one leg squat",
+    "equipment": "body weight",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1476"
+  },
+  {
+    "id": "09f3b66c-3d40-4b4b-9c20-a8e66fc9d102",
+    "name": "dead bug",
+    "equipment": "body weight",
+    "category": "waist",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0276"
+  },
+  {
+    "id": "d1584922-9eef-4c9b-8175-f3270bb4e513",
+    "name": "walking lunge",
+    "equipment": "body weight",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1460"
+  },
+  {
+    "id": "73e610a1-6729-4d71-911b-2600eb68cf3c",
+    "name": "wide grip pull-up",
+    "equipment": "body weight",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1429"
+  },
+  {
+    "id": "0adc9ac8-ea71-4e4c-a6e8-d93e16da7894",
+    "name": "reverse crunch",
+    "equipment": "body weight",
+    "category": "waist",
+    "gif_url": "https://v2.exercisedb.io/image/0872"
+  },
+  {
+    "id": "e74bbbed-dd5f-4918-8b00-e6c7ae135da8",
+    "name": "mountain climber",
+    "equipment": "body weight",
+    "category": "cardio",
+    "gif_url": "https://v2.exercisedb.io/image/0630"
+  },
+  {
+    "id": "721370e9-e1ba-4ee7-92de-6fe0d830606b",
+    "name": "hanging leg raise",
+    "equipment": "body weight",
+    "category": "waist",
+    "gif_url": "https://v2.exercisedb.io/image/0472"
+  },
+  {
+    "id": "810074a8-07c8-4482-97ae-025ab67df3b0",
+    "name": "rear pull-up",
+    "equipment": "body weight",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0670"
+  },
+  {
+    "id": "f744e8dd-b251-4eef-9d06-1db09dc5be1e",
+    "name": "push-up (wall)",
+    "equipment": "body weight",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0659"
+  },
+  {
+    "id": "317a3888-c1e2-4853-ad58-f5c32faae2a9",
+    "name": "sit-up v. 2",
+    "equipment": "body weight",
+    "category": "waist",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0735"
+  },
+  {
+    "id": "349b4af7-f2eb-4249-ab01-e482d8253a8a",
+    "name": "diamond push-up",
+    "equipment": "body weight",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0283"
+  },
+  {
+    "id": "3e2ff05d-9950-41b5-a29c-372ee8ff25f4",
+    "name": "pull-up",
+    "equipment": "body weight",
+    "category": "back",
+    "gif_url": "https://v2.exercisedb.io/image/0652"
+  },
+  {
+    "id": "559543e9-3243-44d6-bfc4-1f035f7861f8",
+    "name": "cable reverse-grip pushdown",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0207"
+  },
+  {
+    "id": "b64151cc-3aaf-4a67-b1c8-4425d38e7eb2",
+    "name": "cable one arm lateral raise",
+    "equipment": "cable",
+    "category": "shoulders",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0192"
+  },
+  {
+    "id": "1374ca61-117a-4019-8b28-5e3a62396740",
+    "name": "cable lateral raise",
+    "equipment": "cable",
+    "category": "shoulders",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0178"
+  },
+  {
+    "id": "b6547f77-4792-42c0-980a-f64ef0ccd915",
+    "name": "cable preacher curl",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0195"
+  },
+  {
+    "id": "010d22cb-2f13-4ae2-a1c0-47486a4643c3",
+    "name": "cable curl",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0868"
+  },
+  {
+    "id": "dd82a638-14fa-4ed9-85f1-d95340c349d8",
+    "name": "cable pushdown",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0201"
+  },
+  {
+    "id": "839f9f68-a35b-4cc3-bbb1-ec2da2ef2375",
+    "name": "cable triceps pushdown (v-bar)",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://v2.exercisedb.io/image/0241"
+  },
+  {
+    "id": "641b3bd6-8cac-475d-9dea-aa83fc5546f3",
+    "name": "cable one arm tricep pushdown",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://v2.exercisedb.io/image/1723"
+  },
+  {
+    "id": "31e83f8a-3f91-4a3d-9c86-19541ce594bb",
+    "name": "cable kickback",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://v2.exercisedb.io/image/0860"
+  },
+  {
+    "id": "b5467008-d8b6-4a14-a38b-bd583694db93",
+    "name": "cable pushdown (with rope attachment)",
+    "equipment": "cable",
+    "category": "upper arms",
+    "gif_url": "https://v2.exercisedb.io/image/0200"
+  },
+  {
+    "id": "30215005-9fb8-44bd-ad3c-2abca63ea2a2",
+    "name": "dumbbell hammer curl",
+    "equipment": "dumbbell",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0313"
+  },
+  {
+    "id": "81045af0-3485-404f-bc8b-9a8eebdf3687",
+    "name": "dumbbell kickback",
+    "equipment": "dumbbell",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0333"
+  },
+  {
+    "id": "2ea4d3b4-0b74-4305-9d80-7e5f39928e9f",
+    "name": "dumbbell concentration curl",
+    "equipment": "dumbbell",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0297"
+  },
+  {
+    "id": "21d79113-d144-4a72-ab12-6dce705868f9",
+    "name": "dumbbell preacher curl",
+    "equipment": "dumbbell",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0372"
+  },
+  {
+    "id": "d3c7db06-2b04-458c-a710-25cb021c3a81",
+    "name": "dumbbell one arm bent-over row",
+    "equipment": "dumbbell",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0292"
+  },
+  {
+    "id": "c4f627ce-cf93-4949-a853-708d1407df1e",
+    "name": "kettlebell front squat",
+    "equipment": "kettlebell",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0533"
+  },
+  {
+    "id": "a21c301f-86f3-4bd3-ad93-e9f8c35c398c",
+    "name": "kettlebell alternating row",
+    "equipment": "kettlebell",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0522"
+  },
+  {
+    "id": "5be3c4ec-0b80-4695-9b62-78f5ae15a67c",
+    "name": "kettlebell swing",
+    "equipment": "kettlebell",
+    "category": "upper legs",
+    "gif_url": "https://v2.exercisedb.io/image/0549"
+  },
+  {
+    "id": "fa6cb2a7-4185-457d-97fb-b4c795aaa066",
+    "name": "kettlebell one arm row",
+    "equipment": "kettlebell",
+    "category": "back",
+    "gif_url": "https://v2.exercisedb.io/image/0541"
+  },
+  {
+    "id": "73a0eb61-7c50-4ea1-9481-1e43c617d6f6",
+    "name": "kettlebell goblet squat",
+    "equipment": "kettlebell",
+    "category": "upper legs",
+    "gif_url": "https://v2.exercisedb.io/image/0534"
+  },
+  {
+    "id": "fd1b2168-b03d-4200-ad88-3d5cef4c53df",
+    "name": "medicine ball overhead slam",
+    "equipment": "medicine ball",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1354"
+  },
+  {
+    "id": "eec46d35-87d3-42d8-8aa8-b3cc8b292ce3",
+    "name": "medicine ball chest pass",
+    "equipment": "medicine ball",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1302"
+  },
+  {
+    "id": "0bebe66f-3788-4d1a-9fd4-86999a5a5980",
+    "name": "medicine ball chest push single response",
+    "equipment": "medicine ball",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1305"
+  },
+  {
+    "id": "615f7961-28d6-4bc2-bfa6-dd8d688fdb10",
+    "name": "resistance band leg extension",
+    "equipment": "resistance band",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3007"
+  },
+  {
+    "id": "a346f242-4933-40f3-a45e-bc826b46b56b",
+    "name": "resistance band seated straight back row",
+    "equipment": "resistance band",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3144"
+  },
+  {
+    "id": "2be9b9b2-4541-4795-be8b-1f4e8d8d4358",
+    "name": "resistance band seated shoulder press",
+    "equipment": "resistance band",
+    "category": "shoulders",
+    "gif_url": "https://v2.exercisedb.io/image/3122"
+  },
+  {
+    "id": "51038c02-dac7-475f-8942-3e77b3a96254",
+    "name": "resistance band seated biceps curl",
+    "equipment": "resistance band",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3123"
+  },
+  {
+    "id": "6fd59c0b-4883-413a-bc62-bd382b2671b1",
+    "name": "resistance band seated chest press",
+    "equipment": "resistance band",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3124"
+  },
+  {
+    "id": "c3d2633b-dc31-469b-94a9-c6925017e5c5",
+    "name": "sled closer hack squat",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0741"
+  },
+  {
+    "id": "d9d7cd1b-6ec7-4a9d-bd40-1a4ad5679e75",
+    "name": "sled calf press on leg press",
+    "equipment": "sled machine",
+    "category": "lower legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1391"
+  },
+  {
+    "id": "38307665-093b-41c3-9e9a-5ed629946d04",
+    "name": "sled one leg calf press on leg press",
+    "equipment": "sled machine",
+    "category": "lower legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1392"
+  },
+  {
+    "id": "09b1f926-546f-4851-8af0-20f351e939b5",
+    "name": "sled 45° leg press",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0739"
+  },
+  {
+    "id": "831d7178-689f-4af7-95c6-185ad1bf1bd7",
+    "name": "sled lying squat",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0744"
+  },
+  {
+    "id": "91d2a9e9-2581-4d32-8b5b-5794ec7ea80f",
+    "name": "sled 45° leg wide press",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0740"
+  },
+  {
+    "id": "e58b13da-770f-4727-8381-acdcdd16f1ca",
+    "name": "sled forward angled calf raise",
+    "equipment": "sled machine",
+    "category": "lower legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0742"
+  },
+  {
+    "id": "6c90d7a8-0247-4d62-be43-d0e42ada0eb8",
+    "name": "sled hack squat",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0743"
+  },
+  {
+    "id": "55d80bca-6d4a-4ae9-a3a9-1b709ea9214c",
+    "name": "sled 45 degrees one leg press",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://v2.exercisedb.io/image/1425"
+  },
+  {
+    "id": "6daacd9e-eadb-44b1-a5ba-0304b6bf5232",
+    "name": "sled 45° leg press (back pov)",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1464"
+  },
+  {
+    "id": "2d17ddcd-6572-48b5-b0ed-e107e427e6d4",
+    "name": "sled 45° leg press (side pov)",
+    "equipment": "sled machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1463"
+  },
+  {
+    "id": "82b50be0-c073-45d8-9f45-ce65b973c379",
+    "name": "smith full squat",
+    "equipment": "smith machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3281"
+  },
+  {
+    "id": "4532705e-4dbc-4155-a8f2-a3edb3adad2a",
+    "name": "smith reverse calf raises",
+    "equipment": "smith machine",
+    "category": "lower legs",
+    "gif_url": "https://v2.exercisedb.io/image/1394"
+  },
+  {
+    "id": "90354412-a265-4629-acbf-7ad8bac08397",
+    "name": "smith seated shoulder press",
+    "equipment": "smith machine",
+    "category": "shoulders",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0765"
+  },
+  {
+    "id": "cf8d4986-d69d-4aad-b906-66fd42e409e3",
+    "name": "smith bent over row",
+    "equipment": "smith machine",
+    "category": "back",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1359"
+  },
+  {
+    "id": "033540dd-3a24-40ca-b9e5-d9e73a94a239",
+    "name": "smith machine bicep curl",
+    "equipment": "smith machine",
+    "category": "upper arms",
+    "gif_url": "https://v2.exercisedb.io/image/1683"
+  },
+  {
+    "id": "513045bd-8af3-4772-9256-4f4b4a3b525b",
+    "name": "smith incline bench press",
+    "equipment": "smith machine",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0757"
+  },
+  {
+    "id": "452f6f7c-7eef-4024-b8fc-dfba66d69579",
+    "name": "smith upright row",
+    "equipment": "smith machine",
+    "category": "shoulders",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0775"
+  },
+  {
+    "id": "33e524bc-5251-4659-8f4b-e276d7aa8e50",
+    "name": "smith close-grip bench press",
+    "equipment": "smith machine",
+    "category": "upper arms",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0751"
+  },
+  {
+    "id": "2e265be9-5423-49ea-83b7-2c015786b100",
+    "name": "smith decline bench press",
+    "equipment": "smith machine",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0753"
+  },
+  {
+    "id": "c3b68b16-6a47-4b35-be52-53c6db720db4",
+    "name": "smith reverse calf raises",
+    "equipment": "smith machine",
+    "category": "lower legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0763"
+  },
+  {
+    "id": "804dcdf1-f2fc-460b-b54c-983b825ce327",
+    "name": "smith shoulder press",
+    "equipment": "smith machine",
+    "category": "shoulders",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0766"
+  },
+  {
+    "id": "f89ac622-79d8-44f4-8d90-fce6495d852f",
+    "name": "smith squat",
+    "equipment": "smith machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0770"
+  },
+  {
+    "id": "16949e2b-1c27-49ab-b680-7abf45d3ed15",
+    "name": "smith hack squat",
+    "equipment": "smith machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0755"
+  },
+  {
+    "id": "2770b61f-5e26-4c9b-9266-47424c734888",
+    "name": "smith single leg split squat",
+    "equipment": "smith machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0768"
+  },
+  {
+    "id": "effd0e99-08af-400e-bbda-063c3e5e6636",
+    "name": "smith deadlift",
+    "equipment": "smith machine",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0752"
+  },
+  {
+    "id": "d8707318-8423-4ed8-bf74-c14098ce2e9f",
+    "name": "smith bench press",
+    "equipment": "smith machine",
+    "category": "chest",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0748"
+  },
+  {
+    "id": "a735ebf2-1714-451c-bb72-218c40f424c5",
+    "name": "trap bar deadlift",
+    "equipment": "trap bar",
+    "category": "upper legs",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0811"
+  }
+]

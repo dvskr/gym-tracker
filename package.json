@@ -75,7 +75,6 @@
     "react-native-svg": "15.12.1",
     "react-native-url-polyfill": "^3.0.0",
     "react-native-web": "^0.21.0",
-    "sharp": "^0.34.5",
     "uuid": "^13.0.0",
     "zod": "^4.2.1",
     "zustand": "^5.0.9"
@@ -86,6 +85,7 @@
     "@types/sharp": "^0.31.1",
     "@types/uuid": "^10.0.0",
     "dotenv": "^16.6.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.3.2",
     "tsx": "^4.21.0",
     "typescript": "~5.9.2"
