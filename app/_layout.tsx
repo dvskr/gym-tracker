@@ -17,6 +17,17 @@ import { usePrefetchAI } from '../hooks/usePrefetchAI';
 
 export default function RootLayout() {
   const router = useRouter();
+  const { user, session, isInitialized } = useAuthStore();
+  
+  // Handle auth-based navigation
+  useEffect(() => {
+    if (!isInitialized) return;
+    
+    if (!session && !user) {
+      // User signed out, redirect to login
+      router.replace('/(auth)/login');
+    }
+  }, [session, user, isInitialized, router]);
 
   // Pre-fetch AI data after authentication
   usePrefetchAI();
