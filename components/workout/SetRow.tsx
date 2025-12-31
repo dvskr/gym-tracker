@@ -66,26 +66,44 @@ function SetRowComponent({
   const [distanceInput, setDistanceInput] = useState(distanceMeters ? (distanceMeters / 1609.34).toFixed(2) : '');
   const [assistanceInput, setAssistanceInput] = useState(assistanceWeight?.toString() || '');
 
+  // Track if user is actively editing to prevent external updates
+  const [isEditingWeight, setIsEditingWeight] = useState(false);
+  const [isEditingReps, setIsEditingReps] = useState(false);
+  const [isEditingDuration, setIsEditingDuration] = useState(false);
+  const [isEditingDistance, setIsEditingDistance] = useState(false);
+  const [isEditingAssistance, setIsEditingAssistance] = useState(false);
+
   // Sync local state when props change (from outside updates like "copy previous")
+  // BUT only when user is not actively editing
   useEffect(() => {
-    setWeightInput(weight);
-  }, [weight]);
+    if (!isEditingWeight) {
+      setWeightInput(weight);
+    }
+  }, [weight, isEditingWeight]);
 
   useEffect(() => {
-    setRepsInput(reps);
-  }, [reps]);
+    if (!isEditingReps) {
+      setRepsInput(reps);
+    }
+  }, [reps, isEditingReps]);
 
   useEffect(() => {
-    setDurationInput(durationSeconds?.toString() || '');
-  }, [durationSeconds]);
+    if (!isEditingDuration) {
+      setDurationInput(durationSeconds?.toString() || '');
+    }
+  }, [durationSeconds, isEditingDuration]);
 
   useEffect(() => {
-    setDistanceInput(distanceMeters ? (distanceMeters / 1609.34).toFixed(2) : '');
-  }, [distanceMeters]);
+    if (!isEditingDistance) {
+      setDistanceInput(distanceMeters ? (distanceMeters / 1609.34).toFixed(2) : '');
+    }
+  }, [distanceMeters, isEditingDistance]);
 
   useEffect(() => {
-    setAssistanceInput(assistanceWeight?.toString() || '');
-  }, [assistanceWeight]);
+    if (!isEditingAssistance) {
+      setAssistanceInput(assistanceWeight?.toString() || '');
+    }
+  }, [assistanceWeight, isEditingAssistance]);
 
   // Format previous text based on measurement type
   const getPreviousText = () => {
@@ -154,11 +172,13 @@ function SetRowComponent({
 
   // Handle weight blur - sync to store
   const handleWeightBlur = useCallback(() => {
+    setIsEditingWeight(false);
     onWeightChange(weightInput);
   }, [weightInput, onWeightChange]);
 
   // Handle reps blur - sync to store
   const handleRepsBlur = useCallback(() => {
+    setIsEditingReps(false);
     onRepsChange(repsInput);
   }, [repsInput, onRepsChange]);
 
@@ -169,6 +189,7 @@ function SetRowComponent({
   }, []);
 
   const handleDurationBlur = useCallback(() => {
+    setIsEditingDuration(false);
     if (onDurationChange) {
       onDurationChange(parseInt(durationInput) || 0);
     }
@@ -185,6 +206,7 @@ function SetRowComponent({
   }, []);
 
   const handleDistanceBlur = useCallback(() => {
+    setIsEditingDistance(false);
     if (onDistanceChange) {
       const miles = parseFloat(distanceInput) || 0;
       onDistanceChange(miles * 1609.34); // Convert miles to meters
@@ -202,6 +224,7 @@ function SetRowComponent({
   }, []);
 
   const handleAssistanceBlur = useCallback(() => {
+    setIsEditingAssistance(false);
     if (onAssistanceChange) {
       onAssistanceChange(parseFloat(assistanceInput) || 0);
     }
@@ -217,6 +240,7 @@ function SetRowComponent({
               style={styles.input}
               value={durationInput}
               onChangeText={handleDurationChange}
+              onFocus={() => setIsEditingDuration(true)}
               onBlur={handleDurationBlur}
               keyboardType="number-pad"
               placeholder="sec"
@@ -235,11 +259,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={durationInput}
                 onChangeText={handleDurationChange}
+                onFocus={() => setIsEditingDuration(true)}
                 onBlur={handleDurationBlur}
                 keyboardType="number-pad"
                 placeholder="sec"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -248,11 +272,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={distanceInput}
                 onChangeText={handleDistanceChange}
+                onFocus={() => setIsEditingDistance(true)}
                 onBlur={handleDistanceBlur}
                 keyboardType="decimal-pad"
                 placeholder="mi"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -267,11 +291,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={durationInput}
                 onChangeText={handleDurationChange}
+                onFocus={() => setIsEditingDuration(true)}
                 onBlur={handleDurationBlur}
                 keyboardType="number-pad"
                 placeholder="sec"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -280,11 +304,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={weightInput}
                 onChangeText={handleWeightInputChange}
+                onFocus={() => setIsEditingWeight(true)}
                 onBlur={handleWeightBlur}
                 keyboardType="decimal-pad"
                 placeholder="lbs"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -299,11 +323,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={repsInput}
                 onChangeText={handleRepsInputChange}
+                onFocus={() => setIsEditingReps(true)}
                 onBlur={handleRepsBlur}
                 keyboardType="number-pad"
                 placeholder="reps"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -312,11 +336,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={assistanceInput}
                 onChangeText={handleAssistanceChange}
+                onFocus={() => setIsEditingAssistance(true)}
                 onBlur={handleAssistanceBlur}
                 keyboardType="decimal-pad"
                 placeholder="assist"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -330,6 +354,7 @@ function SetRowComponent({
               style={styles.input}
               value={repsInput}
               onChangeText={handleRepsInputChange}
+              onFocus={() => setIsEditingReps(true)}
               onBlur={handleRepsBlur}
               keyboardType="number-pad"
               placeholder="reps"
@@ -348,11 +373,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={weightInput}
                 onChangeText={handleWeightInputChange}
+                onFocus={() => setIsEditingWeight(true)}
                 onBlur={handleWeightBlur}
                 keyboardType="decimal-pad"
                 placeholder="lbs"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
@@ -361,11 +386,11 @@ function SetRowComponent({
                 style={styles.input}
                 value={repsInput}
                 onChangeText={handleRepsInputChange}
+                onFocus={() => setIsEditingReps(true)}
                 onBlur={handleRepsBlur}
                 keyboardType="number-pad"
                 placeholder="reps"
                 placeholderTextColor="#64748b"
-                selectTextOnFocus={true}
                 editable={!isCompleted}
               />
             </View>
