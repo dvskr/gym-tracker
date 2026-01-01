@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Haptics from 'expo-haptics';
 import { notificationService } from './notificationService';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 class RestTimerNotificationService {
   private currentNotificationId: string | null = null;
@@ -14,13 +15,13 @@ class RestTimerNotificationService {
   async scheduleRestComplete(seconds: number, nextExercise?: string): Promise<void> {
     // Cancel any existing rest notification
     await this.cancelRestNotification();
-
+    
     const body = nextExercise 
       ? `Time for ${nextExercise}!` 
       : 'Time for your next set!';
 
     try {
-      // Schedule notification (shows when app is backgrounded)
+      // Schedule notification (shows when app is backgrounded) - no sound
       this.currentNotificationId = await notificationService.scheduleNotification(
         'Rest Complete! 💪',
         body,
@@ -33,11 +34,11 @@ class RestTimerNotificationService {
             type: 'rest_complete',
             nextExercise,
           },
-          sound: 'default', // Use default for now, can customize later
+          sound: false, // No sound - vibration only
         }
       );
 
-      console.log(`✅ Scheduled rest timer notification for ${seconds}s`);
+      console.log(`✅ Scheduled rest timer notification for ${seconds}s (vibration only)`);
     } catch (error) {
       console.error('Failed to schedule rest notification:', error);
     }
@@ -61,18 +62,28 @@ class RestTimerNotificationService {
 
   /**
    * Trigger rest complete haptics/vibration (when app is in foreground)
+   * Note: Sound is handled by the scheduled notification (works in background)
+   * For foreground, we only trigger haptics since playing sound requires more complex setup
    */
   async triggerRestComplete(): Promise<void> {
-    try {
-      // Strong success haptic feedback
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      
-      // Additional vibration pattern for attention
-      this.startVibrationPattern();
+    // Check if haptics are enabled in settings
+    const { hapticEnabled } = useSettingsStore.getState();
+    
+    // Trigger haptics if enabled
+    if (hapticEnabled) {
+      try {
+        // Strong success haptic feedback
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        
+        // Additional vibration pattern for attention
+        this.startVibrationPattern();
 
-      console.log('✅ Triggered rest complete haptics');
-    } catch (error) {
-      console.error('Failed to trigger rest complete haptics:', error);
+        console.log('✅ Triggered rest complete haptics');
+      } catch (error) {
+        console.error('Failed to trigger rest complete haptics:', error);
+      }
+    } else {
+      console.log('⏭️ Skipping rest complete haptics (disabled in settings)');
     }
   }
 
@@ -80,6 +91,13 @@ class RestTimerNotificationService {
    * Trigger warning haptics (10 seconds remaining)
    */
   async triggerWarning(): Promise<void> {
+    // Check if haptics are enabled in settings
+    const { hapticEnabled } = useSettingsStore.getState();
+    
+    if (!hapticEnabled) {
+      return;
+    }
+
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       console.log('⚠️ Triggered rest timer warning haptic');

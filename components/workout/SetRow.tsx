@@ -61,6 +61,7 @@ function SetRowComponent({
   onAssistanceChange,
 }: SetRowProps) {
   const weightUnit = useSettingsStore((state) => state.weightUnit);
+  const showPreviousWorkout = useSettingsStore((state) => state.showPreviousWorkout);
   
   // Local state for immediate UI feedback
   const [weightInput, setWeightInput] = useState(weight);
@@ -409,16 +410,18 @@ function SetRowComponent({
         <Text style={styles.setNumber}>{setNumber}</Text>
       </View>
 
-      {/* PREVIOUS */}
-      <Pressable
-        style={styles.previousColumn}
-        onPress={handlePreviousTap}
-        disabled={!hasPrevious}
-      >
-        <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
-          {previousText}
-        </Text>
-      </Pressable>
+      {/* PREVIOUS - Only show if setting is enabled */}
+      {showPreviousWorkout && (
+        <Pressable
+          style={styles.previousColumn}
+          onPress={handlePreviousTap}
+          disabled={!hasPrevious}
+        >
+          <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
+            {previousText}
+          </Text>
+        </Pressable>
+      )}
 
       {/* DYNAMIC INPUTS */}
       {renderInputs()}

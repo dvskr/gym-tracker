@@ -38,9 +38,7 @@ import {
   celebratePR,
 } from '@/lib/utils/prDetection';
 import { useUnits } from '@/hooks/useUnits';
-
-// Default rest time in seconds
-const DEFAULT_REST_TIME = 90;
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // PR Toast duration in ms
 const PR_TOAST_DURATION = 3000;
@@ -48,6 +46,7 @@ const PR_TOAST_DURATION = 3000;
 export default function ActiveWorkoutScreen() {
   const activeWorkout = useActiveWorkout();
   const isWorkoutActive = useIsWorkoutActive();
+  const { autoStartTimer } = useSettingsStore();
   const restTimer = useRestTimer();
   const { weightUnit } = useUnits();
 
@@ -185,8 +184,10 @@ export default function ActiveWorkoutScreen() {
 
       // If completing (not uncompleting), start rest timer and check for PRs
       if (isCompleting) {
-        // Start rest timer - works for ALL workouts (empty or template)
-        startRestTimer(exerciseId);
+        // Start rest timer only if auto-start is enabled
+        if (autoStartTimer) {
+          startRestTimer(exerciseId);
+        }
 
         // Check for PRs only if we have weight and reps
         if (!set.weight || !set.reps) return;

@@ -10,6 +10,7 @@ import { smartTimingService } from '@/lib/notifications/smartTiming';
 import { calculateStreak } from '@/lib/utils/streakCalculation';
 import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
+import { useSettingsStore } from './settingsStore';
 
 // ============================================
 // Types
@@ -471,13 +472,16 @@ export const useWorkoutStore = create<WorkoutState>()(
 
             const newSetNumber = e.sets.length + 1;
             const lastSet = e.sets[e.sets.length - 1];
+            
+            // Check if auto-fill is enabled
+            const { autoFillSets } = useSettingsStore.getState();
 
-            // Copy weight/reps from last set if available (but not PR status)
+            // Copy weight/reps from last set if available AND autoFillSets is enabled
             const newSet: WorkoutSet = {
               ...createDefaultSet(newSetNumber),
-              weight: lastSet?.weight ?? null,
+              weight: (autoFillSets && lastSet?.weight) ? lastSet.weight : null,
               weightUnit: lastSet?.weightUnit ?? 'lbs',
-              reps: lastSet?.reps ?? null,
+              reps: (autoFillSets && lastSet?.reps) ? lastSet.reps : null,
               isPR: false,
               prType: null,
             };
@@ -668,7 +672,9 @@ export const useWorkoutStore = create<WorkoutState>()(
 
       startRestTimer: (exerciseId: string, seconds?: number) => {
         const { exerciseRestTimes, activeWorkout } = get();
-        const defaultSeconds = 90; // Default 90 seconds
+        // Use settings from settingsStore
+        const settings = useSettingsStore.getState();
+        const defaultSeconds = settings.restTimerDefault; // Use setting instead of hardcoded 90
         const duration = seconds ?? exerciseRestTimes[exerciseId] ?? defaultSeconds;
         
         // Get next exercise name for notification

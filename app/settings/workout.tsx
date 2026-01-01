@@ -179,31 +179,108 @@ const DurationPickerModal: React.FC<DurationPickerModalProps> = ({
   );
 };
 
+interface BarbellWeightPickerModalProps {
+  visible: boolean;
+  currentValue: number;
+  onClose: () => void;
+  onSelect: (value: number) => void;
+  unit: 'lbs' | 'kg';
+}
+
+const BarbellWeightPickerModal: React.FC<BarbellWeightPickerModalProps> = ({
+  visible,
+  currentValue,
+  onClose,
+  onSelect,
+  unit,
+}) => {
+  const [selectedValue, setSelectedValue] = useState(currentValue);
+
+  // Common barbell weights
+  const barbellWeightsLbs = [25, 33, 35, 45, 55, 65]; // Includes Olympic, Women's, EZ Bar, etc.
+  const barbellWeightsKg = [10, 15, 20, 25, 30]; // Common kg barbells
+  const weights = unit === 'lbs' ? barbellWeightsLbs : barbellWeightsKg;
+
+  const handleConfirm = () => {
+    onSelect(selectedValue);
+    onClose();
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="slide">
+      <Pressable style={styles.modalOverlay} onPress={onClose}>
+        <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Barbell Weight</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.modalCancel}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Weight List */}
+          <ScrollView style={styles.durationList} showsVerticalScrollIndicator={false}>
+            {weights.map((weight) => (
+              <TouchableOpacity
+                key={weight}
+                style={[
+                  styles.durationItem,
+                  selectedValue === weight && styles.durationItemActive,
+                ]}
+                onPress={() => setSelectedValue(weight)}
+              >
+                <Text
+                  style={[
+                    styles.durationItemText,
+                    selectedValue === weight && styles.durationItemTextActive,
+                  ]}
+                >
+                  {weight} {unit}
+                </Text>
+                {selectedValue === weight && (
+                  <View style={styles.durationCheckmark} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+            <Text style={styles.confirmButtonText}>Confirm</Text>
+          </TouchableOpacity>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+};
+
 export default function WorkoutSettingsScreen() {
   const router = useRouter();
   const { weightUnit } = useUnits();
   const {
     restTimerDefault,
     autoStartTimer,
-    soundEnabled,
     hapticEnabled,
     showPreviousWorkout,
+    autoFillSets,
     prCelebrations,
+    prSound,
+    prConfetti,
     defaultPlates,
     barbellWeight,
+    showPlateCalculator,
     setRestTimerDefault,
     setAutoStartTimer,
-    setSoundEnabled,
     setHapticEnabled,
     setShowPreviousWorkout,
+    setAutoFillSets,
     setPrCelebrations,
+    setPrSound,
+    setPrConfetti,
+    setShowPlateCalculator,
+    setBarbellWeight,
   } = useSettingsStore();
 
   const [showDurationPicker, setShowDurationPicker] = useState(false);
-  const [autoFillSets, setAutoFillSets] = useState(false);
-  const [showCalculator, setShowCalculator] = useState(true);
-  const [soundOnPR, setSoundOnPR] = useState(true);
-  const [confettiAnimation, setConfettiAnimation] = useState(true);
+  const [showBarbellPicker, setShowBarbellPicker] = useState(false);
 
   const handlePlatesSettings = () => {
     router.push('/settings/plates');
@@ -239,14 +316,6 @@ export default function WorkoutSettingsScreen() {
             toggle
             toggleValue={autoStartTimer}
             onToggleChange={setAutoStartTimer}
-          />
-          <View style={styles.divider} />
-          <SettingRow
-            icon={<Volume2 size={24} color="#3b82f6" />}
-            label="Timer Sound"
-            toggle
-            toggleValue={soundEnabled}
-            onToggleChange={setSoundEnabled}
           />
           <View style={styles.divider} />
           <SettingRow
@@ -287,9 +356,7 @@ export default function WorkoutSettingsScreen() {
             icon={<Calculator size={24} color="#3b82f6" />}
             label="Barbell Weight"
             value={`${barbellWeight} ${weightUnit}`}
-            onPress={() => {
-              // TODO: Show barbell weight picker
-            }}
+            onPress={() => setShowBarbellPicker(true)}
           />
           <View style={styles.divider} />
           <SettingRow
@@ -304,8 +371,8 @@ export default function WorkoutSettingsScreen() {
             label="Show Calculator"
             description="Display plate breakdown for weights"
             toggle
-            toggleValue={showCalculator}
-            onToggleChange={setShowCalculator}
+            toggleValue={showPlateCalculator}
+            onToggleChange={setShowPlateCalculator}
           />
         </View>
 
@@ -324,8 +391,8 @@ export default function WorkoutSettingsScreen() {
             icon={<Volume2 size={24} color="#3b82f6" />}
             label="Sound on PR"
             toggle
-            toggleValue={soundOnPR}
-            onToggleChange={setSoundOnPR}
+            toggleValue={prSound}
+            onToggleChange={setPrSound}
             disabled={!prCelebrations}
           />
           <View style={styles.divider} />
@@ -333,8 +400,8 @@ export default function WorkoutSettingsScreen() {
             icon={<Trophy size={24} color="#3b82f6" />}
             label="Confetti Animation"
             toggle
-            toggleValue={confettiAnimation}
-            onToggleChange={setConfettiAnimation}
+            toggleValue={prConfetti}
+            onToggleChange={setPrConfetti}
             disabled={!prCelebrations}
           />
         </View>
@@ -348,6 +415,15 @@ export default function WorkoutSettingsScreen() {
         currentValue={restTimerDefault}
         onClose={() => setShowDurationPicker(false)}
         onSelect={setRestTimerDefault}
+      />
+
+      {/* Barbell Weight Picker Modal */}
+      <BarbellWeightPickerModal
+        visible={showBarbellPicker}
+        currentValue={barbellWeight}
+        onClose={() => setShowBarbellPicker(false)}
+        onSelect={setBarbellWeight}
+        unit={weightUnit}
       />
     </SafeAreaView>
   );

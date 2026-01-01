@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { X, Check } from 'lucide-react-native';
 import { selectionHaptic } from '@/lib/utils/haptics';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // ============================================
 // Types
@@ -116,23 +117,31 @@ function calculatePlates(
 
 export function PlateCalculator({
   targetWeight,
-  barWeight: initialBarWeight = 45,
+  barWeight: initialBarWeight,
   unit = 'lbs',
   isVisible,
   onClose,
   onBarWeightChange,
 }: PlateCalculatorProps) {
-  const [selectedBarWeight, setSelectedBarWeight] = useState(initialBarWeight);
+  // Get settings from store
+  const { barbellWeight: settingsBarbellWeight, availablePlates: settingsPlates } = useSettingsStore();
+  
+  // Use settings barbell weight as default if no initial value provided
+  const defaultBarWeight = initialBarWeight ?? settingsBarbellWeight;
+  const [selectedBarWeight, setSelectedBarWeight] = useState(defaultBarWeight);
   const [showBarPicker, setShowBarPicker] = useState(false);
 
   const plateConfig = unit === 'lbs' ? PLATE_CONFIG_LBS : PLATE_CONFIG_KG;
   const barOptions = unit === 'lbs' ? BAR_OPTIONS_LBS : BAR_OPTIONS_KG;
-  const availablePlates = plateConfig.map((p) => p.weight);
+  
+  // Use available plates from settings
+  const availablePlates = settingsPlates.length > 0 ? settingsPlates : plateConfig.map((p) => p.weight);
 
-  // Update bar weight when initial changes
+  // Update bar weight when settings change or initial changes
   useEffect(() => {
-    setSelectedBarWeight(initialBarWeight);
-  }, [initialBarWeight]);
+    const newBarWeight = initialBarWeight ?? settingsBarbellWeight;
+    setSelectedBarWeight(newBarWeight);
+  }, [initialBarWeight, settingsBarbellWeight]);
 
   // Calculate plates
   const calculation = useMemo(() => {

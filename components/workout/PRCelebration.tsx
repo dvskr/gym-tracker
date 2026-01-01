@@ -11,6 +11,7 @@ import {
   Easing,
 } from 'react-native';
 import { successHaptic } from '@/lib/utils/haptics';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // ============================================
 // Types
@@ -109,6 +110,14 @@ export function PRCelebration({
   value,
   onDismiss,
 }: PRCelebrationProps) {
+  // Get settings
+  const { prCelebrations, prSound, prConfetti } = useSettingsStore();
+  
+  // Don't show if PR celebrations are disabled
+  if (!prCelebrations || !visible) {
+    return null;
+  }
+
   // Animation values
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const trophyScaleAnim = useRef(new Animated.Value(0)).current;
@@ -339,12 +348,14 @@ export function PRCelebration({
     >
       <TouchableWithoutFeedback onPress={handleDismiss}>
         <View style={styles.overlay}>
-          {/* Confetti */}
-          <View style={styles.confettiContainer}>
-            {confettiPieces.map((piece) => (
-              <ConfettiPieceComponent key={piece.id} piece={piece} />
-            ))}
-          </View>
+          {/* Confetti - Only show if enabled */}
+          {prConfetti && (
+            <View style={styles.confettiContainer}>
+              {confettiPieces.map((piece) => (
+                <ConfettiPieceComponent key={piece.id} piece={piece} />
+              ))}
+            </View>
+          )}
 
           <TouchableWithoutFeedback>
             <Animated.View

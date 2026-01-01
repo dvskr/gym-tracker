@@ -74,6 +74,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 
   // Fetch previous workout data for this exercise
   const { data: previousWorkout, getPreviousSet, daysAgo } = usePreviousWorkout(exercise.id);
+  
+  // Get settings
+  const { showPreviousWorkout } = useSettingsStore();
 
   // Get completed sets count
   const completedSets = sets.filter((s) => s.isCompleted).length;
@@ -175,7 +178,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           </View>
 
           {/* Previous Workout Hint */}
-          {previousWorkout && previousWorkout.sets.length > 0 && (
+          {showPreviousWorkout && previousWorkout && previousWorkout.sets.length > 0 && (
             <View style={styles.previousHintRow}>
               <Text style={styles.previousHintText}>
                 Last: {previousWorkout.sets[0].weight} {weightUnit} × {previousWorkout.sets[0].reps} reps

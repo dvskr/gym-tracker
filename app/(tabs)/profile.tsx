@@ -16,7 +16,6 @@ import {
   ChevronRight,
   Settings,
   Globe,
-  Moon,
   Clock,
   Volume2,
   Vibrate,
@@ -112,11 +111,6 @@ export default function ProfileScreen() {
     () => useSettingsStore.getState().unitSystem,
     () => useSettingsStore.getState().unitSystem
   );
-  const theme = useSyncExternalStore(
-    useSettingsStore.subscribe,
-    () => useSettingsStore.getState().theme,
-    () => useSettingsStore.getState().theme
-  );
   const restTimerDefault = useSyncExternalStore(
     useSettingsStore.subscribe,
     () => useSettingsStore.getState().restTimerDefault,
@@ -158,10 +152,6 @@ export default function ProfileScreen() {
 
   const handleUnitsSettings = () => {
     router.push('/settings/units');
-  };
-
-  const handleThemeSettings = () => {
-    router.push('/settings/theme');
   };
 
   const handleRestTimerSettings = () => {
@@ -269,12 +259,6 @@ export default function ProfileScreen() {
             label="Units"
             value={unitSystem === 'metric' ? 'Metric' : 'Imperial'}
             onPress={handleUnitsSettings}
-          />
-          <SettingItem
-            icon={<Moon size={24} color="#60a5fa" />}
-            label="Theme"
-            value={theme === 'dark' ? 'Dark' : theme === 'light' ? 'Light' : 'Auto'}
-            onPress={handleThemeSettings}
           />
           <SettingItem
             icon={<Globe size={24} color="#60a5fa" />}
