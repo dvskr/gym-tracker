@@ -49,6 +49,7 @@ import { AchievementCard } from '@/components/AchievementCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { tabDataCache } from '@/lib/cache/tabDataCache';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -183,6 +184,7 @@ const StatsGridSkeleton = () => (
 
 export default function ProgressScreen() {
   const { user, session } = useAuthStore();
+  const { weightUnit } = useUnits();
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -368,7 +370,7 @@ export default function ProgressScreen() {
               icon={<TrendingUp size={20} color="#22c55e" />}
               label="Total Volume"
               value={formatVolume(allTimeStats.totalVolume)}
-              subtext="lbs lifted"
+              subtext={`${weightUnit} lifted`}
             />
             <StatCard
               icon={<Flame size={20} color="#ef4444" />}

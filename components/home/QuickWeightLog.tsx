@@ -10,6 +10,7 @@ import {
 import { Scale, Minus, Plus, Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { getTodayWeight, logWeight, getLatestWeight } from '@/lib/api/bodyWeight';
+import { useUnits } from '@/hooks/useUnits';
 
 interface QuickWeightLogProps {
   userId: string;
@@ -20,6 +21,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
   userId,
   onWeightLogged,
 }) => {
+  const { weightUnit } = useUnits();
   const [weight, setWeight] = useState<string>('');
   const [todayWeight, setTodayWeight] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -117,7 +119,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
             placeholderTextColor="#475569"
             selectTextOnFocus={true}
           />
-          <Text style={styles.unit}>lbs</Text>
+          <Text style={styles.unit}>{weightUnit}</Text>
         </View>
 
         {/* Increment Button */}

@@ -15,6 +15,7 @@ import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Check, X, Clock, Weight, Ruler, Users } from 'lucide-react-native';
 import type { Exercise, ExerciseSet } from '@/types/exercise-measurements';
 import { getMeasurementConfig, validateSetData } from '@/lib/utils/exerciseMeasurements';
+import { useUnits } from '@/hooks/useUnits';
 
 interface ExerciseSetInputProps {
   exercise: Exercise;
@@ -35,6 +36,7 @@ export const ExerciseSetInput: React.FC<ExerciseSetInputProps> = ({
 }) => {
   const config = getMeasurementConfig(exercise);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const { weightUnit } = useUnits();
 
   const handleFieldUpdate = (field: string, value: string) => {
     const numValue = value === '' ? undefined : parseFloat(value);
@@ -96,7 +98,7 @@ export const ExerciseSetInput: React.FC<ExerciseSetInputProps> = ({
                 set.is_completed && styles.inputCompleted
               ]}
             />
-            <Text style={styles.inputLabel}>kg</Text>
+            <Text style={styles.inputLabel}>{weightUnit}</Text>
           </View>
         )}
 
@@ -162,7 +164,7 @@ export const ExerciseSetInput: React.FC<ExerciseSetInputProps> = ({
                 set.is_completed && styles.inputCompleted
               ]}
             />
-            <Text style={styles.inputLabel}>kg</Text>
+            <Text style={styles.inputLabel}>{weightUnit}</Text>
           </View>
         )}
       </View>

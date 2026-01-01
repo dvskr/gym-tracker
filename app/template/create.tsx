@@ -31,6 +31,7 @@ import { ExerciseSearch } from '@/components/exercise/ExerciseSearch';
 import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { lightHaptic, successHaptic, mediumHaptic } from '@/lib/utils/haptics';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -186,7 +187,7 @@ const SetRow: React.FC<SetRowProps> = ({ set, onUpdate, onDelete, onTypePress })
           placeholderTextColor="#64748b"
           selectTextOnFocus={true}
         />
-        <Text style={styles.setInputUnit}>lbs</Text>
+        <Text style={styles.setInputUnit}>{weightUnit}</Text>
       </View>
 
       {/* Reps Input */}
@@ -320,6 +321,7 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
 
 export default function CreateTemplateScreen() {
   const { user } = useAuthStore();
+  const { weightUnit } = useUnits();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');

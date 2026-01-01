@@ -43,6 +43,7 @@ import {
   ExerciseHistoryEntry,
   ExerciseStats,
 } from '@/lib/api/exercises';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -121,10 +122,10 @@ const HistoryEntry: React.FC<HistoryEntryProps> = ({
             {format(new Date(entry.date), 'MMM d, yyyy')}
           </Text>
           <Text style={styles.historySummary}>
-            {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • Best: {entry.bestSet.weight} × {entry.bestSet.reps}
+            {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • Best: {convertWeight(entry.bestSet.weight, entry.bestSet.weight_unit).toFixed(1)} × {entry.bestSet.reps}
           </Text>
           <Text style={styles.historyVolume}>
-            Volume: {entry.totalVolume.toLocaleString()} lbs
+            Volume: {entry.sets.reduce((sum, s) => sum + (convertWeight(s.weight, s.weight_unit) * s.reps), 0).toLocaleString()} {weightUnit}
           </Text>
         </View>
         <View style={styles.historyEntryRight}>
@@ -151,10 +152,10 @@ const HistoryEntry: React.FC<HistoryEntryProps> = ({
           {entry.sets.map((set, index) => (
             <View key={index} style={styles.setRow}>
               <Text style={[styles.setRowText, { width: 50 }]}>{set.set_number}</Text>
-              <Text style={[styles.setRowText, { flex: 1 }]}>{set.weight} lbs</Text>
+              <Text style={[styles.setRowText, { flex: 1 }]}>{convertWeight(set.weight, set.weight_unit).toFixed(1)} {weightUnit}</Text>
               <Text style={[styles.setRowText, { flex: 1 }]}>{set.reps}</Text>
               <Text style={[styles.setRowText, { width: 80 }]}>
-                {(set.weight * set.reps).toLocaleString()}
+                {(convertWeight(set.weight, set.weight_unit) * set.reps).toLocaleString()}
               </Text>
             </View>
           ))}
@@ -289,15 +290,16 @@ const ChartsTab: React.FC<ChartsTabProps> = ({
     }
 
     const dataPoints: ChartDataPoint[] = reversed.map((entry) => {
-      const maxWeight = Math.max(...entry.sets.map((s) => s.weight));
+      const maxWeight = Math.max(...entry.sets.map((s) => convertWeight(s.weight, s.weight_unit)));
       const best1RM = Math.max(
-        ...entry.sets.map((s) => calculate1RM(s.weight, s.reps))
+        ...entry.sets.map((s) => calculate1RM(convertWeight(s.weight, s.weight_unit), s.reps))
       );
+      const totalVolume = entry.sets.reduce((sum, s) => sum + (convertWeight(s.weight, s.weight_unit) * s.reps), 0);
       
       return {
         date: entry.date,
         maxWeight,
-        totalVolume: entry.totalVolume,
+        totalVolume,
         estimated1RM: best1RM,
       };
     });
@@ -386,8 +388,8 @@ const ChartsTab: React.FC<ChartsTabProps> = ({
           <Text style={styles.touchedPointText}>
             {touchedPoint.label}: {touchedPoint.value.toLocaleString()}
             {touchedPoint.chart === 'weight' || touchedPoint.chart === 'oneRM'
-              ? ' lbs'
-              : ' lbs vol'}
+              ? ` ${weightUnit}`
+              : ` ${weightUnit} vol`}
           </Text>
         </View>
       )}
@@ -497,6 +499,17 @@ const StatsSkeleton = () => (
 export default function ExerciseHistoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
+  const { weightUnit, unitSystem } = useUnits();
+  
+  // Helper to convert weight from DB unit to user's preferred unit
+  const convertWeight = (weight: number, dbUnit?: string): number => {
+    const targetUnit = unitSystem === 'metric' ? 'kg' : 'lbs';
+    const sourceUnit = dbUnit || 'lbs';
+    if (sourceUnit === targetUnit) return weight;
+    if (targetUnit === 'kg' && sourceUnit === 'lbs') return weight * 0.453592;
+    if (targetUnit === 'lbs' && sourceUnit === 'kg') return weight * 2.20462;
+    return weight;
+  };
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [history, setHistory] = useState<ExerciseHistoryEntry[]>([]);
@@ -625,7 +638,7 @@ export default function ExerciseHistoryScreen() {
             />
             <StatItem
               label="Best Weight"
-              value={stats.bestWeight ? `${stats.bestWeight.value} lbs` : '—'}
+              value={stats.bestWeight ? `${stats.bestWeight.value} ${weightUnit}` : '—'}
               icon={<Trophy size={20} color="#fbbf24" />}
               color="#fbbf24"
             />
@@ -637,7 +650,7 @@ export default function ExerciseHistoryScreen() {
             />
             <StatItem
               label="Est. 1RM"
-              value={stats.estimated1RM ? `${stats.estimated1RM} lbs` : '—'}
+              value={stats.estimated1RM ? `${stats.estimated1RM} ${weightUnit}` : '—'}
               icon={<Target size={20} color="#ef4444" />}
               color="#ef4444"
             />

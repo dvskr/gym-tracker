@@ -37,6 +37,7 @@ import {
   formatWeightChange,
   formatWeeklyRate,
 } from '@/lib/utils/weightTrends';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -105,6 +106,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ selected, onSelec
 
 export default function WeightChartScreen() {
   const { user } = useAuthStore();
+  const { bodyWeight, unitSystem } = useUnits();
 
   const [stats, setStats] = useState<WeightStats | null>(null);
   const [chartData, setChartData] = useState<WeightEntry[]>([]);
@@ -112,6 +114,27 @@ export default function WeightChartScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<{ value: number; date: string } | null>(null);
+  
+  // Helper to convert weight from API unit to user's preferred unit
+  const convertWeight = (weight: number, apiUnit: 'lbs' | 'kg'): number => {
+    // If API unit matches user preference, no conversion needed
+    if ((unitSystem === 'imperial' && apiUnit === 'lbs') || 
+        (unitSystem === 'metric' && apiUnit === 'kg')) {
+      return weight;
+    }
+    
+    // Convert lbs to kg
+    if (unitSystem === 'metric' && apiUnit === 'lbs') {
+      return weight * 0.453592;
+    }
+    
+    // Convert kg to lbs
+    if (unitSystem === 'imperial' && apiUnit === 'kg') {
+      return weight * 2.20462;
+    }
+    
+    return weight;
+  };
 
   // Get days for time range
   const getDaysForRange = (range: TimeRange): number => {
@@ -181,11 +204,15 @@ export default function WeightChartScreen() {
       .filter((_, i) => i % step === 0 || i === chartData.length - 1)
       .map(w => format(new Date(w.logged_at), 'M/d'));
 
-    const weights = chartData.map(w => w.weight);
+    // Convert weights to user's preferred unit
+    const weights = chartData.map(w => convertWeight(w.weight, w.weight_unit as 'lbs' | 'kg'));
     
-    // Calculate moving average (returns nulls for initial points without full window)
+    // Calculate moving average with converted weights
     const movingAvgRaw = calculateMovingAverageAligned(
-      chartData.map(w => ({ date: w.logged_at, weight: w.weight })),
+      chartData.map(w => ({ 
+        date: w.logged_at, 
+        weight: convertWeight(w.weight, w.weight_unit as 'lbs' | 'kg') 
+      })),
       7
     );
     
@@ -274,22 +301,22 @@ export default function WeightChartScreen() {
               <View style={styles.statsGrid}>
                 <StatCard
                   label="Current"
-                  value={`${stats.currentWeight}`}
-                  subValue={stats.unit}
+                  value={`${Math.round(convertWeight(stats.currentWeight, stats.unit) * 10) / 10}`}
+                  subValue={bodyWeight.label}
                   icon={<Scale size={18} color="#3b82f6" />}
                   color="#3b82f6"
                 />
                 <StatCard
                   label="Starting"
-                  value={`${stats.startingWeight}`}
-                  subValue={stats.unit}
+                  value={`${Math.round(convertWeight(stats.startingWeight, stats.unit) * 10) / 10}`}
+                  subValue={bodyWeight.label}
                   icon={<Calendar size={18} color="#8b5cf6" />}
                   color="#8b5cf6"
                 />
                 <StatCard
                   label="Total Change"
-                  value={formatWeightChange(stats.totalChange, '')}
-                  subValue={stats.unit}
+                  value={formatWeightChange(convertWeight(stats.totalChange, stats.unit), '')}
+                  subValue={bodyWeight.label}
                   icon={stats.totalChange >= 0 
                     ? <TrendingUp size={18} color="#22c55e" />
                     : <TrendingDown size={18} color="#ef4444" />
@@ -298,8 +325,8 @@ export default function WeightChartScreen() {
                 />
                 <StatCard
                   label="7-Day Avg"
-                  value={`${stats.average7Day}`}
-                  subValue={stats.unit}
+                  value={`${Math.round(convertWeight(stats.average7Day, stats.unit) * 10) / 10}`}
+                  subValue={bodyWeight.label}
                   icon={<Target size={18} color="#f59e0b" />}
                   color="#f59e0b"
                 />
@@ -355,7 +382,7 @@ export default function WeightChartScreen() {
                     const entry = chartData[data.index];
                     if (entry) {
                       setSelectedPoint({
-                        value: entry.weight,
+                        value: Math.round(convertWeight(entry.weight, entry.weight_unit as 'lbs' | 'kg') * 10) / 10,
                         date: format(new Date(entry.logged_at), 'MMM d, yyyy'),
                       });
                     }
@@ -374,7 +401,7 @@ export default function WeightChartScreen() {
                     onPress={() => setSelectedPoint(null)}
                   >
                     <Text style={styles.tooltipValue}>
-                      {selectedPoint.value} {stats.unit}
+                      {selectedPoint.value} {bodyWeight.label}
                     </Text>
                     <Text style={styles.tooltipDate}>{selectedPoint.date}</Text>
                   </TouchableOpacity>
@@ -398,7 +425,7 @@ export default function WeightChartScreen() {
                   <View style={styles.trendValueRow}>
                     {trendIndicator?.icon}
                     <Text style={[styles.trendValue, { color: trendIndicator?.color }]}>
-                      {formatWeeklyRate(stats.weeklyRate, stats.unit)}
+                      {formatWeeklyRate(convertWeight(stats.weeklyRate, stats.unit), bodyWeight.label)}
                     </Text>
                   </View>
                 </View>
@@ -408,7 +435,7 @@ export default function WeightChartScreen() {
                 <View style={styles.trendItem}>
                   <Text style={styles.trendLabel}>Projected (30d)</Text>
                   <Text style={styles.trendValue}>
-                    {stats.projectedWeight30Day} {stats.unit}
+                    {Math.round(convertWeight(stats.projectedWeight30Day, stats.unit) * 10) / 10} {bodyWeight.label}
                   </Text>
                 </View>
               </View>
@@ -419,8 +446,8 @@ export default function WeightChartScreen() {
                   {stats.weeklyRate === 0
                     ? "📊 Your weight has been stable"
                     : stats.weeklyRate > 0
-                    ? `📈 You're gaining about ${Math.abs(stats.weeklyRate)} ${stats.unit} per week`
-                    : `📉 You're losing about ${Math.abs(stats.weeklyRate)} ${stats.unit} per week`}
+                    ? `📈 You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
+                    : `📉 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
                 </Text>
               </View>
             </View>
@@ -431,7 +458,7 @@ export default function WeightChartScreen() {
                 <View style={styles.averageItem}>
                   <Text style={styles.averageLabel}>30-Day Average</Text>
                   <Text style={styles.averageValue}>
-                    {stats.average30Day} {stats.unit}
+                    {Math.round(convertWeight(stats.average30Day, stats.unit) * 10) / 10} {bodyWeight.label}
                   </Text>
                 </View>
                 <View style={styles.averageItem}>

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
@@ -116,12 +117,22 @@ export default function ThemeSettingsScreen() {
   const router = useRouter();
   const { theme, setTheme } = useSettingsStore();
   const [tempTheme, setTempTheme] = useState<Theme>(theme);
+  
+  // Update temp state when store changes
+  useEffect(() => {
+    setTempTheme(theme);
+  }, [theme]);
 
   const handleSave = () => {
     if (tempTheme !== theme) {
       setTheme(tempTheme);
+      Alert.alert('Settings Saved', 'Theme settings have been updated.');
     }
     router.back();
+  };
+
+  const handleSelectTheme = (newTheme: Theme) => {
+    setTempTheme(newTheme);
   };
 
   return (
@@ -134,8 +145,8 @@ export default function ThemeSettingsScreen() {
           headerTintColor: '#f1f5f9',
           headerTitleStyle: { fontWeight: '600' },
           headerRight: () => (
-            <TouchableOpacity onPress={handleSave}>
-              <Text style={styles.saveButton}>Save</Text>
+            <TouchableOpacity onPress={handleSave} style={{ marginRight: 16 }}>
+              <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '600' }}>Save</Text>
             </TouchableOpacity>
           ),
         }}
@@ -154,7 +165,7 @@ export default function ThemeSettingsScreen() {
             description="Dark colors for low light"
             value="dark"
             selected={tempTheme === 'dark'}
-            onSelect={setTempTheme}
+            onSelect={handleSelectTheme}
           />
           <View style={styles.divider} />
           <ThemeOption
@@ -163,7 +174,7 @@ export default function ThemeSettingsScreen() {
             description="Bright colors for daylight"
             value="light"
             selected={tempTheme === 'light'}
-            onSelect={setTempTheme}
+            onSelect={handleSelectTheme}
           />
           <View style={styles.divider} />
           <ThemeOption
@@ -172,7 +183,7 @@ export default function ThemeSettingsScreen() {
             description="Matches your device theme"
             value="system"
             selected={tempTheme === 'system'}
-            onSelect={setTempTheme}
+            onSelect={handleSelectTheme}
           />
         </View>
 

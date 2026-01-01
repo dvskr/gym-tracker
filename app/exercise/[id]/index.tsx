@@ -49,6 +49,7 @@ import {
   ExerciseHistoryEntry,
   ExerciseStats,
 } from '@/lib/api/exercises';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -83,7 +84,7 @@ const AboutTab: React.FC<{
                     <Trophy size={24} color="#fbbf24" />
                   </View>
                   <Text style={styles.prLabel}>Max Weight</Text>
-                  <Text style={styles.prValue}>{stats.bestWeight.value} kg</Text>
+                  <Text style={styles.prValue}>{stats.bestWeight.value} {weightUnit}</Text>
                   {stats.bestWeight.reps && (
                     <Text style={styles.prDetail}>× {stats.bestWeight.reps} reps</Text>
                   )}
@@ -102,7 +103,7 @@ const AboutTab: React.FC<{
                   <Text style={styles.prLabel}>Max Reps</Text>
                   <Text style={styles.prValue}>{stats.bestReps.value} reps</Text>
                   {stats.bestReps.weight && (
-                    <Text style={styles.prDetail}>@ {stats.bestReps.weight} kg</Text>
+                    <Text style={styles.prDetail}>@ {stats.bestReps.weight} {weightUnit}</Text>
                   )}
                   <Text style={styles.prDate}>
                     {format(new Date(stats.bestReps.date), 'MMM d, yyyy')}
@@ -118,7 +119,7 @@ const AboutTab: React.FC<{
                   </View>
                   <Text style={styles.prLabel}>Max Volume</Text>
                   <Text style={styles.prValue}>
-                    {stats.bestVolume.value.toLocaleString()} kg
+                    {stats.bestVolume.value.toLocaleString()} {weightUnit}
                   </Text>
                   <Text style={styles.prDetail}>Single Session</Text>
                   <Text style={styles.prDate}>
@@ -134,7 +135,7 @@ const AboutTab: React.FC<{
                     <Target size={24} color="#a855f7" />
                   </View>
                   <Text style={styles.prLabel}>Estimated 1RM</Text>
-                  <Text style={styles.prValue}>{stats.estimated1RM} kg</Text>
+                  <Text style={styles.prValue}>{stats.estimated1RM} {weightUnit}</Text>
                   <Text style={styles.prDetail}>Brzycki Formula</Text>
                   <Text style={styles.prDate}>Current</Text>
                 </View>
@@ -326,7 +327,7 @@ const HistoryTab: React.FC<{
             <View style={styles.historySets}>
               {item.sets.slice(0, 4).map((set, index) => (
                 <Text key={index} style={styles.historySetText}>
-                  {set.weight} lbs × {set.reps}
+                  {set.weight} {weightUnit} × {set.reps}
                   {index < Math.min(item.sets.length, 4) - 1 ? '  •  ' : ''}
                 </Text>
               ))}
@@ -377,8 +378,8 @@ const ChartsTab: React.FC<{ history: ExerciseHistoryEntry[] }> = ({ history }) =
         <Text style={styles.chartTitle}>Max Weight Over Time</Text>
         <View style={styles.chartContainer}>
           <View style={styles.chartYAxis}>
-            <Text style={styles.chartYLabel}>{maxWeightPeak} lbs</Text>
-            <Text style={styles.chartYLabel}>{Math.round(maxWeightPeak / 2)} lbs</Text>
+            <Text style={styles.chartYLabel}>{maxWeightPeak} {weightUnit}</Text>
+            <Text style={styles.chartYLabel}>{Math.round(maxWeightPeak / 2)} {weightUnit}</Text>
             <Text style={styles.chartYLabel}>0</Text>
           </View>
           <View style={styles.chartBars}>
@@ -477,7 +478,7 @@ const RecordsTab: React.FC<{
           </View>
           <View style={styles.recordInfo}>
             <Text style={styles.recordLabel}>Max Weight</Text>
-            <Text style={styles.recordValue}>{stats.bestWeight.value} lbs</Text>
+            <Text style={styles.recordValue}>{stats.bestWeight.value} {weightUnit}</Text>
             <Text style={styles.recordDate}>
               {format(new Date(stats.bestWeight.date), 'MMM d, yyyy')}
             </Text>
@@ -494,7 +495,7 @@ const RecordsTab: React.FC<{
           <View style={styles.recordInfo}>
             <Text style={styles.recordLabel}>Max Volume (Single Session)</Text>
             <Text style={styles.recordValue}>
-              {stats.bestVolume.value.toLocaleString()} lbs
+              {stats.bestVolume.value.toLocaleString()} {weightUnit}
             </Text>
             <Text style={styles.recordDate}>
               {format(new Date(stats.bestVolume.date), 'MMM d, yyyy')}
@@ -511,7 +512,7 @@ const RecordsTab: React.FC<{
           </View>
           <View style={styles.recordInfo}>
             <Text style={styles.recordLabel}>
-              Max Reps at {stats.bestReps.weight} lbs
+              Max Reps at {stats.bestReps.weight} {weightUnit}
             </Text>
             <Text style={styles.recordValue}>{stats.bestReps.value} reps</Text>
             <Text style={styles.recordDate}>
@@ -529,7 +530,7 @@ const RecordsTab: React.FC<{
           </View>
           <View style={styles.recordInfo}>
             <Text style={styles.recordLabel}>Estimated 1RM</Text>
-            <Text style={styles.recordValue}>{stats.estimated1RM} lbs</Text>
+            <Text style={styles.recordValue}>{stats.estimated1RM} {weightUnit}</Text>
             <Text style={styles.recordDate}>Based on Brzycki formula</Text>
           </View>
         </Card>
@@ -549,6 +550,17 @@ export default function ExerciseDetailScreen() {
   const { user } = useAuthStore();
   const { isFavorite, toggleFavorite, loadFavorites } = useExerciseStore();
   const { currentWorkout, addExerciseToWorkout } = useWorkoutStore();
+  const { weightUnit, unitSystem } = useUnits();
+  
+  // Helper to convert weight from DB unit to user's preferred unit
+  const convertWeight = (weight: number, dbUnit?: string): number => {
+    const targetUnit = unitSystem === 'metric' ? 'kg' : 'lbs';
+    const sourceUnit = dbUnit || 'lbs';
+    if (sourceUnit === targetUnit) return weight;
+    if (targetUnit === 'kg' && sourceUnit === 'lbs') return weight * 0.453592;
+    if (targetUnit === 'lbs' && sourceUnit === 'kg') return weight * 2.20462;
+    return weight;
+  };
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [history, setHistory] = useState<ExerciseHistoryEntry[]>([]);

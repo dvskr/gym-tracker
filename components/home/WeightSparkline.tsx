@@ -11,6 +11,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { getWeightHistory } from '@/lib/api/bodyWeight';
+import { useUnits } from '@/hooks/useUnits';
 
 interface WeightSparklineProps {
   userId: string;
@@ -23,8 +24,29 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
   goalType = 'lose',
   refreshTrigger,
 }) => {
-  const [weights, setWeights] = useState<{ date: string; weight: number }[]>([]);
+  const { weightUnit, unitSystem } = useUnits();
+  const [weights, setWeights] = useState<{ date: string; weight: number; weight_unit: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Helper to convert weight from DB unit to user's preferred unit
+  const convertWeight = (weight: number, dbUnit: string): number => {
+    const targetUnit = unitSystem === 'metric' ? 'kg' : 'lbs';
+    
+    // If units match, no conversion needed
+    if (dbUnit === targetUnit) return weight;
+    
+    // Convert lbs to kg
+    if (targetUnit === 'kg' && dbUnit === 'lbs') {
+      return weight * 0.453592;
+    }
+    
+    // Convert kg to lbs
+    if (targetUnit === 'lbs' && dbUnit === 'kg') {
+      return weight * 2.20462;
+    }
+    
+    return weight;
+  };
 
   const fetchWeights = useCallback(async () => {
     // KEY FIX: Don't fetch if no userId (guest mode)
@@ -35,9 +57,9 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
     
     try {
       const history = await getWeightHistory(userId, 7);
-      // Sort by date ascending for chart
+      // Sort by date ascending for chart and keep weight_unit for conversion
       const sorted = [...history]
-        .map(w => ({ date: w.logged_at, weight: w.weight }))
+        .map(w => ({ date: w.logged_at, weight: w.weight, weight_unit: w.weight_unit || 'lbs' }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setWeights(sorted);
     } catch (error) {
@@ -72,9 +94,9 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
     );
   }
 
-  // Calculate change
-  const firstWeight = weights[0]?.weight || 0;
-  const lastWeight = weights[weights.length - 1]?.weight || 0;
+  // Calculate change with converted weights
+  const firstWeight = weights[0] ? convertWeight(weights[0].weight, weights[0].weight_unit) : 0;
+  const lastWeight = weights[weights.length - 1] ? convertWeight(weights[weights.length - 1].weight, weights[weights.length - 1].weight_unit) : 0;
   const change = lastWeight - firstWeight;
   const changePercent = firstWeight > 0 ? ((change / firstWeight) * 100).toFixed(1) : '0';
 
@@ -99,7 +121,7 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
     labels: [],
     datasets: [
       {
-        data: weights.map(w => w.weight),
+        data: weights.map(w => convertWeight(w.weight, w.weight_unit)),
         color: () => trendColor,
         strokeWidth: 2,
       },
@@ -120,8 +142,8 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
       <View style={styles.content}>
         {/* Current Weight */}
         <View style={styles.weightInfo}>
-          <Text style={styles.currentWeight}>{lastWeight}</Text>
-          <Text style={styles.unit}>lbs</Text>
+          <Text style={styles.currentWeight}>{lastWeight.toFixed(1)}</Text>
+          <Text style={styles.unit}>{weightUnit}</Text>
         </View>
 
         {/* Sparkline Chart */}

@@ -54,6 +54,7 @@ import {
   shareTemplate,
   shareTemplateAsJSON,
 } from '@/lib/utils/templateShare';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Exercise Row Component
@@ -67,6 +68,7 @@ interface ExerciseRowProps {
   onMoveDown: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  weightUnit: string;
 }
 
 const ExerciseRow: React.FC<ExerciseRowProps> = ({
@@ -77,6 +79,7 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
   onMoveDown,
   onEdit,
   onDelete,
+  weightUnit,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -149,7 +152,7 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
                 )}
               </View>
               <Text style={styles.setDetailText}>
-                {set.target_weight ? `${set.target_weight} lbs` : '—'} × {set.target_reps} reps
+                {set.target_weight ? `${set.target_weight} ${weightUnit}` : '—'} × {set.target_reps} reps
               </Text>
               {set.set_type !== 'normal' && (
                 <Text style={[styles.setTypeLabel, { color: setTypeColors[set.set_type] }]}>
@@ -386,6 +389,7 @@ export default function TemplateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuthStore();
   const { startWorkout, addExerciseWithSets, isWorkoutActive } = useWorkoutStore();
+  const { weightUnit } = useUnits();
 
   const [template, setTemplate] = useState<Template | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -869,6 +873,7 @@ export default function TemplateDetailScreen() {
                   onMoveDown={() => handleMoveExercise(index, index + 1)}
                   onEdit={() => handleEditExercise(exercise)}
                   onDelete={() => handleDeleteExercise(exercise.id!)}
+                  weightUnit={weightUnit}
                 />
               ))}
             </Card>

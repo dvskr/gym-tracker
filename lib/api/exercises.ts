@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 export interface ExerciseHistorySet {
   set_number: number;
   weight: number;
+  weight_unit?: string;
   reps: number;
   rpe?: number | null;
   set_type?: string;
@@ -17,7 +18,7 @@ export interface ExerciseHistoryEntry {
   workoutId: string;
   workoutName: string;
   sets: ExerciseHistorySet[];
-  bestSet: { weight: number; reps: number };
+  bestSet: { weight: number; weight_unit?: string; reps: number };
   totalVolume: number;
   totalSets: number;
 }
@@ -25,10 +26,11 @@ export interface ExerciseHistoryEntry {
 export interface ExerciseStats {
   totalTimesPerformed: number;
   lastPerformed: string | null;
-  bestWeight: { value: number; date: string; reps: number } | null;
+  bestWeight: { value: number; weight_unit?: string; date: string; reps: number } | null;
   bestVolume: { value: number; date: string } | null;
-  bestReps: { value: number; date: string; weight: number } | null;
+  bestReps: { value: number; date: string; weight: number; weight_unit?: string } | null;
   estimated1RM: number | null;
+  estimated1RMUnit?: string;
   totalVolume: number;
   averageSetsPerSession: number;
 }
@@ -64,12 +66,12 @@ function calculate1RM(weight: number, reps: number): number {
 /**
  * Find best set by volume (weight × reps)
  */
-function findBestSet(sets: ExerciseHistorySet[]): { weight: number; reps: number } {
+function findBestSet(sets: ExerciseHistorySet[]): { weight: number; weight_unit?: string; reps: number } {
   return sets.reduce(
     (best, set) => {
       const volume = set.weight * set.reps;
       const bestVolume = best.weight * best.reps;
-      return volume > bestVolume ? { weight: set.weight, reps: set.reps } : best;
+      return volume > bestVolume ? { weight: set.weight, weight_unit: set.weight_unit, reps: set.reps } : best;
     },
     { weight: 0, reps: 0 }
   );
@@ -135,6 +137,7 @@ export async function getExerciseHistory(
       workout_sets (
         set_number,
         weight,
+        weight_unit,
         reps,
         rpe,
         set_type,
@@ -157,6 +160,7 @@ export async function getExerciseHistory(
       .map((s: any) => ({
         set_number: s.set_number,
         weight: s.weight || 0,
+        weight_unit: s.weight_unit || 'lbs',
         reps: s.reps || 0,
         rpe: s.rpe,
         set_type: s.set_type,
@@ -209,28 +213,30 @@ export async function getExerciseStats(
   let bestVolume: ExerciseStats['bestVolume'] = null;
   let bestReps: ExerciseStats['bestReps'] = null;
   let max1RM = 0;
+  let max1RMUnit: string | undefined;
   let totalVolume = 0;
   let totalSets = 0;
 
   history.forEach((entry) => {
-    totalVolume += entry.totalVolume;
+    const entryVolume = entry.sets.reduce((sum, s) => sum + (s.weight * s.reps), 0);
+    totalVolume += entryVolume;
     totalSets += entry.totalSets;
 
     // Track best session volume
-    if (!bestVolume || entry.totalVolume > bestVolume.value) {
-      bestVolume = { value: entry.totalVolume, date: entry.date };
+    if (!bestVolume || entryVolume > bestVolume.value) {
+      bestVolume = { value: entryVolume, date: entry.date };
     }
 
     // Check each set
     entry.sets.forEach((set) => {
       // Best weight
       if (!bestWeight || set.weight > bestWeight.value) {
-        bestWeight = { value: set.weight, date: entry.date, reps: set.reps };
+        bestWeight = { value: set.weight, weight_unit: set.weight_unit, date: entry.date, reps: set.reps };
       }
 
       // Best reps (at any weight)
       if (!bestReps || set.reps > bestReps.value) {
-        bestReps = { value: set.reps, date: entry.date, weight: set.weight };
+        bestReps = { value: set.reps, date: entry.date, weight: set.weight, weight_unit: set.weight_unit };
       }
 
       // Calculate 1RM for each set and track max
@@ -238,6 +244,7 @@ export async function getExerciseStats(
         const estimated = calculate1RM(set.weight, set.reps);
         if (estimated > max1RM) {
           max1RM = estimated;
+          max1RMUnit = set.weight_unit;
         }
       }
     });
@@ -250,6 +257,7 @@ export async function getExerciseStats(
     bestVolume,
     bestReps,
     estimated1RM: max1RM > 0 ? Math.round(max1RM) : null,
+    estimated1RMUnit: max1RMUnit,
     totalVolume,
     averageSetsPerSession: history.length > 0 ? Math.round(totalSets / history.length) : 0,
   };

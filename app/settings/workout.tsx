@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { Clock, Volume2, Vibrate, Eye, Calculator, Trophy, ChevronRight } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { useUnits } from '@/hooks/useUnits';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -180,6 +181,7 @@ const DurationPickerModal: React.FC<DurationPickerModalProps> = ({
 
 export default function WorkoutSettingsScreen() {
   const router = useRouter();
+  const { weightUnit } = useUnits();
   const {
     restTimerDefault,
     autoStartTimer,
@@ -284,7 +286,7 @@ export default function WorkoutSettingsScreen() {
           <SettingRow
             icon={<Calculator size={24} color="#3b82f6" />}
             label="Barbell Weight"
-            value={`${barbellWeight} lbs`}
+            value={`${barbellWeight} ${weightUnit}`}
             onPress={() => {
               // TODO: Show barbell weight picker
             }}

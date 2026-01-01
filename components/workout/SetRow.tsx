@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // ============================================
 // Types
@@ -59,6 +60,8 @@ function SetRowComponent({
   onDistanceChange,
   onAssistanceChange,
 }: SetRowProps) {
+  const weightUnit = useSettingsStore((state) => state.weightUnit);
+  
   // Local state for immediate UI feedback
   const [weightInput, setWeightInput] = useState(weight);
   const [repsInput, setRepsInput] = useState(reps);
@@ -307,7 +310,7 @@ function SetRowComponent({
                 onFocus={() => setIsEditingWeight(true)}
                 onBlur={handleWeightBlur}
                 keyboardType="decimal-pad"
-                placeholder="lbs"
+                placeholder={weightUnit}
                 placeholderTextColor="#64748b"
                 editable={!isCompleted}
               />
@@ -376,7 +379,7 @@ function SetRowComponent({
                 onFocus={() => setIsEditingWeight(true)}
                 onBlur={handleWeightBlur}
                 keyboardType="decimal-pad"
-                placeholder="lbs"
+                placeholder={weightUnit}
                 placeholderTextColor="#64748b"
                 editable={!isCompleted}
               />

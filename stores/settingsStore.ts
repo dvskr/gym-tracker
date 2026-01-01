@@ -75,6 +75,10 @@ interface SettingsState {
   showProgressiveOverload: boolean;
   showWorkoutAnalysis: boolean;
 
+  // Hydration flag
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+  
   // Actions
   setUnitSystem: (system: UnitSystem) => void;
   setWeightUnit: (unit: WeightUnit) => void;
@@ -108,13 +112,13 @@ interface SettingsState {
   setHealthAutoSync: (enabled: boolean) => void;
   setSyncWeight: (enabled: boolean) => void;
   setSyncBodyMeasurements: (enabled: boolean) => void;
-  updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'>>) => void;
+  updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated'>>) => void;
   resetToDefaults: () => void;
   syncFromProfile: (profile: any) => void;
   syncToProfile: (userId: string) => Promise<void>;
 }
 
-const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile'> = {
+const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated'> = {
   // Units
   unitSystem: 'imperial',
   weightUnit: 'lbs',
@@ -180,6 +184,9 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   showWorkoutSuggestions: true,
   showProgressiveOverload: true,
   showWorkoutAnalysis: true,
+  
+  // Hydration
+  _hasHydrated: false,
 };
 
 // Debounce timer for syncing to Supabase
@@ -189,6 +196,10 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
       ...DEFAULT_SETTINGS,
+      
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state });
+      },
 
       setUnitSystem: (system) => {
         const updates: Partial<SettingsState> = {
@@ -199,6 +210,7 @@ export const useSettingsStore = create<SettingsState>()(
           availablePlates: system === 'metric' ? [20, 15, 10, 5, 2.5, 1.25] : [45, 35, 25, 10, 5, 2.5],
         };
         set(updates);
+        
         debounceSyncToProfile();
       },
 
@@ -368,9 +380,13 @@ export const useSettingsStore = create<SettingsState>()(
       },
 
       syncFromProfile: (profile) => {
-        if (!profile) return;
+        if (!profile) {
+          console.log('[Settings] ⚠️ syncFromProfile called with no profile');
+          return;
+        }
 
-        set({
+        console.log('[Settings] 📥 Syncing settings FROM database profile');
+        const newSettings = {
           unitSystem: profile.unit_system || DEFAULT_SETTINGS.unitSystem,
           weightUnit: profile.weight_unit || (profile.unit_system === 'metric' ? 'kg' : 'lbs'),
           measurementUnit: profile.measurement_unit || (profile.unit_system === 'metric' ? 'cm' : 'in'),
@@ -386,12 +402,28 @@ export const useSettingsStore = create<SettingsState>()(
           notificationsEnabled: profile.notifications_enabled ?? DEFAULT_SETTINGS.notificationsEnabled,
           workoutReminders: profile.workout_reminders ?? DEFAULT_SETTINGS.workoutReminders,
           streakReminders: profile.streak_reminders ?? DEFAULT_SETTINGS.streakReminders,
+        };
+        
+        console.log('[Settings] 📥 New settings from DB:', {
+          unitSystem: newSettings.unitSystem,
+          theme: newSettings.theme,
+          restTimerDefault: newSettings.restTimerDefault,
         });
+        
+        set(newSettings);
+        console.log('[Settings] ✅ Settings updated in store');
       },
 
       syncToProfile: async (userId) => {
         try {
           const state = get();
+          
+          console.log('[Settings] 📤 Syncing settings TO database for user:', userId);
+          console.log('[Settings] 📤 Current state:', {
+            unitSystem: state.unitSystem,
+            theme: state.theme,
+            restTimerDefault: state.restTimerDefault,
+          });
 
           const { error } = await supabase
             .from('profiles')
@@ -416,16 +448,26 @@ export const useSettingsStore = create<SettingsState>()(
             .eq('id', userId);
 
           if (error) {
-            console.error('Error syncing settings to profile:', error);
+            console.error('[Settings] ❌ Error syncing settings to profile:', error);
+          } else {
+            console.log('[Settings] ✅ Settings synced to database successfully');
           }
         } catch (error) {
-          console.error('Error syncing settings:', error);
+          console.error('[Settings] ❌ Error syncing settings:', error);
         }
       },
     }),
     {
       name: 'settings-storage',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+        console.log('[Settings] Hydration finished, current state:', {
+          unitSystem: state?.unitSystem,
+          weightUnit: state?.weightUnit,
+          theme: state?.theme
+        });
+      },
     }
   )
 );
@@ -456,6 +498,8 @@ function debounceSyncToProfile() {
  */
 export async function initializeSettings(userId: string) {
   try {
+    console.log('[Settings] 🔄 Initializing settings from DB for user:', userId);
+    
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('*')
@@ -463,14 +507,22 @@ export async function initializeSettings(userId: string) {
       .single();
 
     if (error) {
-      console.error('Error loading profile settings:', error);
+      console.error('[Settings] ❌ Error loading profile settings:', error);
       return;
     }
 
     if (profile) {
+      console.log('[Settings] ✅ Profile loaded from DB:', {
+        unit_system: profile.unit_system,
+        theme: profile.theme,
+        rest_timer_default: profile.rest_timer_default,
+      });
       useSettingsStore.getState().syncFromProfile(profile);
+      console.log('[Settings] ✅ Settings synced from DB to store');
+    } else {
+      console.log('[Settings] ⚠️ No profile found in database');
     }
   } catch (error) {
-    console.error('Error initializing settings:', error);
+    console.error('[Settings] ❌ Error initializing settings:', error);
   }
 }

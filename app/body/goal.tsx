@@ -29,6 +29,7 @@ import {
 import { format, parseISO } from 'date-fns';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '@/stores/authStore';
+import { useUnits } from '@/hooks/useUnits';
 import { getLatestWeight, getWeightHistory } from '@/lib/api/bodyWeight';
 import {
   setWeightGoal,
@@ -138,6 +139,7 @@ const GoalTypeSelector: React.FC<GoalTypeSelectorProps> = ({ selected, onSelect 
 
 export default function WeightGoalScreen() {
   const { user } = useAuthStore();
+  const { bodyWeight } = useUnits();
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -358,7 +360,7 @@ export default function WeightGoalScreen() {
             <View style={styles.weightRow}>
               <View style={styles.weightItem}>
                 <Text style={styles.weightLabel}>Current</Text>
-                <Text style={styles.weightValue}>{currentWeight} lbs</Text>
+                <Text style={styles.weightValue}>{bodyWeight.format(currentWeight)}</Text>
               </View>
               <View style={styles.weightArrow}>
                 {progress.direction === 'lose' ? (
@@ -371,7 +373,7 @@ export default function WeightGoalScreen() {
               </View>
               <View style={styles.weightItem}>
                 <Text style={styles.weightLabel}>Goal</Text>
-                <Text style={styles.weightValue}>{currentGoal.target_weight} lbs</Text>
+                <Text style={styles.weightValue}>{bodyWeight.format(currentGoal.target_weight)}</Text>
               </View>
             </View>
 
@@ -381,7 +383,7 @@ export default function WeightGoalScreen() {
               <Text style={styles.remainingText}>
                 {progress.remaining === 0
                   ? '🎉 Goal reached!'
-                  : `${progress.remaining} lbs to go`}
+                  : `${progress.remaining} ${bodyWeight.label} to go`}
               </Text>
             </View>
           </View>
@@ -410,7 +412,7 @@ export default function WeightGoalScreen() {
                 placeholderTextColor="#64748b"
                 keyboardType="decimal-pad"
               />
-              <Text style={styles.inputUnit}>lbs</Text>
+              <Text style={styles.inputUnit}>{bodyWeight.label}</Text>
             </View>
 
             {/* Target Date (Optional) */}
@@ -471,7 +473,7 @@ export default function WeightGoalScreen() {
               <Text style={styles.detailLabel}>Started</Text>
               <Text style={styles.detailValue}>
                 {format(parseISO(currentGoal.start_date), 'MMM d, yyyy')} at{' '}
-                {currentGoal.start_weight} lbs
+                {bodyWeight.format(currentGoal.start_weight)}
               </Text>
             </View>
 
@@ -486,7 +488,7 @@ export default function WeightGoalScreen() {
               <Text style={styles.detailLabel}>Current Rate</Text>
               <Text style={styles.detailValue}>
                 {weeklyRate !== 0
-                  ? `${Math.abs(weeklyRate)} lbs/week ${weeklyRate < 0 ? '(losing)' : '(gaining)'}`
+                  ? `${Math.abs(weeklyRate)} ${bodyWeight.label}/week ${weeklyRate < 0 ? '(losing)' : '(gaining)'}`
                   : 'Not enough data'}
               </Text>
             </View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import {
   View,
   Text,
@@ -37,6 +37,7 @@ import {
   LogOut,
 } from 'lucide-react-native';
 import { useAuthStore } from '../../stores/authStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 
 interface SettingItemProps {
   icon: React.ReactNode;
@@ -103,7 +104,30 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { user, session, profile, signOut } = useAuthStore();
+  const { user, session, signOut } = useAuthStore();
+  
+  // Force subscription using useSyncExternalStore for guaranteed reactivity
+  const unitSystem = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().unitSystem,
+    () => useSettingsStore.getState().unitSystem
+  );
+  const theme = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().theme,
+    () => useSettingsStore.getState().theme
+  );
+  const restTimerDefault = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().restTimerDefault,
+    () => useSettingsStore.getState().restTimerDefault
+  );
+  const defaultPlates = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().defaultPlates,
+    () => useSettingsStore.getState().defaultPlates
+  );
+  
   
   const isLoggedIn = !!session;
 
@@ -116,6 +140,12 @@ export default function ProfileScreen() {
   const [workoutReminders, setWorkoutReminders] = useState(true);
   const [streakReminders, setStreakReminders] = useState(true);
   const [prCelebrations, setPrCelebrations] = useState(true);
+  
+  // #region agent log - Hypothesis D: Local state shadowing check
+  React.useEffect(() => {
+    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'profile.tsx:local-state',message:'Local state values',data:{localAutoStartTimer:autoStartTimer,localSoundEnabled:soundEnabled,note:'These are LOCAL state, not store'},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D'})}).catch(()=>{});
+  }, [autoStartTimer, soundEnabled]);
+  // #endregion
 
   const handleEditProfile = () => {
     router.push('/settings/profile');
@@ -209,16 +239,12 @@ export default function ProfileScreen() {
             <>
               <TouchableOpacity onPress={handleChangeAvatar} activeOpacity={0.7}>
                 <View style={styles.avatarContainer}>
-                  {profile?.avatar_url ? (
-                    <Image source={{ uri: profile.avatar_url }} style={styles.avatar} />
-                  ) : (
-                    <View style={styles.avatarPlaceholder}>
-                      <User size={48} color="#60a5fa" />
-                    </View>
-                  )}
+                  <View style={styles.avatarPlaceholder}>
+                    <User size={48} color="#60a5fa" />
+                  </View>
                 </View>
               </TouchableOpacity>
-              <Text style={styles.userName}>{profile?.full_name || 'User'}</Text>
+              <Text style={styles.userName}>{user?.user_metadata?.full_name || 'User'}</Text>
               <Text style={styles.userEmail}>{user?.email || ''}</Text>
               <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
                 <Text style={styles.editProfileButtonText}>Edit Profile</Text>
@@ -241,13 +267,13 @@ export default function ProfileScreen() {
           <SettingItem
             icon={<Settings size={24} color="#60a5fa" />}
             label="Units"
-            value={profile?.unit_system === 'metric' ? 'Metric' : 'Imperial'}
+            value={unitSystem === 'metric' ? 'Metric' : 'Imperial'}
             onPress={handleUnitsSettings}
           />
           <SettingItem
             icon={<Moon size={24} color="#60a5fa" />}
             label="Theme"
-            value={profile?.theme === 'dark' ? 'Dark' : profile?.theme === 'light' ? 'Light' : 'Auto'}
+            value={theme === 'dark' ? 'Dark' : theme === 'light' ? 'Light' : 'Auto'}
             onPress={handleThemeSettings}
           />
           <SettingItem
@@ -264,7 +290,7 @@ export default function ProfileScreen() {
           <SettingItem
             icon={<Clock size={24} color="#60a5fa" />}
             label="Rest Timer Default"
-            value={`${profile?.rest_timer_default || 90} seconds`}
+            value={`${restTimerDefault} seconds`}
             onPress={handleRestTimerSettings}
           />
           <SettingItem
@@ -298,7 +324,7 @@ export default function ProfileScreen() {
           <SettingItem
             icon={<Calculator size={24} color="#60a5fa" />}
             label="Plate Calculator Settings"
-            value={profile?.default_plates || 'Standard'}
+            value={defaultPlates === 'standard' ? 'Standard' : 'Custom'}
             onPress={handlePlateCalculatorSettings}
           />
         </View>

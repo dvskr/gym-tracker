@@ -35,6 +35,7 @@ import { createTemplateFromWorkout } from '@/lib/api/templates';
 import { invalidateCache, prefetchAIData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { WorkoutAnalysis } from '@/components/ai';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -84,6 +85,7 @@ interface PersonalRecord {
 export default function WorkoutCompleteScreen() {
   const { workoutId } = useLocalSearchParams<{ workoutId: string }>();
   const { user } = useAuthStore();
+  const { weightUnit } = useUnits();
 
   // Workout data
   const [workout, setWorkout] = useState<WorkoutDetail | null>(null);
@@ -439,9 +441,9 @@ export default function WorkoutCompleteScreen() {
                   </Text>
                 </View>
                 <Text style={styles.prValue}>
-                  {pr.prType === 'max_weight' && `${pr.weight} lbs`}
+                  {pr.prType === 'max_weight' && `${pr.weight} ${weightUnit}`}
                   {pr.prType === 'max_reps' && `${pr.reps} reps`}
-                  {pr.prType === 'max_volume' && `${(pr.weight * pr.reps).toLocaleString()} lbs`}
+                  {pr.prType === 'max_volume' && `${(pr.weight * pr.reps).toLocaleString()} ${weightUnit}`}
                 </Text>
               </View>
             ))}
@@ -473,7 +475,7 @@ export default function WorkoutCompleteScreen() {
                 <Text style={styles.statLabel}>Volume</Text>
               </View>
               <Text style={styles.statValue}>
-                {workout ? (workout.total_volume || 0).toLocaleString() : '0'} lbs
+                {workout ? (workout.total_volume || 0).toLocaleString() : '0'} {weightUnit}
               </Text>
             </View>
 

@@ -36,6 +36,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { format, differenceInDays, differenceInMonths, parseISO } from 'date-fns';
 import * as Haptics from 'expo-haptics';
 import { useAuthStore } from '@/stores/authStore';
+import { useUnits } from '@/hooks/useUnits';
 import {
   getMeasurementHistory,
   getMeasurementTimeline,
@@ -284,14 +285,14 @@ const BodyCompositionCard: React.FC<BodyCompositionCardProps> = ({
             <View style={[styles.legendDot, { backgroundColor: '#ef4444' }]} />
             <View>
               <Text style={styles.legendLabel}>Fat Mass</Text>
-              <Text style={styles.legendValue}>{composition.fatMass} lbs</Text>
+              <Text style={styles.legendValue}>{bodyWeight.format(composition.fatMass)}</Text>
             </View>
           </View>
           <View style={styles.legendItem}>
             <View style={[styles.legendDot, { backgroundColor: '#22c55e' }]} />
             <View>
               <Text style={styles.legendLabel}>Lean Mass</Text>
-              <Text style={styles.legendValue}>{composition.leanMass} lbs</Text>
+              <Text style={styles.legendValue}>{bodyWeight.format(composition.leanMass)}</Text>
             </View>
           </View>
         </View>
@@ -655,6 +656,7 @@ const MultiMeasurementChart: React.FC<MultiChartProps> = ({
 
 export default function MeasurementsHistoryScreen() {
   const { user } = useAuthStore();
+  const { bodyWeight } = useUnits();
 
   const [activeTab, setActiveTab] = useState<Tab>('summary');
   const [history, setHistory] = useState<MeasurementEntry[]>([]);

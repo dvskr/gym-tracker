@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -59,33 +59,23 @@ const RadioOption: React.FC<RadioOptionProps> = ({
 export default function UnitsSettingsScreen() {
   const router = useRouter();
   const { unitSystem, setUnitSystem } = useSettingsStore();
-
   const [tempUnitSystem, setTempUnitSystem] = useState<UnitSystem>(unitSystem);
+
+  // Update temp state when store changes
+  useEffect(() => {
+    setTempUnitSystem(unitSystem);
+  }, [unitSystem]);
 
   const handleSave = () => {
     if (tempUnitSystem !== unitSystem) {
-      Alert.alert(
-        'Change Unit System',
-        'Your existing data will be displayed in the new units. Original values are preserved.',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Change',
-            onPress: () => {
-              setUnitSystem(tempUnitSystem);
-              Alert.alert('Success', 'Unit system updated', [
-                { text: 'OK', onPress: () => router.back() },
-              ]);
-            },
-          },
-        ]
-      );
-    } else {
-      router.back();
+      setUnitSystem(tempUnitSystem);
+      Alert.alert('Settings Saved', 'Unit settings have been updated throughout the app.');
     }
+    // Don't auto-navigate - let user go back manually
+  };
+
+  const handleSelectUnitSystem = (newSystem: UnitSystem) => {
+    setTempUnitSystem(newSystem);
   };
 
   // Example conversions for preview
@@ -103,8 +93,8 @@ export default function UnitsSettingsScreen() {
           headerTintColor: '#f1f5f9',
           headerTitleStyle: { fontWeight: '600' },
           headerRight: () => (
-            <TouchableOpacity onPress={handleSave}>
-              <Text style={styles.saveButton}>Save</Text>
+            <TouchableOpacity onPress={handleSave} style={{ marginRight: 16 }}>
+              <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '600' }}>Save</Text>
             </TouchableOpacity>
           ),
         }}
@@ -122,7 +112,7 @@ export default function UnitsSettingsScreen() {
             description="Pounds (lbs), Feet & Inches"
             value="imperial"
             selected={tempUnitSystem === 'imperial'}
-            onSelect={setTempUnitSystem}
+            onSelect={handleSelectUnitSystem}
           />
           <View style={styles.divider} />
           <RadioOption
@@ -130,9 +120,27 @@ export default function UnitsSettingsScreen() {
             description="Kilograms (kg), Centimeters (cm)"
             value="metric"
             selected={tempUnitSystem === 'metric'}
-            onSelect={setTempUnitSystem}
+            onSelect={handleSelectUnitSystem}
           />
         </View>
+        
+        {/* SAVE BUTTON */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#3b82f6',
+            marginHorizontal: 20,
+            marginTop: 24,
+            paddingVertical: 16,
+            borderRadius: 12,
+            alignItems: 'center',
+          }}
+          onPress={handleSave}
+          activeOpacity={0.8}
+        >
+          <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
+            Save Settings
+          </Text>
+        </TouchableOpacity>
 
         {/* Information Note */}
         <View style={styles.infoCard}>

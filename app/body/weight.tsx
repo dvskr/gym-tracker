@@ -40,6 +40,7 @@ import {
 } from '@/lib/api/bodyWeight';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -328,6 +329,7 @@ const LogWeightModal: React.FC<LogWeightModalProps> = ({
 
 export default function BodyWeightScreen() {
   const { user } = useAuthStore();
+  const { weightUnit } = useUnits();
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -420,7 +422,7 @@ export default function BodyWeightScreen() {
     if (editingEntry) return editingEntry.weight_unit;
     if (todayEntry) return todayEntry.weight_unit;
     if (recentEntries.length > 0) return recentEntries[0].weight_unit;
-    return 'lbs';
+    return weightUnit; // Use user's preferred unit
   };
 
   // Loading

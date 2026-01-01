@@ -2,8 +2,25 @@ import { useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { Slot } from 'expo-router';
 import { clearMemoryCache } from '@/lib/images/cacheManager';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { useAuthStore } from '@/stores/authStore';
+import { initializeSettings } from '@/stores/settingsStore';
 
 export default function RootLayout() {
+  const { user, initialize, isInitialized } = useAuthStore();
+
+  useEffect(() => {
+    // Initialize auth
+    initialize();
+  }, []);
+
+  useEffect(() => {
+    // Initialize settings from profile when user logs in
+    if (user?.id && isInitialized) {
+      initializeSettings(user.id);
+    }
+  }, [user?.id, isInitialized]);
+
   useEffect(() => {
     // DON'T preload images on app startup - let them load on demand
     // Images are cached by expo-image automatically
@@ -21,5 +38,9 @@ export default function RootLayout() {
     }
   };
 
-  return <Slot />;
+  return (
+    <ThemeProvider>
+      <Slot />
+    </ThemeProvider>
+  );
 }

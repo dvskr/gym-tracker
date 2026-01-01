@@ -148,7 +148,7 @@ interface ExerciseItemProps {
     equipment: string;
     target: string;
     bodyPart: string;
-    gif_url?: string | null;
+    gifUrl?: string | null;
   };
   onPress: () => void;
   isFavorite?: boolean;
@@ -164,7 +164,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
   showFavoriteIcon = true 
 }) => {
   // Get thumbnail URL and equipment-specific icon and color
-  const thumbnailUrl = getThumbnailUrl(exercise.gif_url || null);
+  const thumbnailUrl = getThumbnailUrl(exercise.gifUrl || null);
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
   const iconColor = getEquipmentColor(exercise.equipment);
   

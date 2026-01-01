@@ -35,6 +35,7 @@ import {
 import { getTodayWeight } from '@/lib/api/bodyWeight';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -100,6 +101,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 
 export default function MeasurementsScreen() {
   const { user } = useAuthStore();
+  const { measurementUnit, weightUnit } = useUnits();
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -107,10 +109,15 @@ export default function MeasurementsScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [formData, setFormData] = useState<FormData>(emptyFormData);
   const [previousData, setPreviousData] = useState<MeasurementEntry | null>(null);
-  const [unit, setUnit] = useState<MeasurementUnit>('in');
+  const [unit, setUnit] = useState<MeasurementUnit>(measurementUnit);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [hasExistingEntry, setHasExistingEntry] = useState(false);
+
+  // Sync local unit state with global preference
+  useEffect(() => {
+    setUnit(measurementUnit);
+  }, [measurementUnit]);
 
   // Get date string for API
   const dateString = format(selectedDate, 'yyyy-MM-dd');
@@ -361,7 +368,7 @@ export default function MeasurementsScreen() {
                 label="Weight"
                 value={formData.weight}
                 onChangeText={(v) => updateField('weight', v)}
-                unit="lbs"
+                unit={weightUnit}
                 previousValue={getPreviousValue('weight')}
               />
             </View>

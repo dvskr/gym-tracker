@@ -64,6 +64,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   const { exercise, sets } = workoutExercise;
   const { user } = useAuthStore();
   const { showFormTips: showFormTipsEnabled, showProgressiveOverload } = useSettingsStore();
+  const weightUnit = useSettingsStore((state) => state.weightUnit);
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
@@ -177,7 +178,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           {previousWorkout && previousWorkout.sets.length > 0 && (
             <View style={styles.previousHintRow}>
               <Text style={styles.previousHintText}>
-                Last: {previousWorkout.sets[0].weight} lbs × {previousWorkout.sets[0].reps} reps
+                Last: {previousWorkout.sets[0].weight} {weightUnit} × {previousWorkout.sets[0].reps} reps
                 {daysAgo !== null && ` (${getDaysAgoText()})`}
               </Text>
             </View>
@@ -264,7 +265,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
             default: // 'reps_weight'
               return (
                 <>
-                  <Text style={[styles.columnHeaderText, styles.colWeight]}>LBS</Text>
+                  <Text style={[styles.columnHeaderText, styles.colWeight]}>{weightUnit.toUpperCase()}</Text>
                   <Text style={[styles.columnHeaderText, styles.colReps]}>REPS</Text>
                 </>
               );
@@ -291,6 +292,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                     onApplyWeight={(weight) => onUpdateSet(set.id, { weight })}
                     onApplyReps={(reps) => onUpdateSet(set.id, { reps })}
                     userId={user.id}
+                    units={weightUnit as 'lbs' | 'kg'}
                   />
                 </View>
               )}

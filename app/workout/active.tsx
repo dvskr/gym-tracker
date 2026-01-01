@@ -37,6 +37,7 @@ import {
   getPRTypeLabel,
   celebratePR,
 } from '@/lib/utils/prDetection';
+import { useUnits } from '@/hooks/useUnits';
 
 // Default rest time in seconds
 const DEFAULT_REST_TIME = 90;
@@ -48,6 +49,7 @@ export default function ActiveWorkoutScreen() {
   const activeWorkout = useActiveWorkout();
   const isWorkoutActive = useIsWorkoutActive();
   const restTimer = useRestTimer();
+  const { weightUnit } = useUnits();
 
   const {
     startWorkout,
@@ -389,7 +391,7 @@ export default function ActiveWorkoutScreen() {
           <Text style={styles.statValue}>
             {getTotalVolume().toLocaleString()}
           </Text>
-          <Text style={styles.statLabel}>Volume (lbs)</Text>
+          <Text style={styles.statLabel}>Volume ({weightUnit})</Text>
         </View>
       </View>
 
@@ -486,9 +488,9 @@ export default function ActiveWorkoutScreen() {
                 {prToast.exerciseName}
               </Text>
               <Text style={styles.prToastValue}>
-                {prToast.prType === 'max_weight' && `${prToast.weight} lbs × ${prToast.reps}`}
-                {prToast.prType === 'max_reps' && `${prToast.reps} reps @ ${prToast.weight} lbs`}
-                {prToast.prType === 'max_volume' && `${(prToast.weight * prToast.reps).toLocaleString()} lbs volume`}
+                {prToast.prType === 'max_weight' && `${prToast.weight} ${weightUnit} × ${prToast.reps}`}
+                {prToast.prType === 'max_reps' && `${prToast.reps} reps @ ${prToast.weight} ${weightUnit}`}
+                {prToast.prType === 'max_volume' && `${(prToast.weight * prToast.reps).toLocaleString()} ${weightUnit} volume`}
               </Text>
             </View>
           </View>

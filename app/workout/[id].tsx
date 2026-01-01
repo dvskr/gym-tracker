@@ -46,6 +46,7 @@ import {
   shareWorkout,
   convertToExportable,
 } from '@/lib/utils/export';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -101,7 +102,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
           </Text>
           <Text style={styles.exerciseMeta}>
             {exercise.exercises?.equipment || 'No equipment'} •{' '}
-            {completedSets.length} sets • {totalVolume.toLocaleString()} lbs
+            {completedSets.length} sets • {totalVolume.toLocaleString()} {weightUnit}
           </Text>
         </View>
 
@@ -176,6 +177,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 export default function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { startWorkout, addExerciseWithSets } = useWorkoutStore();
+  const { weightUnit } = useUnits();
 
   // State
   const [workout, setWorkout] = useState<WorkoutDetail | null>(null);
@@ -453,7 +455,7 @@ export default function WorkoutDetailScreen() {
               <Text style={styles.summaryValue}>
                 {workout.total_volume.toLocaleString()}
               </Text>
-              <Text style={styles.summaryLabel}>Volume (lbs)</Text>
+              <Text style={styles.summaryLabel}>Volume ({weightUnit})</Text>
             </View>
 
             <View style={styles.summaryItem}>

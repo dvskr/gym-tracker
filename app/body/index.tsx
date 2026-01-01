@@ -36,6 +36,7 @@ import { getPhotos } from '@/lib/api/photos';
 import { calculateProgress } from '@/lib/utils/goalCalculations';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { useUnits } from '@/hooks/useUnits';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -60,6 +61,7 @@ const WeightSection: React.FC<WeightSectionProps> = ({
   onPress,
   onLogPress,
 }) => {
+  const { weightUnit } = useUnits();
   const isGaining = weekChange !== null && weekChange > 0;
   const isLosing = weekChange !== null && weekChange < 0;
   const changeColor = isLosing ? '#22c55e' : isGaining ? '#ef4444' : '#64748b';
@@ -79,7 +81,7 @@ const WeightSection: React.FC<WeightSectionProps> = ({
           {currentWeight !== null ? (
             <>
               <Text style={styles.weightValue}>{currentWeight}</Text>
-              <Text style={styles.weightUnit}>lbs</Text>
+              <Text style={styles.weightUnit}>{weightUnit}</Text>
             </>
           ) : (
             <Text style={styles.noDataText}>Not logged yet</Text>
@@ -327,6 +329,7 @@ const GoalSection: React.FC<GoalSectionProps> = ({
   goalType,
   onPress,
 }) => {
+  const { weightUnit } = useUnits();
   const progress = calculateProgress(startWeight, currentWeight, targetWeight);
   const remaining = Math.abs(currentWeight - targetWeight).toFixed(1);
 
@@ -359,9 +362,9 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
       <View style={styles.goalFooter}>
         <Text style={styles.goalRemaining}>
-          {progress.remaining === 0 ? '🎉 Goal reached!' : `${remaining} lbs to go`}
+          {progress.remaining === 0 ? '🎉 Goal reached!' : `${remaining} ${weightUnit} to go`}
         </Text>
-        <Text style={styles.goalTarget}>Target: {targetWeight} lbs</Text>
+        <Text style={styles.goalTarget}>Target: {targetWeight} {weightUnit}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -373,6 +376,16 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
 export default function BodyHubScreen() {
   const { user } = useAuthStore();
+  const { measurementUnit: preferredUnit, unitSystem } = useUnits();
+  
+  // Helper to convert weight from DB unit to user's preferred unit
+  const convertWeight = (weight: number, dbUnit: string): number => {
+    const targetUnit = unitSystem === 'metric' ? 'kg' : 'lbs';
+    if (dbUnit === targetUnit) return weight;
+    if (targetUnit === 'kg' && dbUnit === 'lbs') return weight * 0.453592;
+    if (targetUnit === 'lbs' && dbUnit === 'kg') return weight * 2.20462;
+    return weight;
+  };
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -392,7 +405,7 @@ export default function BodyHubScreen() {
   const [chest, setChest] = useState<number | null>(null);
   const [waist, setWaist] = useState<number | null>(null);
   const [bicep, setBicep] = useState<number | null>(null);
-  const [measurementUnit, setMeasurementUnit] = useState<string>('in');
+  const [measurementUnit, setMeasurementUnit] = useState<string>(preferredUnit);
 
   // Photos data
   const [recentPhotos, setRecentPhotos] = useState<Array<{ id: string; local_uri: string }>>([]);
@@ -418,7 +431,7 @@ export default function BodyHubScreen() {
       ]);
 
       if (latestWeight) {
-        setCurrentWeight(latestWeight.weight);
+        setCurrentWeight(convertWeight(latestWeight.weight, latestWeight.weight_unit || 'lbs'));
         setLastWeightDate(latestWeight.logged_at);
       }
 
@@ -426,8 +439,10 @@ export default function BodyHubScreen() {
         const sorted = [...weightHistory].sort(
           (a, b) => new Date(a.logged_at).getTime() - new Date(b.logged_at).getTime()
         );
-        setWeightChartData(sorted.map(w => w.weight));
-        const change = sorted[sorted.length - 1].weight - sorted[0].weight;
+        setWeightChartData(sorted.map(w => convertWeight(w.weight, w.weight_unit || 'lbs')));
+        const firstWeight = convertWeight(sorted[0].weight, sorted[0].weight_unit || 'lbs');
+        const lastWeight = convertWeight(sorted[sorted.length - 1].weight, sorted[sorted.length - 1].weight_unit || 'lbs');
+        const change = lastWeight - firstWeight;
         setWeekChange(change);
       }
 
@@ -461,9 +476,9 @@ export default function BodyHubScreen() {
         const weightGoal = await getWeightGoal(user.id);
         if (weightGoal && latestWeight) {
           setGoal({
-            currentWeight: latestWeight.weight,
-            targetWeight: weightGoal.target_weight,
-            startWeight: weightGoal.start_weight || latestWeight.weight,
+            currentWeight: convertWeight(latestWeight.weight, latestWeight.weight_unit || 'lbs'),
+            targetWeight: convertWeight(weightGoal.target_weight, weightGoal.weight_unit || 'lbs'),
+            startWeight: convertWeight(weightGoal.start_weight || latestWeight.weight, weightGoal.weight_unit || 'lbs'),
             goalType: weightGoal.goal_type,
           });
         }

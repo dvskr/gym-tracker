@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { RecordType, formatPRType } from '@/lib/api/records';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Types
@@ -140,11 +141,12 @@ interface PRToastProps {
 }
 
 export function PRToastContent({ exerciseName, type, value, previousValue }: PRToastProps) {
+  const { weightUnit } = useUnits();
   const formattedValue = type === 'max_reps' 
     ? `${value} reps` 
     : type === 'max_volume'
-    ? `${value.toLocaleString()} lbs`
-    : `${value} lbs`;
+    ? `${value.toLocaleString()} ${weightUnit}`
+    : `${value} ${weightUnit}`;
 
   const improvement = previousValue ? value - previousValue : null;
 
@@ -180,6 +182,7 @@ interface PRSummaryCardProps {
 }
 
 export function PRSummaryCard({ prs }: PRSummaryCardProps) {
+  const { weightUnit } = useUnits();
   if (prs.length === 0) return null;
 
   return (
@@ -198,8 +201,8 @@ export function PRSummaryCard({ prs }: PRSummaryCardProps) {
               pr.type === 'max_reps' 
                 ? `${pr.value} reps`
                 : pr.type === 'max_volume'
-                ? `${pr.value.toLocaleString()} lbs`
-                : `${pr.value} lbs`
+                ? `${pr.value.toLocaleString()} ${weightUnit}`
+                : `${pr.value} ${weightUnit}`
             }
           </Text>
         </View>

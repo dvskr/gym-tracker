@@ -37,6 +37,7 @@ import { Skeleton } from '@/components/ui';
 import { lightHaptic } from '@/lib/utils/haptics';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
 // Constants
@@ -195,7 +196,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = tru
           <View style={styles.statItem}>
             <TrendingUp size={12} color={item.has_pr ? '#22c55e' : '#94a3b8'} />
             <Text style={[styles.statText, item.has_pr && styles.prVolume]}>
-              {item.total_volume.toLocaleString()} lbs
+              {item.total_volume.toLocaleString()} {weightUnit}
             </Text>
           </View>
         </View>
@@ -212,6 +213,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = tru
 
 export default function HistoryScreen() {
   const { user, session } = useAuthStore();
+  const { weightUnit } = useUnits();
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
