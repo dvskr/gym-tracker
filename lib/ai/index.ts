@@ -28,11 +28,21 @@ export {
   sanitizeText,
   sanitizeStringArray,
   normalizeConfidence,
+  initExerciseValidator,
+  validateExerciseName,
+  getExerciseByName,
+  validateWorkoutSuggestionAdvanced,
+  checkResponseSpecificity,
+  buildUserContextFromData,
+  validateResponseQuality,
 } from './validation';
 
 export type {
   FormTips,
   ProgressionRecommendation,
+  ValidatedSuggestion,
+  UserContext,
+  SpecificityCheck,
 } from './validation';
 
 // ==========================================
@@ -56,9 +66,15 @@ export {
   buildWorkoutSplitContext,
   buildProgressContext,
   buildCompleteContext,
+  buildCoachContext,
 } from './contextBuilder';
 
-export type { UserContext, WorkoutContext } from './contextBuilder';
+export type { 
+  UserContext, 
+  WorkoutContext,
+  CoachContext,
+  DataStateFlags,
+} from './contextBuilder';
 
 // ==========================================
 // AI PROMPTS
@@ -140,3 +156,19 @@ export {
 // ==========================================
 export { aiUsageTracker } from './usageTracker';
 export type { UsageData, UsageStats, UsageCheck } from './usageTracker';
+
+// ==========================================
+// ANALYTICS & MONITORING
+// ==========================================
+export {
+  logAIQuality,
+  getAIQualityStats,
+  buildQualityLog,
+  getMonitoringDashboard,
+} from './analytics';
+
+export type {
+  AIResponseQuality,
+  AIQualityStats,
+  AIQualityAlert,
+} from './analytics';

@@ -43,7 +43,18 @@ export async function prefetchAIData(userId: string): Promise<void> {
   
   results.forEach((result, index) => {
     if (result.status === 'fulfilled') {
-      setCacheData(userId, keys[index], result.value);
+      let dataToCache = result.value;
+      
+      // *** FIX: Extract .text from CoachContext before caching ***
+      if (keys[index] === 'coachContext') {
+        // buildCoachContext returns { text, flags, warnings }
+        // We only want to cache the text string
+        dataToCache = typeof result.value === 'string' 
+          ? result.value 
+          : result.value.text;
+      }
+      
+      setCacheData(userId, keys[index], dataToCache);
       console.log(`[AI Prefetch] ✓ ${keys[index]} cached`);
       successCount++;
     } else {

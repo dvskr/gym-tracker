@@ -2,7 +2,13 @@ import { supabase } from '@/lib/supabase';
 import { aiService } from './aiService';
 import { buildUserContext, buildEquipmentContext, buildFitnessProfileContext, buildInjuryContext } from './contextBuilder';
 import { FITNESS_COACH_SYSTEM_PROMPT, WORKOUT_SUGGESTION_PROMPT } from './prompts';
-import { validateWorkoutSuggestion, validateAndFallback, normalizeConfidence } from './validation';
+import { 
+  validateWorkoutSuggestion, 
+  validateAndFallback, 
+  normalizeConfidence,
+  validateWorkoutSuggestionAdvanced,
+  type ValidatedSuggestion
+} from './validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface WorkoutSuggestion {
@@ -21,7 +27,7 @@ const SUGGESTION_CACHE_KEY = 'workout_suggestion_cache';
 const CACHE_DURATION = 4 * 60 * 60 * 1000; // 4 hours
 
 interface CachedSuggestion {
-  suggestion: WorkoutSuggestion;
+  suggestion: WorkoutSuggestion | ValidatedSuggestion;
   timestamp: number;
   userId: string;
 }
@@ -29,8 +35,9 @@ interface CachedSuggestion {
 class WorkoutSuggestionService {
   /**
    * Get AI-powered workout suggestion for today
+   * Now includes strict validation with equipment and injury filtering
    */
-  async getSuggestion(userId: string, forceRefresh = false): Promise<WorkoutSuggestion> {
+  async getSuggestion(userId: string, forceRefresh = false): Promise<ValidatedSuggestion> {
     try {
       // Check cache unless force refresh
       if (!forceRefresh) {
@@ -62,24 +69,65 @@ class WorkoutSuggestionService {
           profile,
         });
         
-        // Validate AI response
-        const fallbackSuggestion = this.getRuleBasedSuggestion(recentWorkouts);
-        const finalSuggestion = validateAndFallback(
+        // 🆕 STRICT VALIDATION with equipment and injury filtering
+        console.log('🔍 Validating AI suggestion...');
+        const validated = validateWorkoutSuggestionAdvanced(
           aiSuggestion,
-          validateWorkoutSuggestion,
-          fallbackSuggestion,
-          'WorkoutSuggestion'
+          profile.available_equipment || [],
+          profile.injury_restrictions || []
         );
         
-        // Cache the result
-        await this.cacheSuggestion(userId, finalSuggestion);
+        // Log validation results
+        if (validated.wasFiltered) {
+          const removed = aiSuggestion.exercises.length - validated.exercises.length;
+          console.warn(`⚠️ Filtered ${removed} exercises (equipment/injury restrictions)`);
+        }
         
-        return finalSuggestion;
+        // 🆕 CHECK: If too many exercises filtered, use fallback
+        if (validated.exercises.length < 3) {
+          console.warn('❌ Too few valid exercises after filtering, using rule-based fallback');
+          const fallback = this.getRuleBasedSuggestion(recentWorkouts);
+          
+          // Validate fallback too (should pass since rule-based uses valid exercises)
+          const validatedFallback = validateWorkoutSuggestionAdvanced(
+            fallback,
+            profile.available_equipment || [],
+            profile.injury_restrictions || []
+          );
+          
+          await this.cacheSuggestion(userId, validatedFallback);
+          return validatedFallback;
+        }
+        
+        // Validate structure (existing validation)
+        if (!validateWorkoutSuggestion(validated)) {
+          console.warn('AI response structure invalid, using fallback');
+          const fallback = this.getRuleBasedSuggestion(recentWorkouts);
+          const validatedFallback = validateWorkoutSuggestionAdvanced(
+            fallback,
+            profile.available_equipment || [],
+            profile.injury_restrictions || []
+          );
+          await this.cacheSuggestion(userId, validatedFallback);
+          return validatedFallback;
+        }
+        
+        console.log('✅ AI suggestion validated successfully');
+        
+        // Cache the result
+        await this.cacheSuggestion(userId, validated);
+        
+        return validated;
       } catch (aiError) {
         console.warn('AI suggestion failed, falling back to rule-based:', aiError);
         const fallback = this.getRuleBasedSuggestion(recentWorkouts);
-        await this.cacheSuggestion(userId, fallback);
-        return fallback;
+        const validatedFallback = validateWorkoutSuggestionAdvanced(
+          fallback,
+          profile.available_equipment || [],
+          profile.injury_restrictions || []
+        );
+        await this.cacheSuggestion(userId, validatedFallback);
+        return validatedFallback;
       }
     } catch (error) {
       console.error('Failed to get workout suggestion:', error);
@@ -90,7 +138,7 @@ class WorkoutSuggestionService {
   /**
    * Get cached suggestion if valid
    */
-  private async getCachedSuggestion(userId: string): Promise<WorkoutSuggestion | null> {
+  private async getCachedSuggestion(userId: string): Promise<ValidatedSuggestion | null> {
     try {
       const cached = await AsyncStorage.getItem(SUGGESTION_CACHE_KEY);
       if (!cached) return null;
@@ -114,7 +162,7 @@ class WorkoutSuggestionService {
   /**
    * Cache suggestion for future use
    */
-  private async cacheSuggestion(userId: string, suggestion: WorkoutSuggestion): Promise<void> {
+  private async cacheSuggestion(userId: string, suggestion: ValidatedSuggestion): Promise<void> {
     try {
       const cacheData: CachedSuggestion = {
         suggestion,
@@ -210,7 +258,7 @@ class WorkoutSuggestionService {
   /**
    * Rule-based suggestion when AI unavailable
    */
-  private getRuleBasedSuggestion(recentWorkouts: any[]): WorkoutSuggestion {
+  private getRuleBasedSuggestion(recentWorkouts: any[]): ValidatedSuggestion {
     const muscleMap = this.analyzeRecentMuscles(recentWorkouts);
     const now = new Date();
     
@@ -266,6 +314,7 @@ class WorkoutSuggestionService {
       reason,
       exercises: this.getDefaultExercises(bestSuggestion.type),
       confidence: 'medium',
+      wasFiltered: false,
     };
   }
 
@@ -305,7 +354,7 @@ class WorkoutSuggestionService {
   /**
    * Default suggestion when no data available
    */
-  private getDefaultSuggestion(recentWorkouts: any[]): WorkoutSuggestion {
+  private getDefaultSuggestion(recentWorkouts: any[]): ValidatedSuggestion {
     // If user has never worked out, suggest full body
     if (recentWorkouts.length === 0) {
       return {
@@ -319,11 +368,16 @@ class WorkoutSuggestionService {
           { name: 'Romanian Deadlifts', sets: 3, reps: '8-10' },
         ],
         confidence: 'low',
+        wasFiltered: false,
       };
     }
 
     // Otherwise use rule-based
-    return this.getRuleBasedSuggestion(recentWorkouts);
+    const suggestion = this.getRuleBasedSuggestion(recentWorkouts);
+    return {
+      ...suggestion,
+      wasFiltered: false,
+    };
   }
 
   /**

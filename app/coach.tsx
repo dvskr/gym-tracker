@@ -38,7 +38,7 @@ export default function CoachScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [userContext, setUserContext] = useState('');
+  const [userContext, setUserContext] = useState(''); // FIX: Store context.text (string), not the object
   const [isLoadingContext, setIsLoadingContext] = useState(true);
   const [contextData, setContextData] = useState<{
     hasWorkouts: boolean;
@@ -53,7 +53,7 @@ export default function CoachScreen() {
   });
   const flatListRef = useRef<FlatList>(null);
   const { user } = useAuthStore();
-  const { startWorkout, addExercise } = useWorkoutStore();
+  const { startWorkout, addExercise, addExerciseWithSets } = useWorkoutStore();
   
   // Auth guard
   const { isAuthenticated, requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -63,6 +63,15 @@ export default function CoachScreen() {
     loadUserContext();
     loadChatHistory();
   }, [user]);
+  
+  // FORCE CLEAR coachContext cache on component mount (to fix any old cached objects)
+  useEffect(() => {
+    if (user) {
+      // Invalidate any potentially corrupted cache from before the fix
+      invalidateCacheKey(user.id, 'coachContext');
+      console.log('[Coach] Cache cleared on mount');
+    }
+  }, []);  // Only on mount
 
   const loadChatHistory = async () => {
     if (!user) return;
@@ -137,10 +146,13 @@ export default function CoachScreen() {
       console.log('[Coach] Building fresh context');
       const context = await buildCoachContext(user.id);
       
-      // Cache for future use
-      setCacheData(user.id, 'coachContext', context);
+      // Extract .text from CoachContext object
+      const contextText = typeof context === 'string' ? context : context.text;
       
-      setUserContext(context);
+      // Cache the text for future use
+      setCacheData(user.id, 'coachContext', contextText);
+      
+      setUserContext(contextText);
       
       // Fetch contextual data for suggested questions
       await fetchContextData();
@@ -239,7 +251,8 @@ export default function CoachScreen() {
       const systemPrompt = `${FITNESS_COACH_SYSTEM_PROMPT}
 
 ${userContext ? `\n${userContext}\n` : ''}
-Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
+
+REMINDER: You are chatting with a human user. Write naturally and conversationally. If you're suggesting a workout, explain it in friendly language BEFORE including the workout block. Keep responses concise (2-3 paragraphs max).`;
 
       let fullResponse = '';
 
@@ -342,27 +355,108 @@ Keep responses concise (2-3 paragraphs max). Be specific and actionable.`;
     try {
       // Invalidate cache and reload
       invalidateCacheKey(user.id, 'coachContext');
-      await loadUserContext();
+      
+      // Build fresh context
+      const context = await buildCoachContext(user.id);
+      const contextText = typeof context === 'string' ? context : context.text;
+      
+      // Update cache and state with fresh data
+      setCacheData(user.id, 'coachContext', contextText);
+      setUserContext(contextText);
+      
+      // Refresh contextual data for suggested questions
+      await fetchContextData();
     } finally {
       setIsLoadingContext(false);
     }
   };
 
   const handleStartWorkout = async (workoutName: string, exercises: any[]) => {
+    if (!exercises || exercises.length === 0) {
+      Alert.alert('No Exercises', 'This workout plan has no exercises.');
+      return;
+    }
+    
     try {
       // Start a new workout with the AI-suggested name
       startWorkout(workoutName);
       
-      // Store exercises in state to add them in the workout screen
-      // (exercises need to be looked up in the database first)
+      // Search for exercises using the API
+      const { searchExercises } = await import('@/lib/api/exercises');
+      
+      let successCount = 0;
+      
+      // Add each exercise from the AI suggestion
+      for (const exerciseData of exercises) {
+        try {
+          // Normalize the exercise name for better matching
+          let searchTerm = exerciseData.name
+            .replace(/s$/i, '')  // Remove trailing 's' (Squats -> Squat)
+            .replace(/Dumbbell/i, 'DB')  // Try DB abbreviation
+            .trim();
+          
+          // Try original name first
+          let results = await searchExercises(exerciseData.name, 5);
+          
+          // If no results, try normalized name
+          if (!results || results.length === 0) {
+            results = await searchExercises(searchTerm, 5);
+          }
+          
+          // If still no results, try just the main word (last word usually)
+          if (!results || results.length === 0) {
+            const words = exerciseData.name.split(' ');
+            const mainWord = words[words.length - 1].replace(/s$/i, '');
+            results = await searchExercises(mainWord, 5);
+          }
+          
+          if (results && results.length > 0) {
+            // Use the first match - convert to ExerciseDBExercise format
+            const dbExercise = results[0];
+            
+            // Use Supabase UUID
+            const exercise = {
+              id: dbExercise.id,
+              name: dbExercise.name,
+              gifUrl: dbExercise.gif_url || '',
+              target: dbExercise.primary_muscles?.[0] || 'unknown',
+              bodyPart: dbExercise.category || 'other',
+              equipment: dbExercise.equipment || 'bodyweight',
+              secondaryMuscles: dbExercise.secondary_muscles || [],
+              instructions: dbExercise.instructions || [],
+            };
+            
+            // Parse reps to get a number (handle ranges like "8-10")
+            const repsValue = String(exerciseData.reps || '10');
+            const repsNum = parseInt(repsValue.split('-')[0]) || 10;
+            
+            // Add exercise with prefilled sets based on AI suggestion
+            const prefillSets = Array(exerciseData.sets || 3).fill({
+              weight: undefined,
+              reps: repsNum,
+            });
+            
+            addExerciseWithSets(exercise, prefillSets);
+            successCount++;
+            
+            console.log(`✅ Added exercise: ${exercise.name} (${exerciseData.sets} sets × ${repsNum} reps)`);
+          } else {
+            console.warn(`⚠️ Exercise not found: ${exerciseData.name}`);
+          }
+        } catch (error) {
+          console.error(`Failed to add exercise ${exerciseData.name}:`, error);
+        }
+      }
+      
+      if (successCount === 0) {
+        Alert.alert('No Exercises Added', 'Could not find any of the suggested exercises in the database. Please add exercises manually.');
+      }
       
       // Navigate to active workout
       router.push('/workout/active');
-      
-      // TODO: In the future, we could pass the exercise list via params
-      // and auto-add them in the active workout screen
     } catch (error) {
       console.error('Failed to start workout:', error);
+      Alert.alert('Error', 'Failed to start workout. Please try again.');
     }
   };
 

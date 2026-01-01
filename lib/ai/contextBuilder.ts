@@ -227,8 +227,9 @@ export const buildCompleteContext = async (userId: string): Promise<string> => {
 
 /**
  * Build comprehensive coach context including profile, workouts, injuries, equipment, PRs, and check-ins
+ * @deprecated Use the new buildCoachContext that returns CoachContext instead
  */
-export const buildCoachContext = async (userId: string): Promise<string> => {
+export const buildCoachContextLegacy = async (userId: string): Promise<string> => {
   try {
     // Fetch all relevant data in parallel for performance
     const [
@@ -743,3 +744,380 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
     return '';
   }
 };
+
+// ==========================================
+// ENHANCED COACH CONTEXT (Prevents Hallucinations)
+// ==========================================
+
+/**
+ * Data state flags for context awareness
+ */
+export interface DataStateFlags {
+  hasWorkouts: boolean;
+  hasPRs: boolean;
+  hasInjuries: boolean;
+  hasCheckin: boolean;
+  hasGoals: boolean;
+  hasEquipment: boolean;
+  workoutCount: number;
+  isNewUser: boolean;
+  experienceLevel?: string;
+}
+
+/**
+ * Complete coach context with explicit state
+ */
+export interface CoachContext {
+  text: string;
+  flags: DataStateFlags;
+  warnings: string[];
+}
+
+/**
+ * Build comprehensive coach context with hallucination prevention
+ * Explicitly tells AI what data exists and what to avoid claiming
+ */
+export const buildCoachContext = async (userId: string): Promise<CoachContext> => {
+  try {
+    // Fetch all relevant data in parallel
+    const [workouts, prs, profile, injuries, checkin] = await Promise.all([
+      getRecentWorkouts(userId, 14),
+      getPersonalRecords(userId, 10),
+      getUserProfile(userId),
+      getActiveInjuries(userId),
+      getTodayCheckin(userId),
+    ]);
+
+    // Build explicit state flags
+    const dataState: DataStateFlags = {
+      hasWorkouts: workouts.length > 0,
+      hasPRs: prs.length > 0,
+      hasInjuries: injuries.length > 0,
+      hasCheckin: checkin !== null,
+      hasGoals: !!(profile?.fitness_goal),
+      hasEquipment: !!(profile?.available_equipment?.length),
+      workoutCount: workouts.length,
+      isNewUser: workouts.length === 0,
+      experienceLevel: profile?.experience_level,
+    };
+
+    const warnings: string[] = [];
+    let contextText = '';
+
+    // ==========================================
+    // NEW USER WARNING (Critical!)
+    // ==========================================
+    if (dataState.isNewUser) {
+      contextText += `
+⚠️⚠️⚠️ NEW USER - ZERO WORKOUT DATA ⚠️⚠️⚠️
+
+CRITICAL INSTRUCTIONS:
+- This user has NO workout history in the system
+- DO NOT reference "your recent workouts" or "last time you trained"
+- DO NOT claim to know their strength levels, PRs, or capabilities
+- DO NOT say things like "based on your training history" (there is none!)
+- DO NOT make assumptions about their experience level
+- DO ask questions to understand their background and goals
+- DO provide general beginner-friendly guidance
+- DO suggest starting points for weight/reps (but label as "starting point")
+
+YOU MUST BE HONEST: "I don't have any workout history for you yet. Let's start fresh!"
+`;
+      warnings.push('NEW_USER_NO_DATA');
+    } else {
+      // User has history - build normal context
+      contextText += buildWorkoutHistoryContext(workouts);
+      
+      if (dataState.hasPRs) {
+        contextText += '\n' + buildPRContext(prs);
+      }
+    }
+
+    // ==========================================
+    // INJURY WARNINGS (Always prominent)
+    // ==========================================
+    if (dataState.hasInjuries && injuries.length > 0) {
+      contextText += `
+
+🚨🚨🚨 ACTIVE INJURIES - CRITICAL 🚨🚨🚨
+
+`;
+      for (const injury of injuries) {
+        contextText += `
+📍 ${injury.bodyPart.toUpperCase()} - ${injury.type || 'Injury'} (Severity: ${injury.severity})
+   ❌ NEVER suggest: ${(injury.avoidExercises || []).join(', ') || 'N/A'}
+   ❌ NEVER suggest movements: ${(injury.avoidMovements || []).join(', ') || 'N/A'}
+   ${injury.notes ? `📝 Note: ${injury.notes}` : ''}
+`;
+      }
+
+      contextText += `
+🔒 MANDATORY RULES:
+- NEVER suggest avoided exercises/movements (list above)
+- Always suggest safe alternatives
+- Consider injury severity in programming
+- Prioritize safety over optimization
+`;
+      warnings.push('ACTIVE_INJURIES');
+    }
+
+    // ==========================================
+    // PROFILE DATA (If available)
+    // ==========================================
+    if (profile) {
+      contextText += '\n📊 USER PROFILE:\n';
+      
+      if (profile.fitness_goal) {
+        contextText += `- Primary Goal: ${profile.fitness_goal}\n`;
+      }
+      
+      if (profile.experience_level) {
+        contextText += `- Experience Level: ${profile.experience_level}\n`;
+      }
+      
+      if (profile.available_equipment && profile.available_equipment.length > 0) {
+        contextText += `- Available Equipment: ${profile.available_equipment.join(', ')}\n`;
+        contextText += `  ⚠️ ONLY suggest exercises using this equipment!\n`;
+      } else {
+        warnings.push('NO_EQUIPMENT_SPECIFIED');
+      }
+      
+      if (profile.weekly_workout_target) {
+        contextText += `- Weekly Workout Target: ${profile.weekly_workout_target} days\n`;
+      }
+    }
+
+    // ==========================================
+    // TODAY'S CHECK-IN (If available)
+    // ==========================================
+    if (dataState.hasCheckin && checkin) {
+      contextText += `\n💬 TODAY'S CHECK-IN:\n`;
+      contextText += `- Energy Level: ${checkin.energyLevel}/10\n`;
+      contextText += `- Motivation: ${checkin.motivation}/10\n`;
+      
+      if (checkin.sleepQuality) {
+        contextText += `- Sleep Quality: ${checkin.sleepQuality}/10\n`;
+      }
+      
+      if (checkin.soreness && checkin.soreness.length > 0) {
+        contextText += `- Sore Areas: ${checkin.soreness.join(', ')}\n`;
+        contextText += `  ⚠️ Avoid overworking these areas today\n`;
+      }
+      
+      if (checkin.notes) {
+        contextText += `- Notes: ${checkin.notes}\n`;
+      }
+    }
+
+    // ==========================================
+    // DATA AVAILABILITY SUMMARY
+    // ==========================================
+    contextText += `\n
+📋 DATA AVAILABILITY SUMMARY:
+- Workout History: ${dataState.hasWorkouts ? `✅ Yes (${dataState.workoutCount} recent)` : '❌ None'}
+- Personal Records: ${dataState.hasPRs ? '✅ Yes' : '❌ None'}
+- Active Injuries: ${dataState.hasInjuries ? '🚨 Yes (see above)' : '✅ None'}
+- Today's Check-in: ${dataState.hasCheckin ? '✅ Yes (see above)' : '❌ None'}
+- Equipment Info: ${dataState.hasEquipment ? '✅ Yes (see above)' : '❌ Not specified'}
+- Goals Set: ${dataState.hasGoals ? '✅ Yes' : '❌ Not specified'}
+
+⚠️ IMPORTANT: Base your responses ONLY on the data marked with ✅ above.
+DO NOT make claims about data marked with ❌.
+`;
+
+    return {
+      text: contextText,
+      flags: dataState,
+      warnings,
+    };
+  } catch (error) {
+    console.error('Error building coach context:', error);
+    
+    // Return minimal safe context on error
+    return {
+      text: '⚠️ Error loading user data. Provide general guidance only.',
+      flags: {
+        hasWorkouts: false,
+        hasPRs: false,
+        hasInjuries: false,
+        hasCheckin: false,
+        hasGoals: false,
+        hasEquipment: false,
+        workoutCount: 0,
+        isNewUser: true,
+      },
+      warnings: ['ERROR_LOADING_DATA'],
+    };
+  }
+};
+
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
+
+/**
+ * Get recent workouts for user
+ */
+async function getRecentWorkouts(userId: string, days: number): Promise<any[]> {
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+
+  const { data, error } = await supabase
+    .from('workouts')
+    .select(`
+      *,
+      workout_exercises (
+        *,
+        exercises (*),
+        workout_sets (*)
+      )
+    `)
+    .eq('user_id', userId)
+    .gte('created_at', since.toISOString())
+    .not('ended_at', 'is', null)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching workouts:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get personal records for user
+ */
+async function getPersonalRecords(userId: string, limit: number): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('personal_records')
+    .select('*, exercises(name)')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching PRs:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get user profile
+ */
+async function getUserProfile(userId: string): Promise<any | null> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching profile:', error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Get active injuries
+ */
+async function getActiveInjuries(userId: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('user_injuries')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_active', true);
+
+  if (error) {
+    console.error('Error fetching injuries:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get today's check-in
+ */
+async function getTodayCheckin(userId: string): Promise<any | null> {
+  const today = new Date().toISOString().split('T')[0];
+
+  const { data, error } = await supabase
+    .from('daily_checkins')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', today)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) {
+    // No check-in today is not an error
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Build workout history context text
+ */
+function buildWorkoutHistoryContext(workouts: any[]): string {
+  if (workouts.length === 0) return '';
+
+  let context = '\n📈 RECENT WORKOUT HISTORY:\n\n';
+
+  // Show last 3 workouts with details
+  const recentWorkouts = workouts.slice(0, 3);
+
+  for (const workout of recentWorkouts) {
+    const date = new Date(workout.created_at).toLocaleDateString();
+    context += `${workout.name || 'Workout'} (${date}):\n`;
+
+    const exercises = workout.workout_exercises || [];
+    for (const we of exercises.slice(0, 5)) {
+      const ex = we.exercises;
+      if (!ex) continue;
+
+      const sets = we.workout_sets || [];
+      const completedSets = sets.filter((s: any) => s.is_completed);
+
+      if (completedSets.length > 0) {
+        const weights = completedSets.map((s: any) => `${s.weight || 0}×${s.reps || 0}`);
+        context += `  - ${ex.name}: ${weights.join(', ')}\n`;
+      }
+    }
+
+    context += '\n';
+  }
+
+  // Workout frequency
+  const daysSinceFirst = Math.ceil(
+    (Date.now() - new Date(workouts[workouts.length - 1].created_at).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const frequency = daysSinceFirst > 0 ? (workouts.length / daysSinceFirst * 7).toFixed(1) : 0;
+
+  context += `📊 Workout Frequency: ${frequency} times/week (${workouts.length} workouts in ${daysSinceFirst} days)\n`;
+
+  return context;
+}
+
+/**
+ * Build PR context text
+ */
+function buildPRContext(prs: any[]): string {
+  if (prs.length === 0) return '';
+
+  let context = '🏆 PERSONAL RECORDS:\n';
+
+  for (const pr of prs.slice(0, 5)) {
+    const exerciseName = pr.exercises?.name || 'Unknown';
+    context += `  - ${exerciseName}: ${pr.weight} lbs × ${pr.reps} reps\n`;
+  }
+
+  return context;
+}

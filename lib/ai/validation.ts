@@ -1,10 +1,13 @@
 /**
  * AI Response Validation
  * Ensures AI responses meet expected structure and quality standards
+ * Includes fuzzy matching for exercise name validation
  */
 
+import Fuse from 'fuse.js';
 import { WorkoutSuggestion } from './workoutSuggestions';
 import { WorkoutAnalysis } from './workoutAnalysis';
+import { supabase } from '@/lib/supabase';
 
 // ==========================================
 // FORM TIPS TYPE
@@ -29,6 +32,187 @@ export interface ProgressionRecommendation {
   reason: string;
   confidence: 'high' | 'medium' | 'low';
 }
+
+// ==========================================
+// VALIDATED SUGGESTION TYPE
+// ==========================================
+
+export interface ValidatedSuggestion extends WorkoutSuggestion {
+  wasFiltered: boolean;
+  exercises: Array<{
+    name: string;
+    sets: number;
+    reps: string;
+    equipment?: string;
+  }>;
+}
+
+// ==========================================
+// RESPONSE SPECIFICITY TYPES
+// ==========================================
+
+export interface UserContext {
+  hasPRs: boolean;
+  hasWorkoutHistory: boolean;
+  recentExercises: string[];
+  recentWeights?: Array<{ exercise: string; weight: number; reps: number }>;
+  workoutCount?: number;
+  lastWorkoutDate?: string;
+}
+
+export interface SpecificityCheck {
+  isSpecific: boolean;
+  score: number;
+  issues: string[];
+  details: {
+    hasSpecificWeight: boolean;
+    hasSpecificReps: boolean;
+    mentionedExercises: string[];
+    hasTimeReference: boolean;
+  };
+}
+
+// ==========================================
+// FUZZY MATCHING FOR EXERCISE NAMES
+// ==========================================
+
+// In-memory cache for exercise names and fuzzy search
+let exerciseNames: string[] = [];
+let exerciseMap: Map<string, { name: string; equipment: string }> = new Map();
+let fuse: Fuse<string> | null = null;
+
+/**
+ * Initialize the exercise validator with exercise data from database
+ */
+export const initExerciseValidator = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('exercises')
+      .select('name, equipment');
+    
+    if (error) {
+      console.error('Failed to load exercises for validation:', error);
+      return;
+    }
+    
+    if (data) {
+      exerciseNames = data.map(ex => ex.name);
+      exerciseMap.clear();
+      data.forEach(ex => {
+        exerciseMap.set(ex.name.toLowerCase(), { 
+          name: ex.name, 
+          equipment: ex.equipment 
+        });
+      });
+      
+      fuse = new Fuse(exerciseNames, {
+        threshold: 0.3,
+        includeScore: true,
+        ignoreLocation: true,
+        keys: ['name'],
+      });
+      
+      console.log(`✅ Exercise validator initialized with ${exerciseNames.length} exercises`);
+    }
+  } catch (error) {
+    console.error('Failed to initialize exercise validator:', error);
+  }
+};
+
+/**
+ * Validate and correct an exercise name using fuzzy matching
+ * Returns the corrected name or null if no valid match found
+ */
+export const validateExerciseName = (name: string): string | null => {
+  if (!name || typeof name !== 'string') return null;
+  
+  const normalized = name.trim();
+  if (!normalized) return null;
+  
+  // Exact match first (case-insensitive)
+  const exactMatch = exerciseMap.get(normalized.toLowerCase());
+  if (exactMatch) return exactMatch.name;
+  
+  // Fuzzy match using Fuse.js
+  if (fuse) {
+    const results = fuse.search(normalized);
+    if (results.length > 0 && results[0].score !== undefined && results[0].score < 0.3) {
+      console.log(`✅ Fuzzy matched "${normalized}" -> "${results[0].item}" (score: ${results[0].score})`);
+      return results[0].item;
+    }
+  }
+  
+  console.warn(`❌ No valid exercise match found for: "${normalized}"`);
+  return null;
+};
+
+/**
+ * Get exercise data by name (for equipment checks)
+ */
+export const getExerciseByName = (name: string): { name: string; equipment: string } | null => {
+  const data = exerciseMap.get(name.toLowerCase());
+  return data || null;
+};
+
+/**
+ * Validate workout suggestion against user equipment and injury restrictions
+ */
+export const validateWorkoutSuggestionAdvanced = (
+  suggestion: WorkoutSuggestion,
+  userEquipment: string[] = [],
+  injuryAvoidList: string[] = []
+): ValidatedSuggestion => {
+  const validatedExercises = suggestion.exercises
+    .map(ex => {
+      // 1. Validate exercise name exists
+      const validName = validateExerciseName(ex.name);
+      if (!validName) {
+        console.warn(`Filtered out invalid exercise: "${ex.name}"`);
+        return null;
+      }
+      
+      // 2. Check equipment match (only if user has specified equipment)
+      if (userEquipment.length > 0) {
+        const exerciseData = getExerciseByName(validName);
+        if (exerciseData && !userEquipment.includes(exerciseData.equipment)) {
+          console.warn(`Filtered out "${validName}" - requires ${exerciseData.equipment}`);
+          return null;
+        }
+      }
+      
+      // 3. Check injury avoid list
+      if (injuryAvoidList.length > 0) {
+        const isAvoided = injuryAvoidList.some(avoid => 
+          validName.toLowerCase().includes(avoid.toLowerCase())
+        );
+        if (isAvoided) {
+          console.warn(`Filtered out "${validName}" - on injury avoid list`);
+          return null;
+        }
+      }
+      
+      // Get equipment info for response
+      const exerciseData = getExerciseByName(validName);
+      
+      return {
+        ...ex,
+        name: validName, // Use exact database name
+        equipment: exerciseData?.equipment,
+      };
+    })
+    .filter(Boolean) as Array<{
+      name: string;
+      sets: number;
+      reps: string;
+      equipment?: string;
+    }>;
+  
+  return {
+    ...suggestion,
+    exercises: validatedExercises,
+    wasFiltered: validatedExercises.length < suggestion.exercises.length,
+  };
+};
 
 // ==========================================
 // VALIDATION FUNCTIONS
@@ -325,4 +509,191 @@ export function normalizeConfidence(confidence: any): 'high' | 'medium' | 'low' 
   
   return 'medium';  // Default
 }
+
+// ==========================================
+// RESPONSE SPECIFICITY VALIDATION
+// ==========================================
+
+/**
+ * Check if AI response is specific enough (not generic)
+ * Ensures responses reference actual user data like exercises, weights, dates
+ */
+export const checkResponseSpecificity = (
+  response: string,
+  context: UserContext
+): SpecificityCheck => {
+  const issues: string[] = [];
+  let score = 0;
+  
+  // Check for specific numbers (e.g., "185×8", "225 lbs")
+  const weightPattern = /\d+\s*(lbs?|kg|pounds?|kilos?)/gi;
+  const hasSpecificWeight = weightPattern.test(response);
+  
+  const repsPattern = /\d+\s*(×|x|reps?|sets?)/gi;
+  const hasSpecificReps = repsPattern.test(response);
+  
+  if (hasSpecificWeight) {
+    score += 30;
+  } else if (context.hasPRs || (context.recentWeights && context.recentWeights.length > 0)) {
+    issues.push('Missing specific weights (user has PR/weight data)');
+  }
+  
+  if (hasSpecificReps) {
+    score += 20;
+  }
+  
+  // Check if response mentions user's actual exercises
+  const mentionedExercises = context.recentExercises.filter(ex => {
+    const pattern = new RegExp(ex.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    return pattern.test(response);
+  });
+  
+  if (mentionedExercises.length > 0) {
+    score += 30;
+  } else if (context.hasWorkoutHistory && context.recentExercises.length > 0) {
+    issues.push("Doesn't reference user's actual exercises");
+  }
+  
+  // Check for temporal references ("last week", "3 weeks ago")
+  const timePattern = /(last|previous|ago|yesterday|this week|past|recent)/i;
+  const hasTimeRef = timePattern.test(response);
+  
+  if (hasTimeRef) {
+    score += 20;
+  }
+  
+  // Additional checks for quality
+  
+  // Check for specific workout names if user has history
+  if (context.lastWorkoutDate) {
+    const datePattern = /\b\d{1,2}[/-]\d{1,2}|\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i;
+    if (datePattern.test(response)) {
+      score += 10;
+    }
+  }
+  
+  // Penalize if response is too generic (common phrases)
+  const genericPhrases = [
+    'in general',
+    'typically',
+    'usually',
+    'most people',
+    'generally speaking',
+    'on average'
+  ];
+  
+  const genericCount = genericPhrases.filter(phrase => 
+    response.toLowerCase().includes(phrase)
+  ).length;
+  
+  if (genericCount > 2) {
+    score -= 15;
+    issues.push('Response contains too many generic phrases');
+  }
+  
+  return {
+    isSpecific: score >= 50,
+    score,
+    issues,
+    details: {
+      hasSpecificWeight,
+      hasSpecificReps,
+      mentionedExercises,
+      hasTimeReference: hasTimeRef,
+    },
+  };
+};
+
+/**
+ * Helper: Build UserContext from workout data
+ */
+export const buildUserContextFromData = (data: {
+  recentWorkouts?: any[];
+  personalRecords?: any[];
+  workoutCount?: number;
+}): UserContext => {
+  const recentExercises: string[] = [];
+  const recentWeights: Array<{ exercise: string; weight: number; reps: number }> = [];
+  
+  // Extract recent exercises
+  if (data.recentWorkouts && data.recentWorkouts.length > 0) {
+    for (const workout of data.recentWorkouts.slice(0, 3)) {
+      for (const we of workout.workout_exercises || []) {
+        const exerciseName = we.exercises?.name;
+        if (exerciseName && !recentExercises.includes(exerciseName)) {
+          recentExercises.push(exerciseName);
+        }
+        
+        // Extract weights
+        const sets = we.workout_sets || [];
+        const bestSet = sets.reduce((best: any, set: any) => {
+          const volume = (set.weight || 0) * (set.reps || 0);
+          const bestVolume = (best.weight || 0) * (best.reps || 0);
+          return volume > bestVolume ? set : best;
+        }, {});
+        
+        if (bestSet.weight && bestSet.reps && exerciseName) {
+          recentWeights.push({
+            exercise: exerciseName,
+            weight: bestSet.weight,
+            reps: bestSet.reps,
+          });
+        }
+      }
+    }
+  }
+  
+  return {
+    hasPRs: (data.personalRecords?.length || 0) > 0,
+    hasWorkoutHistory: (data.recentWorkouts?.length || 0) > 0,
+    recentExercises,
+    recentWeights,
+    workoutCount: data.workoutCount,
+    lastWorkoutDate: data.recentWorkouts?.[0]?.created_at,
+  };
+};
+
+/**
+ * Validate response quality and provide feedback
+ */
+export const validateResponseQuality = (
+  response: string,
+  context: UserContext,
+  minScore: number = 50
+): { 
+  isValid: boolean; 
+  specificity: SpecificityCheck; 
+  feedback: string 
+} => {
+  const specificity = checkResponseSpecificity(response, context);
+  
+  let feedback = '';
+  
+  if (!specificity.isSpecific) {
+    feedback = `Response too generic (score: ${specificity.score}/${minScore}). `;
+    
+    if (specificity.issues.length > 0) {
+      feedback += 'Issues: ' + specificity.issues.join(', ');
+    }
+    
+    // Provide specific guidance
+    if (!specificity.details.hasSpecificWeight && context.recentWeights?.length) {
+      feedback += ' | Try mentioning specific weights like "' + 
+        context.recentWeights[0].weight + ' lbs"';
+    }
+    
+    if (specificity.details.mentionedExercises.length === 0 && context.recentExercises.length > 0) {
+      feedback += ' | Try mentioning exercises like "' + 
+        context.recentExercises.slice(0, 2).join('" or "') + '"';
+    }
+  } else {
+    feedback = `Response is specific enough (score: ${specificity.score})`;
+  }
+  
+  return {
+    isValid: specificity.isSpecific,
+    specificity,
+    feedback,
+  };
+};
 
