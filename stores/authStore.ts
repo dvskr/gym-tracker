@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { seedDefaultTemplates } from '@/lib/data/defaultTemplates';
+import { seedDefaultTemplates, addNewDefaultTemplates } from '@/lib/data/defaultTemplates';
 
 interface AuthState {
   user: User | null;
@@ -30,7 +30,11 @@ async function seedTemplatesInBackground(userId: string) {
   // Run in background - don't await
   setTimeout(async () => {
     try {
+      // First try to seed (for new users)
       await seedDefaultTemplates(userId);
+      
+      // Then add any new templates (for existing users)
+      await addNewDefaultTemplates(userId);
     } catch (error) {
       console.error('Background template seeding failed:', error);
     }

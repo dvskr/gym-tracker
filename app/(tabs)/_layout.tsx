@@ -15,6 +15,10 @@ const tabs = [
   { name: 'profile', title: 'Profile', icon: User, path: '/(tabs)/profile' },
 ];
 
+// Persist preload status outside component to survive unmounts
+let preloadCompleted = false;
+let currentUserId: string | null = null;
+
 export default function TabsLayout() {
   const pathname = usePathname();
   const { user, isLoading: isAuthLoading } = useAuthStore();
@@ -26,16 +30,30 @@ export default function TabsLayout() {
   });
 
   useEffect(() => {
-    if (user && !isAuthLoading) {
-      // User is authenticated, preload all data
+    // Reset preload flag if user changed
+    if (user?.id && user.id !== currentUserId) {
+      console.log('[TabsLayout] User changed, resetting preload flag');
+      preloadCompleted = false;
+      currentUserId = user.id;
+    }
+
+    // Only run preload once per user session
+    if (user && !isAuthLoading && !preloadCompleted) {
       console.log('[TabsLayout] Starting app data preload...');
       preloadAllAppData(user.id, setPreloadProgress)
         .finally(() => {
           console.log('[TabsLayout] Preload complete');
           setIsPreloading(false);
+          preloadCompleted = true;
         });
     } else if (!user && !isAuthLoading) {
       // Not authenticated, no preload needed
+      setIsPreloading(false);
+      preloadCompleted = false;
+      currentUserId = null;
+    } else if (preloadCompleted) {
+      // Already preloaded, skip loading screen
+      console.log('[TabsLayout] Skipping preload - already completed');
       setIsPreloading(false);
     }
   }, [user, isAuthLoading]);

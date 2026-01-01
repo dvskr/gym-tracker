@@ -403,10 +403,6 @@ export default function HistoryScreen() {
 
   // Handle date press in calendar
   const handleDatePress = (day: DateData) => {
-    // #region agent log
-    console.log('[DEBUG history.tsx:359] Date pressed', {dateString: day.dateString, markedDatesCount: Object.keys(markedDates).length, timestamp: Date.now()});
-    // #endregion
-    
     lightHaptic();
     setSelectedDate(day.dateString);
     
@@ -433,10 +429,6 @@ export default function HistoryScreen() {
         selectedColor: '#334155',
       };
     }
-    
-    // #region agent log
-    console.log('[DEBUG history.tsx:386] Updated marked dates', {newMarkedCount: Object.keys(newMarked).length, timestamp: Date.now()});
-    // #endregion
     
     setMarkedDates(newMarked);
 
