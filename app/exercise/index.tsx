@@ -20,7 +20,6 @@ import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight,
 import { useDebouncedCallback } from 'use-debounce';
 import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
-import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -132,6 +131,7 @@ interface ExerciseItemProps {
     target: string;
     bodyPart: string;
     gifUrl?: string | null;
+    thumbnailUrl?: string | null;
   };
   onPress: () => void;
   isFavorite?: boolean;
@@ -146,8 +146,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
   onToggleFavorite,
   showFavoriteIcon = true 
 }) => {
-  // Get thumbnail URL and equipment-specific icon and color
-  const thumbnailUrl = getThumbnailUrl(exercise.gifUrl || null);
+  // Use direct thumbnail URL from database instead of deriving it
+  const thumbnailUrl = exercise.thumbnailUrl || null;
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
   const iconColor = getEquipmentColor(exercise.equipment);
   

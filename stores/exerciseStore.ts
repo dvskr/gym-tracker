@@ -15,6 +15,7 @@ interface DisplayExercise {
   target: string;
   equipment: string;
   gifUrl: string;
+  thumbnailUrl: string | null; // Direct thumbnail URL from database
   secondaryMuscles: string[];
   instructions: string[];
   measurementType?: string;
@@ -126,6 +127,7 @@ function transformExercise(exercise: Exercise): DisplayExercise {
     target: exercise.primary_muscles?.[0] || '',
     equipment: exercise.equipment || '',
     gifUrl: exercise.gif_url || '',
+    thumbnailUrl: exercise.thumbnail_url || null, // Use direct thumbnail URL from database
     secondaryMuscles: exercise.secondary_muscles || [],
     instructions: exercise.instructions || [],
     measurementType: exercise.measurement_type || 'reps_weight',
