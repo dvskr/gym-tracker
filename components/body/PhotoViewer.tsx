@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -113,7 +114,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
         url: currentPhoto.local_uri,
       });
     } catch (error) {
-      console.error('Error sharing photo:', error);
+      logger.error('Error sharing photo:', error);
     }
   };
 

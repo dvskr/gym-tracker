@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -170,7 +171,7 @@ export default function WeightChartScreen() {
 
       setChartData(weights);
     } catch (error) {
-      console.error('Error fetching weight data:', error);
+      logger.error('Error fetching weight data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -444,10 +445,10 @@ export default function WeightChartScreen() {
               <View style={styles.insightContainer}>
                 <Text style={styles.insightText}>
                   {stats.weeklyRate === 0
-                    ? "📊 Your weight has been stable"
+                    ? "ðŸ“Š Your weight has been stable"
                     : stats.weeklyRate > 0
-                    ? `📈 You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
-                    : `📉 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
+                    ? `ðŸ“ˆ You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
+                    : `ðŸ“‰ You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
                 </Text>
               </View>
             </View>

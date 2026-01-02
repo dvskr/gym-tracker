@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
+import { logger } from '@/lib/utils/logger';
 import {
   ArrowLeft,
   Dumbbell,
@@ -598,7 +599,7 @@ export default function ExerciseDetailScreen() {
       const data = await getExerciseById(id!);
       setExercise(data);
     } catch (error) {
-      console.error('Failed to fetch exercise:', error);
+      logger.error('Failed to fetch exercise:', error);
     } finally {
       setIsLoading(false);
     }
@@ -616,7 +617,7 @@ export default function ExerciseDetailScreen() {
       setHistory(historyData);
       setStats(statsData);
     } catch (error) {
-      console.error('Failed to fetch history:', error);
+      logger.error('Failed to fetch history:', error);
     } finally {
       setIsHistoryLoading(false);
     }
@@ -660,7 +661,7 @@ export default function ExerciseDetailScreen() {
         setNotesId(data.id);
       }
     } catch (error) {
-      console.error('Error loading notes:', error);
+      logger.error('Error loading notes:', error);
     }
   };
 
@@ -712,7 +713,7 @@ export default function ExerciseDetailScreen() {
       setIsNotesModalOpen(false);
       lightHaptic();
     } catch (error: any) {
-      console.error('Error saving notes:', error);
+      logger.error('Error saving notes:', error);
       Alert.alert('Error', 'Failed to save notes. Please try again.');
     } finally {
       setIsSavingNotes(false);

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { syncQueue } from '../sync/syncQueue';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
@@ -11,13 +12,13 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { isOnline } = useNetworkStatus();
 
   useEffect(() => {
-    console.log('🚀 Starting offline-first sync system...');
+    logger.log('ðŸš€ Starting offline-first sync system...');
     
     // Start auto-sync when app loads
     syncQueue.startAutoSync(30000); // Sync every 30 seconds
 
     return () => {
-      console.log('⏸️ Stopping sync system...');
+      logger.log('â¸ï¸ Stopping sync system...');
       syncQueue.stopAutoSync();
     };
   }, []);
@@ -25,7 +26,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   // Trigger sync when coming back online
   useEffect(() => {
     if (isOnline) {
-      console.log('📡 Back online - triggering sync...');
+      logger.log('ðŸ“¡ Back online - triggering sync...');
       syncQueue.syncAll();
     }
   }, [isOnline]);
@@ -62,9 +63,9 @@ export function OfflineStatusBanner() {
     <View style={[styles.banner, isOnline ? styles.bannerSyncing : styles.bannerOffline]}>
       <Text style={styles.bannerText}>
         {isOnline ? (
-          pendingCount > 0 ? `⏳ Syncing ${pendingCount} item(s)...` : '✅ All synced'
+          pendingCount > 0 ? `â³ Syncing ${pendingCount} item(s)...` : 'âœ… All synced'
         ) : (
-          `📵 Offline${pendingCount > 0 ? ` • ${pendingCount} pending` : ''}`
+          `ðŸ“µ Offline${pendingCount > 0 ? ` â€¢ ${pendingCount} pending` : ''}`
         )}
       </Text>
     </View>
@@ -162,12 +163,12 @@ export function DebugSyncPanel() {
 
   const handleClearFailed = async () => {
     const cleared = await syncQueue.clearFailedOperations();
-    console.log(`Cleared ${cleared} failed operations`);
+    logger.log(`Cleared ${cleared} failed operations`);
   };
 
   const handleRetryFailed = async () => {
     const result = await syncQueue.retryFailedOperations();
-    console.log(`Retry result:`, result);
+    logger.log(`Retry result:`, result);
   };
 
   const handleSyncNow = async () => {
@@ -186,7 +187,7 @@ export function DebugSyncPanel() {
       <View style={styles.debugRow}>
         <Text style={styles.debugLabel}>Status:</Text>
         <Text style={styles.debugValue}>
-          {status.isSyncing ? '🔄 Syncing' : '⏸️ Idle'}
+          {status.isSyncing ? 'ðŸ”„ Syncing' : 'â¸ï¸ Idle'}
         </Text>
       </View>
 
@@ -213,7 +214,7 @@ export function DebugSyncPanel() {
           {status.operations.slice(0, 5).map((op: any) => (
             <View key={op.id} style={styles.operation}>
               <Text style={styles.operationText}>
-                {op.operation} • {op.table} • Attempts: {op.attempts}
+                {op.operation} â€¢ {op.table} â€¢ Attempts: {op.attempts}
               </Text>
               {op.error && (
                 <Text style={styles.operationError}>Error: {op.error}</Text>

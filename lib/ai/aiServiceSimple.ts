@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export interface AIMessage {
   role: 'system' | 'user' | 'assistant';
@@ -32,7 +33,7 @@ class AIService {
     });
 
     if (error) {
-      console.error('AI request failed:', error);
+      logger.error('AI request failed:', error);
       
       // Check if rate limited
       if (error.message?.includes('rate_limit') || error.status === 429) {

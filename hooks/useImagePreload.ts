@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { preloadAllImages, preloadThumbnails, preloadGifs } from '@/lib/images/preloadService';
 
 interface PreloadState {
@@ -43,7 +44,7 @@ export function useImagePreload(options?: {
           });
         }
       } catch (error) {
-        console.error('[useImagePreload] Error:', error);
+        logger.error('[useImagePreload] Error:', error);
       }
 
       setState({ isLoading: false, progress: 100, phase: 'complete' });

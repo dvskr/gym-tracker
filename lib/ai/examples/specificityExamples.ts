@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Response Specificity Validation Examples
  * Demonstrates how to ensure AI responses are personalized, not generic
@@ -16,7 +17,7 @@ import {
 // ==========================================
 
 export const example1_basicCheck = () => {
-  console.log('\n📊 Example 1: Basic Specificity Check');
+  logger.log('\nðŸ“Š Example 1: Basic Specificity Check');
   
   // Simulate user context
   const userContext: UserContext = {
@@ -33,14 +34,14 @@ export const example1_basicCheck = () => {
   
   // Test a specific response
   const specificResponse = 
-    "Your bench press at 185×8 last week was solid! Since you hit all reps, " +
+    "Your bench press at 185Ã—8 last week was solid! Since you hit all reps, " +
     "try bumping to 190 lbs next session.";
   
   const check1 = checkResponseSpecificity(specificResponse, userContext);
   
-  console.log('Specific Response:', specificResponse);
-  console.log('Result:', check1);
-  console.log(`✅ Score: ${check1.score} (${check1.isSpecific ? 'PASS' : 'FAIL'})`);
+  logger.log('Specific Response:', specificResponse);
+  logger.log('Result:', check1);
+  logger.log(`âœ… Score: ${check1.score} (${check1.isSpecific ? 'PASS' : 'FAIL'})`);
   
   // Test a generic response
   const genericResponse = 
@@ -49,10 +50,10 @@ export const example1_basicCheck = () => {
   
   const check2 = checkResponseSpecificity(genericResponse, userContext);
   
-  console.log('\nGeneric Response:', genericResponse);
-  console.log('Result:', check2);
-  console.log(`❌ Score: ${check2.score} (${check2.isSpecific ? 'PASS' : 'FAIL'})`);
-  console.log('Issues:', check2.issues);
+  logger.log('\nGeneric Response:', genericResponse);
+  logger.log('Result:', check2);
+  logger.log(`âŒ Score: ${check2.score} (${check2.isSpecific ? 'PASS' : 'FAIL'})`);
+  logger.log('Issues:', check2.issues);
 };
 
 // ==========================================
@@ -60,7 +61,7 @@ export const example1_basicCheck = () => {
 // ==========================================
 
 export const example2_buildingContext = () => {
-  console.log('\n🔨 Example 2: Building Context from Workout Data');
+  logger.log('\nðŸ”¨ Example 2: Building Context from Workout Data');
   
   // Simulate raw workout data from database
   const workoutData = {
@@ -108,14 +109,14 @@ export const example2_buildingContext = () => {
   // Build context
   const context = buildUserContextFromData(workoutData);
   
-  console.log('Generated Context:', JSON.stringify(context, null, 2));
-  console.log('\nExtracted:');
-  console.log('- Exercises:', context.recentExercises.join(', '));
-  console.log('- Weights:', context.recentWeights?.map(w => 
-    `${w.exercise}: ${w.weight}×${w.reps}`
+  logger.log('Generated Context:', JSON.stringify(context, null, 2));
+  logger.log('\nExtracted:');
+  logger.log('- Exercises:', context.recentExercises.join(', '));
+  logger.log('- Weights:', context.recentWeights?.map(w => 
+    `${w.exercise}: ${w.weight}Ã—${w.reps}`
   ).join(', '));
-  console.log('- Has PRs:', context.hasPRs);
-  console.log('- Has History:', context.hasWorkoutHistory);
+  logger.log('- Has PRs:', context.hasPRs);
+  logger.log('- Has History:', context.hasWorkoutHistory);
 };
 
 // ==========================================
@@ -123,7 +124,7 @@ export const example2_buildingContext = () => {
 // ==========================================
 
 export const example3_qualityValidation = () => {
-  console.log('\n✅ Example 3: Complete Quality Validation');
+  logger.log('\nâœ… Example 3: Complete Quality Validation');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -138,7 +139,7 @@ export const example3_qualityValidation = () => {
   const responses = [
     {
       name: 'Excellent',
-      text: "Your bench press at 185×8 on Monday was strong. Last week you hit 180×9, " +
+      text: "Your bench press at 185Ã—8 on Monday was strong. Last week you hit 180Ã—9, " +
             "so you're progressing well. Try 190 lbs for 6-8 reps next session.",
     },
     {
@@ -160,10 +161,10 @@ export const example3_qualityValidation = () => {
   responses.forEach(({ name, text }) => {
     const result = validateResponseQuality(text, userContext);
     
-    console.log(`\n[${name}] Score: ${result.specificity.score}`);
-    console.log(`Valid: ${result.isValid ? '✅' : '❌'}`);
-    console.log(`Response: "${text.substring(0, 80)}..."`);
-    console.log(`Feedback: ${result.feedback}`);
+    logger.log(`\n[${name}] Score: ${result.specificity.score}`);
+    logger.log(`Valid: ${result.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Response: "${text.substring(0, 80)}..."`);
+    logger.log(`Feedback: ${result.feedback}`);
   });
 };
 
@@ -172,7 +173,7 @@ export const example3_qualityValidation = () => {
 // ==========================================
 
 export const example4_aiServiceIntegration = async () => {
-  console.log('\n🤖 Example 4: AI Service Integration');
+  logger.log('\nðŸ¤– Example 4: AI Service Integration');
   
   // Simulate AI service
   const mockAIService = {
@@ -180,7 +181,7 @@ export const example4_aiServiceIntegration = async () => {
       // First response is generic (will retry)
       "Try to increase weight when you feel ready. Progressive overload is key.",
       // Second response is specific (will pass)
-      "Your bench press at 185×8 last week shows you're ready for 190 lbs next session.",
+      "Your bench press at 185Ã—8 last week shows you're ready for 190 lbs next session.",
     ],
     currentIndex: 0,
     
@@ -215,25 +216,25 @@ export const example4_aiServiceIntegration = async () => {
   let finalResponse = '';
   
   for (let attempt = 0; attempt < maxRetries; attempt++) {
-    console.log(`\nAttempt ${attempt + 1}/${maxRetries}`);
+    logger.log(`\nAttempt ${attempt + 1}/${maxRetries}`);
     
     const response = await mockAIService.ask('Should I increase my bench press weight?');
     const validation = validateResponseQuality(response, userContext);
     
-    console.log(`Response: "${response}"`);
-    console.log(`Score: ${validation.specificity.score}`);
-    console.log(`Valid: ${validation.isValid ? '✅' : '❌'}`);
+    logger.log(`Response: "${response}"`);
+    logger.log(`Score: ${validation.specificity.score}`);
+    logger.log(`Valid: ${validation.isValid ? 'âœ…' : 'âŒ'}`);
     
     if (validation.isValid) {
       finalResponse = response;
-      console.log('\n✅ Accepted! Response is specific enough.');
+      logger.log('\nâœ… Accepted! Response is specific enough.');
       break;
     }
     
-    console.log(`⚠️ Too generic: ${validation.feedback}`);
+    logger.log(`âš ï¸ Too generic: ${validation.feedback}`);
     
     if (attempt < maxRetries - 1) {
-      console.log('Retrying with enhanced prompt...');
+      logger.log('Retrying with enhanced prompt...');
     }
   }
   
@@ -245,7 +246,7 @@ export const example4_aiServiceIntegration = async () => {
 // ==========================================
 
 export const example5_scoringBreakdown = () => {
-  console.log('\n🎯 Example 5: Scoring Breakdown');
+  logger.log('\nðŸŽ¯ Example 5: Scoring Breakdown');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -272,7 +273,7 @@ export const example5_scoringBreakdown = () => {
     },
     {
       name: 'Full context',
-      text: 'Your bench press at 185×8 last week was great.',
+      text: 'Your bench press at 185Ã—8 last week was great.',
       expectedScore: 80,
     },
   ];
@@ -280,11 +281,11 @@ export const example5_scoringBreakdown = () => {
   testCases.forEach(({ name, text, expectedScore }) => {
     const check = checkResponseSpecificity(text, userContext);
     
-    console.log(`\n[${name}]`);
-    console.log(`Text: "${text}"`);
-    console.log(`Expected: ${expectedScore}, Got: ${check.score}`);
-    console.log(`Pass: ${check.isSpecific ? '✅' : '❌'}`);
-    console.log('Details:', check.details);
+    logger.log(`\n[${name}]`);
+    logger.log(`Text: "${text}"`);
+    logger.log(`Expected: ${expectedScore}, Got: ${check.score}`);
+    logger.log(`Pass: ${check.isSpecific ? 'âœ…' : 'âŒ'}`);
+    logger.log('Details:', check.details);
   });
 };
 
@@ -293,7 +294,7 @@ export const example5_scoringBreakdown = () => {
 // ==========================================
 
 export const example6_workoutAnalysis = () => {
-  console.log('\n💪 Example 6: Workout Analysis Specificity');
+  logger.log('\nðŸ’ª Example 6: Workout Analysis Specificity');
   
   const userContext = buildUserContextFromData({
     recentWorkouts: [
@@ -331,24 +332,24 @@ export const example6_workoutAnalysis = () => {
     },
     {
       type: 'Specific',
-      text: "Strong push day! Your bench press hit 185×8/7/6 - that's 21 total reps " +
-            "at 185 lbs. Your incline press at 155×10 is also solid. Next session, " +
-            "try 190 lbs on bench for 3×6-8.",
+      text: "Strong push day! Your bench press hit 185Ã—8/7/6 - that's 21 total reps " +
+            "at 185 lbs. Your incline press at 155Ã—10 is also solid. Next session, " +
+            "try 190 lbs on bench for 3Ã—6-8.",
     },
   ];
   
   analyses.forEach(({ type, text }) => {
     const result = validateResponseQuality(text, userContext);
     
-    console.log(`\n[${type} Analysis]`);
-    console.log(`Score: ${result.specificity.score}`);
-    console.log(`Valid: ${result.isValid ? '✅' : '❌'}`);
-    console.log(`Exercises mentioned: ${result.specificity.details.mentionedExercises.join(', ') || 'None'}`);
-    console.log(`Has weights: ${result.specificity.details.hasSpecificWeight ? '✅' : '❌'}`);
-    console.log(`Has reps: ${result.specificity.details.hasSpecificReps ? '✅' : '❌'}`);
+    logger.log(`\n[${type} Analysis]`);
+    logger.log(`Score: ${result.specificity.score}`);
+    logger.log(`Valid: ${result.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Exercises mentioned: ${result.specificity.details.mentionedExercises.join(', ') || 'None'}`);
+    logger.log(`Has weights: ${result.specificity.details.hasSpecificWeight ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Has reps: ${result.specificity.details.hasSpecificReps ? 'âœ…' : 'âŒ'}`);
     
     if (!result.isValid) {
-      console.log(`Issues: ${result.specificity.issues.join(', ')}`);
+      logger.log(`Issues: ${result.specificity.issues.join(', ')}`);
     }
   });
 };
@@ -358,7 +359,7 @@ export const example6_workoutAnalysis = () => {
 // ==========================================
 
 export const example7_thresholdTesting = () => {
-  console.log('\n🎚️ Example 7: Testing Different Thresholds');
+  logger.log('\nðŸŽšï¸ Example 7: Testing Different Thresholds');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -375,9 +376,9 @@ export const example7_thresholdTesting = () => {
   thresholds.forEach(threshold => {
     const result = validateResponseQuality(response, userContext, threshold);
     
-    console.log(`\nThreshold: ${threshold}`);
-    console.log(`Score: ${result.specificity.score}`);
-    console.log(`Pass: ${result.isValid ? '✅' : '❌'}`);
+    logger.log(`\nThreshold: ${threshold}`);
+    logger.log(`Score: ${result.specificity.score}`);
+    logger.log(`Pass: ${result.isValid ? 'âœ…' : 'âŒ'}`);
   });
 };
 
@@ -386,10 +387,10 @@ export const example7_thresholdTesting = () => {
 // ==========================================
 
 export const example8_completeIntegration = async () => {
-  console.log('\n🚀 Example 8: Complete Integration');
+  logger.log('\nðŸš€ Example 8: Complete Integration');
   
   // Step 1: Get user data
-  console.log('Step 1: Fetch user workout data...');
+  logger.log('Step 1: Fetch user workout data...');
   const workoutData = {
     recentWorkouts: [
       {
@@ -410,30 +411,30 @@ export const example8_completeIntegration = async () => {
   };
   
   // Step 2: Build context
-  console.log('Step 2: Build user context...');
+  logger.log('Step 2: Build user context...');
   const userContext = buildUserContextFromData(workoutData);
-  console.log(`- Exercises: ${userContext.recentExercises.join(', ')}`);
-  console.log(`- Latest weight: ${userContext.recentWeights?.[0]?.weight} lbs`);
+  logger.log(`- Exercises: ${userContext.recentExercises.join(', ')}`);
+  logger.log(`- Latest weight: ${userContext.recentWeights?.[0]?.weight} lbs`);
   
   // Step 3: Get AI response (simulated)
-  console.log('\nStep 3: Get AI response...');
+  logger.log('\nStep 3: Get AI response...');
   const aiResponse = 
-    "Your bench press at 185×8 yesterday was strong! You're ready to bump up to " +
+    "Your bench press at 185Ã—8 yesterday was strong! You're ready to bump up to " +
     "190 lbs for 6-8 reps on your next push day.";
   
-  console.log(`Response: "${aiResponse}"`);
+  logger.log(`Response: "${aiResponse}"`);
   
   // Step 4: Validate specificity
-  console.log('\nStep 4: Validate specificity...');
+  logger.log('\nStep 4: Validate specificity...');
   const validation = validateResponseQuality(aiResponse, userContext);
   
-  console.log(`Score: ${validation.specificity.score}/100`);
-  console.log(`Valid: ${validation.isValid ? '✅ PASS' : '❌ FAIL'}`);
-  console.log(`Feedback: ${validation.feedback}`);
+  logger.log(`Score: ${validation.specificity.score}/100`);
+  logger.log(`Valid: ${validation.isValid ? 'âœ… PASS' : 'âŒ FAIL'}`);
+  logger.log(`Feedback: ${validation.feedback}`);
   
   // Step 5: Log details for monitoring
-  console.log('\nStep 5: Analytics data:');
-  console.log(JSON.stringify({
+  logger.log('\nStep 5: Analytics data:');
+  logger.log(JSON.stringify({
     score: validation.specificity.score,
     isValid: validation.isValid,
     hasWeight: validation.specificity.details.hasSpecificWeight,
@@ -444,10 +445,10 @@ export const example8_completeIntegration = async () => {
   
   // Step 6: Decision
   if (validation.isValid) {
-    console.log('\n✅ Response approved - sending to user');
+    logger.log('\nâœ… Response approved - sending to user');
     return aiResponse;
   } else {
-    console.log('\n⚠️ Response needs improvement - regenerating...');
+    logger.log('\nâš ï¸ Response needs improvement - regenerating...');
     return null;
   }
 };
@@ -457,9 +458,9 @@ export const example8_completeIntegration = async () => {
 // ==========================================
 
 export const runAllSpecificityExamples = async () => {
-  console.log('═══════════════════════════════════════');
-  console.log('  RESPONSE SPECIFICITY EXAMPLES');
-  console.log('═══════════════════════════════════════');
+  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('  RESPONSE SPECIFICITY EXAMPLES');
+  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
   
   example1_basicCheck();
   example2_buildingContext();
@@ -470,8 +471,8 @@ export const runAllSpecificityExamples = async () => {
   example7_thresholdTesting();
   await example8_completeIntegration();
   
-  console.log('\n═══════════════════════════════════════');
-  console.log('  ALL EXAMPLES COMPLETE');
-  console.log('═══════════════════════════════════════\n');
+  logger.log('\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('  ALL EXAMPLES COMPLETE');
+  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n');
 };
 

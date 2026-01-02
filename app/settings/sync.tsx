@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -49,7 +50,7 @@ export default function SyncSettingsScreen() {
       setDataUsage(usage.formatted);
       setSettings(syncSettings);
     } catch (error) {
-      console.error('Error loading sync data:', error);
+      logger.error('Error loading sync data:', error);
     }
   };
 
@@ -73,7 +74,7 @@ export default function SyncSettingsScreen() {
         await loadData();
         Alert.alert(
           'Sync Complete',
-          `✅ Synced ${result.syncedCount} changes\n📥 Pulled ${result.pulledCount} updates`
+          `âœ… Synced ${result.syncedCount} changes\nðŸ“¥ Pulled ${result.pulledCount} updates`
         );
       } else {
         Alert.alert('Sync Failed', result.error || 'Unknown error');
@@ -96,7 +97,7 @@ export default function SyncSettingsScreen() {
       
       Alert.alert(
         'Retry Complete',
-        `✅ ${result.syncedCount} succeeded\n${result.failedCount || 0 > 0 ? `❌ ${result.failedCount} still failed` : ''}`
+        `âœ… ${result.syncedCount} succeeded\n${result.failedCount || 0 > 0 ? `âŒ ${result.failedCount} still failed` : ''}`
       );
     } finally {
       setSyncing(false);
@@ -284,7 +285,7 @@ export default function SyncSettingsScreen() {
                   <View style={styles.failedItemHeader}>
                     <AlertTriangle size={16} color="#ef4444" />
                     <Text style={styles.failedItemTitle}>
-                      {op.operation} • {op.table}
+                      {op.operation} â€¢ {op.table}
                     </Text>
                   </View>
                   

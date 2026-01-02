@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -124,7 +125,7 @@ export default function NotificationAnalyticsScreen() {
       const data = await notificationAnalyticsService.getSummary();
       setSummary(data);
     } catch (error) {
-      console.error('Failed to load analytics:', error);
+      logger.error('Failed to load analytics:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

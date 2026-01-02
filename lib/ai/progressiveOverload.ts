@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export interface SetRecommendation {
   weight: number;
@@ -49,7 +50,7 @@ class ProgressiveOverloadService {
       // Calculate recommendation using progressive overload principles
       return this.calculateRecommendation(history, setNumber, targetReps);
     } catch (error) {
-      console.error('Failed to get recommendation:', error);
+      logger.error('Failed to get recommendation:', error);
       return this.getDefaultRecommendation(targetReps);
     }
   }
@@ -84,7 +85,7 @@ class ProgressiveOverloadService {
       return {
         weight: avgWeight,
         reps: targetReps || avgReps,
-        reasoning: `Based on your last session average: ${avgWeight}lbs × ${avgReps} reps`,
+        reasoning: `Based on your last session average: ${avgWeight}lbs Ã— ${avgReps} reps`,
         confidence: 'medium',
         progressType: 'maintain',
       };
@@ -107,31 +108,31 @@ class ProgressiveOverloadService {
         const hitTargetPreviously = secondLastMatchingSet.reps >= targetRepsToHit;
         
         if (hitTargetPreviously) {
-          // Hit target reps at this weight for 2 sessions → increase weight
+          // Hit target reps at this weight for 2 sessions â†’ increase weight
           const increment = this.getWeightIncrement(suggestedWeight);
           suggestedWeight += increment;
           progressType = 'weight';
-          reasoning = `You hit ${lastMatchingSet.reps} reps at ${lastMatchingSet.weight}lbs for 2+ sessions. Time to add ${increment}lbs! 💪`;
+          reasoning = `You hit ${lastMatchingSet.reps} reps at ${lastMatchingSet.weight}lbs for 2+ sessions. Time to add ${increment}lbs! ðŸ’ª`;
         } else {
-          // Hit target this time but not last time → maintain
+          // Hit target this time but not last time â†’ maintain
           progressType = 'maintain';
           reasoning = `Great progress! You hit ${lastMatchingSet.reps} reps. Try to match or beat this at ${suggestedWeight}lbs.`;
         }
       } else {
-        // Recently increased weight → maintain
+        // Recently increased weight â†’ maintain
         progressType = 'maintain';
         reasoning = `You recently increased to ${suggestedWeight}lbs. Aim for ${targetRepsToHit}+ reps to solidify this weight.`;
       }
     } else if (lastMatchingSet.reps < targetRepsToHit) {
-      // Didn't hit target reps → try to add reps
+      // Didn't hit target reps â†’ try to add reps
       progressType = 'reps';
       const repsToAdd = Math.min(2, targetRepsToHit - lastMatchingSet.reps);
       suggestedReps = lastMatchingSet.reps + repsToAdd;
-      reasoning = `Last time: ${lastMatchingSet.weight}lbs × ${lastMatchingSet.reps}. Try for ${suggestedReps}+ reps today! 📈`;
+      reasoning = `Last time: ${lastMatchingSet.weight}lbs Ã— ${lastMatchingSet.reps}. Try for ${suggestedReps}+ reps today! ðŸ“ˆ`;
     } else {
-      // Hit target but no history to compare → maintain
+      // Hit target but no history to compare â†’ maintain
       progressType = 'maintain';
-      reasoning = `Last time: ${lastMatchingSet.weight}lbs × ${lastMatchingSet.reps}. Aim to match or beat this!`;
+      reasoning = `Last time: ${lastMatchingSet.weight}lbs Ã— ${lastMatchingSet.reps}. Aim to match or beat this!`;
       confidence = 'medium';
     }
 
@@ -148,7 +149,7 @@ class ProgressiveOverloadService {
     if (history.personalRecord) {
       const { weight: prWeight, reps: prReps } = history.personalRecord;
       if (suggestedWeight > prWeight || (suggestedWeight === prWeight && suggestedReps > prReps)) {
-        reasoning += ` 🏆 This would be a new PR! (Current: ${prWeight}lbs × ${prReps})`;
+        reasoning += ` ðŸ† This would be a new PR! (Current: ${prWeight}lbs Ã— ${prReps})`;
       }
     }
 
@@ -257,7 +258,7 @@ class ProgressiveOverloadService {
     // Validate exerciseId is a UUID (8-4-4-4-12 format)
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(exerciseId)) {
-      console.log(`[ProgressiveOverload] Skipping invalid exercise ID: "${exerciseId}" for ${exerciseName}`);
+      logger.log(`[ProgressiveOverload] Skipping invalid exercise ID: "${exerciseId}" for ${exerciseName}`);
       return {
         exerciseId,
         exerciseName,
@@ -293,7 +294,7 @@ class ProgressiveOverloadService {
       .limit(50);
 
     if (error) {
-      console.error('Error fetching exercise history:', error);
+      logger.error('Error fetching exercise history:', error);
     }
 
     // Get personal record

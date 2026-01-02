@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -242,7 +243,7 @@ export default function ComparePhotosScreen() {
         setAfterPhoto(sortedByDate[sortedByDate.length - 1]);
       }
     } catch (error) {
-      console.error('Error fetching photos:', error);
+      logger.error('Error fetching photos:', error);
     } finally {
       setIsLoading(false);
     }
@@ -262,11 +263,11 @@ export default function ComparePhotosScreen() {
       const timeDiff = calculateTimeDifference(beforePhoto.taken_at, afterPhoto.taken_at);
       
       await Share.share({
-        message: `Check out my progress! 💪 ${timeDiff}`,
+        message: `Check out my progress! ðŸ’ª ${timeDiff}`,
         // In a full implementation, we'd create a combined image and share its URI
       });
     } catch (error) {
-      console.error('Error sharing:', error);
+      logger.error('Error sharing:', error);
     }
   };
 
@@ -281,7 +282,7 @@ export default function ComparePhotosScreen() {
       await saveComparisonImage(afterPhoto.local_uri);
       Alert.alert('Saved', 'Comparison saved to your device');
     } catch (error) {
-      console.error('Error saving comparison:', error);
+      logger.error('Error saving comparison:', error);
       Alert.alert('Error', 'Failed to save comparison');
     } finally {
       setIsSaving(false);

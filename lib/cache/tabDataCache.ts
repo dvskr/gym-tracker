@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Global cache for tab data that persists across component unmounts
  * Solves the issue where useRef values are lost when React Native
@@ -31,10 +32,10 @@ class TabDataCache {
     if (this.isValid(key, duration)) {
       const entry = this.cache.get(key);
       const age = Math.round((Date.now() - entry!.lastFetched) / 1000);
-      console.log(`[Cache] ✓ ${key} hit (age: ${age}s)`);
+      logger.log(`[Cache] âœ“ ${key} hit (age: ${age}s)`);
       return entry!.data;
     }
-    console.log(`[Cache] ✗ ${key} miss`);
+    logger.log(`[Cache] âœ— ${key} miss`);
     return null;
   }
 
@@ -46,7 +47,7 @@ class TabDataCache {
       lastFetched: Date.now(),
       data,
     });
-    console.log(`[Cache] ✎ ${key} stored`);
+    logger.log(`[Cache] âœŽ ${key} stored`);
   }
 
   /**
@@ -54,7 +55,7 @@ class TabDataCache {
    */
   invalidate(key: string): void {
     this.cache.delete(key);
-    console.log(`[Cache] ✗ ${key} invalidated`);
+    logger.log(`[Cache] âœ— ${key} invalidated`);
   }
 
   /**
@@ -62,7 +63,7 @@ class TabDataCache {
    */
   clear(): void {
     this.cache.clear();
-    console.log('[Cache] ✗ All cleared');
+    logger.log('[Cache] âœ— All cleared');
   }
 
   /**

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
@@ -152,7 +153,7 @@ export const useExerciseStore = create<ExerciseState>()(
 
         // Prevent concurrent fetches
         if (isLoading) {
-          console.log('[ExerciseStore] Already loading, skipping');
+          logger.log('[ExerciseStore] Already loading, skipping');
           return;
         }
 
@@ -164,7 +165,7 @@ export const useExerciseStore = create<ExerciseState>()(
 
         if (isCacheValid && !force) {
           const cacheAge = Math.round((Date.now() - (lastFetched || 0)) / 1000);
-          console.log(`[ExerciseStore] Using cached data (age: ${cacheAge} seconds, count: ${exercises.length})`);
+          logger.log(`[ExerciseStore] Using cached data (age: ${cacheAge} seconds, count: ${exercises.length})`);
           return;
         }
 
@@ -215,9 +216,9 @@ export const useExerciseStore = create<ExerciseState>()(
           // Initialize fuzzy search with loaded exercises
           initializeFuseSearch(transformedExercises);
           
-          console.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
+          logger.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
         } catch (error) {
-          console.error('[ExerciseStore] Error fetching exercises:', error);
+          logger.error('[ExerciseStore] Error fetching exercises:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to fetch exercises',
@@ -411,7 +412,7 @@ export const useExerciseStore = create<ExerciseState>()(
           const favoriteIds = data?.map(f => f.exercise_id) || [];
           set({ favoriteIds });
         } catch (error) {
-          console.error('Failed to load favorites:', error);
+          logger.error('Failed to load favorites:', error);
         }
       },
       
@@ -446,7 +447,7 @@ export const useExerciseStore = create<ExerciseState>()(
             if (error) throw error;
           }
         } catch (error) {
-          console.error('Failed to toggle favorite:', error);
+          logger.error('Failed to toggle favorite:', error);
           // Revert optimistic update on error
           set({ favoriteIds });
         }

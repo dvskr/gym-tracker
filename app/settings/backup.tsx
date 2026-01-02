@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -69,7 +70,7 @@ export default function BackupScreen() {
       setAutoBackupEnabled(autoSettings.enabled);
       setAutoBackupFrequency(autoSettings.frequency);
     } catch (error) {
-      console.error('Error loading backup data:', error);
+      logger.error('Error loading backup data:', error);
       Alert.alert('Error', 'Failed to load backup data');
     }
   };
@@ -93,7 +94,7 @@ export default function BackupScreen() {
                 `Backup saved successfully!\nSize: ${formatBytes(backup.size)}`
               );
             } catch (error) {
-              console.error('Error creating backup:', error);
+              logger.error('Error creating backup:', error);
               Alert.alert('Error', 'Failed to create backup: ' + (error as Error).message);
             } finally {
               setLoading(false);
@@ -122,7 +123,7 @@ export default function BackupScreen() {
         },
       ]);
     } catch (error) {
-      console.error('Error downloading backup:', error);
+      logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
       setLoading(false);
@@ -140,7 +141,7 @@ export default function BackupScreen() {
       setSelectedBackupData(backupData);
       setShowRestoreConfirm(true);
     } catch (error) {
-      console.error('Error downloading backup:', error);
+      logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
       setLoading(false);
@@ -178,7 +179,7 @@ export default function BackupScreen() {
       if (result.success) {
         Alert.alert(
           'Restore Complete!',
-          `✅ Restored ${result.itemsRestored} items\n📊 Tables: ${result.tablesRestored.join(', ')}`,
+          `âœ… Restored ${result.itemsRestored} items\nðŸ“Š Tables: ${result.tablesRestored.join(', ')}`,
           [
             {
               text: 'OK',
@@ -192,11 +193,11 @@ export default function BackupScreen() {
       } else {
         Alert.alert(
           'Restore Completed with Errors',
-          `✅ ${result.itemsRestored} items restored\n❌ ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
+          `âœ… ${result.itemsRestored} items restored\nâŒ ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
           [
             {
               text: 'View Details',
-              onPress: () => console.log('Errors:', result.errors),
+              onPress: () => logger.log('Errors:', result.errors),
             },
             { text: 'OK' },
           ]
@@ -204,7 +205,7 @@ export default function BackupScreen() {
       }
     } catch (error) {
       setShowRestoreProgress(false);
-      console.error('Error restoring backup:', error);
+      logger.error('Error restoring backup:', error);
       Alert.alert('Error', 'Failed to restore backup: ' + (error as Error).message);
     }
   };
@@ -224,7 +225,7 @@ export default function BackupScreen() {
               await loadData();
               Alert.alert('Deleted', 'Backup deleted successfully');
             } catch (error) {
-              console.error('Error deleting backup:', error);
+              logger.error('Error deleting backup:', error);
               Alert.alert('Error', 'Failed to delete backup');
             }
           },
@@ -248,7 +249,7 @@ export default function BackupScreen() {
               await loadData();
               Alert.alert('Cleanup Complete', `Deleted ${count} old backup(s)`);
             } catch (error) {
-              console.error('Error cleaning up backups:', error);
+              logger.error('Error cleaning up backups:', error);
               Alert.alert('Error', 'Failed to cleanup backups');
             } finally {
               setLoading(false);
@@ -491,12 +492,12 @@ export default function BackupScreen() {
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoTitle}>What's included in backups?</Text>
               <Text style={styles.infoText}>
-                • All workout history and sets{'\n'}
-                • Workout templates{'\n'}
-                • Body weight and measurements{'\n'}
-                • Personal records{'\n'}
-                • Custom exercises{'\n'}
-                • App settings
+                â€¢ All workout history and sets{'\n'}
+                â€¢ Workout templates{'\n'}
+                â€¢ Body weight and measurements{'\n'}
+                â€¢ Personal records{'\n'}
+                â€¢ Custom exercises{'\n'}
+                â€¢ App settings
               </Text>
             </View>
           </View>
@@ -506,10 +507,10 @@ export default function BackupScreen() {
             <View style={styles.infoTextContainer}>
               <Text style={[styles.infoTitle, styles.infoTitleWarning]}>Important Notes</Text>
               <Text style={styles.infoText}>
-                • Backups are stored securely in the cloud{'\n'}
-                • Restoring will overwrite current data{'\n'}
-                • Keep backups for data safety{'\n'}
-                • Download backups for offline storage
+                â€¢ Backups are stored securely in the cloud{'\n'}
+                â€¢ Restoring will overwrite current data{'\n'}
+                â€¢ Keep backups for data safety{'\n'}
+                â€¢ Download backups for offline storage
               </Text>
             </View>
           </View>

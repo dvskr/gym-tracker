@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -111,7 +112,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             </Text>
             <Text style={styles.compactMeta}>
               {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
-              {template.estimated_duration ? ` • ~${template.estimated_duration}min` : ''}
+              {template.estimated_duration ? ` â€¢ ~${template.estimated_duration}min` : ''}
             </Text>
           </View>
 
@@ -178,7 +179,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <Calendar size={12} color="#475569" />
             <Text style={styles.lastUsedText}>{lastUsed}</Text>
             {template.times_used ? (
-              <Text style={styles.usageCount}>• Used {template.times_used}x</Text>
+              <Text style={styles.usageCount}>â€¢ Used {template.times_used}x</Text>
             ) : null}
           </View>
 
@@ -442,7 +443,7 @@ const FolderSection: React.FC<FolderSectionProps> = ({
 
 const EmptyState: React.FC<{ onCreatePress: () => void }> = ({ onCreatePress }) => (
   <View style={styles.emptyContainer}>
-    <Text style={styles.emptyIcon}>🏋️</Text>
+    <Text style={styles.emptyIcon}>ðŸ‹ï¸</Text>
     <Text style={styles.emptyTitle}>No Templates Yet</Text>
     <Text style={styles.emptyDescription}>
       Create a template to quickly start your favorite workouts.
@@ -501,7 +502,7 @@ export default function TemplatesScreen() {
       setFolders(data.folders);
       setUncategorizedTemplates(data.uncategorized);
     } catch (error) {
-      console.error('Error fetching templates:', error);
+      logger.error('Error fetching templates:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -529,7 +530,7 @@ export default function TemplatesScreen() {
       setSelectedColor(FOLDER_COLORS[0]);
       fetchData();
     } catch (error) {
-      console.error('Error creating folder:', error);
+      logger.error('Error creating folder:', error);
     }
   };
 
@@ -546,7 +547,7 @@ export default function TemplatesScreen() {
       setNewFolderName('');
       fetchData();
     } catch (error) {
-      console.error('Error updating folder:', error);
+      logger.error('Error updating folder:', error);
     }
   };
 
@@ -565,7 +566,7 @@ export default function TemplatesScreen() {
               await deleteFolder(folderId);
               fetchData();
             } catch (error) {
-              console.error('Error deleting folder:', error);
+              logger.error('Error deleting folder:', error);
             }
           },
         },
@@ -582,7 +583,7 @@ export default function TemplatesScreen() {
       setMovingTemplate(null);
       fetchData();
     } catch (error) {
-      console.error('Error moving template:', error);
+      logger.error('Error moving template:', error);
     }
   };
 
@@ -658,7 +659,7 @@ export default function TemplatesScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      console.error('Error starting workout:', error);
+      logger.error('Error starting workout:', error);
     }
   };
 
@@ -678,7 +679,7 @@ export default function TemplatesScreen() {
       // Navigate to the new template
       router.push(`/template/${copy.id}`);
     } catch (error) {
-      console.error('Error duplicating template:', error);
+      logger.error('Error duplicating template:', error);
       Alert.alert('Error', 'Failed to duplicate template');
     }
   };
@@ -696,7 +697,7 @@ export default function TemplatesScreen() {
       setDeleteConfirmId(null);
       fetchData();
     } catch (error) {
-      console.error('Error deleting template:', error);
+      logger.error('Error deleting template:', error);
     }
   };
 

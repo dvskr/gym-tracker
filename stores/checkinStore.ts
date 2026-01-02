@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
 import { invalidateCoachContextAfterCheckin } from '@/lib/ai/cacheInvalidation';
 
@@ -65,7 +66,7 @@ export const useCheckinStore = create<CheckinStore>((set, get) => ({
         loading: false 
       });
     } catch (error: any) {
-      console.error('Error fetching check-in:', error);
+      logger.error('Error fetching check-in:', error);
       set({ 
         error: error.message || 'Failed to fetch check-in',
         loading: false 
@@ -111,7 +112,7 @@ export const useCheckinStore = create<CheckinStore>((set, get) => ({
 
       return true;
     } catch (error: any) {
-      console.error('Error saving check-in:', error);
+      logger.error('Error saving check-in:', error);
       set({ 
         error: error.message || 'Failed to save check-in',
         loading: false 
@@ -136,7 +137,7 @@ export async function getWellnessAverage(userId: string, days: number = 7) {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching wellness average:', error);
+    logger.error('Error fetching wellness average:', error);
     return null;
   }
 }
@@ -157,7 +158,7 @@ export async function getCheckinsForRange(userId: string, startDate: string, end
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching check-ins range:', error);
+    logger.error('Error fetching check-ins range:', error);
     return [];
   }
 }

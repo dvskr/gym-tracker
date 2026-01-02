@@ -1,19 +1,20 @@
 import { aiService } from '../aiService';
+import { logger } from '@/lib/utils/logger';
 
 // Run this test manually in your app
 export async function testAIService() {
   try {
-    console.log('🧪 Testing AI service...');
-    console.log('   Making request to Edge Function...');
+    logger.log('ðŸ§ª Testing AI service...');
+    logger.log('   Making request to Edge Function...');
     
     const response = await aiService.ask('Say hello in exactly 3 words');
     
-    console.log('✅ AI service working!');
-    console.log('   Response:', response);
+    logger.log('âœ… AI service working!');
+    logger.log('   Response:', response);
     
     return true;
   } catch (error) {
-    console.error('❌ AI service test failed:', error);
+    logger.error('âŒ AI service test failed:', error);
     return false;
   }
 }
@@ -21,21 +22,21 @@ export async function testAIService() {
 // Test with full response details
 export async function testAIServiceDetailed() {
   try {
-    console.log('🧪 Testing AI service (detailed)...');
+    logger.log('ðŸ§ª Testing AI service (detailed)...');
     
     const response = await aiService.complete(
       [{ role: 'user', content: 'Say hello in 5 words' }],
       { maxTokens: 20 }
     );
     
-    console.log('✅ AI service working!');
-    console.log('   Content:', response.content);
-    console.log('   Usage:', response.usage);
-    console.log('   Limits:', response.limits);
+    logger.log('âœ… AI service working!');
+    logger.log('   Content:', response.content);
+    logger.log('   Usage:', response.usage);
+    logger.log('   Limits:', response.limits);
     
     return true;
   } catch (error) {
-    console.error('❌ AI service test failed:', error);
+    logger.error('âŒ AI service test failed:', error);
     return false;
   }
 }
@@ -43,25 +44,25 @@ export async function testAIServiceDetailed() {
 // Test rate limiting
 export async function testRateLimit() {
   try {
-    console.log('🧪 Testing rate limiting...');
+    logger.log('ðŸ§ª Testing rate limiting...');
     
     // Make multiple requests quickly
     for (let i = 0; i < 3; i++) {
-      console.log(`   Request ${i + 1}...`);
+      logger.log(`   Request ${i + 1}...`);
       const response = await aiService.complete(
         [{ role: 'user', content: `Count to ${i + 1}` }],
         { maxTokens: 10 }
       );
       
       if (response.limits) {
-        console.log(`   Used: ${response.limits.used}/${response.limits.limit}`);
+        logger.log(`   Used: ${response.limits.used}/${response.limits.limit}`);
       }
     }
     
-    console.log('✅ Rate limiting working!');
+    logger.log('âœ… Rate limiting working!');
     return true;
   } catch (error) {
-    console.error('❌ Rate limit test failed:', error);
+    logger.error('âŒ Rate limit test failed:', error);
     return false;
   }
 }

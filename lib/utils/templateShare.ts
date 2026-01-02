@@ -1,4 +1,5 @@
 import { Share, Platform } from 'react-native';
+import { logger } from '@/lib/utils/logger';
 import * as Clipboard from 'expo-clipboard';
 import { Template } from '@/lib/api/templates';
 
@@ -10,7 +11,7 @@ import { Template } from '@/lib/api/templates';
  * Generate shareable text format for a template
  */
 export function generateTemplateShareText(template: Template): string {
-  let text = `🏋️ ${template.name} Template\n\n`;
+  let text = `ðŸ‹ï¸ ${template.name} Template\n\n`;
 
   if (template.description) {
     text += `${template.description}\n\n`;
@@ -33,7 +34,7 @@ export function generateTemplateShareText(template: Template): string {
       repsText = '8-12';
     }
 
-    text += `${index + 1}. ${exerciseName} - ${sets} sets × ${repsText} reps\n`;
+    text += `${index + 1}. ${exerciseName} - ${sets} sets Ã— ${repsText} reps\n`;
   });
 
   if (template.target_muscles && template.target_muscles.length > 0) {
@@ -44,7 +45,7 @@ export function generateTemplateShareText(template: Template): string {
     text += `\nDuration: ~${template.estimated_duration} min`;
   }
 
-  text += `\n\nCreated with GymTracker 💪`;
+  text += `\n\nCreated with GymTracker ðŸ’ª`;
 
   return text;
 }
@@ -53,24 +54,24 @@ export function generateTemplateShareText(template: Template): string {
  * Generate detailed text with instructions
  */
 export function generateDetailedShareText(template: Template): string {
-  let text = `━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-  text += `🏋️ ${template.name.toUpperCase()}\n`;
-  text += `━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  let text = `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n`;
+  text += `ðŸ‹ï¸ ${template.name.toUpperCase()}\n`;
+  text += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
 
   if (template.description) {
-    text += `📝 ${template.description}\n\n`;
+    text += `ðŸ“ ${template.description}\n\n`;
   }
 
   if (template.target_muscles && template.target_muscles.length > 0) {
-    text += `🎯 Target: ${template.target_muscles.join(' • ')}\n`;
+    text += `ðŸŽ¯ Target: ${template.target_muscles.join(' â€¢ ')}\n`;
   }
 
   if (template.estimated_duration) {
-    text += `⏱️ Duration: ~${template.estimated_duration} min\n`;
+    text += `â±ï¸ Duration: ~${template.estimated_duration} min\n`;
   }
 
-  text += `\n📋 EXERCISES\n`;
-  text += `────────────────────────\n`;
+  text += `\nðŸ“‹ EXERCISES\n`;
+  text += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
 
   (template.exercises || []).forEach((ex, index) => {
     const exerciseName = ex.exercise?.name || 'Unknown Exercise';
@@ -86,21 +87,21 @@ export function generateDetailedShareText(template: Template): string {
     }
 
     text += `\n${index + 1}. ${exerciseName}\n`;
-    text += `   ${sets} sets × ${repsText} reps`;
+    text += `   ${sets} sets Ã— ${repsText} reps`;
 
     if (ex.rest_seconds) {
-      text += ` • ${ex.rest_seconds}s rest`;
+      text += ` â€¢ ${ex.rest_seconds}s rest`;
     }
 
     text += `\n`;
 
     if (ex.notes) {
-      text += `   💡 ${ex.notes}\n`;
+      text += `   ðŸ’¡ ${ex.notes}\n`;
     }
   });
 
-  text += `\n────────────────────────\n`;
-  text += `Created with GymTracker 💪\n`;
+  text += `\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
+  text += `Created with GymTracker ðŸ’ª\n`;
 
   return text;
 }
@@ -151,7 +152,7 @@ export async function copyTemplateToClipboard(template: Template): Promise<boole
     await Clipboard.setStringAsync(text);
     return true;
   } catch (error) {
-    console.error('Error copying to clipboard:', error);
+    logger.error('Error copying to clipboard:', error);
     return false;
   }
 }
@@ -176,7 +177,7 @@ export async function shareTemplate(template: Template): Promise<boolean> {
 
     return result.action === Share.sharedAction;
   } catch (error) {
-    console.error('Error sharing template:', error);
+    logger.error('Error sharing template:', error);
     return false;
   }
 }
@@ -201,7 +202,7 @@ export async function shareTemplateAsJSON(template: Template): Promise<boolean> 
 
     return result.action === Share.sharedAction;
   } catch (error) {
-    console.error('Error exporting template:', error);
+    logger.error('Error exporting template:', error);
     return false;
   }
 }
@@ -215,7 +216,7 @@ export async function copyTemplateJSONToClipboard(template: Template): Promise<b
     await Clipboard.setStringAsync(json);
     return true;
   } catch (error) {
-    console.error('Error copying JSON to clipboard:', error);
+    logger.error('Error copying JSON to clipboard:', error);
     return false;
   }
 }

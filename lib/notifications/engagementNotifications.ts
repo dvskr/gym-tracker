@@ -1,4 +1,5 @@
 import { notificationService } from './notificationService';
+import { logger } from '@/lib/utils/logger';
 import { useNotificationStore } from '@/stores/notificationStore';
 
 export interface StreakData {
@@ -9,32 +10,32 @@ export interface StreakData {
 
 const STREAK_MESSAGES = {
   reminder: [
-    "Don't let your {streak}-day streak end! 🔥",
-    "Keep the fire alive! {streak} days strong 💪",
+    "Don't let your {streak}-day streak end! ðŸ”¥",
+    "Keep the fire alive! {streak} days strong ðŸ’ª",
     "One workout away from {nextStreak} days!",
     "Your {streak}-day streak is counting on you!",
-    "{streak} days of progress - keep going! 💯",
+    "{streak} days of progress - keep going! ðŸ’¯",
   ],
   celebration: [
-    "Amazing! {streak} days in a row! 🎉",
+    "Amazing! {streak} days in a row! ðŸŽ‰",
     "{streak}-day streak! You're unstoppable!",
-    "New streak record: {streak} days! 🏆",
+    "New streak record: {streak} days! ðŸ†",
     "Incredible dedication! {streak} consecutive days!",
-    "{streak} days strong! This is your year! ⭐",
+    "{streak} days strong! This is your year! â­",
   ],
   milestone: [
-    "🎊 Milestone Alert: {streak} days!",
-    "🏆 {streak}-Day Warrior!",
-    "⭐ Legend Status: {streak} Days!",
+    "ðŸŽŠ Milestone Alert: {streak} days!",
+    "ðŸ† {streak}-Day Warrior!",
+    "â­ Legend Status: {streak} Days!",
   ],
 };
 
 const INACTIVITY_MESSAGES = [
-  { days: 3, message: "Haven't seen you in a bit! Ready to train? 💪" },
-  { days: 7, message: "A week without a workout? Let's fix that! 🏋️" },
-  { days: 14, message: "We miss you! Start fresh today 🌟" },
-  { days: 21, message: "Three weeks is long enough. Your comeback starts now! 🔥" },
-  { days: 30, message: "It's never too late to restart. One workout at a time 💚" },
+  { days: 3, message: "Haven't seen you in a bit! Ready to train? ðŸ’ª" },
+  { days: 7, message: "A week without a workout? Let's fix that! ðŸ‹ï¸" },
+  { days: 14, message: "We miss you! Start fresh today ðŸŒŸ" },
+  { days: 21, message: "Three weeks is long enough. Your comeback starts now! ðŸ”¥" },
+  { days: 30, message: "It's never too late to restart. One workout at a time ðŸ’š" },
 ];
 
 const MILESTONE_STREAKS = [7, 14, 21, 30, 60, 90, 100, 150, 200, 250, 300, 365];
@@ -47,7 +48,7 @@ class EngagementNotificationService {
     const { currentStreak, lastWorkoutDate } = streakData;
     
     if (currentStreak < 2) {
-      console.log('⏸️ No streak to protect (streak < 2)');
+      logger.log('â¸ï¸ No streak to protect (streak < 2)');
       return;
     }
     
@@ -60,7 +61,7 @@ class EngagementNotificationService {
       // Check if already sent today
       const alreadySent = await this.hasStreakReminderToday();
       if (alreadySent) {
-        console.log('⏸️ Streak reminder already sent today');
+        logger.log('â¸ï¸ Streak reminder already sent today');
         return;
       }
 
@@ -85,7 +86,7 @@ class EngagementNotificationService {
         .replace('{nextStreak}', (streak + 1).toString());
 
       await notificationService.scheduleNotification(
-        'Streak Alert! 🔥',
+        'Streak Alert! ðŸ”¥',
         message,
         {
           type: 'date' as const,
@@ -101,9 +102,9 @@ class EngagementNotificationService {
         }
       );
 
-      console.log(`✅ Scheduled streak reminder for ${time.toLocaleTimeString()}`);
+      logger.log(`âœ… Scheduled streak reminder for ${time.toLocaleTimeString()}`);
     } catch (error) {
-      console.error('Failed to schedule streak reminder:', error);
+      logger.error('Failed to schedule streak reminder:', error);
     }
   }
 
@@ -139,7 +140,7 @@ class EngagementNotificationService {
         // Only schedule if in the future
         if (reminderDate > new Date()) {
           await notificationService.scheduleNotification(
-            days <= 7 ? 'Missing You! 💪' : 'Ready to Restart? 🌟',
+            days <= 7 ? 'Missing You! ðŸ’ª' : 'Ready to Restart? ðŸŒŸ',
             message,
             {
               type: 'date' as const,
@@ -154,9 +155,9 @@ class EngagementNotificationService {
         }
       }
 
-      console.log(`✅ Scheduled ${scheduled} inactivity reminder(s)`);
+      logger.log(`âœ… Scheduled ${scheduled} inactivity reminder(s)`);
     } catch (error) {
-      console.error('Failed to schedule inactivity reminders:', error);
+      logger.error('Failed to schedule inactivity reminders:', error);
     }
   }
 
@@ -176,10 +177,10 @@ class EngagementNotificationService {
       }
 
       if (cancelled > 0) {
-        console.log(`✅ Cancelled ${cancelled} inactivity reminder(s)`);
+        logger.log(`âœ… Cancelled ${cancelled} inactivity reminder(s)`);
       }
     } catch (error) {
-      console.error('Failed to cancel inactivity reminders:', error);
+      logger.error('Failed to cancel inactivity reminders:', error);
     }
   }
 
@@ -217,9 +218,9 @@ class EngagementNotificationService {
         }
       );
 
-      console.log(`🎉 Sent streak celebration for ${streak} days`);
+      logger.log(`ðŸŽ‰ Sent streak celebration for ${streak} days`);
     } catch (error) {
-      console.error('Failed to send streak celebration:', error);
+      logger.error('Failed to send streak celebration:', error);
     }
   }
 
@@ -250,7 +251,7 @@ class EngagementNotificationService {
       }
     }
 
-    console.log('✅ Cancelled all engagement notifications');
+    logger.log('âœ… Cancelled all engagement notifications');
   }
 }
 

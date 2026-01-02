@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -83,7 +84,7 @@ function AIUsageStats() {
         setStats(JSON.parse(data));
       }
     } catch (error) {
-      console.error('Failed to load AI usage stats:', error);
+      logger.error('Failed to load AI usage stats:', error);
     }
   };
 
@@ -98,7 +99,7 @@ function AIUsageStats() {
       setStats(newStats);
       Alert.alert('Reset', 'Usage statistics have been reset');
     } catch (error) {
-      console.error('Failed to reset stats:', error);
+      logger.error('Failed to reset stats:', error);
     }
   };
 
@@ -221,7 +222,7 @@ export default function AISettingsScreen() {
                 </Pressable>
               </View>
               <Text style={styles.apiKeyValue}>
-                {showApiKey ? settings.aiApiKey : `••••••••••••${settings.aiApiKey.slice(-4)}`}
+                {showApiKey ? settings.aiApiKey : `â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢${settings.aiApiKey.slice(-4)}`}
               </Text>
               <View style={styles.apiKeyActions}>
                 <Pressable
@@ -262,7 +263,7 @@ export default function AISettingsScreen() {
               5. Copy and paste it here
             </Text>
             <Text style={styles.helpNote}>
-              💡 Keys start with "sk-" and are about 50 characters long
+              ðŸ’¡ Keys start with "sk-" and are about 50 characters long
             </Text>
           </View>
         </View>

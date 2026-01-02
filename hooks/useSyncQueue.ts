@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { syncQueue, SyncResult } from '../lib/sync/syncQueue';
 import { useNetworkStatus } from './useNetworkStatus';
 
@@ -114,7 +115,7 @@ export function useSyncQueue(): UseSyncQueueResult {
   const clearCompleted = useCallback(async (): Promise<void> => {
     // Note: Current implementation auto-removes completed operations
     // This is a placeholder if you want to implement batch clearing
-    console.log('Completed operations are auto-removed');
+    logger.log('Completed operations are auto-removed');
   }, []);
 
   return {

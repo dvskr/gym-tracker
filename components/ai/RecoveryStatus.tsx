@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { ChevronRight, RefreshCw } from 'lucide-react-native';
@@ -54,7 +55,7 @@ export function RecoveryStatus() {
       const errorMessage = err.message || 'Failed to fetch recovery status';
       setError(errorMessage);
       setHasFetched(true);
-      console.error('Failed to fetch recovery status:', err);
+      logger.error('Failed to fetch recovery status:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -89,16 +90,16 @@ export function RecoveryStatus() {
   };
 
   const getStatusEmoji = () => {
-    if (!status) return '💪';
+    if (!status) return 'ðŸ’ª';
     switch (status.overall) {
       case 'recovered':
-        return '💪';
+        return 'ðŸ’ª';
       case 'moderate':
-        return '👍';
+        return 'ðŸ‘';
       case 'fatigued':
-        return '😓';
+        return 'ðŸ˜“';
       case 'overtrained':
-        return '😴';
+        return 'ðŸ˜´';
     }
   };
 

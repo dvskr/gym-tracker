@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -77,7 +78,7 @@ export function HealthDashboard() {
 
       setLastUpdated(new Date());
     } catch (error) {
-      console.error('Error fetching health data:', error);
+      logger.error('Error fetching health data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -147,7 +148,7 @@ export function HealthDashboard() {
           <Text style={styles.label}>Steps</Text>
           {summary?.steps !== null && summary.steps >= 10000 && (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>Goal! 🎉</Text>
+              <Text style={styles.badgeText}>Goal! ðŸŽ‰</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -288,35 +289,35 @@ export function HealthInsights() {
         return {
           backgroundColor: '#22c55e20',
           borderColor: '#22c55e',
-          icon: '💪',
+          icon: 'ðŸ’ª',
           color: '#22c55e',
         };
       case 'moderate':
         return {
           backgroundColor: '#3b82f620',
           borderColor: '#3b82f6',
-          icon: '👍',
+          icon: 'ðŸ‘',
           color: '#3b82f6',
         };
       case 'light':
         return {
           backgroundColor: '#f59e0b20',
           borderColor: '#f59e0b',
-          icon: '🚶',
+          icon: 'ðŸš¶',
           color: '#f59e0b',
         };
       case 'rest':
         return {
           backgroundColor: '#ef444420',
           borderColor: '#ef4444',
-          icon: '😴',
+          icon: 'ðŸ˜´',
           color: '#ef4444',
         };
       default:
         return {
           backgroundColor: '#64748b20',
           borderColor: '#64748b',
-          icon: 'ℹ️',
+          icon: 'â„¹ï¸',
           color: '#64748b',
         };
     }

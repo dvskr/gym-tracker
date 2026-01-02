@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { logger } from '@/lib/utils/logger';
 import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 
@@ -46,7 +47,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching profile:', error);
+    logger.error('Error fetching profile:', error);
     throw error;
   }
 }
@@ -72,7 +73,7 @@ export async function updateProfile(
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error updating profile:', error);
+    logger.error('Error updating profile:', error);
     throw error;
   }
 }
@@ -119,7 +120,7 @@ export async function uploadAvatar(
 
     return urlData.publicUrl;
   } catch (error) {
-    console.error('Error uploading avatar:', error);
+    logger.error('Error uploading avatar:', error);
     throw error;
   }
 }
@@ -147,14 +148,14 @@ export async function deleteAvatar(userId: string): Promise<void> {
         .remove([filePath]);
 
       if (storageError) {
-        console.error('Error deleting from storage:', storageError);
+        logger.error('Error deleting from storage:', storageError);
       }
     }
 
     // Update profile to remove avatar URL
     await updateProfile(userId, { avatar_url: null });
   } catch (error) {
-    console.error('Error deleting avatar:', error);
+    logger.error('Error deleting avatar:', error);
     throw error;
   }
 }

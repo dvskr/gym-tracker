@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * High-level AI helpers for common gym app use cases
  * These wrap the aiService with domain-specific logic
@@ -48,7 +49,7 @@ export function cleanExerciseName(name: string): string {
   return name
     .replace(/\*\*/g, '')        // Remove bold markdown
     .replace(/^\d+\.\s*/, '')    // Remove numbered prefix (1. )
-    .replace(/^[-•*]\s*/, '')    // Remove bullet prefix (- or • or *)
+    .replace(/^[-â€¢*]\s*/, '')    // Remove bullet prefix (- or â€¢ or *)
     .replace(/\s+/g, ' ')        // Normalize whitespace
     .trim();
 }
@@ -61,8 +62,8 @@ export function safeJSONParse<T>(response: string, fallback: T): T {
     const cleaned = cleanAIResponse(response);
     return JSON.parse(cleaned) as T;
   } catch (error) {
-    console.error('Failed to parse AI JSON response:', error);
-    console.error('Response was:', response);
+    logger.error('Failed to parse AI JSON response:', error);
+    logger.error('Response was:', response);
     return fallback;
   }
 }

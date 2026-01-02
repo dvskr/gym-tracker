@@ -1,4 +1,5 @@
 import { notificationService } from './notificationService';
+import { logger } from '@/lib/utils/logger';
 
 /**
  * Schedule a workout reminder notification
@@ -6,7 +7,7 @@ import { notificationService } from './notificationService';
 export async function scheduleWorkoutReminder(
   day: string,
   time: { hour: number; minute: number },
-  message: string = "Time to crush your workout! 💪"
+  message: string = "Time to crush your workout! ðŸ’ª"
 ): Promise<string> {
   const trigger: any = {
     hour: time.hour,
@@ -39,7 +40,7 @@ export async function scheduleWorkoutReminder(
     }
   );
 
-  console.log(`✅ Scheduled workout reminder for ${day} at ${time.hour}:${String(time.minute).padStart(2, '0')}`);
+  logger.log(`âœ… Scheduled workout reminder for ${day} at ${time.hour}:${String(time.minute).padStart(2, '0')}`);
   return id;
 }
 
@@ -60,7 +61,7 @@ export async function sendRestTimerNotification(nextExercise?: string): Promise<
     }
   );
 
-  console.log('✅ Sent rest timer notification');
+  logger.log('âœ… Sent rest timer notification');
 }
 
 /**
@@ -68,7 +69,7 @@ export async function sendRestTimerNotification(nextExercise?: string): Promise<
  */
 export async function sendPRNotification(exercise: string, newRecord: string): Promise<void> {
   await notificationService.sendNotification(
-    "New Personal Record! 🎉",
+    "New Personal Record! ðŸŽ‰",
     `Amazing! You just hit a new PR on ${exercise}: ${newRecord}`,
     {
       channelId: 'achievements',
@@ -76,7 +77,7 @@ export async function sendPRNotification(exercise: string, newRecord: string): P
     }
   );
 
-  console.log(`✅ Sent PR notification for ${exercise}`);
+  logger.log(`âœ… Sent PR notification for ${exercise}`);
 }
 
 /**
@@ -84,7 +85,7 @@ export async function sendPRNotification(exercise: string, newRecord: string): P
  */
 export async function sendStreakReminderNotification(streakDays: number): Promise<void> {
   const messages = [
-    `🔥 Don't break your ${streakDays}-day streak!`,
+    `ðŸ”¥ Don't break your ${streakDays}-day streak!`,
     `You're on fire! ${streakDays} days strong - keep it going!`,
     `${streakDays} days in a row! One more workout to keep the streak alive`,
   ];
@@ -100,7 +101,7 @@ export async function sendStreakReminderNotification(streakDays: number): Promis
     }
   );
 
-  console.log(`✅ Sent streak reminder (${streakDays} days)`);
+  logger.log(`âœ… Sent streak reminder (${streakDays} days)`);
 }
 
 /**
@@ -111,7 +112,7 @@ export async function sendMilestoneNotification(
   description: string
 ): Promise<void> {
   await notificationService.sendNotification(
-    `Milestone Unlocked: ${milestone}! 🏆`,
+    `Milestone Unlocked: ${milestone}! ðŸ†`,
     description,
     {
       channelId: 'achievements',
@@ -119,7 +120,7 @@ export async function sendMilestoneNotification(
     }
   );
 
-  console.log(`✅ Sent milestone notification: ${milestone}`);
+  logger.log(`âœ… Sent milestone notification: ${milestone}`);
 }
 
 /**
@@ -136,7 +137,7 @@ export async function scheduleWeeklyWorkoutReminders(
     ids.push(id);
   }
 
-  console.log(`✅ Scheduled ${ids.length} workout reminders`);
+  logger.log(`âœ… Scheduled ${ids.length} workout reminders`);
   return ids;
 }
 
@@ -152,7 +153,7 @@ export async function cancelAllWorkoutReminders(): Promise<void> {
     }
   }
 
-  console.log('✅ Cancelled all workout reminders');
+  logger.log('âœ… Cancelled all workout reminders');
 }
 
 /**

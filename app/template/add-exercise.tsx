@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -78,7 +79,7 @@ export default function AddExerciseToTemplateScreen() {
         successHaptic();
         router.back();
       } catch (error) {
-        console.error('Error adding exercise to template:', error);
+        logger.error('Error adding exercise to template:', error);
       }
     },
     [templateId]

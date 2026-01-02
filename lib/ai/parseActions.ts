@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Parse AI coach responses to extract structured actions
  */
@@ -45,7 +46,7 @@ export function parseCoachResponse(response: string): ParsedResponse {
         };
       }
     } catch (error) {
-      console.warn('Failed to parse workout action:', error);
+      logger.warn('Failed to parse workout action:', error);
       // Return original message if parsing fails
       return { message: response };
     }

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -41,14 +42,14 @@ class NotificationAnalyticsService {
       const trimmed = events.slice(-this.MAX_EVENTS);
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
       
-      console.log(`📊 Tracked ${event.type} event for ${event.notificationType}`);
+      logger.log(`ðŸ“Š Tracked ${event.type} event for ${event.notificationType}`);
       
       // Sync to server (async, don't wait)
       this.syncToServer(event).catch(error => {
-        console.warn('Failed to sync notification event:', error);
+        logger.warn('Failed to sync notification event:', error);
       });
     } catch (error) {
-      console.error('Failed to track notification event:', error);
+      logger.error('Failed to track notification event:', error);
     }
   }
 
@@ -203,7 +204,7 @@ class NotificationAnalyticsService {
    */
   async clearAnalytics(): Promise<void> {
     await AsyncStorage.removeItem(this.STORAGE_KEY);
-    console.log('🗑️ Notification analytics cleared');
+    logger.log('ðŸ—‘ï¸ Notification analytics cleared');
   }
 
   /**
@@ -214,7 +215,7 @@ class NotificationAnalyticsService {
       const data = await AsyncStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Failed to get notification events:', error);
+      logger.error('Failed to get notification events:', error);
       return [];
     }
   }
@@ -239,10 +240,10 @@ class NotificationAnalyticsService {
         created_at: event.timestamp,
       });
       
-      console.log('✅ Synced notification event to server');
+      logger.log('âœ… Synced notification event to server');
     } catch (error) {
       // Silent fail - analytics shouldn't break the app
-      console.warn('Failed to sync notification event to server:', error);
+      logger.warn('Failed to sync notification event to server:', error);
     }
   }
 }

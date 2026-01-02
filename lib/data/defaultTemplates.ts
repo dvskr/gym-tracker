@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { createTemplate, getTemplates, updateTemplateExercises } from '@/lib/api/templates';
 
 // ============================================
@@ -56,7 +57,7 @@ export const DEFAULT_TEMPLATES: DefaultTemplate[] = [
     exercises: [
       { name: "barbell full squat", sets: 4, reps: "6-8" },
       { name: "barbell romanian deadlift", sets: 3, reps: "8-10" },
-      { name: "sled 45° leg press", sets: 3, reps: "10-12" },
+      { name: "sled 45Â° leg press", sets: 3, reps: "10-12" },
       { name: "lying leg curl machine", sets: 3, reps: "10-12" },
       { name: "leg extension machine", sets: 3, reps: "12-15" },
       { name: "lever standing calf raise", sets: 4, reps: "12-15" },
@@ -241,11 +242,11 @@ export async function seedDefaultTemplates(userId: string): Promise<void> {
     const existing = await getTemplates(userId);
     
     if (existing.length > 0) {
-      console.log('User already has templates, skipping seed');
+      logger.log('User already has templates, skipping seed');
       return;
     }
 
-    console.log('Seeding default templates for user...');
+    logger.log('Seeding default templates for user...');
 
     for (const template of DEFAULT_TEMPLATES) {
       // Look up exercise IDs by name
@@ -270,7 +271,7 @@ export async function seedDefaultTemplates(userId: string): Promise<void> {
       );
 
       if (validExercises.length === 0) {
-        console.warn(`No exercises found for template "${template.name}", skipping`);
+        logger.warn(`No exercises found for template "${template.name}", skipping`);
         continue;
       }
 
@@ -284,14 +285,14 @@ export async function seedDefaultTemplates(userId: string): Promise<void> {
         exercises: validExercises,
       });
 
-      console.log(
+      logger.log(
         `Created template "${template.name}" with ${validExercises.length}/${template.exercises.length} exercises`
       );
     }
 
-    console.log('Finished seeding default templates');
+    logger.log('Finished seeding default templates');
   } catch (error) {
-    console.error('Error seeding default templates:', error);
+    logger.error('Error seeding default templates:', error);
     // Don't throw - seeding failure shouldn't break the app
   }
 }
@@ -316,21 +317,21 @@ export async function shouldSeedTemplates(userId: string): Promise<boolean> {
  */
 export async function addNewDefaultTemplates(userId: string): Promise<void> {
   try {
-    console.log('Checking for new templates to add...');
+    logger.log('Checking for new templates to add...');
     
     // Get existing templates
     const existing = await getTemplates(userId);
     const existingNames = new Set(existing.map(t => t.name));
     
-    console.log(`User has ${existing.length} existing templates:`, Array.from(existingNames));
+    logger.log(`User has ${existing.length} existing templates:`, Array.from(existingNames));
     
     // Find templates that don't exist yet
     const newTemplates = DEFAULT_TEMPLATES.filter(t => !existingNames.has(t.name));
     
     if (newTemplates.length === 0) {
-      console.log('No new templates to add');
+      logger.log('No new templates to add');
     } else {
-      console.log(`Adding ${newTemplates.length} new templates:`, newTemplates.map(t => t.name));
+      logger.log(`Adding ${newTemplates.length} new templates:`, newTemplates.map(t => t.name));
       
       // Add each new template
       for (const template of newTemplates) {
@@ -356,7 +357,7 @@ export async function addNewDefaultTemplates(userId: string): Promise<void> {
         );
 
         if (validExercises.length === 0) {
-          console.warn(`No exercises found for template "${template.name}", skipping`);
+          logger.warn(`No exercises found for template "${template.name}", skipping`);
           continue;
         }
 
@@ -370,28 +371,28 @@ export async function addNewDefaultTemplates(userId: string): Promise<void> {
           exercises: validExercises,
         });
 
-        console.log(
+        logger.log(
           `Created template "${template.name}" with ${validExercises.length}/${template.exercises.length} exercises`
         );
       }
 
-      console.log('Finished adding new default templates');
+      logger.log('Finished adding new default templates');
     }
     
     // Now update existing templates with correct exercise names
-    console.log('Checking for templates that need exercise updates...');
+    logger.log('Checking for templates that need exercise updates...');
     
     const templatesToUpdate = DEFAULT_TEMPLATES.filter(t => existingNames.has(t.name));
     
     if (templatesToUpdate.length > 0) {
-      console.log(`Updating ${templatesToUpdate.length} existing templates with correct exercise names`);
+      logger.log(`Updating ${templatesToUpdate.length} existing templates with correct exercise names`);
       
       for (const template of templatesToUpdate) {
         // Find the existing template
         const existingTemplate = existing.find(t => t.name === template.name);
         if (!existingTemplate) continue;
         
-        console.log(`Updating exercises for template "${template.name}"...`);
+        logger.log(`Updating exercises for template "${template.name}"...`);
         
         // Look up correct exercise IDs with new names
         const exercisePromises = template.exercises.map(async (ex, index) => {
@@ -416,23 +417,23 @@ export async function addNewDefaultTemplates(userId: string): Promise<void> {
         );
 
         if (validExercises.length === 0) {
-          console.warn(`No exercises found for template "${template.name}", skipping update`);
+          logger.warn(`No exercises found for template "${template.name}", skipping update`);
           continue;
         }
 
         // Update template exercises
         await updateTemplateExercises(existingTemplate.id, validExercises as any);
 
-        console.log(
+        logger.log(
           `Updated template "${template.name}" with ${validExercises.length}/${template.exercises.length} exercises`
         );
       }
       
-      console.log('Finished updating existing templates');
+      logger.log('Finished updating existing templates');
     }
     
   } catch (error) {
-    console.error('Error adding/updating default templates:', error);
+    logger.error('Error adding/updating default templates:', error);
     // Don't throw - this shouldn't break the app
   }
 }

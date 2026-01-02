@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { Sparkles, TrendingUp, Target } from 'lucide-react-native';
 import { progressiveOverloadService, SetRecommendation } from '@/lib/ai/progressiveOverload';
@@ -40,7 +41,7 @@ export function WeightRecommendation({
       );
       setRecommendation(rec);
     } catch (error) {
-      console.error('Failed to get recommendation:', error);
+      logger.error('Failed to get recommendation:', error);
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +97,7 @@ export function WeightRecommendation({
       >
         {getProgressIcon()}
         <Text style={styles.textCompact}>
-          {recommendation.weight} × {recommendation.reps}
+          {recommendation.weight} Ã— {recommendation.reps}
         </Text>
       </Pressable>
     );
@@ -112,7 +113,7 @@ export function WeightRecommendation({
         <View style={styles.badgeContent}>
           {getProgressIcon()}
           <Text style={styles.recommendText}>
-            Try {recommendation.weight}lbs × {recommendation.reps}
+            Try {recommendation.weight}lbs Ã— {recommendation.reps}
           </Text>
           <View style={[styles.confidenceDot, { backgroundColor: getConfidenceColor() }]} />
         </View>
@@ -123,7 +124,7 @@ export function WeightRecommendation({
         <View style={styles.reasoningBox}>
           <Text style={styles.reasoningText}>{recommendation.reasoning}</Text>
           <Pressable style={styles.applyButton} onPress={handleApply}>
-            <Text style={styles.applyButtonText}>Apply ✓</Text>
+            <Text style={styles.applyButtonText}>Apply âœ“</Text>
           </Pressable>
         </View>
       )}
@@ -158,7 +159,7 @@ export function WeightRecommendationBadge({
         );
         setRecommendation(rec);
       } catch (error) {
-        console.error('Failed to get recommendation:', error);
+        logger.error('Failed to get recommendation:', error);
       } finally {
         setIsLoading(false);
       }
@@ -185,7 +186,7 @@ export function WeightRecommendationBadge({
     >
       <Sparkles size={12} color="#f59e0b" />
       <Text style={styles.inlineBadgeText}>
-        {recommendation.weight} × {recommendation.reps}
+        {recommendation.weight} Ã— {recommendation.reps}
       </Text>
     </Pressable>
   );

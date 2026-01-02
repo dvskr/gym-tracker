@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -194,7 +195,7 @@ export default function WeightGoalScreen() {
         setWeeklyRate(rate);
       }
     } catch (error) {
-      console.error('Error fetching goal data:', error);
+      logger.error('Error fetching goal data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -243,7 +244,7 @@ export default function WeightGoalScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert('Goal Set', 'Your weight goal has been saved!');
     } catch (error) {
-      console.error('Error saving goal:', error);
+      logger.error('Error saving goal:', error);
       Alert.alert('Error', 'Failed to save goal');
     } finally {
       setIsSaving(false);
@@ -272,7 +273,7 @@ export default function WeightGoalScreen() {
               setTargetWeight(currentWeight?.toString() || '');
               setTargetDate('');
             } catch (error) {
-              console.error('Error clearing goal:', error);
+              logger.error('Error clearing goal:', error);
               Alert.alert('Error', 'Failed to clear goal');
             }
           },
@@ -382,7 +383,7 @@ export default function WeightGoalScreen() {
             <View style={styles.remainingContainer}>
               <Text style={styles.remainingText}>
                 {progress.remaining === 0
-                  ? '🎉 Goal reached!'
+                  ? 'ðŸŽ‰ Goal reached!'
                   : `${progress.remaining} ${bodyWeight.label} to go`}
               </Text>
             </View>
@@ -480,7 +481,7 @@ export default function WeightGoalScreen() {
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Progress</Text>
               <Text style={styles.detailValue}>
-                {progress ? formatWeightChange(progress.progressMade) : '—'}
+                {progress ? formatWeightChange(progress.progressMade) : 'â€”'}
               </Text>
             </View>
 
@@ -531,20 +532,20 @@ export default function WeightGoalScreen() {
 
         {/* Tips Card */}
         <View style={styles.tipsCard}>
-          <Text style={styles.tipsTitle}>💡 Healthy Tips</Text>
+          <Text style={styles.tipsTitle}>ðŸ’¡ Healthy Tips</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              • For weight loss: 0.5-1 lb/week is sustainable
+              â€¢ For weight loss: 0.5-1 lb/week is sustainable
             </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              • For muscle gain: 0.25-0.5 lb/week is realistic
+              â€¢ For muscle gain: 0.25-0.5 lb/week is realistic
             </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              • Track consistently for accurate projections
+              â€¢ Track consistently for accurate projections
             </Text>
           </View>
         </View>

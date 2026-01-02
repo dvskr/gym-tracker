@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { TrendingUp, TrendingDown, Minus, X } from 'lucide-react-native';
 import { progressiveOverloadService } from '@/lib/ai/progressiveOverload';
@@ -64,7 +65,7 @@ export function WeightSuggestion({
           setIsLoading(false);
         }
       } catch (error) {
-        console.error('Failed to load weight suggestion:', error);
+        logger.error('Failed to load weight suggestion:', error);
         if (mounted) {
           setIsLoading(false);
         }

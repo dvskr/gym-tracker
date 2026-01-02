@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -138,7 +139,7 @@ const SetTypePicker: React.FC<SetTypePickerProps> = ({
             </View>
             {currentType === option.type && (
               <View style={[styles.setTypeCheck, { backgroundColor: option.color }]}>
-                <Text style={styles.setTypeCheckText}>✓</Text>
+                <Text style={styles.setTypeCheckText}>âœ“</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -183,7 +184,7 @@ const SetRow: React.FC<SetRowProps> = ({ set, onUpdate, onDelete, onTypePress })
           value={set.target_weight}
           onChangeText={(text) => onUpdate({ target_weight: text.replace(/[^0-9.]/g, '') })}
           keyboardType="decimal-pad"
-          placeholder="—"
+          placeholder="â€”"
           placeholderTextColor="#64748b"
           selectTextOnFocus={true}
         />
@@ -381,7 +382,7 @@ export default function CreateTemplateScreen() {
         .single();
 
       if (error) {
-        console.error('Error creating exercise:', error);
+        logger.error('Error creating exercise:', error);
         return;
       }
       exerciseId = newExercise.id;
@@ -551,7 +552,7 @@ export default function CreateTemplateScreen() {
       successHaptic();
       router.replace(`/template/${template.id}`);
     } catch (error) {
-      console.error('Error creating template:', error);
+      logger.error('Error creating template:', error);
       Alert.alert('Error', 'Failed to create template');
     } finally {
       setIsSaving(false);

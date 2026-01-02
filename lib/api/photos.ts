@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { PhotoType, deletePhotoLocally } from '@/lib/services/photoService';
 
 // Types
@@ -170,7 +171,7 @@ export async function deletePhoto(photoId: string): Promise<void> {
     try {
       await deletePhotoLocally(photo.local_uri);
     } catch (error) {
-      console.warn('Failed to delete local photo file:', error);
+      logger.warn('Failed to delete local photo file:', error);
     }
 
     // Delete database record

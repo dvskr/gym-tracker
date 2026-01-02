@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { AlertTriangle, X } from 'lucide-react-native';
 import { aiUsageTracker, UsageStats } from '@/lib/ai/usageTracker';
@@ -17,7 +18,7 @@ export function AIUsageWarning() {
       const stats = await aiUsageTracker.getUsage();
       setUsage(stats);
     } catch (error) {
-      console.error('Failed to load AI usage:', error);
+      logger.error('Failed to load AI usage:', error);
     }
   };
 
@@ -40,7 +41,7 @@ export function AIUsageWarning() {
             {isCritical ? 'AI Limit Almost Reached' : 'AI Usage Warning'}
           </Text>
           <Text style={styles.message}>
-            {usage.percentUsed}% used • {usage.requestsRemaining} requests remaining
+            {usage.percentUsed}% used â€¢ {usage.requestsRemaining} requests remaining
           </Text>
           <Text style={styles.resetInfo}>
             Resets in {usage.daysUntilReset} day{usage.daysUntilReset !== 1 ? 's' : ''}

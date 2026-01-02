@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export interface PlateauAlert {
   exerciseId: string;
@@ -48,7 +49,7 @@ class PlateauDetectionService {
         return b.weeksStalled - a.weeksStalled;
       });
     } catch (error) {
-      console.error('Failed to detect plateaus:', error);
+      logger.error('Failed to detect plateaus:', error);
       return [];
     }
   }
@@ -66,7 +67,7 @@ class PlateauDetectionService {
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
-    // Group by week and get max volume (weight × reps) per week
+    // Group by week and get max volume (weight Ã— reps) per week
     const weeklyMaxVolume = this.getWeeklyMaxVolume(sortedHistory);
     
     if (weeklyMaxVolume.length < this.PLATEAU_WEEKS) return null;
@@ -272,7 +273,7 @@ class PlateauDetectionService {
         .limit(1000);
 
       if (error) {
-        console.error('Error fetching exercise progress:', error);
+        logger.error('Error fetching exercise progress:', error);
         return [];
       }
 
@@ -302,7 +303,7 @@ class PlateauDetectionService {
       return Array.from(exerciseMap.values())
         .filter(ex => ex.history.length >= this.MIN_DATA_POINTS);
     } catch (error) {
-      console.error('Failed to get exercise progress:', error);
+      logger.error('Failed to get exercise progress:', error);
       return [];
     }
   }
@@ -335,7 +336,7 @@ class PlateauDetectionService {
         weeklyProgress,
       };
     } catch (error) {
-      console.error('Failed to get progress report:', error);
+      logger.error('Failed to get progress report:', error);
       return { exercise: null, plateau: null, weeklyProgress: [] };
     }
   }

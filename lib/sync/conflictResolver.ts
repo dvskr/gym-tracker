@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 import { localDB } from '../storage/localDatabase';
 import { syncQueue } from './syncQueue';
 
@@ -41,7 +42,7 @@ class ConflictResolver {
   async setStrategy(strategy: ConflictStrategy): Promise<void> {
     this.strategy = strategy;
     await AsyncStorage.setItem(this.STRATEGY_KEY, strategy);
-    console.log(`🔧 Conflict strategy set to: ${strategy}`);
+    logger.log(`ðŸ”§ Conflict strategy set to: ${strategy}`);
   }
 
   /**
@@ -83,7 +84,7 @@ class ConflictResolver {
     server: any,
     table: string
   ): Promise<ConflictResolutionResult> {
-    console.log(`🔍 Resolving conflict for ${table}/${local.id || server.id} using strategy: ${this.strategy}`);
+    logger.log(`ðŸ” Resolving conflict for ${table}/${local.id || server.id} using strategy: ${this.strategy}`);
 
     const conflict: Conflict = {
       id: this.generateConflictId(),
@@ -104,7 +105,7 @@ class ConflictResolver {
           data: { ...server, _synced: true },
           resolution: 'server',
         };
-        console.log('✅ Server wins');
+        logger.log('âœ… Server wins');
         break;
 
       case 'client_wins':
@@ -112,7 +113,7 @@ class ConflictResolver {
           data: { ...local, _synced: false }, // Keep as unsynced to push to server
           resolution: 'local',
         };
-        console.log('✅ Client wins');
+        logger.log('âœ… Client wins');
         break;
 
       case 'latest_wins':
@@ -124,13 +125,13 @@ class ConflictResolver {
             data: { ...local, _synced: false },
             resolution: 'local',
           };
-          console.log('✅ Latest wins: Local (newer)');
+          logger.log('âœ… Latest wins: Local (newer)');
         } else {
           result = {
             data: { ...server, _synced: true },
             resolution: 'server',
           };
-          console.log('✅ Latest wins: Server (newer)');
+          logger.log('âœ… Latest wins: Server (newer)');
         }
         break;
 
@@ -145,7 +146,7 @@ class ConflictResolver {
           resolution: 'deferred',
           conflict,
         };
-        console.log('⏸️ Manual resolution required - using server temporarily');
+        logger.log('â¸ï¸ Manual resolution required - using server temporarily');
         break;
 
       default:
@@ -257,7 +258,7 @@ class ConflictResolver {
       throw new Error(`Conflict ${conflictId} not found`);
     }
 
-    console.log(`👤 Manual resolution: ${resolution} for ${conflict.table}/${conflict.itemId}`);
+    logger.log(`ðŸ‘¤ Manual resolution: ${resolution} for ${conflict.table}/${conflict.itemId}`);
 
     let winner: any;
 
@@ -298,7 +299,7 @@ class ConflictResolver {
 
     await this.saveConflicts();
     
-    console.log('✅ Conflict resolved manually');
+    logger.log('âœ… Conflict resolved manually');
   }
 
   /**
@@ -323,7 +324,7 @@ class ConflictResolver {
     await this.saveConflicts();
     
     const cleared = before - this.conflicts.length;
-    console.log(`🧹 Cleared ${cleared} resolved conflict(s)`);
+    logger.log(`ðŸ§¹ Cleared ${cleared} resolved conflict(s)`);
     return cleared;
   }
 
@@ -333,7 +334,7 @@ class ConflictResolver {
   async clearAllConflicts(): Promise<void> {
     this.conflicts = [];
     await AsyncStorage.removeItem(this.CONFLICTS_KEY);
-    console.log('🧹 All conflicts cleared');
+    logger.log('ðŸ§¹ All conflicts cleared');
   }
 
   /**
@@ -367,7 +368,7 @@ class ConflictResolver {
         this.strategy = stored as ConflictStrategy;
       }
     } catch (error) {
-      console.error('Error loading conflict strategy:', error);
+      logger.error('Error loading conflict strategy:', error);
     }
   }
 
@@ -385,7 +386,7 @@ class ConflictResolver {
         }));
       }
     } catch (error) {
-      console.error('Error loading conflicts:', error);
+      logger.error('Error loading conflicts:', error);
     }
   }
 
@@ -393,7 +394,7 @@ class ConflictResolver {
     try {
       await AsyncStorage.setItem(this.CONFLICTS_KEY, JSON.stringify(this.conflicts));
     } catch (error) {
-      console.error('Error saving conflicts:', error);
+      logger.error('Error saving conflicts:', error);
     }
   }
 }

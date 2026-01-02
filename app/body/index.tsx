@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -362,7 +363,7 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
       <View style={styles.goalFooter}>
         <Text style={styles.goalRemaining}>
-          {progress.remaining === 0 ? '🎉 Goal reached!' : `${remaining} ${weightUnit} to go`}
+          {progress.remaining === 0 ? 'ðŸŽ‰ Goal reached!' : `${remaining} ${weightUnit} to go`}
         </Text>
         <Text style={styles.goalTarget}>Target: {targetWeight} {weightUnit}</Text>
       </View>
@@ -486,7 +487,7 @@ export default function BodyHubScreen() {
         // No goal set
       }
     } catch (error) {
-      console.error('Error fetching body data:', error);
+      logger.error('Error fetching body data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

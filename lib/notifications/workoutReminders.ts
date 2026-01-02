@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { logger } from '@/lib/utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notificationService } from './notificationService';
 
@@ -13,12 +14,12 @@ export interface WorkoutReminder {
 }
 
 const REMINDER_MESSAGES = [
-  "Time to crush it! 💪",
+  "Time to crush it! ðŸ’ª",
   "Your workout is waiting!",
   "Let's get stronger today!",
   "Ready to make progress?",
   "Your future self will thank you!",
-  "No excuses - let's go! 🔥",
+  "No excuses - let's go! ðŸ”¥",
   "Gains don't wait!",
   "Make today count!",
   "Turn your goals into results!",
@@ -36,7 +37,7 @@ class WorkoutReminderService {
       const data = await AsyncStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Failed to get reminders:', error);
+      logger.error('Failed to get reminders:', error);
       return [];
     }
   }
@@ -47,9 +48,9 @@ class WorkoutReminderService {
   async saveReminders(reminders: WorkoutReminder[]): Promise<void> {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(reminders));
-      console.log('✅ Reminders saved');
+      logger.log('âœ… Reminders saved');
     } catch (error) {
-      console.error('Failed to save reminders:', error);
+      logger.error('Failed to save reminders:', error);
     }
   }
 
@@ -61,7 +62,7 @@ class WorkoutReminderService {
     await this.cancelReminder(reminder.id);
 
     if (!reminder.enabled) {
-      console.log(`⏸️ Reminder ${reminder.id} is disabled, skipping schedule`);
+      logger.log(`â¸ï¸ Reminder ${reminder.id} is disabled, skipping schedule`);
       return null;
     }
 
@@ -93,10 +94,10 @@ class WorkoutReminderService {
         }
       );
 
-      console.log(`✅ Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
+      logger.log(`âœ… Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
       return notificationId;
     } catch (error) {
-      console.error('Failed to schedule reminder:', error);
+      logger.error('Failed to schedule reminder:', error);
       return null;
     }
   }
@@ -116,10 +117,10 @@ class WorkoutReminderService {
       }
 
       if (matching.length > 0) {
-        console.log(`✅ Cancelled ${matching.length} notification(s) for reminder ${id}`);
+        logger.log(`âœ… Cancelled ${matching.length} notification(s) for reminder ${id}`);
       }
     } catch (error) {
-      console.error('Failed to cancel reminder:', error);
+      logger.error('Failed to cancel reminder:', error);
     }
   }
 
@@ -139,7 +140,7 @@ class WorkoutReminderService {
       }
     }
 
-    console.log(`✅ Scheduled ${scheduled} workout reminder(s)`);
+    logger.log(`âœ… Scheduled ${scheduled} workout reminder(s)`);
   }
 
   /**
@@ -152,7 +153,7 @@ class WorkoutReminderService {
       await this.cancelReminder(reminder.id);
     }
 
-    console.log('✅ Cancelled all workout reminders');
+    logger.log('âœ… Cancelled all workout reminders');
   }
 
   /**
@@ -273,7 +274,7 @@ class WorkoutReminderService {
     await this.cancelAllReminders();
     await this.scheduleAllReminders();
 
-    console.log(`✅ Applied ${preset} preset`);
+    logger.log(`âœ… Applied ${preset} preset`);
   }
 
   /**

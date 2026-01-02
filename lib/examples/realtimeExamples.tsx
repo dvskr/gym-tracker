@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Real-time Sync Usage Examples
  * 
@@ -23,7 +24,7 @@ export function LoginScreen() {
     });
 
     if (data.user) {
-      // ✅ Initialize real-time subscriptions
+      // âœ… Initialize real-time subscriptions
       await realtimeSync.init(data.user.id);
       
       // Navigate to app
@@ -40,7 +41,7 @@ export function LoginScreen() {
 
 export function ProfileScreen() {
   const handleLogout = async () => {
-    // ✅ Cleanup real-time subscriptions
+    // âœ… Cleanup real-time subscriptions
     await realtimeSync.cleanup();
     
     // Sign out
@@ -76,9 +77,9 @@ export function WorkoutsScreen() {
     loadWorkouts();
   }, []);
 
-  // ✅ Auto-refresh when real-time update occurs
+  // âœ… Auto-refresh when real-time update occurs
   useRealtimeWorkouts(() => {
-    console.log('📡 Workouts updated - refreshing...');
+    logger.log('ðŸ“¡ Workouts updated - refreshing...');
     loadWorkouts();
   });
 
@@ -139,7 +140,7 @@ export function TemplatesScreen() {
     loadTemplates();
   }, []);
 
-  // ✅ Listen for template updates
+  // âœ… Listen for template updates
   useRealtimeTemplates(() => {
     loadTemplates();
   });
@@ -158,7 +159,7 @@ export function WorkoutsWithToast() {
     loadWorkouts();
   }, []);
 
-  // ✅ Show toast when workout added/updated/deleted
+  // âœ… Show toast when workout added/updated/deleted
   useRealtimeWorkouts((payload) => {
     const { eventType, data } = payload;
     
@@ -222,7 +223,7 @@ export function ConflictMonitor() {
       onPress={() => router.push('/settings/conflicts')}
     >
       <Text style={styles.conflictText}>
-        ⚠️ {conflictCount} Conflict{conflictCount > 1 ? 's' : ''} Detected - Tap to Resolve
+        âš ï¸ {conflictCount} Conflict{conflictCount > 1 ? 's' : ''} Detected - Tap to Resolve
       </Text>
     </TouchableOpacity>
   );
@@ -234,17 +235,17 @@ export function ConflictMonitor() {
 
 export function CustomEventListener() {
   useEffect(() => {
-    // ✅ Listen to multiple events
+    // âœ… Listen to multiple events
     const unsubWorkouts = eventEmitter.on(Events.WORKOUTS_UPDATED, () => {
-      console.log('Workouts updated');
+      logger.log('Workouts updated');
     });
 
     const unsubTemplates = eventEmitter.on(Events.TEMPLATES_UPDATED, () => {
-      console.log('Templates updated');
+      logger.log('Templates updated');
     });
 
     const unsubSync = eventEmitter.on(Events.SYNC_COMPLETED, () => {
-      console.log('Sync completed');
+      logger.log('Sync completed');
     });
 
     // Cleanup
@@ -267,7 +268,7 @@ export function WorkoutCompleteButton({ workout }: { workout: any }) {
     // Save workout
     await saveWorkout(workout);
     
-    // ✅ Emit custom event
+    // âœ… Emit custom event
     eventEmitter.emit('workout-completed', workout);
   };
 
@@ -321,7 +322,7 @@ export function RealtimeStatusPanel() {
       <View style={styles.row}>
         <Text style={styles.label}>Connection:</Text>
         <Text style={[styles.value, isConnected && styles.valueSuccess]}>
-          {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
+          {isConnected ? 'ðŸŸ¢ Connected' : 'ðŸ”´ Disconnected'}
         </Text>
       </View>
 
@@ -348,12 +349,12 @@ export function AppRoot() {
   const { user } = useAuthStore();
 
   useEffect(() => {
-    // ✅ Initialize real-time when user is authenticated
+    // âœ… Initialize real-time when user is authenticated
     if (user?.id) {
       realtimeSync.init(user.id);
     }
 
-    // ✅ Cleanup when user logs out
+    // âœ… Cleanup when user logs out
     return () => {
       if (user?.id) {
         realtimeSync.cleanup();
@@ -382,7 +383,7 @@ export function WeightLogScreen() {
     loadEntries();
   }, []);
 
-  // ✅ Auto-refresh on real-time updates
+  // âœ… Auto-refresh on real-time updates
   useRealtimeWeightLog(() => {
     loadEntries();
   });
@@ -413,13 +414,13 @@ export function WeightLogScreen() {
 // Key Benefits:
 // ============================================================================
 //
-// 1. ✅ Instant updates across devices
-// 2. ✅ No polling needed
-// 3. ✅ Efficient (only notified on changes)
-// 4. ✅ Works with offline-first (local data updates instantly)
-// 5. ✅ Automatic conflict detection
-// 6. ✅ Easy to use hooks
-// 7. ✅ Event-driven architecture
+// 1. âœ… Instant updates across devices
+// 2. âœ… No polling needed
+// 3. âœ… Efficient (only notified on changes)
+// 4. âœ… Works with offline-first (local data updates instantly)
+// 5. âœ… Automatic conflict detection
+// 6. âœ… Easy to use hooks
+// 7. âœ… Event-driven architecture
 //
 // ============================================================================
 

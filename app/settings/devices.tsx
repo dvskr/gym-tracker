@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -28,7 +29,7 @@ export default function DevicesScreen() {
       const devicesData = await deviceManager.getDevices();
       setDevices(devicesData);
     } catch (error) {
-      console.error('Error loading devices:', error);
+      logger.error('Error loading devices:', error);
       Alert.alert('Error', 'Failed to load devices');
     } finally {
       setLoading(false);
@@ -51,7 +52,7 @@ export default function DevicesScreen() {
               await loadDevices();
               Alert.alert('Removed', 'Device removed successfully');
             } catch (error) {
-              console.error('Error removing device:', error);
+              logger.error('Error removing device:', error);
               Alert.alert('Error', 'Failed to remove device');
             } finally {
               setRemoving(null);
@@ -85,7 +86,7 @@ export default function DevicesScreen() {
               await loadDevices();
               Alert.alert('Success', `Signed out from ${count} device(s)`);
             } catch (error) {
-              console.error('Error removing devices:', error);
+              logger.error('Error removing devices:', error);
               Alert.alert('Error', 'Failed to sign out from other devices');
             } finally {
               setLoading(false);
@@ -169,7 +170,7 @@ export default function DevicesScreen() {
                     </View>
 
                     <Text style={styles.devicePlatform}>
-                      {device.platform.charAt(0).toUpperCase() + device.platform.slice(1)} • v
+                      {device.platform.charAt(0).toUpperCase() + device.platform.slice(1)} â€¢ v
                       {device.appVersion}
                     </Text>
 
@@ -234,10 +235,10 @@ export default function DevicesScreen() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>About Device Management</Text>
           <Text style={styles.infoText}>
-            • Your account can be signed in on multiple devices{'\n'}
-            • Data syncs automatically across all devices{'\n'}
-            • Remove devices you no longer use for security{'\n'}
-            • Device names are detected automatically
+            â€¢ Your account can be signed in on multiple devices{'\n'}
+            â€¢ Data syncs automatically across all devices{'\n'}
+            â€¢ Remove devices you no longer use for security{'\n'}
+            â€¢ Device names are detected automatically
           </Text>
         </View>
 

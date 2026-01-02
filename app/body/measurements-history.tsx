@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -151,7 +152,7 @@ const ComparisonCard: React.FC<ComparisonCardProps> = ({ comparisons, timeSpan, 
                 <Text style={styles.comparisonOld}>
                   {comp.firstValue}{comp.key === 'body_fat_percentage' ? '%' : unit}
                 </Text>
-                <Text style={styles.comparisonArrow}>→</Text>
+                <Text style={styles.comparisonArrow}>â†’</Text>
                 <Text style={styles.comparisonNew}>
                   {comp.latestValue}{comp.key === 'body_fat_percentage' ? '%' : unit}
                 </Text>
@@ -228,7 +229,7 @@ const RatiosCard: React.FC<RatiosCardProps> = ({ measurements, gender }) => {
 
       <View style={styles.ratioLegend}>
         <Text style={styles.legendText}>
-          💡 Shoulder-to-waist golden ratio: 1.618
+          ðŸ’¡ Shoulder-to-waist golden ratio: 1.618
         </Text>
       </View>
     </View>
@@ -500,7 +501,7 @@ const HistoryEntryRow: React.FC<HistoryEntryProps> = ({
             {value}{selectedMeasurement === 'body_fat_percentage' ? '%' : ` ${unit}`}
           </Text>
         ) : (
-          <Text style={styles.historyNoValue}>—</Text>
+          <Text style={styles.historyNoValue}>â€”</Text>
         )}
       </View>
 
@@ -752,7 +753,7 @@ export default function MeasurementsHistoryScreen() {
       }
       setMultiChartData(multiData);
     } catch (error) {
-      console.error('Error fetching measurement history:', error);
+      logger.error('Error fetching measurement history:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -773,7 +774,7 @@ export default function MeasurementsHistoryScreen() {
       await deleteMeasurementById(id);
       fetchData();
     } catch (error) {
-      console.error('Error deleting measurement:', error);
+      logger.error('Error deleting measurement:', error);
       Alert.alert('Error', 'Failed to delete measurement');
     }
   };

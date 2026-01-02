@@ -1,4 +1,5 @@
 import { healthService } from './healthService';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '../supabase';
 import type { HeartRateStats } from './healthService';
 
@@ -11,18 +12,18 @@ export async function saveWorkoutHeartRate(
   endTime: Date
 ): Promise<boolean> {
   try {
-    console.log(`❤️ Fetching heart rate data for workout ${workoutId}...`);
+    logger.log(`â¤ï¸ Fetching heart rate data for workout ${workoutId}...`);
 
     // Fetch heart rate data from health platform
     const stats = await healthService.getHeartRate(startTime, endTime);
 
     if (!stats) {
-      console.log('ℹ️ No heart rate data found for this workout');
+      logger.log('â„¹ï¸ No heart rate data found for this workout');
       return false;
     }
 
-    console.log(
-      `📊 Heart rate stats: Avg ${stats.average}, Max ${stats.max}, Min ${stats.min}`
+    logger.log(
+      `ðŸ“Š Heart rate stats: Avg ${stats.average}, Max ${stats.max}, Min ${stats.min}`
     );
 
     // Save to database
@@ -38,10 +39,10 @@ export async function saveWorkoutHeartRate(
 
     if (error) throw error;
 
-    console.log(`✅ Heart rate data saved for workout ${workoutId}`);
+    logger.log(`âœ… Heart rate data saved for workout ${workoutId}`);
     return true;
   } catch (error) {
-    console.error('❌ Error saving workout heart rate:', error);
+    logger.error('âŒ Error saving workout heart rate:', error);
     return false;
   }
 }
@@ -52,7 +53,7 @@ export async function saveWorkoutHeartRate(
 export async function batchUpdateWorkoutHeartRate(
   workouts: Array<{ id: string; started_at: string; ended_at: string }>
 ): Promise<{ success: number; failed: number; skipped: number }> {
-  console.log(`📦 Batch updating heart rate for ${workouts.length} workouts...`);
+  logger.log(`ðŸ“¦ Batch updating heart rate for ${workouts.length} workouts...`);
 
   let success = 0;
   let failed = 0;
@@ -87,8 +88,8 @@ export async function batchUpdateWorkoutHeartRate(
     }
   }
 
-  console.log(
-    `✅ Batch update complete: ${success} updated, ${failed} failed, ${skipped} skipped`
+  logger.log(
+    `âœ… Batch update complete: ${success} updated, ${failed} failed, ${skipped} skipped`
   );
 
   return { success, failed, skipped };
@@ -115,7 +116,7 @@ export async function getWorkoutsWithoutHeartRate(
 
     return data || [];
   } catch (error) {
-    console.error('❌ Error fetching workouts without heart rate:', error);
+    logger.error('âŒ Error fetching workouts without heart rate:', error);
     return [];
   }
 }
@@ -151,7 +152,7 @@ export async function calculateHeartRateRecovery(
       recoveryHR: recoveryStats.min,
     };
   } catch (error) {
-    console.error('❌ Error calculating heart rate recovery:', error);
+    logger.error('âŒ Error calculating heart rate recovery:', error);
     return null;
   }
 }
@@ -174,7 +175,7 @@ export function formatHeartRateStats(stats: HeartRateStats): string {
     parts.push(`Resting: ${stats.resting} bpm`);
   }
 
-  return parts.join(' • ');
+  return parts.join(' â€¢ ');
 }
 
 /**

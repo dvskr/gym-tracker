@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
 import { invalidateCoachContextAfterInjuryUpdate } from '@/lib/ai/cacheInvalidation';
 
@@ -68,7 +69,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
         loading: false 
       });
     } catch (error: any) {
-      console.error('Error fetching injuries:', error);
+      logger.error('Error fetching injuries:', error);
       set({ 
         error: error.message || 'Failed to fetch injuries',
         loading: false 
@@ -113,7 +114,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       set({ loading: false });
       return true;
     } catch (error: any) {
-      console.error('Error adding injury:', error);
+      logger.error('Error adding injury:', error);
       set({ 
         error: error.message || 'Failed to add injury',
         loading: false 
@@ -148,7 +149,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       set({ loading: false });
       return true;
     } catch (error: any) {
-      console.error('Error updating injury:', error);
+      logger.error('Error updating injury:', error);
       set({ 
         error: error.message || 'Failed to update injury',
         loading: false 
@@ -194,7 +195,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       set({ loading: false });
       return true;
     } catch (error: any) {
-      console.error('Error deleting injury:', error);
+      logger.error('Error deleting injury:', error);
       set({ 
         error: error.message || 'Failed to delete injury',
         loading: false 

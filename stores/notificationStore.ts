@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppNotification } from '@/types/notifications';
@@ -39,7 +40,7 @@ export const useNotificationStore = create<NotificationStore>()(
           };
         });
 
-        console.log('📬 Added notification:', newNotification.title);
+        logger.log('ðŸ“¬ Added notification:', newNotification.title);
       },
 
       markAsRead: (id) => {
@@ -62,7 +63,7 @@ export const useNotificationStore = create<NotificationStore>()(
           unreadCount: 0,
         }));
 
-        console.log('✅ Marked all notifications as read');
+        logger.log('âœ… Marked all notifications as read');
       },
 
       deleteNotification: (id) => {
@@ -79,7 +80,7 @@ export const useNotificationStore = create<NotificationStore>()(
 
       clearAll: () => {
         set({ notifications: [], unreadCount: 0 });
-        console.log('🗑️ Cleared all notifications');
+        logger.log('ðŸ—‘ï¸ Cleared all notifications');
       },
 
       getUnreadCount: () => {

@@ -33,7 +33,8 @@
     "verify:thumbnails": "npx tsx scripts/verify-thumbnail-sizes.ts",
     "verify:supabase": "npx tsx scripts/verify-supabase-quality.ts",
     "assign:measurements": "npx tsx scripts/assign-measurement-types.ts",
-    "verify:measurements": "npx tsx scripts/verify-measurement-types.ts"
+    "verify:measurements": "npx tsx scripts/verify-measurement-types.ts",
+    "thumbnails:generate": "npx tsx scripts/generate-all-thumbnails.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

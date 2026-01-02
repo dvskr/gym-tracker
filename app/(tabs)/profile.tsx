@@ -1,4 +1,5 @@
 import React, { useState, useSyncExternalStore } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -153,7 +154,7 @@ export default function ProfileScreen() {
 
   const handleChangeAvatar = () => {
     // Open image picker
-    console.log('Change avatar');
+    logger.log('Change avatar');
   };
 
   const handleUnitsSettings = () => {
@@ -185,7 +186,7 @@ export default function ProfileScreen() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => console.log('Deleting account...'),
+          onPress: () => logger.log('Deleting account...'),
         },
       ]
     );
@@ -364,17 +365,17 @@ export default function ProfileScreen() {
           <SettingItem
             icon={<FileText size={24} color="#60a5fa" />}
             label="Terms of Service"
-            onPress={() => console.log('Terms')}
+            onPress={() => logger.log('Terms')}
           />
           <SettingItem
             icon={<Shield size={24} color="#60a5fa" />}
             label="Privacy Policy"
-            onPress={() => console.log('Privacy')}
+            onPress={() => logger.log('Privacy')}
           />
           <SettingItem
             icon={<Mail size={24} color="#60a5fa" />}
             label="Contact Support"
-            onPress={() => console.log('Support')}
+            onPress={() => logger.log('Support')}
           />
           <SettingItem
             icon={<Star size={24} color="#60a5fa" />}

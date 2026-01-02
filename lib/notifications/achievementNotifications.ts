@@ -1,4 +1,5 @@
 import { notificationService } from './notificationService';
+import { logger } from '@/lib/utils/logger';
 import * as Haptics from 'expo-haptics';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
@@ -25,19 +26,19 @@ export interface Achievement {
 
 const PR_MESSAGES = {
   weight: [
-    "New weight PR! {exercise}: {value}{unit} 🏆",
+    "New weight PR! {exercise}: {value}{unit} ðŸ†",
     "You're getting stronger! {exercise} PR: {value}{unit}",
-    "Beast mode! New {exercise} record: {value}{unit} 💪",
+    "Beast mode! New {exercise} record: {value}{unit} ðŸ’ª",
     "Crushing it! {exercise}: {value}{unit} personal best!",
   ],
   reps: [
-    "Rep record! {exercise}: {value} reps 🎯",
+    "Rep record! {exercise}: {value} reps ðŸŽ¯",
     "More reps than ever! {exercise}: {value}",
-    "Rep beast! New {exercise} record: {value} reps 💯",
+    "Rep beast! New {exercise} record: {value} reps ðŸ’¯",
   ],
   volume: [
-    "Volume PR! {exercise}: {value}{unit} total 📈",
-    "Massive volume! {exercise}: {value}{unit} 🚀",
+    "Volume PR! {exercise}: {value}{unit} total ðŸ“ˆ",
+    "Massive volume! {exercise}: {value}{unit} ðŸš€",
   ],
 };
 
@@ -64,14 +65,14 @@ class AchievementNotificationService {
       // Add to notification center
       useNotificationStore.getState().addNotification({
         type: 'pr',
-        title: 'New Personal Record! 🏆',
+        title: 'New Personal Record! ðŸ†',
         message: `${pr.exerciseName}: ${pr.newValue}${pr.unit || ''}`,
         data: pr,
       });
 
       // Push notification (only if app is backgrounded)
       await notificationService.sendNotification(
-        '🏆 New Personal Record!',
+        'ðŸ† New Personal Record!',
         message,
         {
           channelId: 'achievements',
@@ -84,9 +85,9 @@ class AchievementNotificationService {
         }
       );
 
-      console.log(`🏆 PR notification sent: ${pr.exerciseName} ${pr.type}`);
+      logger.log(`ðŸ† PR notification sent: ${pr.exerciseName} ${pr.type}`);
     } catch (error) {
-      console.error('Failed to notify PR:', error);
+      logger.error('Failed to notify PR:', error);
     }
   }
 
@@ -129,9 +130,9 @@ class AchievementNotificationService {
         }
       );
 
-      console.log(`🎖️ Achievement unlocked: ${achievement.title}`);
+      logger.log(`ðŸŽ–ï¸ Achievement unlocked: ${achievement.title}`);
     } catch (error) {
-      console.error('Failed to notify achievement:', error);
+      logger.error('Failed to notify achievement:', error);
     }
   }
 
@@ -155,7 +156,7 @@ class AchievementNotificationService {
           id: 'first_workout',
           title: 'First Steps',
           description: 'Completed your first workout',
-          icon: '🎯',
+          icon: 'ðŸŽ¯',
           category: 'workout',
         });
       }
@@ -167,7 +168,7 @@ class AchievementNotificationService {
           id: `workouts_${workoutStats.totalWorkouts}`,
           title: `${workoutStats.totalWorkouts} Workouts!`,
           description: `Completed ${workoutStats.totalWorkouts} workouts`,
-          icon: workoutStats.totalWorkouts >= 500 ? '🏆' : '💪',
+          icon: workoutStats.totalWorkouts >= 500 ? 'ðŸ†' : 'ðŸ’ª',
           category: 'workout',
         });
       }
@@ -179,7 +180,7 @@ class AchievementNotificationService {
           id: `streak_${workoutStats.streak}`,
           title: `${workoutStats.streak}-Day Warrior!`,
           description: `Worked out ${workoutStats.streak} days in a row`,
-          icon: '🔥',
+          icon: 'ðŸ”¥',
           category: 'streak',
         });
       }
@@ -191,7 +192,7 @@ class AchievementNotificationService {
           id: `sets_${workoutStats.totalSets}`,
           title: `${workoutStats.totalSets.toLocaleString()} Sets!`,
           description: `Completed ${workoutStats.totalSets.toLocaleString()} total sets`,
-          icon: '📊',
+          icon: 'ðŸ“Š',
           category: 'volume',
         });
       }
@@ -203,7 +204,7 @@ class AchievementNotificationService {
           id: `reps_${workoutStats.totalReps}`,
           title: `${workoutStats.totalReps.toLocaleString()} Reps!`,
           description: `Completed ${workoutStats.totalReps.toLocaleString()} total reps`,
-          icon: '🔢',
+          icon: 'ðŸ”¢',
           category: 'volume',
         });
       }
@@ -224,7 +225,7 @@ class AchievementNotificationService {
             id: `volume_${milestone.value}`,
             title: milestone.title,
             description: `Lifted ${milestone.value.toLocaleString()}+ lbs total`,
-            icon: milestone.value >= 1000000 ? '🏋️' : '💯',
+            icon: milestone.value >= 1000000 ? 'ðŸ‹ï¸' : 'ðŸ’¯',
             category: 'volume',
           });
         }
@@ -239,7 +240,7 @@ class AchievementNotificationService {
         }
       }
     } catch (error) {
-      console.error('Failed to check workout achievements:', error);
+      logger.error('Failed to check workout achievements:', error);
     }
   }
 
@@ -256,13 +257,13 @@ class AchievementNotificationService {
         .maybeSingle();
 
       if (error) {
-        console.error('Error checking achievement:', error);
+        logger.error('Error checking achievement:', error);
         return false;
       }
 
       return !!data;
     } catch (error) {
-      console.error('Error checking achievement:', error);
+      logger.error('Error checking achievement:', error);
       return false;
     }
   }
@@ -281,10 +282,10 @@ class AchievementNotificationService {
         });
 
       if (error) {
-        console.error('Error saving achievement:', error);
+        logger.error('Error saving achievement:', error);
       }
     } catch (error) {
-      console.error('Error saving achievement:', error);
+      logger.error('Error saving achievement:', error);
     }
   }
 
@@ -299,13 +300,13 @@ class AchievementNotificationService {
         .eq('user_id', userId);
 
       if (error) {
-        console.error('Error getting achievements:', error);
+        logger.error('Error getting achievements:', error);
         return [];
       }
 
       return data.map(a => a.achievement_id);
     } catch (error) {
-      console.error('Error getting achievements:', error);
+      logger.error('Error getting achievements:', error);
       return [];
     }
   }
@@ -321,13 +322,13 @@ class AchievementNotificationService {
         .eq('user_id', userId);
 
       if (error) {
-        console.error('Error counting achievements:', error);
+        logger.error('Error counting achievements:', error);
         return 0;
       }
 
       return count || 0;
     } catch (error) {
-      console.error('Error counting achievements:', error);
+      logger.error('Error counting achievements:', error);
       return 0;
     }
   }

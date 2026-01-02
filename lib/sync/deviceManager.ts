@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Application from 'expo-application';
@@ -37,7 +38,7 @@ class DeviceManager {
     if (!id) {
       id = this.generateDeviceId();
       await AsyncStorage.setItem(this.DEVICE_ID_KEY, id);
-      console.log('📱 New device ID created:', id);
+      logger.log('ðŸ“± New device ID created:', id);
     }
 
     this.deviceId = id;
@@ -48,11 +49,11 @@ class DeviceManager {
    * Register this device in the database
    */
   async registerDevice(): Promise<void> {
-    console.log('📱 Registering device...');
+    logger.log('ðŸ“± Registering device...');
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) {
-      console.log('⚠️ No user ID, skipping device registration');
+      logger.log('âš ï¸ No user ID, skipping device registration');
       return;
     }
 
@@ -73,12 +74,12 @@ class DeviceManager {
       );
 
       if (error) {
-        console.error('❌ Error registering device:', error);
+        logger.error('âŒ Error registering device:', error);
       } else {
-        console.log('✅ Device registered successfully');
+        logger.log('âœ… Device registered successfully');
       }
     } catch (error) {
-      console.error('❌ Error in registerDevice:', error);
+      logger.error('âŒ Error in registerDevice:', error);
     }
   }
 
@@ -98,7 +99,7 @@ class DeviceManager {
         .eq('id', deviceId)
         .eq('user_id', userId);
     } catch (error) {
-      console.error('Error updating last active:', error);
+      logger.error('Error updating last active:', error);
     }
   }
 
@@ -116,7 +117,7 @@ class DeviceManager {
       this.updateLastActive();
     }, 5 * 60 * 1000);
 
-    console.log('⏰ Started periodic device updates (every 5 min)');
+    logger.log('â° Started periodic device updates (every 5 min)');
   }
 
   /**
@@ -126,7 +127,7 @@ class DeviceManager {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log('⏸️ Stopped periodic device updates');
+      logger.log('â¸ï¸ Stopped periodic device updates');
     }
   }
 
@@ -147,7 +148,7 @@ class DeviceManager {
         .order('last_active', { ascending: false });
 
       if (error) {
-        console.error('Error fetching devices:', error);
+        logger.error('Error fetching devices:', error);
         return [];
       }
 
@@ -161,7 +162,7 @@ class DeviceManager {
         createdAt: new Date(d.created_at),
       }));
     } catch (error) {
-      console.error('Error getting devices:', error);
+      logger.error('Error getting devices:', error);
       return [];
     }
   }
@@ -170,19 +171,19 @@ class DeviceManager {
    * Remove a device (logout from device)
    */
   async removeDevice(deviceId: string): Promise<void> {
-    console.log('🗑️ Removing device:', deviceId);
+    logger.log('ðŸ—‘ï¸ Removing device:', deviceId);
 
     try {
       const { error } = await supabase.from('user_devices').delete().eq('id', deviceId);
 
       if (error) {
-        console.error('Error removing device:', error);
+        logger.error('Error removing device:', error);
         throw error;
       }
 
-      console.log('✅ Device removed successfully');
+      logger.log('âœ… Device removed successfully');
     } catch (error) {
-      console.error('Error in removeDevice:', error);
+      logger.error('Error in removeDevice:', error);
       throw error;
     }
   }
@@ -191,7 +192,7 @@ class DeviceManager {
    * Remove all devices except current
    */
   async removeAllOtherDevices(): Promise<number> {
-    console.log('🗑️ Removing all other devices...');
+    logger.log('ðŸ—‘ï¸ Removing all other devices...');
 
     const userId = useAuthStore.getState().user?.id;
     const currentDeviceId = await this.getDeviceId();
@@ -209,10 +210,10 @@ class DeviceManager {
       if (error) throw error;
 
       const count = data?.length || 0;
-      console.log(`✅ Removed ${count} device(s)`);
+      logger.log(`âœ… Removed ${count} device(s)`);
       return count;
     } catch (error) {
-      console.error('Error removing other devices:', error);
+      logger.error('Error removing other devices:', error);
       throw error;
     }
   }
@@ -253,7 +254,7 @@ class DeviceManager {
         .single();
 
       if (deviceError) {
-        console.error('Error fetching device info:', deviceError);
+        logger.error('Error fetching device info:', deviceError);
       }
 
       return {
@@ -263,7 +264,7 @@ class DeviceManager {
         startedAt: new Date(workout.started_at),
       };
     } catch (error) {
-      console.error('Error checking active workout:', error);
+      logger.error('Error checking active workout:', error);
       return null;
     }
   }
@@ -272,7 +273,7 @@ class DeviceManager {
    * End workout on another device
    */
   async endWorkoutOnOtherDevice(workoutId: string): Promise<void> {
-    console.log('⏹️ Ending workout on other device:', workoutId);
+    logger.log('â¹ï¸ Ending workout on other device:', workoutId);
 
     try {
       const { error } = await supabase
@@ -285,9 +286,9 @@ class DeviceManager {
 
       if (error) throw error;
 
-      console.log('✅ Workout ended on other device');
+      logger.log('âœ… Workout ended on other device');
     } catch (error) {
-      console.error('Error ending workout on other device:', error);
+      logger.error('Error ending workout on other device:', error);
       throw error;
     }
   }
@@ -325,7 +326,7 @@ class DeviceManager {
         appVersion = Application.nativeApplicationVersion || '1.0.0';
       }
     } catch (error) {
-      console.error('Error getting device info:', error);
+      logger.error('Error getting device info:', error);
     }
 
     return { name: deviceName, appVersion };
@@ -337,13 +338,13 @@ class DeviceManager {
   getPlatformIcon(platform: string): string {
     switch (platform) {
       case 'ios':
-        return '📱';
+        return 'ðŸ“±';
       case 'android':
-        return '🤖';
+        return 'ðŸ¤–';
       case 'web':
-        return '🌐';
+        return 'ðŸŒ';
       default:
-        return '📱';
+        return 'ðŸ“±';
     }
   }
 

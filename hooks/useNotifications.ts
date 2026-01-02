@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
@@ -12,7 +13,7 @@ export function useNotifications() {
     // Listen for notifications received while app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log('Notification received:', notification);
+        logger.log('Notification received:', notification);
         // Handle notification received
       }
     );
@@ -20,7 +21,7 @@ export function useNotifications() {
     // Listen for user interactions with notifications
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        console.log('Notification response:', response);
+        logger.log('Notification response:', response);
         handleNotificationResponse(response);
       }
     );

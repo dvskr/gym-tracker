@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import { logger } from '@/lib/utils/logger';
 import * as Sharing from 'expo-sharing';
 import { supabase } from '../supabase';
 
@@ -127,7 +128,7 @@ export async function generateExport(
       return await createCSVExport(data);
     }
   } catch (error) {
-    console.error('Error generating export:', error);
+    logger.error('Error generating export:', error);
     throw error;
   }
 }
@@ -235,7 +236,7 @@ export async function getExportSizeEstimate(userId: string): Promise<number> {
     const estimatedBytes = (workoutCount || 0) * 1024 + (templateCount || 0) * 512;
     return estimatedBytes / (1024 * 1024); // Convert to MB
   } catch (error) {
-    console.error('Error estimating export size:', error);
+    logger.error('Error estimating export size:', error);
     return 1; // Default 1MB estimate
   }
 }

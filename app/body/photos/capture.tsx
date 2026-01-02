@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -77,9 +78,9 @@ const PhotoTypeCard: React.FC<PhotoTypeCardProps> = ({
       case 'back':
         return <User size={24} color={isSelected ? '#3b82f6' : '#64748b'} style={{ transform: [{ scaleX: -1 }] }} />;
       case 'flexed_front':
-        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>💪</Text>;
+        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>ðŸ’ª</Text>;
       case 'flexed_back':
-        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>🦾</Text>;
+        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>ðŸ¦¾</Text>;
       default:
         return <User size={24} color={isSelected ? '#3b82f6' : '#64748b'} />;
     }
@@ -129,7 +130,7 @@ export default function CapturePhotoScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (error) {
-      console.error('Error taking photo:', error);
+      logger.error('Error taking photo:', error);
       Alert.alert(
         'Camera Error',
         'Unable to access camera. Please check your permissions in Settings.'
@@ -150,7 +151,7 @@ export default function CapturePhotoScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (error) {
-      console.error('Error picking photo:', error);
+      logger.error('Error picking photo:', error);
       Alert.alert(
         'Gallery Error',
         'Unable to access photo gallery. Please check your permissions in Settings.'
@@ -198,7 +199,7 @@ export default function CapturePhotoScreen() {
         [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
-      console.error('Error saving photo:', error);
+      logger.error('Error saving photo:', error);
       Alert.alert('Error', 'Failed to save photo. Please try again.');
     } finally {
       setIsSaving(false);
@@ -335,7 +336,7 @@ export default function CapturePhotoScreen() {
         {/* Privacy Notice */}
         <View style={styles.privacyNotice}>
           <Text style={styles.privacyText}>
-            🔒 Photos are stored locally on your device and are not uploaded to the cloud.
+            ðŸ”’ Photos are stored locally on your device and are not uploaded to the cloud.
           </Text>
         </View>
 

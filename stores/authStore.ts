@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { logger } from '@/lib/utils/logger';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { seedDefaultTemplates, addNewDefaultTemplates } from '@/lib/data/defaultTemplates';
@@ -36,7 +37,7 @@ async function seedTemplatesInBackground(userId: string) {
       // Then add any new templates (for existing users)
       await addNewDefaultTemplates(userId);
     } catch (error) {
-      console.error('Background template seeding failed:', error);
+      logger.error('Background template seeding failed:', error);
     }
   }, 1000); // Small delay to let app settle
 }
@@ -85,7 +86,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
       });
     } catch (error) {
-      console.error('Error initializing auth:', error);
+      logger.error('Error initializing auth:', error);
       set({ isInitialized: true, isLoading: false });
     }
   },

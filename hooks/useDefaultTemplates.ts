@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { fetchDefaultTemplates, getEnrichedFallbackTemplates, FALLBACK_TEMPLATES, DefaultTemplate } from '@/lib/templates/defaultTemplates';
 
 export function useDefaultTemplates() {
@@ -16,7 +17,7 @@ export function useDefaultTemplates() {
         if (dbTemplates.length > 0 && dbTemplates.every(t => t.exercises.length >= 3)) {
           setTemplates(dbTemplates);
         } else {
-          console.log('Using enriched fallback templates - DB templates incomplete');
+          logger.log('Using enriched fallback templates - DB templates incomplete');
           // Use enriched fallback templates that match exercise names to database
           const enrichedFallbacks = await getEnrichedFallbackTemplates();
           if (enrichedFallbacks.length > 0) {
@@ -27,7 +28,7 @@ export function useDefaultTemplates() {
           }
         }
       } catch (err) {
-        console.error('Error loading default templates:', err);
+        logger.error('Error loading default templates:', err);
         setError('Failed to load templates');
         // Try to use enriched fallbacks even on error
         try {

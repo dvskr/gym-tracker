@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 import * as FileSystem from 'expo-file-system/legacy';
 import { supabase } from '../supabase';
 import { useAuthStore } from '@/stores/authStore';
@@ -56,7 +57,7 @@ class BackupService {
    * Create a full backup of all user data
    */
   async createBackup(isAutomatic = false): Promise<{ backup: Backup; data: BackupData }> {
-    console.log('🔄 Creating backup...');
+    logger.log('ðŸ”„ Creating backup...');
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) {
@@ -121,11 +122,11 @@ class BackupService {
         isAutomatic,
       };
 
-      console.log(`✅ Backup created: ${backup.id}, size: ${this.formatBytes(backup.size)}`);
+      logger.log(`âœ… Backup created: ${backup.id}, size: ${this.formatBytes(backup.size)}`);
 
       return { backup, data: backupData };
     } catch (error) {
-      console.error('❌ Error creating backup:', error);
+      logger.error('âŒ Error creating backup:', error);
       throw error;
     }
   }
@@ -134,7 +135,7 @@ class BackupService {
    * Save backup to Supabase Storage
    */
   async saveToCloud(backup: Backup, data: BackupData): Promise<string> {
-    console.log('☁️ Saving backup to cloud...');
+    logger.log('â˜ï¸ Saving backup to cloud...');
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) throw new Error('Not authenticated');
@@ -168,11 +169,11 @@ class BackupService {
       // Update last backup time
       await AsyncStorage.setItem(this.LAST_BACKUP_KEY, Date.now().toString());
 
-      console.log(`✅ Backup saved to cloud: ${fileName}`);
+      logger.log(`âœ… Backup saved to cloud: ${fileName}`);
 
       return fileName;
     } catch (error) {
-      console.error('❌ Error saving backup to cloud:', error);
+      logger.error('âŒ Error saving backup to cloud:', error);
       throw error;
     }
   }
@@ -181,7 +182,7 @@ class BackupService {
    * Save backup locally to device
    */
   async saveLocally(backup: Backup, data: BackupData): Promise<string> {
-    console.log('💾 Saving backup locally...');
+    logger.log('ðŸ’¾ Saving backup locally...');
 
     try {
       const backupsDir = `${FileSystem.documentDirectory}backups/`;
@@ -197,11 +198,11 @@ class BackupService {
       // Write backup file
       await FileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
 
-      console.log(`✅ Backup saved locally: ${filePath}`);
+      logger.log(`âœ… Backup saved locally: ${filePath}`);
 
       return filePath;
     } catch (error) {
-      console.error('❌ Error saving backup locally:', error);
+      logger.error('âŒ Error saving backup locally:', error);
       throw error;
     }
   }
@@ -231,7 +232,7 @@ class BackupService {
         isAutomatic: row.is_automatic,
       }));
     } catch (error) {
-      console.error('❌ Error listing backups:', error);
+      logger.error('âŒ Error listing backups:', error);
       throw error;
     }
   }
@@ -240,7 +241,7 @@ class BackupService {
    * Download backup from cloud
    */
   async downloadBackup(backupId: string): Promise<BackupData> {
-    console.log(`📥 Downloading backup: ${backupId}`);
+    logger.log(`ðŸ“¥ Downloading backup: ${backupId}`);
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) throw new Error('Not authenticated');
@@ -255,11 +256,11 @@ class BackupService {
       const text = await data.text();
       const backupData = JSON.parse(text);
 
-      console.log(`✅ Backup downloaded: ${backupId}`);
+      logger.log(`âœ… Backup downloaded: ${backupId}`);
 
       return backupData;
     } catch (error) {
-      console.error('❌ Error downloading backup:', error);
+      logger.error('âŒ Error downloading backup:', error);
       throw error;
     }
   }
@@ -272,7 +273,7 @@ class BackupService {
     onProgress?: RestoreProgressCallback,
     overwriteMode = false
   ): Promise<RestoreResult> {
-    console.log('🔄 Restoring backup...');
+    logger.log('ðŸ”„ Restoring backup...');
 
     const result: RestoreResult = {
       success: false,
@@ -323,7 +324,7 @@ class BackupService {
         await this.restoreProfile(backupData.profile, overwriteMode);
         result.tablesRestored.push('profile');
         result.itemsRestored++;
-        completeStep('✓ Profile restored');
+        completeStep('âœ“ Profile restored');
       } catch (error) {
         result.errors.push(`Profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
@@ -344,7 +345,7 @@ class BackupService {
         );
         result.tablesRestored.push('workouts');
         result.itemsRestored += count;
-        completeStep(`✓ ${count} workouts restored`);
+        completeStep(`âœ“ ${count} workouts restored`);
       } catch (error) {
         result.errors.push(`Workouts: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
@@ -364,7 +365,7 @@ class BackupService {
         );
         result.tablesRestored.push('templates');
         result.itemsRestored += count;
-        completeStep(`✓ ${count} templates restored`);
+        completeStep(`âœ“ ${count} templates restored`);
       } catch (error) {
         result.errors.push(`Templates: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
@@ -379,7 +380,7 @@ class BackupService {
         const count = await this.restoreWeightLog(backupData.bodyWeightLog, overwriteMode);
         result.tablesRestored.push('bodyWeightLog');
         result.itemsRestored += count;
-        completeStep(`✓ ${count} weight entries restored`);
+        completeStep(`âœ“ ${count} weight entries restored`);
       } catch (error) {
         result.errors.push(`Weight Log: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
@@ -394,7 +395,7 @@ class BackupService {
         const count = await this.restoreMeasurements(backupData.bodyMeasurements, overwriteMode);
         result.tablesRestored.push('bodyMeasurements');
         result.itemsRestored += count;
-        completeStep(`✓ ${count} measurements restored`);
+        completeStep(`âœ“ ${count} measurements restored`);
       } catch (error) {
         result.errors.push(
           `Measurements: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -411,7 +412,7 @@ class BackupService {
         const count = await this.restorePersonalRecords(backupData.personalRecords, overwriteMode);
         result.tablesRestored.push('personalRecords');
         result.itemsRestored += count;
-        completeStep(`✓ ${count} personal records restored`);
+        completeStep(`âœ“ ${count} personal records restored`);
       } catch (error) {
         result.errors.push(`PRs: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
@@ -427,14 +428,14 @@ class BackupService {
           const count = await this.restoreCustomExercises(backupData.customExercises, overwriteMode);
           result.tablesRestored.push('customExercises');
           result.itemsRestored += count;
-          completeStep(`✓ ${count} custom exercises restored`);
+          completeStep(`âœ“ ${count} custom exercises restored`);
         } catch (error) {
           result.errors.push(
             `Custom Exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
           );
         }
       } else {
-        completeStep('✓ No custom exercises');
+        completeStep('âœ“ No custom exercises');
       }
 
       // Step 8: Restore settings
@@ -443,20 +444,20 @@ class BackupService {
         await this.restoreSettings(backupData.settings);
         result.tablesRestored.push('settings');
         result.itemsRestored++;
-        completeStep('✓ Settings restored');
+        completeStep('âœ“ Settings restored');
       } catch (error) {
         result.errors.push(`Settings: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
       result.success = result.errors.length === 0;
 
-      console.log(
-        `✅ Restore complete: ${result.itemsRestored} items, ${result.errors.length} errors`
+      logger.log(
+        `âœ… Restore complete: ${result.itemsRestored} items, ${result.errors.length} errors`
       );
 
       return result;
     } catch (error) {
-      console.error('❌ Error restoring backup:', error);
+      logger.error('âŒ Error restoring backup:', error);
       result.errors.push(error instanceof Error ? error.message : 'Unknown error');
       return result;
     }
@@ -466,7 +467,7 @@ class BackupService {
    * Delete backup from cloud
    */
   async deleteBackup(backupId: string): Promise<void> {
-    console.log(`🗑️ Deleting backup: ${backupId}`);
+    logger.log(`ðŸ—‘ï¸ Deleting backup: ${backupId}`);
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) throw new Error('Not authenticated');
@@ -487,9 +488,9 @@ class BackupService {
 
       if (metadataError) throw metadataError;
 
-      console.log(`✅ Backup deleted: ${backupId}`);
+      logger.log(`âœ… Backup deleted: ${backupId}`);
     } catch (error) {
-      console.error('❌ Error deleting backup:', error);
+      logger.error('âŒ Error deleting backup:', error);
       throw error;
     }
   }
@@ -498,7 +499,7 @@ class BackupService {
    * Cleanup old backups (keep last N)
    */
   async cleanupOldBackups(keepCount = 5): Promise<number> {
-    console.log(`🧹 Cleaning up old backups (keeping ${keepCount})...`);
+    logger.log(`ðŸ§¹ Cleaning up old backups (keeping ${keepCount})...`);
 
     try {
       const backups = await this.listBackups();
@@ -508,11 +509,11 @@ class BackupService {
         await this.deleteBackup(backup.id);
       }
 
-      console.log(`✅ Deleted ${toDelete.length} old backup(s)`);
+      logger.log(`âœ… Deleted ${toDelete.length} old backup(s)`);
 
       return toDelete.length;
     } catch (error) {
-      console.error('❌ Error cleaning up backups:', error);
+      logger.error('âŒ Error cleaning up backups:', error);
       throw error;
     }
   }
@@ -525,7 +526,7 @@ class BackupService {
       const time = await AsyncStorage.getItem(this.LAST_BACKUP_KEY);
       return time ? parseInt(time, 10) : null;
     } catch (error) {
-      console.error('Error getting last backup time:', error);
+      logger.error('Error getting last backup time:', error);
       return null;
     }
   }
@@ -543,7 +544,7 @@ class BackupService {
         ? JSON.parse(settings)
         : { enabled: false, frequency: 'weekly' };
     } catch (error) {
-      console.error('Error getting auto-backup settings:', error);
+      logger.error('Error getting auto-backup settings:', error);
       return { enabled: false, frequency: 'weekly' };
     }
   }
@@ -557,9 +558,9 @@ class BackupService {
   }): Promise<void> {
     try {
       await AsyncStorage.setItem(this.AUTO_BACKUP_KEY, JSON.stringify(settings));
-      console.log('✅ Auto-backup settings updated:', settings);
+      logger.log('âœ… Auto-backup settings updated:', settings);
     } catch (error) {
-      console.error('Error updating auto-backup settings:', error);
+      logger.error('Error updating auto-backup settings:', error);
       throw error;
     }
   }

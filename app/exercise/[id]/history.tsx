@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
+import { logger } from '@/lib/utils/logger';
 import {
   ArrowLeft,
   Calendar,
@@ -535,7 +536,7 @@ export default function ExerciseHistoryScreen() {
       setHistory(historyData);
       setStats(statsData);
     } catch (error) {
-      console.error('Failed to fetch exercise history:', error);
+      logger.error('Failed to fetch exercise history:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

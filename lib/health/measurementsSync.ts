@@ -1,4 +1,5 @@
 import { healthService, BodyMeasurementData } from './healthService';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '../supabase';
 import { useSettingsStore } from '@/stores/settingsStore';
 
@@ -32,7 +33,7 @@ export async function logMeasurementsAndSync(
     const measureDate = data.date || new Date();
     const dateStr = measureDate.toISOString().split('T')[0];
 
-    console.log('📏 Logging body measurements...');
+    logger.log('ðŸ“ Logging body measurements...');
 
     // 1. Save to Supabase
     const { error } = await supabase.from('body_measurements').upsert(
@@ -64,7 +65,7 @@ export async function logMeasurementsAndSync(
 
     if (error) throw error;
 
-    console.log('✅ Measurements saved to database');
+    logger.log('âœ… Measurements saved to database');
 
     // 2. Sync supported measurements to health platform
     const { healthSyncEnabled, syncBodyMeasurements } = useSettingsStore.getState();
@@ -82,8 +83,8 @@ export async function logMeasurementsAndSync(
       const hasSupportedMeasurements = false; // Currently none beyond weight/height
 
       if (!hasSupportedMeasurements) {
-        console.log('ℹ️ No supported measurements to sync (waist/hip require react-native-health)');
-        console.log('ℹ️ These measurements are stored in the app only');
+        logger.log('â„¹ï¸ No supported measurements to sync (waist/hip require react-native-health)');
+        logger.log('â„¹ï¸ These measurements are stored in the app only');
       } else {
         const synced = await healthService.saveBodyMeasurements(syncData);
 
@@ -98,16 +99,16 @@ export async function logMeasurementsAndSync(
             .eq('user_id', userId)
             .eq('measured_at', dateStr);
 
-          console.log('✅ Measurements synced to health platform');
+          logger.log('âœ… Measurements synced to health platform');
         }
       }
     } else {
-      console.log('ℹ️ Health sync disabled for body measurements');
+      logger.log('â„¹ï¸ Health sync disabled for body measurements');
     }
 
     return true;
   } catch (error) {
-    console.error('❌ Error logging measurements:', error);
+    logger.error('âŒ Error logging measurements:', error);
     return false;
   }
 }
@@ -117,16 +118,16 @@ export async function logMeasurementsAndSync(
  */
 export async function importHeightFromHealth(userId: string): Promise<number | null> {
   try {
-    console.log('📏 Importing height from health platform...');
+    logger.log('ðŸ“ Importing height from health platform...');
 
     const height = await healthService.getHeight();
 
     if (!height) {
-      console.log('ℹ️ No height data found in health platform');
+      logger.log('â„¹ï¸ No height data found in health platform');
       return null;
     }
 
-    console.log(`✅ Retrieved height: ${height} cm`);
+    logger.log(`âœ… Retrieved height: ${height} cm`);
 
     // Update user's profile with height
     const { error } = await supabase
@@ -135,14 +136,14 @@ export async function importHeightFromHealth(userId: string): Promise<number | n
       .eq('id', userId);
 
     if (error) {
-      console.error('❌ Failed to update profile with height:', error);
+      logger.error('âŒ Failed to update profile with height:', error);
       return null;
     }
 
-    console.log('✅ Profile updated with height from health');
+    logger.log('âœ… Profile updated with height from health');
     return height;
   } catch (error) {
-    console.error('❌ Error importing height from health:', error);
+    logger.error('âŒ Error importing height from health:', error);
     return null;
   }
 }
@@ -173,17 +174,17 @@ export function shouldSyncMeasurements(): boolean {
  */
 export function getMeasurementSyncLimitations(): string {
   return `
-⚠️ Health Platform Limitations:
+âš ï¸ Health Platform Limitations:
 
 Measurements that sync:
-• Weight
-• Body Fat %
-• Height
+â€¢ Weight
+â€¢ Body Fat %
+â€¢ Height
 
 Measurements stored in app only:
-• Chest, Arms, Legs
-• Waist, Hips
-• Shoulders, Neck, Forearms
+â€¢ Chest, Arms, Legs
+â€¢ Waist, Hips
+â€¢ Shoulders, Neck, Forearms
 
 Note: Health platforms (Apple Health & Health Connect) 
 do not support most body measurements beyond weight, 

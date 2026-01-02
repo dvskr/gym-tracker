@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -158,7 +159,7 @@ export default function AddCustomExerciseScreen() {
       if (error) throw error;
 
       Alert.alert(
-        'Success! 🎉',
+        'Success! ðŸŽ‰',
         'Your custom exercise has been added and is ready to use!',
         [
           {
@@ -168,7 +169,7 @@ export default function AddCustomExerciseScreen() {
         ]
       );
     } catch (error: any) {
-      console.error('Error adding custom exercise:', error);
+      logger.error('Error adding custom exercise:', error);
       
       if (error.code === '23505') {
         Alert.alert('Duplicate', 'You already have an exercise with this name');

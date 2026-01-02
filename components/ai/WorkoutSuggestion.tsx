@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -47,7 +48,7 @@ export function WorkoutSuggestion() {
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to get suggestion';
       setError(errorMessage);
-      console.error('Error fetching suggestion:', err);
+      logger.error('Error fetching suggestion:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -141,7 +142,7 @@ export function WorkoutSuggestion() {
               {cleanExerciseName(ex.name)}
             </Text>
             <Text style={styles.exerciseSets}>
-              {ex.sets} × {ex.reps}
+              {ex.sets} Ã— {ex.reps}
             </Text>
           </View>
         ))}

@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
+import { logger } from '@/lib/utils/logger';
 import {
   ArrowLeft,
   MoreVertical,
@@ -412,7 +413,7 @@ export default function TemplateDetailScreen() {
       setTempName(data.name);
       setTempDescription(data.description || '');
     } catch (error) {
-      console.error('Error fetching template:', error);
+      logger.error('Error fetching template:', error);
       Alert.alert('Error', 'Failed to load template');
       router.back();
     } finally {
@@ -433,7 +434,7 @@ export default function TemplateDetailScreen() {
       await updateTemplate(id, updates);
       setTemplate((prev) => prev ? { ...prev, ...updates } : prev);
     } catch (error) {
-      console.error('Error saving template:', error);
+      logger.error('Error saving template:', error);
       Alert.alert('Error', 'Failed to save changes');
     } finally {
       setIsSaving(false);
@@ -471,7 +472,7 @@ export default function TemplateDetailScreen() {
               await deleteTemplate(id!);
               router.back();
             } catch (error) {
-              console.error('Error deleting template:', error);
+              logger.error('Error deleting template:', error);
               Alert.alert('Error', 'Failed to delete template');
             }
           },
@@ -490,7 +491,7 @@ export default function TemplateDetailScreen() {
       // Navigate to the new template
       router.replace(`/template/${copy.id}`);
     } catch (error) {
-      console.error('Error duplicating template:', error);
+      logger.error('Error duplicating template:', error);
       Alert.alert('Error', 'Failed to duplicate template');
     }
   };
@@ -550,7 +551,7 @@ export default function TemplateDetailScreen() {
           .eq('id', ex.id);
       }
     } catch (error) {
-      console.error('Error saving order:', error);
+      logger.error('Error saving order:', error);
     }
   };
 
@@ -582,7 +583,7 @@ export default function TemplateDetailScreen() {
                   : prev
               );
             } catch (error) {
-              console.error('Error deleting exercise:', error);
+              logger.error('Error deleting exercise:', error);
             }
           },
         },
@@ -617,7 +618,7 @@ export default function TemplateDetailScreen() {
           : prev
       );
     } catch (error) {
-      console.error('Error saving exercise:', error);
+      logger.error('Error saving exercise:', error);
     }
   };
 
@@ -711,7 +712,7 @@ export default function TemplateDetailScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      console.error('Error starting workout:', error);
+      logger.error('Error starting workout:', error);
     }
   };
 

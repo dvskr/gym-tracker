@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -29,12 +30,12 @@ type TrainingSplit = 'full_body' | 'upper_lower' | 'push_pull_legs' | 'bro_split
 const DAYS_OF_WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const FITNESS_GOALS: { value: FitnessGoal; label: string; description: string; icon: string }[] = [
-  { value: 'build_muscle', label: 'Build Muscle', description: 'Hypertrophy & size gains', icon: '💪' },
-  { value: 'lose_fat', label: 'Lose Fat', description: 'Fat loss & definition', icon: '🔥' },
-  { value: 'strength', label: 'Get Stronger', description: 'Maximal strength focus', icon: '🏋️' },
-  { value: 'endurance', label: 'Endurance', description: 'Stamina & conditioning', icon: '🏃' },
-  { value: 'maintain', label: 'Maintain', description: 'Keep current fitness', icon: '✅' },
-  { value: 'general_fitness', label: 'General Fitness', description: 'Overall health', icon: '🌟' },
+  { value: 'build_muscle', label: 'Build Muscle', description: 'Hypertrophy & size gains', icon: 'ðŸ’ª' },
+  { value: 'lose_fat', label: 'Lose Fat', description: 'Fat loss & definition', icon: 'ðŸ”¥' },
+  { value: 'strength', label: 'Get Stronger', description: 'Maximal strength focus', icon: 'ðŸ‹ï¸' },
+  { value: 'endurance', label: 'Endurance', description: 'Stamina & conditioning', icon: 'ðŸƒ' },
+  { value: 'maintain', label: 'Maintain', description: 'Keep current fitness', icon: 'âœ…' },
+  { value: 'general_fitness', label: 'General Fitness', description: 'Overall health', icon: 'ðŸŒŸ' },
 ];
 
 const EXPERIENCE_LEVELS: { value: ExperienceLevel; label: string; description: string }[] = [
@@ -86,7 +87,7 @@ export default function FitnessPreferencesScreen() {
         if (data.training_split) setTrainingSplit(data.training_split);
       }
     } catch (error) {
-      console.error('Error loading preferences:', error);
+      logger.error('Error loading preferences:', error);
     } finally {
       setLoading(false);
     }
@@ -115,7 +116,7 @@ export default function FitnessPreferencesScreen() {
       successHaptic();
       router.back();
     } catch (error) {
-      console.error('Error saving preferences:', error);
+      logger.error('Error saving preferences:', error);
     } finally {
       setSaving(false);
     }

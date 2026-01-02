@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -42,7 +43,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
         }
       }
     } catch (error) {
-      console.error('Error fetching weight:', error);
+      logger.error('Error fetching weight:', error);
     }
   }, [userId]);
 
@@ -76,7 +77,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
       setTimeout(() => setShowSuccess(false), 2000);
       onWeightLogged?.();
     } catch (error) {
-      console.error('Error logging weight:', error);
+      logger.error('Error logging weight:', error);
     } finally {
       setIsSaving(false);
     }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -142,7 +143,7 @@ const ContinueBanner: React.FC<ContinueBannerProps> = ({
           <Text style={styles.continueLabel}>WORKOUT IN PROGRESS</Text>
           <Text style={styles.continueName}>{workoutName}</Text>
           <Text style={styles.continueMeta}>
-            {elapsed} • {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
+            {elapsed} â€¢ {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
           </Text>
         </View>
         <View style={styles.continueButton}>
@@ -281,9 +282,9 @@ export default function HomeScreen() {
       });
       
       setHasCheckedCache(true); // Mark cache as checked
-      console.log('[Home] Data fetched successfully');
+      logger.log('[Home] Data fetched successfully');
     } catch (error) {
-      console.error('Error fetching home data:', error);
+      logger.error('Error fetching home data:', error);
       setHasCheckedCache(true);
     } finally {
       setIsLoading(false);
@@ -368,7 +369,7 @@ export default function HomeScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      console.error('Error starting template:', error);
+      logger.error('Error starting template:', error);
     }
   };
 
@@ -415,7 +416,7 @@ export default function HomeScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      console.error('Error starting default template:', error);
+      logger.error('Error starting default template:', error);
     }
   };
 
@@ -485,7 +486,7 @@ export default function HomeScreen() {
         <View style={styles.greetingSection}>
           <View>
             <Text style={styles.greeting}>
-              {getGreeting()}{userName ? `, ${userName}` : ''}! 👋
+              {getGreeting()}{userName ? `, ${userName}` : ''}! ðŸ‘‹
             </Text>
             <Text style={styles.greetingSubtext}>
               {isWorkoutActive ? "You have a workout in progress" : "Ready to crush your workout?"}
@@ -546,7 +547,7 @@ export default function HomeScreen() {
           ) : hasCheckedCache ? (
             <>
               <Text style={styles.defaultTemplatesHint}>
-                Get started with these popular routines • Scroll for more
+                Get started with these popular routines â€¢ Scroll for more
               </Text>
               <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} maxItems={6} />
             </>

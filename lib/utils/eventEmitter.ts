@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Event Emitter - Simple pub/sub for app-wide events
  * Used for real-time updates and cross-component communication
@@ -58,7 +59,7 @@ class EventEmitter {
         try {
           cb(data);
         } catch (error) {
-          console.error(`Error in event callback for ${event}:`, error);
+          logger.error(`Error in event callback for ${event}:`, error);
         }
       });
     }

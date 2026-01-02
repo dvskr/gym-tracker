@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { ThumbsUp, ThumbsDown } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
@@ -31,7 +32,7 @@ export function AIFeedback({ feature, aiUsageId, context }: AIFeedbackProps) {
         context: context || null,
       });
     } catch (error) {
-      console.error('Failed to submit AI feedback:', error);
+      logger.error('Failed to submit AI feedback:', error);
       // Reset on error so user can try again
       setSubmitted(null);
     }

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { prefetchAIData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -18,11 +19,11 @@ export function usePrefetchAI() {
   
   useEffect(() => {
     if (user?.id) {
-      console.log('[usePrefetchAI] Triggering prefetch for user');
+      logger.log('[usePrefetchAI] Triggering prefetch for user');
       
       // Pre-fetch in background, don't block UI
       prefetchAIData(user.id).catch((error) => {
-        console.warn('[usePrefetchAI] Failed:', error);
+        logger.warn('[usePrefetchAI] Failed:', error);
         // Don't throw - prefetch failures shouldn't break the app
       });
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -55,7 +56,7 @@ export function PlateauAlerts() {
         setDismissed(new Set(JSON.parse(data)));
       }
     } catch (error) {
-      console.error('Failed to load dismissed plateaus:', error);
+      logger.error('Failed to load dismissed plateaus:', error);
     }
   };
 
@@ -63,7 +64,7 @@ export function PlateauAlerts() {
     try {
       await AsyncStorage.setItem(DISMISSED_KEY, JSON.stringify(Array.from(newDismissed)));
     } catch (error) {
-      console.error('Failed to save dismissed plateaus:', error);
+      logger.error('Failed to save dismissed plateaus:', error);
     }
   };
 
@@ -82,7 +83,7 @@ export function PlateauAlerts() {
       // Cache the result
       setCacheData(user.id, 'plateaus', results);
     } catch (error) {
-      console.error('Failed to check plateaus:', error);
+      logger.error('Failed to check plateaus:', error);
       setHasFetched(true);
     } finally {
       setIsLoading(false);
@@ -194,7 +195,7 @@ export function PlateauAlerts() {
 
             <Text style={styles.alertText}>
               No progress for {plateau.weeksStalled} week{plateau.weeksStalled > 1 ? 's' : ''} at{' '}
-              {plateau.lastWeight}lbs × {plateau.lastReps} reps
+              {plateau.lastWeight}lbs Ã— {plateau.lastReps} reps
             </Text>
 
             <View style={styles.quickTip}>
@@ -247,7 +248,7 @@ export function PlateauAlerts() {
                   <View style={styles.modalStat}>
                     <Text style={styles.modalStatLabel}>Current Max</Text>
                     <Text style={styles.modalStatValue}>
-                      {selectedPlateau.lastWeight}lbs × {selectedPlateau.lastReps}
+                      {selectedPlateau.lastWeight}lbs Ã— {selectedPlateau.lastReps}
                     </Text>
                   </View>
                 </View>

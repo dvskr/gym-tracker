@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { useAuthStore } from '@/stores/authStore';
 import { 
   AIMessage, 
@@ -53,7 +54,7 @@ class AIService {
       return data;
 
     } catch (error) {
-      console.error('Failed to check AI limits:', error);
+      logger.error('Failed to check AI limits:', error);
       // Default to allowing (fail open for UX)
       return {
         allowed: true,
@@ -82,7 +83,7 @@ class AIService {
       return data;
 
     } catch (error) {
-      console.error('Failed to get AI usage stats:', error);
+      logger.error('Failed to get AI usage stats:', error);
       return null;
     }
   }
@@ -146,8 +147,8 @@ class AIService {
         }
       );
 
-      console.log('Stream response status:', response.status);
-      console.log('Stream response headers:', {
+      logger.log('Stream response status:', response.status);
+      logger.log('Stream response headers:', {
         contentType: response.headers.get('Content-Type'),
         hasBody: !!response.body,
       });
@@ -170,16 +171,16 @@ class AIService {
       // Check if we actually got a streaming response
       const contentType = response.headers.get('Content-Type');
       if (contentType?.includes('application/json')) {
-        console.log('Got JSON response instead of stream - this might be an error response');
+        logger.log('Got JSON response instead of stream - this might be an error response');
         const jsonData = await response.json();
-        console.log('JSON data:', jsonData);
+        logger.log('JSON data:', jsonData);
         throw new Error(`Expected streaming response but got JSON: ${JSON.stringify(jsonData)}`);
       }
 
       // 6. Stream the response
       const reader = response.body?.getReader();
       if (!reader) {
-        console.error('No reader available. Response details:', {
+        logger.error('No reader available. Response details:', {
           status: response.status,
           statusText: response.statusText,
           contentType: response.headers.get('Content-Type'),
@@ -235,11 +236,11 @@ class AIService {
         throw error;
       }
 
-      console.error('AI streaming failed:', error);
+      logger.error('AI streaming failed:', error);
       
       // Try to fall back to non-streaming request
       try {
-        console.log('Attempting non-streaming fallback...');
+        logger.log('Attempting non-streaming fallback...');
         const fallbackResponse = await this.complete(messages, {
           ...options,
           stream: false, // Force non-streaming
@@ -249,7 +250,7 @@ class AIService {
         yield fallbackResponse.content;
         return;
       } catch (fallbackError) {
-        console.error('Fallback also failed:', fallbackError);
+        logger.error('Fallback also failed:', fallbackError);
         throw error; // Throw the original error
       }
     }
@@ -345,7 +346,7 @@ class AIService {
         throw error;
       }
 
-      console.error('AI completion failed:', error);
+      logger.error('AI completion failed:', error);
       
       // Return fallback response
       return this.getFallbackResponse(messages, options);

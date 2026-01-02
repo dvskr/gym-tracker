@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -53,7 +54,7 @@ const RecentWorkoutRow: React.FC<RecentWorkoutRowProps> = ({ workout, onPress })
           {workout.name || 'Workout'}
         </Text>
         <Text style={styles.recentMeta}>
-          {timeAgo} • {workout.total_sets} sets
+          {timeAgo} â€¢ {workout.total_sets} sets
         </Text>
       </View>
       <ChevronRight size={18} color="#475569" />
@@ -123,9 +124,9 @@ export default function WorkoutScreen() {
       // Store in global cache
       tabDataCache.set(CACHE_KEY, workouts);
       
-      console.log('[Workout] Recent workouts fetched successfully');
+      logger.log('[Workout] Recent workouts fetched successfully');
     } catch (error) {
-      console.error('Failed to fetch recent workouts:', error);
+      logger.error('Failed to fetch recent workouts:', error);
     } finally {
       setIsLoadingRecent(false);
     }

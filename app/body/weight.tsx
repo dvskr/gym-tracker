@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -78,7 +79,7 @@ const WeightEntryRow: React.FC<WeightEntryRowProps> = ({ entry, onPress }) => {
 
   const getChangeText = () => {
     if (entry.change === undefined) return '';
-    if (entry.change === 0) return '—';
+    if (entry.change === 0) return 'â€”';
     const sign = entry.change > 0 ? '+' : '';
     return `${sign}${entry.change}`;
   };
@@ -169,7 +170,7 @@ const LogWeightModal: React.FC<LogWeightModalProps> = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       onClose();
     } catch (error) {
-      console.error('Error saving weight:', error);
+      logger.error('Error saving weight:', error);
       Alert.alert('Error', 'Failed to save weight');
     } finally {
       setIsSaving(false);
@@ -354,7 +355,7 @@ export default function BodyWeightScreen() {
       setTodayEntry(today);
       setRecentEntries(recent);
     } catch (error) {
-      console.error('Error fetching weight data:', error);
+      logger.error('Error fetching weight data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

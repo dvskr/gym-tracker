@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Admin Review Dashboard for Custom Exercises
  * 
@@ -87,7 +88,7 @@ export default function AdminReviewDashboard() {
         user_email: ex.users?.email
       })) || []);
     } catch (error) {
-      console.error('Error loading exercises:', error);
+      logger.error('Error loading exercises:', error);
     } finally {
       setLoading(false);
     }
@@ -136,7 +137,7 @@ export default function AdminReviewDashboard() {
       await supabase.from('notifications').insert({
         user_id: exercise.user_id,
         type: 'exercise_approved',
-        title: '🎉 Your Exercise Was Added!',
+        title: 'ðŸŽ‰ Your Exercise Was Added!',
         message: `Your custom exercise "${exercise.name}" has been approved and added to the exercise library. Thank you for contributing!`,
         data: {
           exercise_id: newExercise.id,
@@ -145,11 +146,11 @@ export default function AdminReviewDashboard() {
         is_read: false,
       });
 
-      alert(`✅ "${exercise.name}" has been added to the library!`);
+      alert(`âœ… "${exercise.name}" has been added to the library!`);
       setReviewNotes('');
       loadExercises();
     } catch (error: any) {
-      console.error('Error approving exercise:', error);
+      logger.error('Error approving exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -196,7 +197,7 @@ export default function AdminReviewDashboard() {
       setSelectedExercise(null);
       loadExercises();
     } catch (error: any) {
-      console.error('Error rejecting exercise:', error);
+      logger.error('Error rejecting exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -214,7 +215,7 @@ export default function AdminReviewDashboard() {
 
       loadExercises();
     } catch (error: any) {
-      console.error('Error deleting exercise:', error);
+      logger.error('Error deleting exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -322,14 +323,14 @@ export default function AdminReviewDashboard() {
                     </div>
 
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-400">
-                      <span className="capitalize">📦 {exercise.equipment}</span>
-                      <span className="capitalize">🎯 {exercise.category}</span>
-                      <span>💪 {exercise.primary_muscles.join(', ')}</span>
+                      <span className="capitalize">ðŸ“¦ {exercise.equipment}</span>
+                      <span className="capitalize">ðŸŽ¯ {exercise.category}</span>
+                      <span>ðŸ’ª {exercise.primary_muscles.join(', ')}</span>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
                         {exercise.unique_users_count} user{exercise.unique_users_count !== 1 ? 's' : ''}
                       </span>
-                      <span>🔁 Used {exercise.times_used}x</span>
+                      <span>ðŸ” Used {exercise.times_used}x</span>
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
                         {new Date(exercise.created_at).toLocaleDateString()}

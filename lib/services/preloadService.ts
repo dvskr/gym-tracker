@@ -1,4 +1,5 @@
 import { useExerciseStore } from '@/stores/exerciseStore';
+import { logger } from '@/lib/utils/logger';
 import { useAuthStore } from '@/stores/authStore';
 import { prefetchAIData } from '@/lib/ai/prefetch';
 import { preloadRecentThumbnails } from '@/lib/images/preloadService';
@@ -19,7 +20,7 @@ export async function preloadAllAppData(
   userId: string,
   onProgress?: ProgressCallback
 ): Promise<void> {
-  console.log('[Preload] Starting full app preload...');
+  logger.log('[Preload] Starting full app preload...');
   const startTime = Date.now();
 
   const phases = [
@@ -44,38 +45,38 @@ export async function preloadAllAppData(
 
   try {
     // Phase 1: Exercises (critical - needed for workout tab)
-    console.log('[Preload] Loading exercises...');
+    logger.log('[Preload] Loading exercises...');
     await useExerciseStore.getState().fetchExercises();
     updateProgress('exercises');
 
     // Phase 2: Favorites (needed for exercise library)
-    console.log('[Preload] Loading favorites...');
+    logger.log('[Preload] Loading favorites...');
     await useExerciseStore.getState().loadFavorites();
     updateProgress('favorites');
 
     // Phase 3: AI Data (needed for home tab cards)
-    console.log('[Preload] Loading AI data...');
+    logger.log('[Preload] Loading AI data...');
     try {
       await prefetchAIData(userId);
     } catch (error) {
-      console.warn('[Preload] AI data prefetch failed, continuing...', error);
+      logger.warn('[Preload] AI data prefetch failed, continuing...', error);
     }
     updateProgress('ai');
 
     // Phase 4: Images (thumbnails for recently used exercises)
-    console.log('[Preload] Preloading images...');
+    logger.log('[Preload] Preloading images...');
     try {
       const recentIds = useExerciseStore.getState().recentlyUsedIds.slice(0, 10);
       await preloadRecentThumbnails(recentIds);
     } catch (error) {
-      console.warn('[Preload] Image preload failed, continuing...', error);
+      logger.warn('[Preload] Image preload failed, continuing...', error);
     }
     updateProgress('images');
 
-    console.log(`[Preload] Complete in ${Date.now() - startTime}ms`);
+    logger.log(`[Preload] Complete in ${Date.now() - startTime}ms`);
 
   } catch (error) {
-    console.error('[Preload] Error during preload:', error);
+    logger.error('[Preload] Error during preload:', error);
     // Don't throw - let app continue with partial data
   }
 }
@@ -97,13 +98,13 @@ export function isAppDataReady(): boolean {
  * (other stores handle their own refreshes)
  */
 export async function refreshAIData(userId: string): Promise<void> {
-  console.log('[Preload] Refreshing AI data...');
+  logger.log('[Preload] Refreshing AI data...');
   
   try {
     await prefetchAIData(userId);
-    console.log('[Preload] AI data refresh complete');
+    logger.log('[Preload] AI data refresh complete');
   } catch (error) {
-    console.error('[Preload] AI data refresh failed:', error);
+    logger.error('[Preload] AI data refresh failed:', error);
   }
 }
 

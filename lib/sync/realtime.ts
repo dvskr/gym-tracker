@@ -1,4 +1,5 @@
 import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '../supabase';
 import { localDB } from '../storage/localDatabase';
 import { conflictResolver } from './conflictResolver';
@@ -19,7 +20,7 @@ class RealtimeSync {
    */
   async init(userId: string): Promise<void> {
     if (this.isInitialized && this.userId === userId) {
-      console.log('⚡ Real-time sync already initialized for this user');
+      logger.log('âš¡ Real-time sync already initialized for this user');
       return;
     }
 
@@ -30,7 +31,7 @@ class RealtimeSync {
 
     this.userId = userId;
     
-    console.log('⚡ Initializing real-time sync for user:', userId);
+    logger.log('âš¡ Initializing real-time sync for user:', userId);
 
     try {
       // Subscribe to all tables
@@ -43,9 +44,9 @@ class RealtimeSync {
       this.isInitialized = true;
       eventEmitter.emit(Events.REALTIME_CONNECTED);
       
-      console.log('✅ Real-time sync initialized successfully');
+      logger.log('âœ… Real-time sync initialized successfully');
     } catch (error) {
-      console.error('❌ Failed to initialize real-time sync:', error);
+      logger.error('âŒ Failed to initialize real-time sync:', error);
       eventEmitter.emit(Events.REALTIME_ERROR, error);
       throw error;
     }
@@ -56,15 +57,15 @@ class RealtimeSync {
    * Call this on logout
    */
   async cleanup(): Promise<void> {
-    console.log('🧹 Cleaning up real-time subscriptions...');
+    logger.log('ðŸ§¹ Cleaning up real-time subscriptions...');
 
     // Remove all channels
     for (const [name, channel] of this.channels.entries()) {
       try {
         await supabase.removeChannel(channel);
-        console.log(`✅ Removed channel: ${name}`);
+        logger.log(`âœ… Removed channel: ${name}`);
       } catch (error) {
-        console.error(`❌ Error removing channel ${name}:`, error);
+        logger.error(`âŒ Error removing channel ${name}:`, error);
       }
     }
 
@@ -73,7 +74,7 @@ class RealtimeSync {
     this.isInitialized = false;
     
     eventEmitter.emit(Events.REALTIME_DISCONNECTED);
-    console.log('✅ Real-time sync cleanup complete');
+    logger.log('âœ… Real-time sync cleanup complete');
   }
 
   /**
@@ -108,7 +109,7 @@ class RealtimeSync {
         (payload) => this.handleWorkoutChange(payload)
       )
       .subscribe((status) => {
-        console.log('Workouts channel status:', status);
+        logger.log('Workouts channel status:', status);
       });
 
     this.channels.set('workouts', channel);
@@ -119,7 +120,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    console.log(`⚡ Workout ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`âš¡ Workout ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       switch (eventType) {
@@ -137,7 +138,7 @@ class RealtimeSync {
       // Notify UI to refresh
       eventEmitter.emit(Events.WORKOUTS_UPDATED, { eventType, data: newData || oldData });
     } catch (error) {
-      console.error('Error handling workout change:', error);
+      logger.error('Error handling workout change:', error);
     }
   }
 
@@ -146,7 +147,7 @@ class RealtimeSync {
     
     // Check if workout already exists locally
     if (!localWorkouts.find(w => w.id === workout.id)) {
-      console.log('📥 Adding new workout from real-time:', workout.id);
+      logger.log('ðŸ“¥ Adding new workout from real-time:', workout.id);
       localWorkouts.push({ ...workout, _synced: true });
       await localDB.saveLocally('@gym/workouts', localWorkouts);
     }
@@ -158,7 +159,7 @@ class RealtimeSync {
 
     if (index === -1) {
       // Doesn't exist locally - add it
-      console.log('📥 Adding workout from real-time update:', workout.id);
+      logger.log('ðŸ“¥ Adding workout from real-time update:', workout.id);
       localWorkouts.push({ ...workout, _synced: true });
       await localDB.saveLocally('@gym/workouts', localWorkouts);
       return;
@@ -168,7 +169,7 @@ class RealtimeSync {
 
     // Check for conflict
     if (conflictResolver.hasConflict(localWorkout, workout)) {
-      console.log('⚠️ Conflict detected during real-time update');
+      logger.log('âš ï¸ Conflict detected during real-time update');
       
       const resolution = await conflictResolver.resolve(
         localWorkout,
@@ -190,7 +191,7 @@ class RealtimeSync {
   }
 
   private async handleDeletedWorkout(workout: any): Promise<void> {
-    console.log('🗑️ Deleting workout from real-time:', workout.id);
+    logger.log('ðŸ—‘ï¸ Deleting workout from real-time:', workout.id);
     
     const localWorkouts = await localDB.getLocalWorkouts();
     const filtered = localWorkouts.filter(w => w.id !== workout.id);
@@ -215,7 +216,7 @@ class RealtimeSync {
         (payload) => this.handleTemplateChange(payload)
       )
       .subscribe((status) => {
-        console.log('Templates channel status:', status);
+        logger.log('Templates channel status:', status);
       });
 
     this.channels.set('templates', channel);
@@ -226,7 +227,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    console.log(`⚡ Template ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`âš¡ Template ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localTemplates = await localDB.getLocalTemplates();
@@ -266,7 +267,7 @@ class RealtimeSync {
       await localDB.saveLocally('@gym/templates', localTemplates);
       eventEmitter.emit(Events.TEMPLATES_UPDATED, { eventType, data: newData || oldData });
     } catch (error) {
-      console.error('Error handling template change:', error);
+      logger.error('Error handling template change:', error);
     }
   }
 
@@ -288,7 +289,7 @@ class RealtimeSync {
         (payload) => this.handleWeightChange(payload)
       )
       .subscribe((status) => {
-        console.log('Weight log channel status:', status);
+        logger.log('Weight log channel status:', status);
       });
 
     this.channels.set('weight', channel);
@@ -299,7 +300,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    console.log(`⚡ Weight log ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`âš¡ Weight log ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localWeights = await localDB.getLocalWeights();
@@ -330,7 +331,7 @@ class RealtimeSync {
       await localDB.saveLocally('@gym/weight_log', localWeights);
       eventEmitter.emit(Events.WEIGHT_LOG_UPDATED, { eventType, data: newData || oldData });
     } catch (error) {
-      console.error('Error handling weight change:', error);
+      logger.error('Error handling weight change:', error);
     }
   }
 
@@ -352,7 +353,7 @@ class RealtimeSync {
         (payload) => this.handleMeasurementChange(payload)
       )
       .subscribe((status) => {
-        console.log('Measurements channel status:', status);
+        logger.log('Measurements channel status:', status);
       });
 
     this.channels.set('measurements', channel);
@@ -363,7 +364,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    console.log(`⚡ Measurement ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`âš¡ Measurement ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localMeasurements = await localDB.getLocalMeasurements();
@@ -394,7 +395,7 @@ class RealtimeSync {
       await localDB.saveLocally('@gym/measurements', localMeasurements);
       eventEmitter.emit(Events.MEASUREMENTS_UPDATED, { eventType, data: newData || oldData });
     } catch (error) {
-      console.error('Error handling measurement change:', error);
+      logger.error('Error handling measurement change:', error);
     }
   }
 
@@ -416,7 +417,7 @@ class RealtimeSync {
         (payload) => this.handlePRChange(payload)
       )
       .subscribe((status) => {
-        console.log('Personal records channel status:', status);
+        logger.log('Personal records channel status:', status);
       });
 
     this.channels.set('personal_records', channel);
@@ -427,7 +428,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    console.log(`⚡ PR ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`âš¡ PR ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localPRs = await localDB.getLocalPersonalRecords();
@@ -458,7 +459,7 @@ class RealtimeSync {
       await localDB.saveLocally('@gym/personal_records', localPRs);
       eventEmitter.emit(Events.PERSONAL_RECORDS_UPDATED, { eventType, data: newData || oldData });
     } catch (error) {
-      console.error('Error handling PR change:', error);
+      logger.error('Error handling PR change:', error);
     }
   }
 

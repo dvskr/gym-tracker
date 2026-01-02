@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { successHaptic } from './haptics';
 
 // ============================================
@@ -70,7 +71,7 @@ export async function checkForPR(
       .eq('exercise_id', exerciseId);
 
     if (error) {
-      console.error('Error fetching PRs:', error);
+      logger.error('Error fetching PRs:', error);
       return results;
     }
 
@@ -103,7 +104,7 @@ export async function checkForPR(
       });
     }
 
-    // Check for max volume PR (weight × reps)
+    // Check for max volume PR (weight Ã— reps)
     if (!maxVolumeRecord || volume > maxVolumeRecord.value) {
       results.push({
         isNewPR: true,
@@ -117,7 +118,7 @@ export async function checkForPR(
 
     return results;
   } catch (error) {
-    console.error('Error checking for PR:', error);
+    logger.error('Error checking for PR:', error);
     return results;
   }
 }
@@ -155,13 +156,13 @@ export async function savePR(
       );
 
     if (error) {
-      console.error('Error saving PR:', error);
+      logger.error('Error saving PR:', error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Error saving PR:', error);
+    logger.error('Error saving PR:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to save PR',
@@ -303,11 +304,11 @@ export function getPRTypeLabel(prType: PRType): string {
 export function formatPRValue(prType: PRType, value: number, weight?: number, reps?: number): string {
   switch (prType) {
     case 'max_weight':
-      return `${value} lbs${reps ? ` × ${reps}` : ''}`;
+      return `${value} lbs${reps ? ` Ã— ${reps}` : ''}`;
     case 'max_reps':
       return `${value} reps${weight ? ` @ ${weight} lbs` : ''}`;
     case 'max_volume':
-      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight} × ${reps})` : ''}`;
+      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight} Ã— ${reps})` : ''}`;
     default:
       return value.toString();
   }

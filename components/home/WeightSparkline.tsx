@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -63,7 +64,7 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setWeights(sorted);
     } catch (error) {
-      console.error('Error fetching weight history:', error);
+      logger.error('Error fetching weight history:', error);
     } finally {
       setIsLoading(false);
     }

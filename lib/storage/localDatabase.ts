@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -99,7 +100,7 @@ class LocalDatabase {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem(key, jsonValue);
     } catch (error) {
-      console.error(`Error saving to ${key}:`, error);
+      logger.error(`Error saving to ${key}:`, error);
       throw error;
     }
   }
@@ -109,7 +110,7 @@ class LocalDatabase {
       const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : [];
     } catch (error) {
-      console.error(`Error reading from ${key}:`, error);
+      logger.error(`Error reading from ${key}:`, error);
       return [];
     }
   }
@@ -118,7 +119,7 @@ class LocalDatabase {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.error(`Error clearing ${key}:`, error);
+      logger.error(`Error clearing ${key}:`, error);
       throw error;
     }
   }
@@ -127,7 +128,7 @@ class LocalDatabase {
     try {
       await AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
     } catch (error) {
-      console.error('Error clearing all data:', error);
+      logger.error('Error clearing all data:', error);
       throw error;
     }
   }

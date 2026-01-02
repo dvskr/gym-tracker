@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { eventEmitter, Events } from '../lib/utils/eventEmitter';
 import { realtimeSync } from '../lib/sync/realtime';
 
@@ -11,7 +12,7 @@ export function useRealtimeWorkouts(onUpdate?: () => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.WORKOUTS_UPDATED, (payload) => {
-      console.log('📡 Workouts updated via real-time:', payload);
+      logger.log('ðŸ“¡ Workouts updated via real-time:', payload);
       setLastUpdate(new Date());
       onUpdate?.();
     });
@@ -30,7 +31,7 @@ export function useRealtimeTemplates(onUpdate?: () => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.TEMPLATES_UPDATED, (payload) => {
-      console.log('📡 Templates updated via real-time:', payload);
+      logger.log('ðŸ“¡ Templates updated via real-time:', payload);
       setLastUpdate(new Date());
       onUpdate?.();
     });
@@ -49,7 +50,7 @@ export function useRealtimeWeightLog(onUpdate?: () => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.WEIGHT_LOG_UPDATED, (payload) => {
-      console.log('📡 Weight log updated via real-time:', payload);
+      logger.log('ðŸ“¡ Weight log updated via real-time:', payload);
       setLastUpdate(new Date());
       onUpdate?.();
     });
@@ -68,7 +69,7 @@ export function useRealtimeMeasurements(onUpdate?: () => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.MEASUREMENTS_UPDATED, (payload) => {
-      console.log('📡 Measurements updated via real-time:', payload);
+      logger.log('ðŸ“¡ Measurements updated via real-time:', payload);
       setLastUpdate(new Date());
       onUpdate?.();
     });
@@ -87,7 +88,7 @@ export function useRealtimePersonalRecords(onUpdate?: () => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.PERSONAL_RECORDS_UPDATED, (payload) => {
-      console.log('📡 Personal records updated via real-time:', payload);
+      logger.log('ðŸ“¡ Personal records updated via real-time:', payload);
       setLastUpdate(new Date());
       onUpdate?.();
     });
@@ -149,7 +150,7 @@ export function useConflictDetection(onConflict?: (conflict: any) => void) {
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.CONFLICT_DETECTED, (conflict) => {
-      console.log('⚠️ Conflict detected:', conflict);
+      logger.log('âš ï¸ Conflict detected:', conflict);
       setConflictCount(prev => prev + 1);
       setLatestConflict(conflict);
       onConflict?.(conflict);

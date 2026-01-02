@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { calculate1RM } from '@/lib/utils/calculations';
 
 // ============================================
@@ -100,7 +101,7 @@ export async function checkAndUpdatePRs(
   // Get exercise UUID
   const exerciseUUID = await getExerciseUUID(exerciseId);
   if (!exerciseUUID) {
-    console.error('Exercise not found:', exerciseId);
+    logger.error('Exercise not found:', exerciseId);
     return newPRs;
   }
 

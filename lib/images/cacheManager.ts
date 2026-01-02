@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { logger } from '@/lib/utils/logger';
 import * as FileSystem from 'expo-file-system/legacy';
 
 // ============================================
@@ -31,7 +32,7 @@ export async function getCacheSize(): Promise<{
     
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
   } catch (error) {
-    console.error('[Cache] Error getting size:', error);
+    logger.error('[Cache] Error getting size:', error);
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
   }
 }
@@ -41,7 +42,7 @@ export async function getCacheSize(): Promise<{
  */
 export async function clearImageCache(): Promise<boolean> {
   try {
-    console.log('[Cache] Clearing image cache...');
+    logger.log('[Cache] Clearing image cache...');
     
     // Clear expo-image memory cache
     await Image.clearMemoryCache();
@@ -49,10 +50,10 @@ export async function clearImageCache(): Promise<boolean> {
     // Clear expo-image disk cache
     await Image.clearDiskCache();
     
-    console.log('[Cache] Image cache cleared!');
+    logger.log('[Cache] Image cache cleared!');
     return true;
   } catch (error) {
-    console.error('[Cache] Error clearing cache:', error);
+    logger.error('[Cache] Error clearing cache:', error);
     return false;
   }
 }
@@ -64,9 +65,9 @@ export async function clearImageCache(): Promise<boolean> {
 export async function clearMemoryCache(): Promise<void> {
   try {
     await Image.clearMemoryCache();
-    console.log('[Cache] Memory cache cleared');
+    logger.log('[Cache] Memory cache cleared');
   } catch (error) {
-    console.error('[Cache] Error clearing memory cache:', error);
+    logger.error('[Cache] Error clearing memory cache:', error);
   }
 }
 
@@ -81,7 +82,7 @@ export async function autoClearCacheIfNeeded(
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
   
   if (sizeBytes > maxSizeBytes) {
-    console.log(`[Cache] Size ${(sizeBytes / 1024 / 1024).toFixed(2)}MB exceeds ${maxSizeMB}MB limit`);
+    logger.log(`[Cache] Size ${(sizeBytes / 1024 / 1024).toFixed(2)}MB exceeds ${maxSizeMB}MB limit`);
     return await clearImageCache();
   }
   

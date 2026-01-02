@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 import { aiService } from './aiService';
 import { FITNESS_COACH_SYSTEM_PROMPT } from './prompts';
 import { buildWorkoutContext } from './contextBuilder';
@@ -47,7 +48,7 @@ class WorkoutAnalysisService {
       if (!forceRefresh && workout.id) {
         const cached = await this.getCachedAnalysis(workout.id);
         if (cached) {
-          console.log('✅ Using cached workout analysis');
+          logger.log('âœ… Using cached workout analysis');
           return cached;
         }
       }
@@ -120,7 +121,7 @@ class WorkoutAnalysisService {
 
         return finalAnalysis;
       } catch (error) {
-        console.error('AI analysis failed, using rule-based:', error);
+        logger.error('AI analysis failed, using rule-based:', error);
         const fallback = this.getRuleBasedAnalysis(
           workout,
           volumeComparison,
@@ -138,7 +139,7 @@ class WorkoutAnalysisService {
         return fallback;
       }
     } catch (error) {
-      console.error('Workout analysis failed:', error);
+      logger.error('Workout analysis failed:', error);
       return this.getDefaultAnalysis(workout);
     }
   }
@@ -163,7 +164,7 @@ class WorkoutAnalysisService {
       
       return parsed.analysis;
     } catch (error) {
-      console.error('Error reading cache:', error);
+      logger.error('Error reading cache:', error);
       return null;
     }
   }
@@ -181,7 +182,7 @@ class WorkoutAnalysisService {
       };
       await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheData));
     } catch (error) {
-      console.error('Error caching analysis:', error);
+      logger.error('Error caching analysis:', error);
     }
   }
 
@@ -206,7 +207,7 @@ Total Volume: ${previousVolume} lbs
 ${previousVolume > 0 ? `Volume Change: ${((currentVolume - previousVolume) / previousVolume * 100).toFixed(1)}%` : ''}`
       : '\n\nThis is their first workout of this type!';
 
-    const prContext = prCount > 0 ? `\n\n🏆 ${prCount} NEW PERSONAL RECORD${prCount > 1 ? 'S' : ''} SET!` : '';
+    const prContext = prCount > 0 ? `\n\nðŸ† ${prCount} NEW PERSONAL RECORD${prCount > 1 ? 'S' : ''} SET!` : '';
 
     const prompt = `Analyze this completed workout and provide encouraging feedback.
 
@@ -267,7 +268,7 @@ Respond in this exact JSON format:
         };
       }
     } catch (parseError) {
-      console.error('Failed to parse AI analysis:', parseError);
+      logger.error('Failed to parse AI analysis:', parseError);
     }
 
     // Fallback: extract from text
@@ -332,7 +333,7 @@ Respond in this exact JSON format:
 
     // Add PR callout to summary
     if (prCount > 0) {
-      summary += ` 🏆 ${prCount} new PR${prCount > 1 ? 's' : ''}!`;
+      summary += ` ðŸ† ${prCount} new PR${prCount > 1 ? 's' : ''}!`;
     }
 
     // Build highlights
@@ -430,7 +431,7 @@ EXERCISES:`;
         const topSet = completedSets.reduce((max: any, s: any) => 
           (s.weight * s.reps > max.weight * max.reps) ? s : max
         );
-        context += ` (top: ${topSet.weight}lbs × ${topSet.reps})`;
+        context += ` (top: ${topSet.weight}lbs Ã— ${topSet.reps})`;
       }
     }
 
@@ -438,7 +439,7 @@ EXERCISES:`;
   }
 
   /**
-   * Calculate total volume (weight × reps)
+   * Calculate total volume (weight Ã— reps)
    */
   private calculateVolume(workout: any): number {
     let volume = 0;
@@ -517,7 +518,7 @@ EXERCISES:`;
         .single();
 
       if (error) {
-        console.error('Error fetching previous workout:', error);
+        logger.error('Error fetching previous workout:', error);
         return null;
       }
 
@@ -534,7 +535,7 @@ EXERCISES:`;
 
       return null;
     } catch (error) {
-      console.error('Failed to get previous workout:', error);
+      logger.error('Failed to get previous workout:', error);
       return null;
     }
   }
@@ -551,7 +552,7 @@ EXERCISES:`;
         .single();
 
       if (error) {
-        console.error('Error fetching user stats:', error);
+        logger.error('Error fetching user stats:', error);
         return { totalWorkouts: 0, streak: 0 };
       }
 
@@ -560,7 +561,7 @@ EXERCISES:`;
         streak: data?.current_streak || 0,
       };
     } catch (error) {
-      console.error('Failed to get user stats:', error);
+      logger.error('Failed to get user stats:', error);
       return { totalWorkouts: 0, streak: 0 };
     }
   }
@@ -581,13 +582,13 @@ EXERCISES:`;
         .gte('created_at', oneHourAgo.toISOString());
 
       if (error) {
-        console.error('Error fetching PR count:', error);
+        logger.error('Error fetching PR count:', error);
         return 0;
       }
 
       return data?.length || 0;
     } catch (error) {
-      console.error('Failed to get PR count:', error);
+      logger.error('Failed to get PR count:', error);
       return 0;
     }
   }

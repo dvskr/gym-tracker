@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 
 // Types
 interface Exercise {
@@ -112,7 +113,7 @@ export async function createTemplate(template: Template): Promise<Template> {
 
         // Silently ignore if table doesn't exist
         if (setsError && setsError.code !== '42P01' && !setsError.message?.includes('does not exist')) {
-          console.warn('Could not save template sets:', setsError.message);
+          logger.warn('Could not save template sets:', setsError.message);
         }
       }
     }
@@ -319,7 +320,7 @@ export async function updateTemplateExercises(
 
       // Silently ignore if table doesn't exist
       if (setsError && setsError.code !== '42P01' && !setsError.message?.includes('does not exist')) {
-        console.warn('Could not save template sets:', setsError.message);
+        logger.warn('Could not save template sets:', setsError.message);
       }
     }
   }

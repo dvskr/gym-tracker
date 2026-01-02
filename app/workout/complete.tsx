@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -173,7 +174,7 @@ export default function WorkoutCompleteScreen() {
         detectPersonalRecords(data as WorkoutDetail);
       }
     } catch (error) {
-      console.error('Failed to fetch workout:', error);
+      logger.error('Failed to fetch workout:', error);
     }
   };
 
@@ -253,19 +254,19 @@ export default function WorkoutCompleteScreen() {
 
       // Invalidate AI cache since workout data changed
       if (user?.id) {
-        console.log('[WorkoutComplete] Invalidating AI cache');
+        logger.log('[WorkoutComplete] Invalidating AI cache');
         invalidateCache(user.id);
         
         // Pre-fetch fresh data in background (optional)
         prefetchAIData(user.id).catch(err => 
-          console.warn('[WorkoutComplete] Prefetch failed:', err)
+          logger.warn('[WorkoutComplete] Prefetch failed:', err)
         );
       }
 
       successHaptic();
       router.replace('/(tabs)');
     } catch (error) {
-      console.error('Failed to save workout:', error);
+      logger.error('Failed to save workout:', error);
       Alert.alert('Error', 'Failed to save workout details. Please try again.');
     } finally {
       setIsSaving(false);
@@ -319,7 +320,7 @@ export default function WorkoutCompleteScreen() {
         ]
       );
     } catch (error) {
-      console.error('Failed to create template:', error);
+      logger.error('Failed to create template:', error);
       Alert.alert('Error', 'Failed to create template. Please try again.');
     } finally {
       setIsSaving(false);
@@ -343,7 +344,7 @@ export default function WorkoutCompleteScreen() {
               }
               router.replace('/(tabs)');
             } catch (error) {
-              console.error('Failed to delete workout:', error);
+              logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout.');
             }
           },
@@ -367,7 +368,7 @@ export default function WorkoutCompleteScreen() {
       return volume > maxVolume ? set : max;
     });
 
-    return `${best.weight || 0} × ${best.reps || 0}`;
+    return `${best.weight || 0} Ã— ${best.reps || 0}`;
   };
 
   const getRatingText = (value: number): string => {
@@ -377,7 +378,7 @@ export default function WorkoutCompleteScreen() {
       case 2: return 'It was okay';
       case 3: return 'Good workout';
       case 4: return 'Great workout!';
-      case 5: return 'Best workout ever! 🔥';
+      case 5: return 'Best workout ever! ðŸ”¥';
       default: return '';
     }
   };
@@ -403,17 +404,17 @@ export default function WorkoutCompleteScreen() {
             <Trophy size={56} color="#fbbf24" />
           </View>
           <View style={styles.confettiLeft}>
-            <Text style={styles.confettiEmoji}>🎉</Text>
+            <Text style={styles.confettiEmoji}>ðŸŽ‰</Text>
           </View>
           <View style={styles.confettiRight}>
-            <Text style={styles.confettiEmoji}>🎊</Text>
+            <Text style={styles.confettiEmoji}>ðŸŽŠ</Text>
           </View>
         </Animated.View>
 
         {/* Congratulations Text */}
         <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Workout Complete!</Text>
-          <Text style={styles.subtitle}>Amazing work! You crushed it 💪</Text>
+          <Text style={styles.subtitle}>Amazing work! You crushed it ðŸ’ª</Text>
         </Animated.View>
 
         {/* PR Callout */}
@@ -541,7 +542,7 @@ export default function WorkoutCompleteScreen() {
                           {exercise.exercises?.name || 'Exercise'}
                         </Text>
                         <Text style={styles.exerciseMeta}>
-                          {completedSets} sets • Best: {getBestSet(exercise)}
+                          {completedSets} sets â€¢ Best: {getBestSet(exercise)}
                         </Text>
                       </View>
                     </View>

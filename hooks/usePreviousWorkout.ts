@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -138,7 +139,7 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
           sets,
         });
       } catch (err) {
-        console.error('Error fetching previous workout:', err);
+        logger.error('Error fetching previous workout:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch previous data');
         setData(null);
       } finally {
@@ -254,7 +255,7 @@ export async function fetchPreviousWorkoutData(
       sets,
     };
   } catch (err) {
-    console.error('Error fetching previous workout:', err);
+    logger.error('Error fetching previous workout:', err);
     return null;
   }
 }

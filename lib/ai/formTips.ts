@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 import { aiService } from './aiService';
 import { FITNESS_COACH_SYSTEM_PROMPT } from './prompts';
 
@@ -18,12 +19,12 @@ const CACHED_TIPS: Record<string, FormTip> = {
     cues: [
       'Retract shoulder blades and squeeze them together',
       'Plant feet firmly on the floor',
-      'Lower bar to mid-chest with elbows at 45°',
+      'Lower bar to mid-chest with elbows at 45Â°',
       'Drive through your feet as you press',
     ],
     commonMistakes: [
       'Bouncing bar off chest',
-      'Flaring elbows to 90°',
+      'Flaring elbows to 90Â°',
       'Lifting hips off bench',
     ],
     breathingPattern: 'Inhale on the way down, exhale as you press up',
@@ -101,7 +102,7 @@ const CACHED_TIPS: Record<string, FormTip> = {
     cues: [
       'Hinge at hips with chest over bar',
       'Pull to lower chest/upper abs',
-      'Keep elbows close to body (45°)',
+      'Keep elbows close to body (45Â°)',
       'Squeeze shoulder blades at top',
     ],
     commonMistakes: [
@@ -165,7 +166,7 @@ class FormTipsService {
       await this.saveCache();
       return tips;
     } catch (error) {
-      console.error('Failed to generate form tips:', error);
+      logger.error('Failed to generate form tips:', error);
       // Return generic tips on error
       return this.getGenericTips(exerciseName);
     }
@@ -212,7 +213,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
         };
       }
     } catch (parseError) {
-      console.log('JSON parsing failed, extracting from text');
+      logger.log('JSON parsing failed, extracting from text');
     }
 
     // Fallback: extract from text response
@@ -230,7 +231,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
     let breathingPattern = 'Exhale during exertion, inhale during release';
     
     for (const line of lines) {
-      const cleanLine = line.replace(/^[-•*\d.]\s*/, '').trim();
+      const cleanLine = line.replace(/^[-â€¢*\d.]\s*/, '').trim();
       
       if (!cleanLine) continue;
       
@@ -240,7 +241,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
         safetyTips.push(cleanLine);
       } else if (line.toLowerCase().includes('mistake') || line.toLowerCase().includes('avoid') || line.toLowerCase().includes('don\'t')) {
         if (mistakes.length < 3) mistakes.push(cleanLine);
-      } else if (line.match(/^\d\./) || line.match(/^[-•]/)) {
+      } else if (line.match(/^\d\./) || line.match(/^[-â€¢]/)) {
         if (cues.length < 4) cues.push(cleanLine);
       }
     }
@@ -311,10 +312,10 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       if (data) {
         const parsed = JSON.parse(data);
         this.cache = new Map(Object.entries(parsed));
-        console.log(`📚 Loaded ${this.cache.size} cached form tips`);
+        logger.log(`ðŸ“š Loaded ${this.cache.size} cached form tips`);
       }
     } catch (error) {
-      console.error('Failed to load form tips cache:', error);
+      logger.error('Failed to load form tips cache:', error);
     }
   }
 
@@ -326,7 +327,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       const obj = Object.fromEntries(this.cache);
       await AsyncStorage.setItem(this.CACHE_STORAGE_KEY, JSON.stringify(obj));
     } catch (error) {
-      console.error('Failed to save form tips cache:', error);
+      logger.error('Failed to save form tips cache:', error);
     }
   }
 
@@ -336,7 +337,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
   async clearCache(): Promise<void> {
     this.cache.clear();
     await AsyncStorage.removeItem(this.CACHE_STORAGE_KEY);
-    console.log('🗑️ Form tips cache cleared');
+    logger.log('ðŸ—‘ï¸ Form tips cache cleared');
   }
 
   /**

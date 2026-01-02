@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -29,7 +30,7 @@ export function FormTips({ exerciseName, initiallyExpanded = false }: FormTipsPr
         const result = await formTipsService.getFormTips(exerciseName);
         setTips(result);
       } catch (error) {
-        console.error('Failed to fetch form tips:', error);
+        logger.error('Failed to fetch form tips:', error);
       } finally {
         setIsLoading(false);
       }

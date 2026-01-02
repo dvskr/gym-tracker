@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 // Photos are LOCAL ONLY by default
 // User must explicitly opt-in for cloud sync
 
@@ -48,7 +49,7 @@ export async function getPhotoPrivacySettings(): Promise<PhotoPrivacySettings> {
     }
     return DEFAULT_PHOTO_PRIVACY;
   } catch (error) {
-    console.error('Error reading photo privacy settings:', error);
+    logger.error('Error reading photo privacy settings:', error);
     return DEFAULT_PHOTO_PRIVACY;
   }
 }
@@ -69,7 +70,7 @@ export async function updatePhotoPrivacySettings(
     await AsyncStorage.setItem(PRIVACY_SETTINGS_KEY, JSON.stringify(updated));
     return updated;
   } catch (error) {
-    console.error('Error updating photo privacy settings:', error);
+    logger.error('Error updating photo privacy settings:', error);
     throw error;
   }
 }
@@ -176,7 +177,7 @@ export async function getPrivacyStatusSummary(): Promise<{
   
   if (settings.syncToCloud) {
     return {
-      icon: '☁️',
+      icon: 'â˜ï¸',
       title: 'Cloud Sync Enabled',
       description: 'Photos are synced across devices',
     };
@@ -184,14 +185,14 @@ export async function getPrivacyStatusSummary(): Promise<{
   
   if (settings.requireAuth) {
     return {
-      icon: '🔒',
+      icon: 'ðŸ”’',
       title: 'Protected',
       description: 'Biometric required to view',
     };
   }
   
   return {
-    icon: '📱',
+    icon: 'ðŸ“±',
     title: 'Local Only',
     description: 'Photos stored on this device only',
   };

@@ -1,4 +1,5 @@
 import { healthService, WorkoutData } from './healthService';
+import { logger } from '@/lib/utils/logger';
 import { supabase } from '../supabase';
 import { useSettingsStore } from '@/stores/settingsStore';
 
@@ -12,19 +13,19 @@ export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
     const healthSyncEnabled = settings.healthSyncEnabled ?? false;
 
     if (!healthSyncEnabled) {
-      console.log('⚠️ Health sync disabled in settings');
+      logger.log('âš ï¸ Health sync disabled in settings');
       return false;
     }
 
     // Check if health permissions are granted
     if (!healthService.getHasPermissions()) {
-      console.log('⚠️ No health permissions granted');
+      logger.log('âš ï¸ No health permissions granted');
       return false;
     }
 
     // Check if already synced
     if (workout.health_synced) {
-      console.log('ℹ️ Workout already synced to health');
+      logger.log('â„¹ï¸ Workout already synced to health');
       return true;
     }
 
@@ -53,12 +54,12 @@ export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
         })
         .eq('id', workout.id);
 
-      console.log(`✅ Workout ${workout.id} synced to health platform`);
+      logger.log(`âœ… Workout ${workout.id} synced to health platform`);
     }
 
     return synced;
   } catch (error) {
-    console.error('❌ Error syncing workout to health:', error);
+    logger.error('âŒ Error syncing workout to health:', error);
     return false;
   }
 }
@@ -71,7 +72,7 @@ export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
   failed: number;
   skipped: number;
 }> {
-  console.log(`📦 Batch syncing ${workouts.length} workouts to health...`);
+  logger.log(`ðŸ“¦ Batch syncing ${workouts.length} workouts to health...`);
 
   let success = 0;
   let failed = 0;
@@ -91,8 +92,8 @@ export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
     }
   }
 
-  console.log(
-    `✅ Batch sync complete: ${success} synced, ${failed} failed, ${skipped} skipped`
+  logger.log(
+    `âœ… Batch sync complete: ${success} synced, ${failed} failed, ${skipped} skipped`
   );
 
   return { success, failed, skipped };
@@ -116,7 +117,7 @@ export async function getUnsyncedWorkouts(userId: string): Promise<any[]> {
 
     return data || [];
   } catch (error) {
-    console.error('❌ Error fetching unsynced workouts:', error);
+    logger.error('âŒ Error fetching unsynced workouts:', error);
     return [];
   }
 }
@@ -178,10 +179,10 @@ export async function updateWorkoutCalories(workoutId: string, calories: number)
 
     if (error) throw error;
 
-    console.log(`✅ Updated workout ${workoutId} calories: ${calories}`);
+    logger.log(`âœ… Updated workout ${workoutId} calories: ${calories}`);
     return true;
   } catch (error) {
-    console.error('❌ Error updating workout calories:', error);
+    logger.error('âŒ Error updating workout calories:', error);
     return false;
   }
 }

@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { logger } from '@/lib/utils/logger';
 import * as Haptics from 'expo-haptics';
 import { notificationService } from './notificationService';
 import { useSettingsStore } from '@/stores/settingsStore';
@@ -18,7 +19,7 @@ class RestTimerNotificationService {
     await this.cancelRestNotification();
     
     // No longer scheduling notifications - using haptics only
-    console.log(`✅ Rest timer set for ${seconds}s (haptics only, no notification)`);
+    logger.log(`âœ… Rest timer set for ${seconds}s (haptics only, no notification)`);
   }
 
   /**
@@ -28,9 +29,9 @@ class RestTimerNotificationService {
     if (this.currentNotificationId) {
       try {
         await notificationService.cancelNotification(this.currentNotificationId);
-        console.log('✅ Cancelled rest timer notification');
+        logger.log('âœ… Cancelled rest timer notification');
       } catch (error) {
-        console.error('Failed to cancel rest notification:', error);
+        logger.error('Failed to cancel rest notification:', error);
       }
       this.currentNotificationId = null;
     }
@@ -55,12 +56,12 @@ class RestTimerNotificationService {
         // Additional vibration pattern for attention
         this.startVibrationPattern();
 
-        console.log('✅ Triggered rest complete haptics');
+        logger.log('âœ… Triggered rest complete haptics');
       } catch (error) {
-        console.error('Failed to trigger rest complete haptics:', error);
+        logger.error('Failed to trigger rest complete haptics:', error);
       }
     } else {
-      console.log('⏭️ Skipping rest complete haptics (disabled in settings)');
+      logger.log('â­ï¸ Skipping rest complete haptics (disabled in settings)');
     }
   }
 
@@ -77,9 +78,9 @@ class RestTimerNotificationService {
 
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      console.log('⚠️ Triggered rest timer warning haptic');
+      logger.log('âš ï¸ Triggered rest timer warning haptic');
     } catch (error) {
-      console.error('Failed to trigger warning haptic:', error);
+      logger.error('Failed to trigger warning haptic:', error);
     }
   }
 
@@ -109,7 +110,7 @@ class RestTimerNotificationService {
           this.stopVibration();
         }
       } catch (error) {
-        console.error('Vibration pattern error:', error);
+        logger.error('Vibration pattern error:', error);
         this.stopVibration();
       }
     }, 300);

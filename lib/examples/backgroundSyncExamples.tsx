@@ -1,9 +1,10 @@
+import { logger } from '@/lib/utils/logger';
 /**
  * Background Sync Usage Examples
  * 
  * The background sync system handles bidirectional synchronization:
- * - PUSH: Local changes → Supabase (via sync queue)
- * - PULL: Supabase changes → Local (for multi-device support)
+ * - PUSH: Local changes â†’ Supabase (via sync queue)
+ * - PULL: Supabase changes â†’ Local (for multi-device support)
  */
 
 import { backgroundSync, SyncStats } from '@/lib/sync/backgroundSync';
@@ -37,9 +38,9 @@ export function ManualSyncButton() {
       
       Alert.alert(
         'Sync Complete',
-        `✅ Synced: ${stats.itemsSynced}\n` +
-        `📥 Pulled: ${stats.itemsPulled}\n` +
-        `${stats.errors.length > 0 ? `⚠️ Errors: ${stats.errors.length}` : ''}`
+        `âœ… Synced: ${stats.itemsSynced}\n` +
+        `ðŸ“¥ Pulled: ${stats.itemsPulled}\n` +
+        `${stats.errors.length > 0 ? `âš ï¸ Errors: ${stats.errors.length}` : ''}`
       );
     } catch (error) {
       Alert.alert('Sync Failed', error instanceof Error ? error.message : 'Unknown error');
@@ -90,9 +91,9 @@ export function SyncStatusDisplay() {
 
   return (
     <View>
-      <Text>Status: {status.isRunning ? '🟢 Running' : '⏸️ Stopped'}</Text>
-      <Text>Network: {status.isOnline ? '🌐 Online' : '📵 Offline'}</Text>
-      <Text>Syncing: {status.isSyncing ? '⏳ Yes' : '✅ No'}</Text>
+      <Text>Status: {status.isRunning ? 'ðŸŸ¢ Running' : 'â¸ï¸ Stopped'}</Text>
+      <Text>Network: {status.isOnline ? 'ðŸŒ Online' : 'ðŸ“µ Offline'}</Text>
+      <Text>Syncing: {status.isSyncing ? 'â³ Yes' : 'âœ… No'}</Text>
       {lastSyncTime && (
         <Text>
           Last sync: {new Date(lastSyncTime).toLocaleString()}
@@ -143,13 +144,13 @@ export async function manualMergeWithTracking() {
 
   const { merged, stats } = await mergeWithStats(localWorkouts, serverWorkouts);
 
-  console.log('Merge Statistics:');
-  console.log(`Total: ${stats.total}`);
-  console.log(`From Server: ${stats.fromServer}`);
-  console.log(`From Local: ${stats.fromLocal}`);
-  console.log(`Conflicts: ${stats.conflicts}`);
-  console.log(`Server Wins: ${stats.serverWins}`);
-  console.log(`Local Wins: ${stats.localWins}`);
+  logger.log('Merge Statistics:');
+  logger.log(`Total: ${stats.total}`);
+  logger.log(`From Server: ${stats.fromServer}`);
+  logger.log(`From Local: ${stats.fromLocal}`);
+  logger.log(`Conflicts: ${stats.conflicts}`);
+  logger.log(`Server Wins: ${stats.serverWins}`);
+  logger.log(`Local Wins: ${stats.localWins}`);
 
   // Save merged data
   await saveWorkoutsLocally(merged);
@@ -168,15 +169,15 @@ export async function syncAllDataTypes() {
     personalRecords: await fetchPersonalRecordsFromServer(),
   });
 
-  console.log('Batch Merge Results:');
-  console.log(`Workouts: ${result.workouts}`);
-  console.log(`Templates: ${result.templates}`);
-  console.log(`Weight Log: ${result.weightLog}`);
-  console.log(`Measurements: ${result.measurements}`);
-  console.log(`Personal Records: ${result.personalRecords}`);
+  logger.log('Batch Merge Results:');
+  logger.log(`Workouts: ${result.workouts}`);
+  logger.log(`Templates: ${result.templates}`);
+  logger.log(`Weight Log: ${result.weightLog}`);
+  logger.log(`Measurements: ${result.measurements}`);
+  logger.log(`Personal Records: ${result.personalRecords}`);
   
   if (result.errors.length > 0) {
-    console.error('Errors:', result.errors);
+    logger.error('Errors:', result.errors);
   }
 }
 
@@ -189,11 +190,11 @@ export function CustomAppStateHandler() {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
         // App came to foreground
-        console.log('📱 App active - syncing...');
+        logger.log('ðŸ“± App active - syncing...');
         backgroundSync.syncNow();
       } else if (nextAppState === 'background') {
         // App went to background
-        console.log('📱 App background - pausing sync...');
+        logger.log('ðŸ“± App background - pausing sync...');
         // Sync is automatically stopped by _layout.tsx
       }
     });
@@ -228,7 +229,7 @@ export function NetworkAwareSyncMonitor() {
       {!isOnline && (
         <View style={{ backgroundColor: '#f59e0b', padding: 8 }}>
           <Text style={{ color: '#fff' }}>
-            📵 Offline - Will sync when reconnected
+            ðŸ“µ Offline - Will sync when reconnected
           </Text>
         </View>
       )}
@@ -246,7 +247,7 @@ export function SyncAfterWorkout() {
     await saveWorkoutLocally(workout);
     
     // Trigger immediate sync
-    console.log('🏋️ Workout completed - syncing now...');
+    logger.log('ðŸ‹ï¸ Workout completed - syncing now...');
     await backgroundSync.syncNow();
   };
 
@@ -313,11 +314,11 @@ export function SyncSettingsScreen() {
       </View>
 
       <View>
-        <Text>Connection: {status.isOnline ? '🟢 Online' : '🔴 Offline'}</Text>
+        <Text>Connection: {status.isOnline ? 'ðŸŸ¢ Online' : 'ðŸ”´ Offline'}</Text>
       </View>
 
       <View>
-        <Text>Status: {status.isSyncing ? '⏳ Syncing...' : '✅ Idle'}</Text>
+        <Text>Status: {status.isSyncing ? 'â³ Syncing...' : 'âœ… Idle'}</Text>
       </View>
 
       {lastSync && (
@@ -378,13 +379,13 @@ async function fetchPersonalRecordsFromServer() {
 // Key Benefits of Background Sync:
 // ============================================================================
 //
-// 1. ✅ Bidirectional sync (push local, pull server changes)
-// 2. ✅ Multi-device support (changes from other devices sync in)
-// 3. ✅ Automatic (no user intervention needed)
-// 4. ✅ Smart merging (timestamp-based conflict resolution)
-// 5. ✅ Battery efficient (stops when app is in background)
-// 6. ✅ Network aware (syncs when online, queues when offline)
-// 7. ✅ App lifecycle aware (syncs on app open/foreground)
+// 1. âœ… Bidirectional sync (push local, pull server changes)
+// 2. âœ… Multi-device support (changes from other devices sync in)
+// 3. âœ… Automatic (no user intervention needed)
+// 4. âœ… Smart merging (timestamp-based conflict resolution)
+// 5. âœ… Battery efficient (stops when app is in background)
+// 6. âœ… Network aware (syncs when online, queues when offline)
+// 7. âœ… App lifecycle aware (syncs on app open/foreground)
 //
 // ============================================================================
 

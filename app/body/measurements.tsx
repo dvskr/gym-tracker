@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -178,7 +179,7 @@ export default function MeasurementsScreen() {
         }
       }
     } catch (error) {
-      console.error('Error fetching measurements:', error);
+      logger.error('Error fetching measurements:', error);
     } finally {
       setIsLoading(false);
     }
@@ -262,7 +263,7 @@ export default function MeasurementsScreen() {
         { text: 'OK', onPress: () => router.back() }
       ]);
     } catch (error) {
-      console.error('Error saving measurements:', error);
+      logger.error('Error saving measurements:', error);
       Alert.alert('Error', 'Failed to save measurements');
     } finally {
       setIsSaving(false);

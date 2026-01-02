@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
@@ -125,7 +126,7 @@ export default function ExportDataScreen() {
       setProgress(null);
     } catch (error) {
       Alert.alert('Export Failed', 'An error occurred while generating your export.');
-      console.error('Export error:', error);
+      logger.error('Export error:', error);
     } finally {
       setExporting(false);
     }
@@ -315,7 +316,7 @@ export default function ExportDataScreen() {
           </TouchableOpacity>
         ) : (
           <View style={styles.successCard}>
-            <Text style={styles.successTitle}>✅ Export Ready!</Text>
+            <Text style={styles.successTitle}>âœ… Export Ready!</Text>
             <Text style={styles.successText}>
               Your data has been exported successfully.
             </Text>

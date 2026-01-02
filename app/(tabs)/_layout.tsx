@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '@/lib/utils/logger';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Slot, usePathname, router } from 'expo-router';
 import { Home, Dumbbell, History, TrendingUp, User } from 'lucide-react-native';
@@ -32,17 +33,17 @@ export default function TabsLayout() {
   useEffect(() => {
     // Reset preload flag if user changed
     if (user?.id && user.id !== currentUserId) {
-      console.log('[TabsLayout] User changed, resetting preload flag');
+      logger.log('[TabsLayout] User changed, resetting preload flag');
       preloadCompleted = false;
       currentUserId = user.id;
     }
 
     // Only run preload once per user session
     if (user && !isAuthLoading && !preloadCompleted) {
-      console.log('[TabsLayout] Starting app data preload...');
+      logger.log('[TabsLayout] Starting app data preload...');
       preloadAllAppData(user.id, setPreloadProgress)
         .finally(() => {
-          console.log('[TabsLayout] Preload complete');
+          logger.log('[TabsLayout] Preload complete');
           setIsPreloading(false);
           preloadCompleted = true;
         });
@@ -53,7 +54,7 @@ export default function TabsLayout() {
       currentUserId = null;
     } else if (preloadCompleted) {
       // Already preloaded, skip loading screen
-      console.log('[TabsLayout] Skipping preload - already completed');
+      logger.log('[TabsLayout] Skipping preload - already completed');
       setIsPreloading(false);
     }
   }, [user, isAuthLoading]);

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/utils/logger';
 // Import runtime functions from react-native-health-connect
 import {
   isAvailable,
@@ -159,10 +160,10 @@ class HealthService {
     try {
       const available = await isAvailable();
       this.isAvailable = available;
-      console.log(`📱 Health Connect available: ${available}`);
+      logger.log(`ðŸ“± Health Connect available: ${available}`);
       return available;
     } catch (error) {
-      console.error('❌ Health not available:', error);
+      logger.error('âŒ Health not available:', error);
       return false;
     }
   }
@@ -176,12 +177,12 @@ class HealthService {
     }
 
     if (!this.isAvailable) {
-      console.log('⚠️ Health Connect not available on this device');
+      logger.log('âš ï¸ Health Connect not available on this device');
       return false;
     }
 
     try {
-      console.log('🔐 Requesting health permissions...');
+      logger.log('ðŸ” Requesting health permissions...');
 
       const granted = await requestPermission([
         // Read permissions
@@ -198,10 +199,10 @@ class HealthService {
       ]);
 
       this.hasPermissions = granted;
-      console.log(`✅ Health permissions granted: ${granted}`);
+      logger.log(`âœ… Health permissions granted: ${granted}`);
       return granted;
     } catch (error) {
-      console.error('❌ Permission request failed:', error);
+      logger.error('âŒ Permission request failed:', error);
       return false;
     }
   }
@@ -232,9 +233,9 @@ class HealthService {
         );
       }
 
-      console.log('📋 Current permissions:', permissions);
+      logger.log('ðŸ“‹ Current permissions:', permissions);
     } catch (error) {
-      console.error('❌ Check permissions failed:', error);
+      logger.error('âŒ Check permissions failed:', error);
     }
 
     return permissions;
@@ -261,7 +262,7 @@ class HealthService {
         time: new Date(record.time),
       }));
     } catch (error) {
-      console.error('❌ Failed to read heart rate:', error);
+      logger.error('âŒ Failed to read heart rate:', error);
       return [];
     }
   }
@@ -281,7 +282,7 @@ class HealthService {
 
       return data.reduce((total: number, record: any) => total + record.count, 0);
     } catch (error) {
-      console.error('❌ Failed to read steps:', error);
+      logger.error('âŒ Failed to read steps:', error);
       return 0;
     }
   }
@@ -308,7 +309,7 @@ class HealthService {
         duration: record.endTime - record.startTime, // milliseconds
       }));
     } catch (error) {
-      console.error('❌ Failed to read sleep:', error);
+      logger.error('âŒ Failed to read sleep:', error);
       return [];
     }
   }
@@ -335,7 +336,7 @@ class HealthService {
         unit: 'kg',
       }));
     } catch (error) {
-      console.error('❌ Failed to read weight:', error);
+      logger.error('âŒ Failed to read weight:', error);
       return [];
     }
   }
@@ -345,12 +346,12 @@ class HealthService {
    */
   async saveWorkout(workout: WorkoutData): Promise<boolean> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to save workout');
+      logger.warn('âš ï¸ No health permissions to save workout');
       return false;
     }
 
     try {
-      console.log(`💪 Saving workout to health platform: ${workout.name}`);
+      logger.log(`ðŸ’ª Saving workout to health platform: ${workout.name}`);
 
       // Map workout type based on platform
       const exerciseType = this.mapWorkoutType(workout.exerciseType);
@@ -371,10 +372,10 @@ class HealthService {
         await this.saveWorkoutToHealthConnect(workout, exerciseType as number, calories);
       }
 
-      console.log('✅ Workout saved to health platform successfully');
+      logger.log('âœ… Workout saved to health platform successfully');
       return true;
     } catch (error) {
-      console.error('❌ Failed to save workout to health:', error);
+      logger.error('âŒ Failed to save workout to health:', error);
       return false;
     }
   }
@@ -399,7 +400,7 @@ class HealthService {
       },
     ]);
 
-    console.log(`✅ HealthKit exercise session written: ${activityType}`);
+    logger.log(`âœ… HealthKit exercise session written: ${activityType}`);
 
     // Save calories
     if (calories > 0) {
@@ -415,7 +416,7 @@ class HealthService {
         },
       ]);
 
-      console.log(`✅ HealthKit calories written: ${calories} kcal`);
+      logger.log(`âœ… HealthKit calories written: ${calories} kcal`);
     }
   }
 
@@ -439,7 +440,7 @@ class HealthService {
       },
     ]);
 
-    console.log(`✅ Health Connect exercise session written: Type ${exerciseType}`);
+    logger.log(`âœ… Health Connect exercise session written: Type ${exerciseType}`);
 
     // Save calories
     if (calories > 0) {
@@ -455,7 +456,7 @@ class HealthService {
         },
       ]);
 
-      console.log(`✅ Health Connect calories written: ${calories} kcal`);
+      logger.log(`âœ… Health Connect calories written: ${calories} kcal`);
     }
   }
 
@@ -465,8 +466,8 @@ class HealthService {
   estimateCalories(durationMinutes: number, exerciseType: number): number {
     const rate = CALORIES_PER_MINUTE[exerciseType] || CALORIES_PER_MINUTE.default;
     const estimated = Math.round(durationMinutes * rate);
-    console.log(
-      `📊 Estimated calories: ${estimated} kcal (${durationMinutes}min @ ${rate}cal/min)`
+    logger.log(
+      `ðŸ“Š Estimated calories: ${estimated} kcal (${durationMinutes}min @ ${rate}cal/min)`
     );
     return estimated;
   }
@@ -490,7 +491,7 @@ class HealthService {
    * Batch save multiple workouts (useful for backfilling)
    */
   async saveWorkoutsBatch(workouts: WorkoutData[]): Promise<{ success: number; failed: number }> {
-    console.log(`📦 Batch saving ${workouts.length} workouts...`);
+    logger.log(`ðŸ“¦ Batch saving ${workouts.length} workouts...`);
 
     let success = 0;
     let failed = 0;
@@ -504,7 +505,7 @@ class HealthService {
       }
     }
 
-    console.log(`✅ Batch save complete: ${success} success, ${failed} failed`);
+    logger.log(`âœ… Batch save complete: ${success} success, ${failed} failed`);
 
     return { success, failed };
   }
@@ -514,12 +515,12 @@ class HealthService {
    */
   async saveWeight(data: WeightData): Promise<boolean> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to save weight');
+      logger.warn('âš ï¸ No health permissions to save weight');
       return false;
     }
 
     try {
-      console.log(`⚖️ Saving weight to health platform: ${data.weightKg} kg`);
+      logger.log(`âš–ï¸ Saving weight to health platform: ${data.weightKg} kg`);
 
       // Save weight record
       await insertRecords([
@@ -533,7 +534,7 @@ class HealthService {
         },
       ]);
 
-      console.log('✅ Weight written to health platform');
+      logger.log('âœ… Weight written to health platform');
 
       // Save body fat if available
       if (data.bodyFatPercent && data.bodyFatPercent > 0 && data.bodyFatPercent < 100) {
@@ -545,13 +546,13 @@ class HealthService {
           },
         ]);
 
-        console.log(`✅ Body fat written: ${data.bodyFatPercent}%`);
+        logger.log(`âœ… Body fat written: ${data.bodyFatPercent}%`);
       }
 
-      console.log('✅ Weight data saved to health platform successfully');
+      logger.log('âœ… Weight data saved to health platform successfully');
       return true;
     } catch (error) {
-      console.error('❌ Failed to save weight to health:', error);
+      logger.error('âŒ Failed to save weight to health:', error);
       return false;
     }
   }
@@ -561,13 +562,13 @@ class HealthService {
    */
   async getWeightHistory(startDate: Date, endDate: Date): Promise<WeightData[]> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read weight');
+      logger.warn('âš ï¸ No health permissions to read weight');
       return [];
     }
 
     try {
-      console.log(
-        `📊 Reading weight history from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
+      logger.log(
+        `ðŸ“Š Reading weight history from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
       );
 
       const records = await readRecords('Weight', {
@@ -578,7 +579,7 @@ class HealthService {
         },
       });
 
-      console.log(`✅ Retrieved ${records.length} weight records from health platform`);
+      logger.log(`âœ… Retrieved ${records.length} weight records from health platform`);
 
       // Try to get body fat data for the same period
       let bodyFatRecords: any[] = [];
@@ -590,9 +591,9 @@ class HealthService {
             endTime: endDate.toISOString(),
           },
         });
-        console.log(`✅ Retrieved ${bodyFatRecords.length} body fat records`);
+        logger.log(`âœ… Retrieved ${bodyFatRecords.length} body fat records`);
       } catch (error) {
-        console.warn('⚠️ Could not read body fat data:', error);
+        logger.warn('âš ï¸ Could not read body fat data:', error);
       }
 
       // Create a map of dates to body fat percentages
@@ -616,7 +617,7 @@ class HealthService {
 
       return weightData;
     } catch (error) {
-      console.error('❌ Failed to read weight history from health:', error);
+      logger.error('âŒ Failed to read weight history from health:', error);
       return [];
     }
   }
@@ -639,7 +640,7 @@ class HealthService {
       weights.sort((a, b) => b.date.getTime() - a.date.getTime());
       return weights[0];
     } catch (error) {
-      console.error('❌ Failed to get latest weight:', error);
+      logger.error('âŒ Failed to get latest weight:', error);
       return null;
     }
   }
@@ -648,7 +649,7 @@ class HealthService {
    * Batch save multiple weight entries
    */
   async saveWeightsBatch(weights: WeightData[]): Promise<{ success: number; failed: number }> {
-    console.log(`📦 Batch saving ${weights.length} weight entries...`);
+    logger.log(`ðŸ“¦ Batch saving ${weights.length} weight entries...`);
 
     let success = 0;
     let failed = 0;
@@ -662,7 +663,7 @@ class HealthService {
       }
     }
 
-    console.log(`✅ Batch save complete: ${success} success, ${failed} failed`);
+    logger.log(`âœ… Batch save complete: ${success} success, ${failed} failed`);
 
     return { success, failed };
   }
@@ -675,12 +676,12 @@ class HealthService {
    */
   async saveBodyMeasurements(data: BodyMeasurementData): Promise<boolean> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to save measurements');
+      logger.warn('âš ï¸ No health permissions to save measurements');
       return false;
     }
 
     try {
-      console.log('📏 Saving body measurements to health platform...');
+      logger.log('ðŸ“ Saving body measurements to health platform...');
 
       const records: any[] = [];
 
@@ -694,7 +695,7 @@ class HealthService {
             unit: 'centimeters',
           },
         });
-        console.log(`📏 Height: ${data.heightCm} cm`);
+        logger.log(`ðŸ“ Height: ${data.heightCm} cm`);
       }
 
       // Platform-specific measurements
@@ -703,21 +704,21 @@ class HealthService {
         // focuses on common cross-platform metrics
         // For iOS-specific measurements, you would need react-native-health
 
-        console.log('ℹ️ iOS additional measurements (waist, hip) require react-native-health');
-        console.log('ℹ️ Currently only height is synced via expo-health-connect');
+        logger.log('â„¹ï¸ iOS additional measurements (waist, hip) require react-native-health');
+        logger.log('â„¹ï¸ Currently only height is synced via expo-health-connect');
       }
 
       // Save records if any
       if (records.length > 0) {
         await insertRecords(records);
-        console.log(`✅ Saved ${records.length} measurement(s) to health platform`);
+        logger.log(`âœ… Saved ${records.length} measurement(s) to health platform`);
         return true;
       } else {
-        console.log('ℹ️ No supported measurements to sync');
+        logger.log('â„¹ï¸ No supported measurements to sync');
         return false;
       }
     } catch (error) {
-      console.error('❌ Failed to save body measurements to health:', error);
+      logger.error('âŒ Failed to save body measurements to health:', error);
       return false;
     }
   }
@@ -727,7 +728,7 @@ class HealthService {
    */
   async getHeight(): Promise<number | null> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read height');
+      logger.warn('âš ï¸ No health permissions to read height');
       return null;
     }
 
@@ -752,10 +753,10 @@ class HealthService {
       records.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
       const heightCm = records[0].height.value;
 
-      console.log(`📏 Retrieved height: ${heightCm} cm`);
+      logger.log(`ðŸ“ Retrieved height: ${heightCm} cm`);
       return heightCm;
     } catch (error) {
-      console.error('❌ Failed to read height from health:', error);
+      logger.error('âŒ Failed to read height from health:', error);
       return null;
     }
   }
@@ -876,13 +877,13 @@ class HealthService {
    */
   async getHeartRate(startTime: Date, endTime: Date): Promise<HeartRateStats | null> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read heart rate');
+      logger.warn('âš ï¸ No health permissions to read heart rate');
       return null;
     }
 
     try {
-      console.log(
-        `❤️ Reading heart rate from ${startTime.toLocaleTimeString()} to ${endTime.toLocaleTimeString()}`
+      logger.log(
+        `â¤ï¸ Reading heart rate from ${startTime.toLocaleTimeString()} to ${endTime.toLocaleTimeString()}`
       );
 
       const records = await readRecords('HeartRate', {
@@ -894,11 +895,11 @@ class HealthService {
       });
 
       if (records.length === 0) {
-        console.log('ℹ️ No heart rate data found for this period');
+        logger.log('â„¹ï¸ No heart rate data found for this period');
         return null;
       }
 
-      console.log(`📊 Retrieved ${records.length} heart rate records`);
+      logger.log(`ðŸ“Š Retrieved ${records.length} heart rate records`);
 
       // Flatten all samples from all records
       const readings: HeartRateReading[] = [];
@@ -923,7 +924,7 @@ class HealthService {
       });
 
       if (readings.length === 0) {
-        console.log('ℹ️ No heart rate readings found in records');
+        logger.log('â„¹ï¸ No heart rate readings found in records');
         return null;
       }
 
@@ -938,7 +939,7 @@ class HealthService {
       try {
         resting = (await this.getRestingHeartRate()) || undefined;
       } catch (error) {
-        console.warn('⚠️ Could not fetch resting heart rate');
+        logger.warn('âš ï¸ Could not fetch resting heart rate');
       }
 
       const stats: HeartRateStats = {
@@ -949,11 +950,11 @@ class HealthService {
         readings: readings.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime()),
       };
 
-      console.log(`✅ Heart rate stats: Avg ${average}, Min ${min}, Max ${max}`);
+      logger.log(`âœ… Heart rate stats: Avg ${average}, Min ${min}, Max ${max}`);
 
       return stats;
     } catch (error) {
-      console.error('❌ Failed to read heart rate:', error);
+      logger.error('âŒ Failed to read heart rate:', error);
       return null;
     }
   }
@@ -963,7 +964,7 @@ class HealthService {
    */
   async getRestingHeartRate(): Promise<number | null> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read resting heart rate');
+      logger.warn('âš ï¸ No health permissions to read resting heart rate');
       return null;
     }
 
@@ -989,11 +990,11 @@ class HealthService {
       );
 
       const resting = sorted[0].beatsPerMinute;
-      console.log(`💤 Resting heart rate: ${resting} bpm`);
+      logger.log(`ðŸ’¤ Resting heart rate: ${resting} bpm`);
 
       return resting;
     } catch (error) {
-      console.error('❌ Failed to read resting heart rate:', error);
+      logger.error('âŒ Failed to read resting heart rate:', error);
       return null;
     }
   }
@@ -1086,13 +1087,13 @@ class HealthService {
    */
   async getSteps(startDate: Date, endDate: Date): Promise<StepData[]> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read steps');
+      logger.warn('âš ï¸ No health permissions to read steps');
       return [];
     }
 
     try {
-      console.log(
-        `👣 Reading steps from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
+      logger.log(
+        `ðŸ‘£ Reading steps from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
       );
 
       const records = await readRecords('Steps', {
@@ -1104,11 +1105,11 @@ class HealthService {
       });
 
       if (records.length === 0) {
-        console.log('ℹ️ No step data found for this period');
+        logger.log('â„¹ï¸ No step data found for this period');
         return [];
       }
 
-      console.log(`📊 Retrieved ${records.length} step records`);
+      logger.log(`ðŸ“Š Retrieved ${records.length} step records`);
 
       // Aggregate steps by day
       const dailySteps = new Map<string, number>();
@@ -1127,13 +1128,13 @@ class HealthService {
         }))
         .sort((a, b) => a.date.getTime() - b.date.getTime());
 
-      console.log(
-        `✅ Aggregated ${stepData.length} days of step data (total: ${stepData.reduce((sum, d) => sum + d.steps, 0).toLocaleString()} steps)`
+      logger.log(
+        `âœ… Aggregated ${stepData.length} days of step data (total: ${stepData.reduce((sum, d) => sum + d.steps, 0).toLocaleString()} steps)`
       );
 
       return stepData;
     } catch (error) {
-      console.error('❌ Failed to read steps:', error);
+      logger.error('âŒ Failed to read steps:', error);
       return [];
     }
   }
@@ -1152,11 +1153,11 @@ class HealthService {
       const steps = await this.getSteps(today, tomorrow);
       const todaySteps = steps[0]?.steps || 0;
 
-      console.log(`👣 Today's steps: ${todaySteps.toLocaleString()}`);
+      logger.log(`ðŸ‘£ Today's steps: ${todaySteps.toLocaleString()}`);
 
       return todaySteps;
     } catch (error) {
-      console.error('❌ Failed to get today\'s steps:', error);
+      logger.error('âŒ Failed to get today\'s steps:', error);
       return 0;
     }
   }
@@ -1184,7 +1185,7 @@ class HealthService {
         goalProgress,
       };
     } catch (error) {
-      console.error('❌ Failed to get weekly steps:', error);
+      logger.error('âŒ Failed to get weekly steps:', error);
       return {
         totalSteps: 0,
         averageSteps: 0,
@@ -1207,7 +1208,7 @@ class HealthService {
       const steps = await this.getSteps(startOfDay, endOfDay);
       return steps[0]?.steps || 0;
     } catch (error) {
-      console.error('❌ Failed to get steps for date:', error);
+      logger.error('âŒ Failed to get steps for date:', error);
       return 0;
     }
   }
@@ -1225,12 +1226,12 @@ class HealthService {
    */
   async getLastNightSleep(): Promise<SleepData | null> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read sleep');
+      logger.warn('âš ï¸ No health permissions to read sleep');
       return null;
     }
 
     try {
-      console.log('😴 Reading last night\'s sleep data...');
+      logger.log('ðŸ˜´ Reading last night\'s sleep data...');
 
       // Sleep sessions typically span from evening to next morning
       const yesterday = new Date();
@@ -1249,11 +1250,11 @@ class HealthService {
       });
 
       if (records.length === 0) {
-        console.log('ℹ️ No sleep data found for last night');
+        logger.log('â„¹ï¸ No sleep data found for last night');
         return null;
       }
 
-      console.log(`📊 Retrieved ${records.length} sleep session(s)`);
+      logger.log(`ðŸ“Š Retrieved ${records.length} sleep session(s)`);
 
       // Get the main sleep session (longest one)
       const mainSession = records.reduce((longest, current) => {
@@ -1285,18 +1286,18 @@ class HealthService {
           rem: mainSession.stages.rem || 0,
         };
 
-        console.log(
-          `💤 Sleep stages: ${sleepData.stages.deep}m deep, ${sleepData.stages.rem}m REM, ${sleepData.stages.light}m light`
+        logger.log(
+          `ðŸ’¤ Sleep stages: ${sleepData.stages.deep}m deep, ${sleepData.stages.rem}m REM, ${sleepData.stages.light}m light`
         );
       }
 
-      console.log(
-        `😴 Last night's sleep: ${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m (${new Date(mainSession.startTime).toLocaleTimeString()} - ${new Date(mainSession.endTime).toLocaleTimeString()})`
+      logger.log(
+        `ðŸ˜´ Last night's sleep: ${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m (${new Date(mainSession.startTime).toLocaleTimeString()} - ${new Date(mainSession.endTime).toLocaleTimeString()})`
       );
 
       return sleepData;
     } catch (error) {
-      console.error('❌ Failed to read sleep data:', error);
+      logger.error('âŒ Failed to read sleep data:', error);
       return null;
     }
   }
@@ -1306,13 +1307,13 @@ class HealthService {
    */
   async getSleepHistory(startDate: Date, endDate: Date): Promise<SleepData[]> {
     if (!this.hasPermissions) {
-      console.warn('⚠️ No health permissions to read sleep history');
+      logger.warn('âš ï¸ No health permissions to read sleep history');
       return [];
     }
 
     try {
-      console.log(
-        `😴 Reading sleep history from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
+      logger.log(
+        `ðŸ˜´ Reading sleep history from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
       );
 
       const records = await readRecords('SleepSession', {
@@ -1324,7 +1325,7 @@ class HealthService {
       });
 
       if (records.length === 0) {
-        console.log('ℹ️ No sleep data found for this period');
+        logger.log('â„¹ï¸ No sleep data found for this period');
         return [];
       }
 
@@ -1363,11 +1364,11 @@ class HealthService {
         (a, b) => a.date.getTime() - b.date.getTime()
       );
 
-      console.log(`✅ Retrieved ${sleepArray.length} nights of sleep data`);
+      logger.log(`âœ… Retrieved ${sleepArray.length} nights of sleep data`);
 
       return sleepArray;
     } catch (error) {
-      console.error('❌ Failed to read sleep history:', error);
+      logger.error('âŒ Failed to read sleep history:', error);
       return [];
     }
   }
@@ -1406,7 +1407,7 @@ class HealthService {
         averageScore,
       };
     } catch (error) {
-      console.error('❌ Failed to get weekly sleep summary:', error);
+      logger.error('âŒ Failed to get weekly sleep summary:', error);
       return {
         averageMinutes: 0,
         totalMinutes: 0,
@@ -1576,7 +1577,7 @@ class HealthService {
    */
   async writeWeight(weight: number, time: Date, unit: 'kg' | 'lbs' = 'kg'): Promise<boolean> {
     try {
-      console.log(`⚖️ Writing weight to health platform: ${weight} ${unit}`);
+      logger.log(`âš–ï¸ Writing weight to health platform: ${weight} ${unit}`);
 
       // Convert to kg if needed
       const weightInKg = unit === 'lbs' ? weight * 0.453592 : weight;
@@ -1592,10 +1593,10 @@ class HealthService {
         },
       ]);
 
-      console.log('✅ Weight written to health platform');
+      logger.log('âœ… Weight written to health platform');
       return true;
     } catch (error) {
-      console.error('❌ Failed to write weight:', error);
+      logger.error('âŒ Failed to write weight:', error);
       return false;
     }
   }
@@ -1605,7 +1606,7 @@ class HealthService {
    */
   async writeBodyFat(percentage: number, time: Date): Promise<boolean> {
     try {
-      console.log(`📊 Writing body fat to health platform: ${percentage}%`);
+      logger.log(`ðŸ“Š Writing body fat to health platform: ${percentage}%`);
 
       await insertRecords([
         {
@@ -1615,10 +1616,10 @@ class HealthService {
         },
       ]);
 
-      console.log('✅ Body fat written to health platform');
+      logger.log('âœ… Body fat written to health platform');
       return true;
     } catch (error) {
-      console.error('❌ Failed to write body fat:', error);
+      logger.error('âŒ Failed to write body fat:', error);
       return false;
     }
   }
@@ -1630,7 +1631,7 @@ class HealthService {
     try {
       await openHealthConnectSettings();
     } catch (error) {
-      console.error('❌ Failed to open health settings:', error);
+      logger.error('âŒ Failed to open health settings:', error);
     }
   }
 

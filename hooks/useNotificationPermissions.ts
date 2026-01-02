@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { logger } from '@/lib/utils/logger';
 import { useState, useEffect } from 'react';
 import { Platform, Linking } from 'react-native';
 
@@ -35,7 +36,7 @@ export function useNotificationPermissions(): NotificationPermissions {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       setStatus(existingStatus as NotificationPermissionStatus);
     } catch (error) {
-      console.error('Failed to check notification permissions:', error);
+      logger.error('Failed to check notification permissions:', error);
       setStatus('undetermined');
     } finally {
       setIsLoading(false);
@@ -69,14 +70,14 @@ export function useNotificationPermissions(): NotificationPermissions {
       setStatus(newStatus as NotificationPermissionStatus);
       
       if (newStatus === 'granted') {
-        console.log('✅ Notification permissions granted');
+        logger.log('âœ… Notification permissions granted');
         return true;
       } else {
-        console.log('❌ Notification permissions denied');
+        logger.log('âŒ Notification permissions denied');
         return false;
       }
     } catch (error) {
-      console.error('Failed to request notification permissions:', error);
+      logger.error('Failed to request notification permissions:', error);
       return false;
     }
   }

@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { logger } from '@/lib/utils/logger';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
@@ -21,7 +22,7 @@ class NotificationService {
    */
   async initialize(): Promise<string | null> {
     if (!Device.isDevice) {
-      console.log('⚠️ Push notifications require physical device');
+      logger.log('âš ï¸ Push notifications require physical device');
       return null;
     }
 
@@ -35,7 +36,7 @@ class NotificationService {
     }
 
     if (finalStatus !== 'granted') {
-      console.log('❌ Failed to get push notification permissions');
+      logger.log('âŒ Failed to get push notification permissions');
       return null;
     }
 
@@ -47,7 +48,7 @@ class NotificationService {
       await this.setupAndroidChannels();
     }
 
-    console.log('✅ Notifications initialized');
+    logger.log('âœ… Notifications initialized');
     return this.expoPushToken;
   }
 
@@ -59,7 +60,7 @@ class NotificationService {
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
 
       if (!projectId) {
-        console.warn('⚠️ No project ID found for push notifications');
+        logger.warn('âš ï¸ No project ID found for push notifications');
         return null;
       }
 
@@ -67,10 +68,10 @@ class NotificationService {
         projectId,
       });
 
-      console.log('📱 Push token:', token.data);
+      logger.log('ðŸ“± Push token:', token.data);
       return token.data;
     } catch (error) {
-      console.error('❌ Failed to get push token:', error);
+      logger.error('âŒ Failed to get push token:', error);
       return null;
     }
   }
@@ -120,7 +121,7 @@ class NotificationService {
       sound: null,
     });
 
-    console.log('✅ Android notification channels configured');
+    logger.log('âœ… Android notification channels configured');
   }
 
   /**

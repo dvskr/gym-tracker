@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '@/lib/utils/logger';
 
 export interface UsageData {
   requests: number;
@@ -163,7 +164,7 @@ class AIUsageTracker {
     const stats = await this.getUsage();
 
     if (level === 'critical') {
-      return `⚠️ You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
+      return `âš ï¸ You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
     } else if (level === 'warning') {
       return `You've used ${stats.percentUsed}% of your monthly AI limit`;
     }
@@ -192,7 +193,7 @@ class AIUsageTracker {
       lastReset.getMonth() !== now.getMonth() || lastReset.getFullYear() !== now.getFullYear();
 
     if (isDifferentMonth) {
-      console.log('📅 New month detected, resetting AI usage stats');
+      logger.log('ðŸ“… New month detected, resetting AI usage stats');
       await this.reset();
     }
   }
@@ -207,7 +208,7 @@ class AIUsageTracker {
         this.usage = JSON.parse(data);
       }
     } catch (error) {
-      console.error('Failed to load AI usage data:', error);
+      logger.error('Failed to load AI usage data:', error);
       // Keep defaults
     }
   }
@@ -219,7 +220,7 @@ class AIUsageTracker {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.usage));
     } catch (error) {
-      console.error('Failed to save AI usage data:', error);
+      logger.error('Failed to save AI usage data:', error);
     }
   }
 
