@@ -383,7 +383,7 @@ export default function WeightGoalScreen() {
             <View style={styles.remainingContainer}>
               <Text style={styles.remainingText}>
                 {progress.remaining === 0
-                  ? 'ðŸŽ‰ Goal reached!'
+                  ? '�x}0 Goal reached!'
                   : `${progress.remaining} ${bodyWeight.label} to go`}
               </Text>
             </View>
@@ -481,7 +481,7 @@ export default function WeightGoalScreen() {
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Progress</Text>
               <Text style={styles.detailValue}>
-                {progress ? formatWeightChange(progress.progressMade) : 'â€”'}
+                {progress ? formatWeightChange(progress.progressMade) : '�'}
               </Text>
             </View>
 
@@ -532,20 +532,20 @@ export default function WeightGoalScreen() {
 
         {/* Tips Card */}
         <View style={styles.tipsCard}>
-          <Text style={styles.tipsTitle}>ðŸ’¡ Healthy Tips</Text>
+          <Text style={styles.tipsTitle}>�x� Healthy Tips</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              â€¢ For weight loss: 0.5-1 lb/week is sustainable
+              • For weight loss: 0.5-1 lb/week is sustainable
             </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              â€¢ For muscle gain: 0.25-0.5 lb/week is realistic
+              • For muscle gain: 0.25-0.5 lb/week is realistic
             </Text>
           </View>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
-              â€¢ Track consistently for accurate projections
+              • Track consistently for accurate projections
             </Text>
           </View>
         </View>

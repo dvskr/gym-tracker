@@ -108,7 +108,7 @@ export default function HealthSettingsScreen() {
         ].join('\n');
 
         if (result.errors.length > 0) {
-          Alert.alert('Sync Completed with Errors', `${message}\n\n⚠️ ${result.errors.length} error(s) occurred`);
+          Alert.alert('Sync Completed with Errors', `${message}\n\n� ${result.errors.length} error(s) occurred`);
         } else {
           Alert.alert('Sync Complete', message);
         }

@@ -11,7 +11,7 @@ import { Template } from '@/lib/api/templates';
  * Generate shareable text format for a template
  */
 export function generateTemplateShareText(template: Template): string {
-  let text = `ðŸ‹ï¸ ${template.name} Template\n\n`;
+  let text = `�x�9️ ${template.name} Template\n\n`;
 
   if (template.description) {
     text += `${template.description}\n\n`;
@@ -34,7 +34,7 @@ export function generateTemplateShareText(template: Template): string {
       repsText = '8-12';
     }
 
-    text += `${index + 1}. ${exerciseName} - ${sets} sets Ã— ${repsText} reps\n`;
+    text += `${index + 1}. ${exerciseName} - ${sets} sets × ${repsText} reps\n`;
   });
 
   if (template.target_muscles && template.target_muscles.length > 0) {
@@ -45,7 +45,7 @@ export function generateTemplateShareText(template: Template): string {
     text += `\nDuration: ~${template.estimated_duration} min`;
   }
 
-  text += `\n\nCreated with GymTracker ðŸ’ª`;
+  text += `\n\nCreated with GymTracker �x�`;
 
   return text;
 }
@@ -54,24 +54,24 @@ export function generateTemplateShareText(template: Template): string {
  * Generate detailed text with instructions
  */
 export function generateDetailedShareText(template: Template): string {
-  let text = `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n`;
-  text += `ðŸ‹ï¸ ${template.name.toUpperCase()}\n`;
-  text += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
+  let text = `������������������������������������������������\n`;
+  text += `�x�9️ ${template.name.toUpperCase()}\n`;
+  text += `������������������������������������������������\n\n`;
 
   if (template.description) {
-    text += `ðŸ“ ${template.description}\n\n`;
+    text += `�x� ${template.description}\n\n`;
   }
 
   if (template.target_muscles && template.target_muscles.length > 0) {
-    text += `ðŸŽ¯ Target: ${template.target_muscles.join(' â€¢ ')}\n`;
+    text += `�x}� Target: ${template.target_muscles.join(' • ')}\n`;
   }
 
   if (template.estimated_duration) {
-    text += `â±ï¸ Duration: ~${template.estimated_duration} min\n`;
+    text += `⏱��� Duration: ~${template.estimated_duration} min\n`;
   }
 
-  text += `\nðŸ“‹ EXERCISES\n`;
-  text += `â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
+  text += `\n�x9 EXERCISES\n`;
+  text += `������������������������������������������������\n`;
 
   (template.exercises || []).forEach((ex, index) => {
     const exerciseName = ex.exercise?.name || 'Unknown Exercise';
@@ -87,21 +87,21 @@ export function generateDetailedShareText(template: Template): string {
     }
 
     text += `\n${index + 1}. ${exerciseName}\n`;
-    text += `   ${sets} sets Ã— ${repsText} reps`;
+    text += `   ${sets} sets × ${repsText} reps`;
 
     if (ex.rest_seconds) {
-      text += ` â€¢ ${ex.rest_seconds}s rest`;
+      text += ` • ${ex.rest_seconds}s rest`;
     }
 
     text += `\n`;
 
     if (ex.notes) {
-      text += `   ðŸ’¡ ${ex.notes}\n`;
+      text += `   �x� ${ex.notes}\n`;
     }
   });
 
-  text += `\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n`;
-  text += `Created with GymTracker ðŸ’ª\n`;
+  text += `\n������������������������������������������������\n`;
+  text += `Created with GymTracker �x�\n`;
 
   return text;
 }

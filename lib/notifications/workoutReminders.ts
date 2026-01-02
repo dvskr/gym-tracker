@@ -14,12 +14,12 @@ export interface WorkoutReminder {
 }
 
 const REMINDER_MESSAGES = [
-  "Time to crush it! ðŸ’ª",
+  "Time to crush it! �x�",
   "Your workout is waiting!",
   "Let's get stronger today!",
   "Ready to make progress?",
   "Your future self will thank you!",
-  "No excuses - let's go! ðŸ”¥",
+  "No excuses - let's go! �x�",
   "Gains don't wait!",
   "Make today count!",
   "Turn your goals into results!",
@@ -48,7 +48,7 @@ class WorkoutReminderService {
   async saveReminders(reminders: WorkoutReminder[]): Promise<void> {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(reminders));
-      logger.log('âœ… Reminders saved');
+      logger.log('�S& Reminders saved');
     } catch (error) {
       logger.error('Failed to save reminders:', error);
     }
@@ -62,7 +62,7 @@ class WorkoutReminderService {
     await this.cancelReminder(reminder.id);
 
     if (!reminder.enabled) {
-      logger.log(`â¸ï¸ Reminder ${reminder.id} is disabled, skipping schedule`);
+      logger.log(`⏸��� Reminder ${reminder.id} is disabled, skipping schedule`);
       return null;
     }
 
@@ -94,7 +94,7 @@ class WorkoutReminderService {
         }
       );
 
-      logger.log(`âœ… Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
+      logger.log(`�S& Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
       return notificationId;
     } catch (error) {
       logger.error('Failed to schedule reminder:', error);
@@ -117,7 +117,7 @@ class WorkoutReminderService {
       }
 
       if (matching.length > 0) {
-        logger.log(`âœ… Cancelled ${matching.length} notification(s) for reminder ${id}`);
+        logger.log(`�S& Cancelled ${matching.length} notification(s) for reminder ${id}`);
       }
     } catch (error) {
       logger.error('Failed to cancel reminder:', error);
@@ -140,7 +140,7 @@ class WorkoutReminderService {
       }
     }
 
-    logger.log(`âœ… Scheduled ${scheduled} workout reminder(s)`);
+    logger.log(`�S& Scheduled ${scheduled} workout reminder(s)`);
   }
 
   /**
@@ -153,7 +153,7 @@ class WorkoutReminderService {
       await this.cancelReminder(reminder.id);
     }
 
-    logger.log('âœ… Cancelled all workout reminders');
+    logger.log('�S& Cancelled all workout reminders');
   }
 
   /**
@@ -274,7 +274,7 @@ class WorkoutReminderService {
     await this.cancelAllReminders();
     await this.scheduleAllReminders();
 
-    logger.log(`âœ… Applied ${preset} preset`);
+    logger.log(`�S& Applied ${preset} preset`);
   }
 
   /**

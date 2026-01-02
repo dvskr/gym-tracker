@@ -22,25 +22,25 @@ const STRATEGY_OPTIONS: Array<{
     value: 'latest_wins',
     label: 'Latest Wins',
     description: 'Use the most recently modified version (recommended)',
-    icon: '🕐',
+    icon: '=P',
   },
   {
     value: 'client_wins',
     label: 'This Device Wins',
     description: 'Always prefer changes made on this device',
-    icon: '📱',
+    icon: '=�',
   },
   {
     value: 'server_wins',
     label: 'Other Device Wins',
     description: 'Always prefer changes from other devices',
-    icon: '☁️',
+    icon: '',
   },
   {
     value: 'manual',
     label: 'Ask Me',
     description: 'Prompt me to resolve conflicts manually',
-    icon: '👤',
+    icon: '=d',
   },
 ];
 
@@ -106,7 +106,7 @@ export default function SyncConflictSettingsScreen() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Info Section */}
         <View style={styles.infoBox}>
-          <Text style={styles.infoIcon}>ℹ️</Text>
+          <Text style={styles.infoIcon}>9</Text>
           <Text style={styles.infoText}>
             When the same data is modified on multiple devices, a conflict occurs.
             Choose how you want to resolve these conflicts.
@@ -120,7 +120,7 @@ export default function SyncConflictSettingsScreen() {
             onPress={handleViewConflicts}
           >
             <View style={styles.conflictAlertContent}>
-              <Text style={styles.conflictAlertIcon}>⚠️</Text>
+              <Text style={styles.conflictAlertIcon}>�</Text>
               <View style={styles.conflictAlertText}>
                 <Text style={styles.conflictAlertTitle}>
                   {pendingConflicts} Conflict{pendingConflicts > 1 ? 's' : ''} Pending

@@ -57,7 +57,7 @@ export const DEFAULT_TEMPLATES: DefaultTemplate[] = [
     exercises: [
       { name: "barbell full squat", sets: 4, reps: "6-8" },
       { name: "barbell romanian deadlift", sets: 3, reps: "8-10" },
-      { name: "sled 45Â° leg press", sets: 3, reps: "10-12" },
+      { name: "sled 45° leg press", sets: 3, reps: "10-12" },
       { name: "lying leg curl machine", sets: 3, reps: "10-12" },
       { name: "leg extension machine", sets: 3, reps: "12-15" },
       { name: "lever standing calf raise", sets: 4, reps: "12-15" },

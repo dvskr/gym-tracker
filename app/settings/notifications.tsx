@@ -114,7 +114,7 @@ export default function NotificationSettingsScreen() {
   const handleSendTestNotification = async () => {
     try {
       await notificationService.scheduleNotification(
-        'Test Notification 🎉',
+        'Test Notification ',
         'Notifications are working perfectly!',
         {
           seconds: 1,

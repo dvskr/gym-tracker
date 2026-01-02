@@ -75,7 +75,7 @@ const SPECIAL_MEASUREMENT_TYPES: Record<string, string> = {
 };
 
 async function setMeasurementTypes() {
-  console.log('📏 Setting measurement types for exercises...\n');
+  console.log('=� Setting measurement types for exercises...\n');
   
   const forceUpdate = process.argv.includes('--force');
   
@@ -172,9 +172,9 @@ async function setMeasurementTypes() {
   }
   
   console.log(`\n✅ Updated ${updated} exercises`);
-  console.log(`⏭️  Skipped ${skipped} (already had measurement type)`);
+  console.log(`�  Skipped ${skipped} (already had measurement type)`);
   
-  console.log('\n📊 Type Breakdown:');
+  console.log('\n=� Type Breakdown:');
   Object.entries(typeBreakdown).forEach(([type, count]) => {
     if (count > 0) {
       console.log(`   ${type}: ${count}`);
@@ -182,7 +182,7 @@ async function setMeasurementTypes() {
   });
   
   if (!forceUpdate && skipped > 0) {
-    console.log('\n💡 Use --force to update all exercises (overwrite existing types)');
+    console.log('\n=� Use --force to update all exercises (overwrite existing types)');
   }
 }
 

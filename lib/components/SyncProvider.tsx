@@ -12,13 +12,13 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { isOnline } = useNetworkStatus();
 
   useEffect(() => {
-    logger.log('ðŸš€ Starting offline-first sync system...');
+    logger.log('�xa� Starting offline-first sync system...');
     
     // Start auto-sync when app loads
     syncQueue.startAutoSync(30000); // Sync every 30 seconds
 
     return () => {
-      logger.log('â¸ï¸ Stopping sync system...');
+      logger.log('⏸��� Stopping sync system...');
       syncQueue.stopAutoSync();
     };
   }, []);
@@ -26,7 +26,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   // Trigger sync when coming back online
   useEffect(() => {
     if (isOnline) {
-      logger.log('ðŸ“¡ Back online - triggering sync...');
+      logger.log('�x� Back online - triggering sync...');
       syncQueue.syncAll();
     }
   }, [isOnline]);
@@ -63,9 +63,9 @@ export function OfflineStatusBanner() {
     <View style={[styles.banner, isOnline ? styles.bannerSyncing : styles.bannerOffline]}>
       <Text style={styles.bannerText}>
         {isOnline ? (
-          pendingCount > 0 ? `â³ Syncing ${pendingCount} item(s)...` : 'âœ… All synced'
+          pendingCount > 0 ? `⏳ Syncing ${pendingCount} item(s)...` : '�S& All synced'
         ) : (
-          `ðŸ“µ Offline${pendingCount > 0 ? ` â€¢ ${pendingCount} pending` : ''}`
+          `�x� Offline${pendingCount > 0 ? ` • ${pendingCount} pending` : ''}`
         )}
       </Text>
     </View>
@@ -187,7 +187,7 @@ export function DebugSyncPanel() {
       <View style={styles.debugRow}>
         <Text style={styles.debugLabel}>Status:</Text>
         <Text style={styles.debugValue}>
-          {status.isSyncing ? 'ðŸ”„ Syncing' : 'â¸ï¸ Idle'}
+          {status.isSyncing ? '�x Syncing' : '⏸��� Idle'}
         </Text>
       </View>
 
@@ -214,7 +214,7 @@ export function DebugSyncPanel() {
           {status.operations.slice(0, 5).map((op: any) => (
             <View key={op.id} style={styles.operation}>
               <Text style={styles.operationText}>
-                {op.operation} â€¢ {op.table} â€¢ Attempts: {op.attempts}
+                {op.operation} • {op.table} • Attempts: {op.attempts}
               </Text>
               {op.error && (
                 <Text style={styles.operationError}>Error: {op.error}</Text>

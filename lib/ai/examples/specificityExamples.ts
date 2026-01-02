@@ -17,7 +17,7 @@ import {
 // ==========================================
 
 export const example1_basicCheck = () => {
-  logger.log('\nðŸ“Š Example 1: Basic Specificity Check');
+  logger.log('\n�x` Example 1: Basic Specificity Check');
   
   // Simulate user context
   const userContext: UserContext = {
@@ -34,14 +34,14 @@ export const example1_basicCheck = () => {
   
   // Test a specific response
   const specificResponse = 
-    "Your bench press at 185Ã—8 last week was solid! Since you hit all reps, " +
+    "Your bench press at 185×8 last week was solid! Since you hit all reps, " +
     "try bumping to 190 lbs next session.";
   
   const check1 = checkResponseSpecificity(specificResponse, userContext);
   
   logger.log('Specific Response:', specificResponse);
   logger.log('Result:', check1);
-  logger.log(`âœ… Score: ${check1.score} (${check1.isSpecific ? 'PASS' : 'FAIL'})`);
+  logger.log(`�S& Score: ${check1.score} (${check1.isSpecific ? 'PASS' : 'FAIL'})`);
   
   // Test a generic response
   const genericResponse = 
@@ -52,7 +52,7 @@ export const example1_basicCheck = () => {
   
   logger.log('\nGeneric Response:', genericResponse);
   logger.log('Result:', check2);
-  logger.log(`âŒ Score: ${check2.score} (${check2.isSpecific ? 'PASS' : 'FAIL'})`);
+  logger.log(`�R Score: ${check2.score} (${check2.isSpecific ? 'PASS' : 'FAIL'})`);
   logger.log('Issues:', check2.issues);
 };
 
@@ -61,7 +61,7 @@ export const example1_basicCheck = () => {
 // ==========================================
 
 export const example2_buildingContext = () => {
-  logger.log('\nðŸ”¨ Example 2: Building Context from Workout Data');
+  logger.log('\n�x� Example 2: Building Context from Workout Data');
   
   // Simulate raw workout data from database
   const workoutData = {
@@ -113,7 +113,7 @@ export const example2_buildingContext = () => {
   logger.log('\nExtracted:');
   logger.log('- Exercises:', context.recentExercises.join(', '));
   logger.log('- Weights:', context.recentWeights?.map(w => 
-    `${w.exercise}: ${w.weight}Ã—${w.reps}`
+    `${w.exercise}: ${w.weight}×${w.reps}`
   ).join(', '));
   logger.log('- Has PRs:', context.hasPRs);
   logger.log('- Has History:', context.hasWorkoutHistory);
@@ -124,7 +124,7 @@ export const example2_buildingContext = () => {
 // ==========================================
 
 export const example3_qualityValidation = () => {
-  logger.log('\nâœ… Example 3: Complete Quality Validation');
+  logger.log('\n�S& Example 3: Complete Quality Validation');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -139,7 +139,7 @@ export const example3_qualityValidation = () => {
   const responses = [
     {
       name: 'Excellent',
-      text: "Your bench press at 185Ã—8 on Monday was strong. Last week you hit 180Ã—9, " +
+      text: "Your bench press at 185×8 on Monday was strong. Last week you hit 180×9, " +
             "so you're progressing well. Try 190 lbs for 6-8 reps next session.",
     },
     {
@@ -162,7 +162,7 @@ export const example3_qualityValidation = () => {
     const result = validateResponseQuality(text, userContext);
     
     logger.log(`\n[${name}] Score: ${result.specificity.score}`);
-    logger.log(`Valid: ${result.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Valid: ${result.isValid ? '�S&' : '�R'}`);
     logger.log(`Response: "${text.substring(0, 80)}..."`);
     logger.log(`Feedback: ${result.feedback}`);
   });
@@ -173,7 +173,7 @@ export const example3_qualityValidation = () => {
 // ==========================================
 
 export const example4_aiServiceIntegration = async () => {
-  logger.log('\nðŸ¤– Example 4: AI Service Integration');
+  logger.log('\n�x� Example 4: AI Service Integration');
   
   // Simulate AI service
   const mockAIService = {
@@ -181,7 +181,7 @@ export const example4_aiServiceIntegration = async () => {
       // First response is generic (will retry)
       "Try to increase weight when you feel ready. Progressive overload is key.",
       // Second response is specific (will pass)
-      "Your bench press at 185Ã—8 last week shows you're ready for 190 lbs next session.",
+      "Your bench press at 185×8 last week shows you're ready for 190 lbs next session.",
     ],
     currentIndex: 0,
     
@@ -223,15 +223,15 @@ export const example4_aiServiceIntegration = async () => {
     
     logger.log(`Response: "${response}"`);
     logger.log(`Score: ${validation.specificity.score}`);
-    logger.log(`Valid: ${validation.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Valid: ${validation.isValid ? '�S&' : '�R'}`);
     
     if (validation.isValid) {
       finalResponse = response;
-      logger.log('\nâœ… Accepted! Response is specific enough.');
+      logger.log('\n�S& Accepted! Response is specific enough.');
       break;
     }
     
-    logger.log(`âš ï¸ Too generic: ${validation.feedback}`);
+    logger.log(`�a���� Too generic: ${validation.feedback}`);
     
     if (attempt < maxRetries - 1) {
       logger.log('Retrying with enhanced prompt...');
@@ -246,7 +246,7 @@ export const example4_aiServiceIntegration = async () => {
 // ==========================================
 
 export const example5_scoringBreakdown = () => {
-  logger.log('\nðŸŽ¯ Example 5: Scoring Breakdown');
+  logger.log('\n�x}� Example 5: Scoring Breakdown');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -273,7 +273,7 @@ export const example5_scoringBreakdown = () => {
     },
     {
       name: 'Full context',
-      text: 'Your bench press at 185Ã—8 last week was great.',
+      text: 'Your bench press at 185×8 last week was great.',
       expectedScore: 80,
     },
   ];
@@ -284,7 +284,7 @@ export const example5_scoringBreakdown = () => {
     logger.log(`\n[${name}]`);
     logger.log(`Text: "${text}"`);
     logger.log(`Expected: ${expectedScore}, Got: ${check.score}`);
-    logger.log(`Pass: ${check.isSpecific ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Pass: ${check.isSpecific ? '�S&' : '�R'}`);
     logger.log('Details:', check.details);
   });
 };
@@ -294,7 +294,7 @@ export const example5_scoringBreakdown = () => {
 // ==========================================
 
 export const example6_workoutAnalysis = () => {
-  logger.log('\nðŸ’ª Example 6: Workout Analysis Specificity');
+  logger.log('\n�x� Example 6: Workout Analysis Specificity');
   
   const userContext = buildUserContextFromData({
     recentWorkouts: [
@@ -332,9 +332,9 @@ export const example6_workoutAnalysis = () => {
     },
     {
       type: 'Specific',
-      text: "Strong push day! Your bench press hit 185Ã—8/7/6 - that's 21 total reps " +
-            "at 185 lbs. Your incline press at 155Ã—10 is also solid. Next session, " +
-            "try 190 lbs on bench for 3Ã—6-8.",
+      text: "Strong push day! Your bench press hit 185×8/7/6 - that's 21 total reps " +
+            "at 185 lbs. Your incline press at 155×10 is also solid. Next session, " +
+            "try 190 lbs on bench for 3×6-8.",
     },
   ];
   
@@ -343,10 +343,10 @@ export const example6_workoutAnalysis = () => {
     
     logger.log(`\n[${type} Analysis]`);
     logger.log(`Score: ${result.specificity.score}`);
-    logger.log(`Valid: ${result.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Valid: ${result.isValid ? '�S&' : '�R'}`);
     logger.log(`Exercises mentioned: ${result.specificity.details.mentionedExercises.join(', ') || 'None'}`);
-    logger.log(`Has weights: ${result.specificity.details.hasSpecificWeight ? 'âœ…' : 'âŒ'}`);
-    logger.log(`Has reps: ${result.specificity.details.hasSpecificReps ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Has weights: ${result.specificity.details.hasSpecificWeight ? '�S&' : '�R'}`);
+    logger.log(`Has reps: ${result.specificity.details.hasSpecificReps ? '�S&' : '�R'}`);
     
     if (!result.isValid) {
       logger.log(`Issues: ${result.specificity.issues.join(', ')}`);
@@ -359,7 +359,7 @@ export const example6_workoutAnalysis = () => {
 // ==========================================
 
 export const example7_thresholdTesting = () => {
-  logger.log('\nðŸŽšï¸ Example 7: Testing Different Thresholds');
+  logger.log('\n�x}a️ Example 7: Testing Different Thresholds');
   
   const userContext: UserContext = {
     hasPRs: true,
@@ -378,7 +378,7 @@ export const example7_thresholdTesting = () => {
     
     logger.log(`\nThreshold: ${threshold}`);
     logger.log(`Score: ${result.specificity.score}`);
-    logger.log(`Pass: ${result.isValid ? 'âœ…' : 'âŒ'}`);
+    logger.log(`Pass: ${result.isValid ? '�S&' : '�R'}`);
   });
 };
 
@@ -387,7 +387,7 @@ export const example7_thresholdTesting = () => {
 // ==========================================
 
 export const example8_completeIntegration = async () => {
-  logger.log('\nðŸš€ Example 8: Complete Integration');
+  logger.log('\n�xa� Example 8: Complete Integration');
   
   // Step 1: Get user data
   logger.log('Step 1: Fetch user workout data...');
@@ -419,7 +419,7 @@ export const example8_completeIntegration = async () => {
   // Step 3: Get AI response (simulated)
   logger.log('\nStep 3: Get AI response...');
   const aiResponse = 
-    "Your bench press at 185Ã—8 yesterday was strong! You're ready to bump up to " +
+    "Your bench press at 185×8 yesterday was strong! You're ready to bump up to " +
     "190 lbs for 6-8 reps on your next push day.";
   
   logger.log(`Response: "${aiResponse}"`);
@@ -429,7 +429,7 @@ export const example8_completeIntegration = async () => {
   const validation = validateResponseQuality(aiResponse, userContext);
   
   logger.log(`Score: ${validation.specificity.score}/100`);
-  logger.log(`Valid: ${validation.isValid ? 'âœ… PASS' : 'âŒ FAIL'}`);
+  logger.log(`Valid: ${validation.isValid ? '�S& PASS' : '�R FAIL'}`);
   logger.log(`Feedback: ${validation.feedback}`);
   
   // Step 5: Log details for monitoring
@@ -445,10 +445,10 @@ export const example8_completeIntegration = async () => {
   
   // Step 6: Decision
   if (validation.isValid) {
-    logger.log('\nâœ… Response approved - sending to user');
+    logger.log('\n�S& Response approved - sending to user');
     return aiResponse;
   } else {
-    logger.log('\nâš ï¸ Response needs improvement - regenerating...');
+    logger.log('\n�a���� Response needs improvement - regenerating...');
     return null;
   }
 };
@@ -458,9 +458,9 @@ export const example8_completeIntegration = async () => {
 // ==========================================
 
 export const runAllSpecificityExamples = async () => {
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   logger.log('  RESPONSE SPECIFICITY EXAMPLES');
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   
   example1_basicCheck();
   example2_buildingContext();
@@ -471,8 +471,8 @@ export const runAllSpecificityExamples = async () => {
   example7_thresholdTesting();
   await example8_completeIntegration();
   
-  logger.log('\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('\n�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   logger.log('  ALL EXAMPLES COMPLETE');
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"\n');
 };
 

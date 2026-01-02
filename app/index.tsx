@@ -26,7 +26,7 @@ export default function Index() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.title}>🏋️ Gym Tracker</Text>
+          <Text style={styles.title}> Gym Tracker</Text>
           <Text style={styles.subtitle}>Loading...</Text>
         </View>
       </SafeAreaView>
@@ -42,7 +42,7 @@ export default function Index() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>🏋️ Gym Tracker</Text>
+        <Text style={styles.title}> Gym Tracker</Text>
         <Text style={styles.subtitle}>Track your workouts, crush your goals</Text>
 
         <View style={styles.buttonContainer}>

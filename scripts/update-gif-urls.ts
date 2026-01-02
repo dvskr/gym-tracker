@@ -10,7 +10,7 @@ const supabase = createClient(
 );
 
 async function updateUrls() {
-  console.log('📝 Updating database with Supabase GIF URLs...\n');
+  console.log('=� Updating database with Supabase GIF URLs...\n');
 
   // Check if URL mappings file exists
   if (!fs.existsSync('scripts/supabase-urls.json')) {
@@ -74,7 +74,7 @@ async function updateUrls() {
       'scripts/failed-url-updates.json',
       JSON.stringify(failedUpdates, null, 2)
     );
-    console.log('⚠️  Failed updates saved to: scripts/failed-url-updates.json\n');
+    console.log('�  Failed updates saved to: scripts/failed-url-updates.json\n');
   }
 
   // Verify

@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function checkDatabase() {
-  console.log('🗄️ Checking Database Exercises...\n');
+  console.log('=� Checking Database Exercises...\n');
   
   // Count active exercises
   const { count: activeCount } = await supabase
@@ -33,13 +33,13 @@ async function checkDatabase() {
     .order('name')
     .limit(10);
   
-  console.log('📊 DATABASE STATISTICS');
+  console.log('=� DATABASE STATISTICS');
   console.log('======================');
   console.log('Active exercises:', activeCount);
   console.log('Has gif_url:', hasGifUrl);
   console.log('Missing gif_url:', (activeCount || 0) - (hasGifUrl || 0));
   
-  console.log('\n📋 Sample gif_url values:');
+  console.log('\n=� Sample gif_url values:');
   samples?.forEach(ex => {
     const filename = ex.gif_url?.split('/').pop() || 'N/A';
     console.log(`  ${ex.name} (${ex.external_id}): ${filename}`);
@@ -53,7 +53,7 @@ async function checkDatabase() {
     .eq('gif_url', '');
   
   if (emptyGifs && emptyGifs.length > 0) {
-    console.log('\n⚠️ Exercises with EMPTY gif_url:', emptyGifs.length);
+    console.log('\n� Exercises with EMPTY gif_url:', emptyGifs.length);
     emptyGifs.slice(0, 5).forEach(ex => {
       console.log(`  - ${ex.name} (${ex.external_id})`);
     });

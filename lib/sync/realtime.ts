@@ -20,7 +20,7 @@ class RealtimeSync {
    */
   async init(userId: string): Promise<void> {
     if (this.isInitialized && this.userId === userId) {
-      logger.log('âš¡ Real-time sync already initialized for this user');
+      logger.log('�a� Real-time sync already initialized for this user');
       return;
     }
 
@@ -31,7 +31,7 @@ class RealtimeSync {
 
     this.userId = userId;
     
-    logger.log('âš¡ Initializing real-time sync for user:', userId);
+    logger.log('�a� Initializing real-time sync for user:', userId);
 
     try {
       // Subscribe to all tables
@@ -44,9 +44,9 @@ class RealtimeSync {
       this.isInitialized = true;
       eventEmitter.emit(Events.REALTIME_CONNECTED);
       
-      logger.log('âœ… Real-time sync initialized successfully');
+      logger.log('�S& Real-time sync initialized successfully');
     } catch (error) {
-      logger.error('âŒ Failed to initialize real-time sync:', error);
+      logger.error('�R Failed to initialize real-time sync:', error);
       eventEmitter.emit(Events.REALTIME_ERROR, error);
       throw error;
     }
@@ -57,15 +57,15 @@ class RealtimeSync {
    * Call this on logout
    */
   async cleanup(): Promise<void> {
-    logger.log('ðŸ§¹ Cleaning up real-time subscriptions...');
+    logger.log('�x�� Cleaning up real-time subscriptions...');
 
     // Remove all channels
     for (const [name, channel] of this.channels.entries()) {
       try {
         await supabase.removeChannel(channel);
-        logger.log(`âœ… Removed channel: ${name}`);
+        logger.log(`�S& Removed channel: ${name}`);
       } catch (error) {
-        logger.error(`âŒ Error removing channel ${name}:`, error);
+        logger.error(`�R Error removing channel ${name}:`, error);
       }
     }
 
@@ -74,7 +74,7 @@ class RealtimeSync {
     this.isInitialized = false;
     
     eventEmitter.emit(Events.REALTIME_DISCONNECTED);
-    logger.log('âœ… Real-time sync cleanup complete');
+    logger.log('�S& Real-time sync cleanup complete');
   }
 
   /**
@@ -120,7 +120,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    logger.log(`âš¡ Workout ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`�a� Workout ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       switch (eventType) {
@@ -147,7 +147,7 @@ class RealtimeSync {
     
     // Check if workout already exists locally
     if (!localWorkouts.find(w => w.id === workout.id)) {
-      logger.log('ðŸ“¥ Adding new workout from real-time:', workout.id);
+      logger.log('�x� Adding new workout from real-time:', workout.id);
       localWorkouts.push({ ...workout, _synced: true });
       await localDB.saveLocally('@gym/workouts', localWorkouts);
     }
@@ -159,7 +159,7 @@ class RealtimeSync {
 
     if (index === -1) {
       // Doesn't exist locally - add it
-      logger.log('ðŸ“¥ Adding workout from real-time update:', workout.id);
+      logger.log('�x� Adding workout from real-time update:', workout.id);
       localWorkouts.push({ ...workout, _synced: true });
       await localDB.saveLocally('@gym/workouts', localWorkouts);
       return;
@@ -169,7 +169,7 @@ class RealtimeSync {
 
     // Check for conflict
     if (conflictResolver.hasConflict(localWorkout, workout)) {
-      logger.log('âš ï¸ Conflict detected during real-time update');
+      logger.log('�a���� Conflict detected during real-time update');
       
       const resolution = await conflictResolver.resolve(
         localWorkout,
@@ -191,7 +191,7 @@ class RealtimeSync {
   }
 
   private async handleDeletedWorkout(workout: any): Promise<void> {
-    logger.log('ðŸ—‘ï¸ Deleting workout from real-time:', workout.id);
+    logger.log('�x️ Deleting workout from real-time:', workout.id);
     
     const localWorkouts = await localDB.getLocalWorkouts();
     const filtered = localWorkouts.filter(w => w.id !== workout.id);
@@ -227,7 +227,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    logger.log(`âš¡ Template ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`�a� Template ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localTemplates = await localDB.getLocalTemplates();
@@ -300,7 +300,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    logger.log(`âš¡ Weight log ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`�a� Weight log ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localWeights = await localDB.getLocalWeights();
@@ -364,7 +364,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    logger.log(`âš¡ Measurement ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`�a� Measurement ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localMeasurements = await localDB.getLocalMeasurements();
@@ -428,7 +428,7 @@ class RealtimeSync {
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
-    logger.log(`âš¡ PR ${eventType}:`, newData?.id || oldData?.id);
+    logger.log(`�a� PR ${eventType}:`, newData?.id || oldData?.id);
 
     try {
       const localPRs = await localDB.getLocalPersonalRecords();

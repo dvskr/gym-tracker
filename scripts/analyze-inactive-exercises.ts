@@ -121,7 +121,7 @@ const PRIORITY_EXERCISE_NAMES = [
 ];
 
 async function analyzeExercises(): Promise<AnalysisResult> {
-  console.log('🔍 Analyzing inactive exercises...\n');
+  console.log('= Analyzing inactive exercises...\n');
   
   // Fetch all inactive exercises
   const { data: inactiveExercises, error } = await supabase
@@ -201,14 +201,14 @@ async function generateReport() {
   console.log('EXERCISE LIBRARY ANALYSIS REPORT');
   console.log('='.repeat(60));
   
-  console.log(`\n📊 SUMMARY`);
+  console.log(`\n=� SUMMARY`);
   console.log(`   Total Inactive: ${analysis.totalInactive}`);
   console.log(`   With GIF URL: ${analysis.inactiveWithGifUrl.length}`);
   console.log(`   Without GIF URL: ${analysis.inactiveWithoutGifUrl.length}`);
   console.log(`   Missing Measurement Type: ${analysis.missingMeasurementType.length}`);
   console.log(`   Priority Exercises Found: ${analysis.priorityExercises.length}`);
   
-  console.log(`\n📦 BY EQUIPMENT:`);
+  console.log(`\n=� BY EQUIPMENT:`);
   Object.entries(analysis.byEquipment)
     .sort((a, b) => b[1].length - a[1].length)
     .forEach(([equipment, exercises]) => {
@@ -216,7 +216,7 @@ async function generateReport() {
       console.log(`   ${equipment}: ${exercises.length} total (${withGif} with GIF URL)`);
     });
   
-  console.log(`\n🎯 PRIORITY EXERCISES TO ACTIVATE:`);
+  console.log(`\n PRIORITY EXERCISES TO ACTIVATE:`);
   
   // Check local GIFs for priority exercises
   const { alreadyDownloaded, needsDownload } = await checkLocalGifs(analysis.priorityExercises);

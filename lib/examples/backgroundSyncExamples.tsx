@@ -3,8 +3,8 @@ import { logger } from '@/lib/utils/logger';
  * Background Sync Usage Examples
  * 
  * The background sync system handles bidirectional synchronization:
- * - PUSH: Local changes â†’ Supabase (via sync queue)
- * - PULL: Supabase changes â†’ Local (for multi-device support)
+ * - PUSH: Local changes �  Supabase (via sync queue)
+ * - PULL: Supabase changes �  Local (for multi-device support)
  */
 
 import { backgroundSync, SyncStats } from '@/lib/sync/backgroundSync';
@@ -38,9 +38,9 @@ export function ManualSyncButton() {
       
       Alert.alert(
         'Sync Complete',
-        `âœ… Synced: ${stats.itemsSynced}\n` +
-        `ðŸ“¥ Pulled: ${stats.itemsPulled}\n` +
-        `${stats.errors.length > 0 ? `âš ï¸ Errors: ${stats.errors.length}` : ''}`
+        `�S& Synced: ${stats.itemsSynced}\n` +
+        `�x� Pulled: ${stats.itemsPulled}\n` +
+        `${stats.errors.length > 0 ? `�a���� Errors: ${stats.errors.length}` : ''}`
       );
     } catch (error) {
       Alert.alert('Sync Failed', error instanceof Error ? error.message : 'Unknown error');
@@ -91,9 +91,9 @@ export function SyncStatusDisplay() {
 
   return (
     <View>
-      <Text>Status: {status.isRunning ? 'ðŸŸ¢ Running' : 'â¸ï¸ Stopped'}</Text>
-      <Text>Network: {status.isOnline ? 'ðŸŒ Online' : 'ðŸ“µ Offline'}</Text>
-      <Text>Syncing: {status.isSyncing ? 'â³ Yes' : 'âœ… No'}</Text>
+      <Text>Status: {status.isRunning ? '�xx� Running' : '⏸��� Stopped'}</Text>
+      <Text>Network: {status.isOnline ? '�xR� Online' : '�x� Offline'}</Text>
+      <Text>Syncing: {status.isSyncing ? '⏳ Yes' : '�S& No'}</Text>
       {lastSyncTime && (
         <Text>
           Last sync: {new Date(lastSyncTime).toLocaleString()}
@@ -190,11 +190,11 @@ export function CustomAppStateHandler() {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
         // App came to foreground
-        logger.log('ðŸ“± App active - syncing...');
+        logger.log('�x� App active - syncing...');
         backgroundSync.syncNow();
       } else if (nextAppState === 'background') {
         // App went to background
-        logger.log('ðŸ“± App background - pausing sync...');
+        logger.log('�x� App background - pausing sync...');
         // Sync is automatically stopped by _layout.tsx
       }
     });
@@ -229,7 +229,7 @@ export function NetworkAwareSyncMonitor() {
       {!isOnline && (
         <View style={{ backgroundColor: '#f59e0b', padding: 8 }}>
           <Text style={{ color: '#fff' }}>
-            ðŸ“µ Offline - Will sync when reconnected
+            �x� Offline - Will sync when reconnected
           </Text>
         </View>
       )}
@@ -247,7 +247,7 @@ export function SyncAfterWorkout() {
     await saveWorkoutLocally(workout);
     
     // Trigger immediate sync
-    logger.log('ðŸ‹ï¸ Workout completed - syncing now...');
+    logger.log('�x�9️ Workout completed - syncing now...');
     await backgroundSync.syncNow();
   };
 
@@ -314,11 +314,11 @@ export function SyncSettingsScreen() {
       </View>
 
       <View>
-        <Text>Connection: {status.isOnline ? 'ðŸŸ¢ Online' : 'ðŸ”´ Offline'}</Text>
+        <Text>Connection: {status.isOnline ? '�xx� Online' : '�x� Offline'}</Text>
       </View>
 
       <View>
-        <Text>Status: {status.isSyncing ? 'â³ Syncing...' : 'âœ… Idle'}</Text>
+        <Text>Status: {status.isSyncing ? '⏳ Syncing...' : '�S& Idle'}</Text>
       </View>
 
       {lastSync && (
@@ -379,13 +379,13 @@ async function fetchPersonalRecordsFromServer() {
 // Key Benefits of Background Sync:
 // ============================================================================
 //
-// 1. âœ… Bidirectional sync (push local, pull server changes)
-// 2. âœ… Multi-device support (changes from other devices sync in)
-// 3. âœ… Automatic (no user intervention needed)
-// 4. âœ… Smart merging (timestamp-based conflict resolution)
-// 5. âœ… Battery efficient (stops when app is in background)
-// 6. âœ… Network aware (syncs when online, queues when offline)
-// 7. âœ… App lifecycle aware (syncs on app open/foreground)
+// 1. �S& Bidirectional sync (push local, pull server changes)
+// 2. �S& Multi-device support (changes from other devices sync in)
+// 3. �S& Automatic (no user intervention needed)
+// 4. �S& Smart merging (timestamp-based conflict resolution)
+// 5. �S& Battery efficient (stops when app is in background)
+// 6. �S& Network aware (syncs when online, queues when offline)
+// 7. �S& App lifecycle aware (syncs on app open/foreground)
 //
 // ============================================================================
 

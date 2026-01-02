@@ -7,8 +7,8 @@ import { conflictResolver } from './conflictResolver';
  * Now with conflict detection and resolution
  * 
  * Conflict Resolution Strategy:
- * 1. If item only exists on server â†’ Add to local
- * 2. If item only exists locally â†’ Keep (will sync via queue)
+ * 1. If item only exists on server �  Add to local
+ * 2. If item only exists locally �  Keep (will sync via queue)
  * 3. If item exists in both:
  *    - Check for conflicts using conflictResolver
  *    - Resolve based on configured strategy
@@ -50,7 +50,7 @@ async function mergeItems<T extends TimestampedItem>(
       // Exists locally - check for conflicts
       if (conflictResolver.hasConflict(localItem, serverItem)) {
         // Conflict detected! Use conflict resolver
-        logger.log(`âš ï¸ Conflict detected for ${tableName}/${serverItem.id}`);
+        logger.log(`�a���� Conflict detected for ${tableName}/${serverItem.id}`);
         
         const resolution = await conflictResolver.resolve(
           localItem,
@@ -99,7 +99,7 @@ function shouldPreferServer<T extends TimestampedItem>(
  * Now with conflict detection
  */
 export async function mergeWorkouts(serverWorkouts: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Merging ${serverWorkouts.length} workout(s)...`);
+  logger.log(`�x Merging ${serverWorkouts.length} workout(s)...`);
 
   try {
     // Get local workouts
@@ -111,7 +111,7 @@ export async function mergeWorkouts(serverWorkouts: any[]): Promise<void> {
     // Save back to local storage
     await localDB.saveLocally('@gym/workouts', merged);
 
-    logger.log(`âœ… Merged workouts: ${merged.length} total`);
+    logger.log(`�S& Merged workouts: ${merged.length} total`);
   } catch (error) {
     logger.error('Error merging workouts:', error);
     throw error;
@@ -122,14 +122,14 @@ export async function mergeWorkouts(serverWorkouts: any[]): Promise<void> {
  * Merge templates from server with local templates
  */
 export async function mergeTemplates(serverTemplates: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Merging ${serverTemplates.length} template(s)...`);
+  logger.log(`�x Merging ${serverTemplates.length} template(s)...`);
 
   try {
     const localTemplates = await localDB.getLocalTemplates();
     const merged = await mergeItems(localTemplates, serverTemplates, 'workout_templates');
     await localDB.saveLocally('@gym/templates', merged);
 
-    logger.log(`âœ… Merged templates: ${merged.length} total`);
+    logger.log(`�S& Merged templates: ${merged.length} total`);
   } catch (error) {
     logger.error('Error merging templates:', error);
     throw error;
@@ -140,14 +140,14 @@ export async function mergeTemplates(serverTemplates: any[]): Promise<void> {
  * Merge weight log from server with local weight log
  */
 export async function mergeWeightLog(serverWeightLog: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Merging ${serverWeightLog.length} weight log(s)...`);
+  logger.log(`�x Merging ${serverWeightLog.length} weight log(s)...`);
 
   try {
     const localWeightLog = await localDB.getLocalWeights();
     const merged = await mergeItems(localWeightLog, serverWeightLog, 'body_weight_log');
     await localDB.saveLocally('@gym/weight_log', merged);
 
-    logger.log(`âœ… Merged weight log: ${merged.length} total`);
+    logger.log(`�S& Merged weight log: ${merged.length} total`);
   } catch (error) {
     logger.error('Error merging weight log:', error);
     throw error;
@@ -158,14 +158,14 @@ export async function mergeWeightLog(serverWeightLog: any[]): Promise<void> {
  * Merge measurements from server with local measurements
  */
 export async function mergeMeasurements(serverMeasurements: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Merging ${serverMeasurements.length} measurement(s)...`);
+  logger.log(`�x Merging ${serverMeasurements.length} measurement(s)...`);
 
   try {
     const localMeasurements = await localDB.getLocalMeasurements();
     const merged = await mergeItems(localMeasurements, serverMeasurements, 'body_measurements');
     await localDB.saveLocally('@gym/measurements', merged);
 
-    logger.log(`âœ… Merged measurements: ${merged.length} total`);
+    logger.log(`�S& Merged measurements: ${merged.length} total`);
   } catch (error) {
     logger.error('Error merging measurements:', error);
     throw error;
@@ -176,14 +176,14 @@ export async function mergeMeasurements(serverMeasurements: any[]): Promise<void
  * Merge personal records from server with local records
  */
 export async function mergePersonalRecords(serverRecords: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Merging ${serverRecords.length} personal record(s)...`);
+  logger.log(`�x Merging ${serverRecords.length} personal record(s)...`);
 
   try {
     const localRecords = await localDB.getLocalPersonalRecords();
     const merged = await mergeItems(localRecords, serverRecords, 'personal_records');
     await localDB.saveLocally('@gym/personal_records', merged);
 
-    logger.log(`âœ… Merged personal records: ${merged.length} total`);
+    logger.log(`�S& Merged personal records: ${merged.length} total`);
   } catch (error) {
     logger.error('Error merging personal records:', error);
     throw error;
@@ -194,11 +194,11 @@ export async function mergePersonalRecords(serverRecords: any[]): Promise<void> 
  * Merge exercises cache (for API exercises)
  */
 export async function mergeExercises(serverExercises: any[]): Promise<void> {
-  logger.log(`ðŸ”„ Caching ${serverExercises.length} exercise(s)...`);
+  logger.log(`�x Caching ${serverExercises.length} exercise(s)...`);
 
   try {
     await localDB.cacheExercises(serverExercises);
-    logger.log(`âœ… Cached ${serverExercises.length} exercises`);
+    logger.log(`�S& Cached ${serverExercises.length} exercises`);
   } catch (error) {
     logger.error('Error caching exercises:', error);
     throw error;

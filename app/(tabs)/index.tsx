@@ -143,7 +143,7 @@ const ContinueBanner: React.FC<ContinueBannerProps> = ({
           <Text style={styles.continueLabel}>WORKOUT IN PROGRESS</Text>
           <Text style={styles.continueName}>{workoutName}</Text>
           <Text style={styles.continueMeta}>
-            {elapsed} â€¢ {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
+            {elapsed} • {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
           </Text>
         </View>
         <View style={styles.continueButton}>
@@ -486,7 +486,7 @@ export default function HomeScreen() {
         <View style={styles.greetingSection}>
           <View>
             <Text style={styles.greeting}>
-              {getGreeting()}{userName ? `, ${userName}` : ''}! ðŸ‘‹
+              {getGreeting()}{userName ? `, ${userName}` : ''}! �x9
             </Text>
             <Text style={styles.greetingSubtext}>
               {isWorkoutActive ? "You have a workout in progress" : "Ready to crush your workout?"}
@@ -547,7 +547,7 @@ export default function HomeScreen() {
           ) : hasCheckedCache ? (
             <>
               <Text style={styles.defaultTemplatesHint}>
-                Get started with these popular routines â€¢ Scroll for more
+                Get started with these popular routines • Scroll for more
               </Text>
               <DefaultTemplates onStartWorkout={handleStartDefaultTemplate} maxItems={6} />
             </>

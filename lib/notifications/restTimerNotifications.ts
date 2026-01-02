@@ -19,7 +19,7 @@ class RestTimerNotificationService {
     await this.cancelRestNotification();
     
     // No longer scheduling notifications - using haptics only
-    logger.log(`âœ… Rest timer set for ${seconds}s (haptics only, no notification)`);
+    logger.log(`�S& Rest timer set for ${seconds}s (haptics only, no notification)`);
   }
 
   /**
@@ -29,7 +29,7 @@ class RestTimerNotificationService {
     if (this.currentNotificationId) {
       try {
         await notificationService.cancelNotification(this.currentNotificationId);
-        logger.log('âœ… Cancelled rest timer notification');
+        logger.log('�S& Cancelled rest timer notification');
       } catch (error) {
         logger.error('Failed to cancel rest notification:', error);
       }
@@ -56,12 +56,12 @@ class RestTimerNotificationService {
         // Additional vibration pattern for attention
         this.startVibrationPattern();
 
-        logger.log('âœ… Triggered rest complete haptics');
+        logger.log('�S& Triggered rest complete haptics');
       } catch (error) {
         logger.error('Failed to trigger rest complete haptics:', error);
       }
     } else {
-      logger.log('â­ï¸ Skipping rest complete haptics (disabled in settings)');
+      logger.log('⏭��� Skipping rest complete haptics (disabled in settings)');
     }
   }
 
@@ -78,7 +78,7 @@ class RestTimerNotificationService {
 
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      logger.log('âš ï¸ Triggered rest timer warning haptic');
+      logger.log('�a���� Triggered rest timer warning haptic');
     } catch (error) {
       logger.error('Failed to trigger warning haptic:', error);
     }

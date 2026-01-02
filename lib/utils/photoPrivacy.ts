@@ -177,7 +177,7 @@ export async function getPrivacyStatusSummary(): Promise<{
   
   if (settings.syncToCloud) {
     return {
-      icon: 'â˜ï¸',
+      icon: '�܁���',
       title: 'Cloud Sync Enabled',
       description: 'Photos are synced across devices',
     };
@@ -185,14 +185,14 @@ export async function getPrivacyStatusSummary(): Promise<{
   
   if (settings.requireAuth) {
     return {
-      icon: 'ðŸ”’',
+      icon: '�x',
       title: 'Protected',
       description: 'Biometric required to view',
     };
   }
   
   return {
-    icon: 'ðŸ“±',
+    icon: '�x�',
     title: 'Local Only',
     description: 'Photos stored on this device only',
   };

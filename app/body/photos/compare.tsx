@@ -263,7 +263,7 @@ export default function ComparePhotosScreen() {
       const timeDiff = calculateTimeDifference(beforePhoto.taken_at, afterPhoto.taken_at);
       
       await Share.share({
-        message: `Check out my progress! ðŸ’ª ${timeDiff}`,
+        message: `Check out my progress! �x� ${timeDiff}`,
         // In a full implementation, we'd create a combined image and share its URI
       });
     } catch (error) {

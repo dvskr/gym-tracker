@@ -213,7 +213,7 @@ export function SyncStatusSheet({ visible, onClose }: SyncStatusSheetProps) {
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabel}>Network:</Text>
                   <Text style={styles.infoValue}>
-                    {isOnline ? `🟢 ${connectionType}` : '🔴 Offline'}
+                    {isOnline ? `=� ${connectionType}` : '=4 Offline'}
                   </Text>
                 </View>
 
@@ -221,8 +221,8 @@ export function SyncStatusSheet({ visible, onClose }: SyncStatusSheetProps) {
                   <Text style={styles.infoLabel}>Real-time:</Text>
                   <Text style={styles.infoValue}>
                     {realtimeConnected
-                      ? `🟢 Connected (${subscriptionCount})`
-                      : '🔴 Disconnected'}
+                      ? `=� Connected (${subscriptionCount})`
+                      : '=4 Disconnected'}
                   </Text>
                 </View>
               </View>

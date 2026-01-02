@@ -22,7 +22,7 @@ export default function TestEdgeFunctions() {
 
   const runTest = async (testFn: () => Promise<boolean>, testName: string) => {
     setLoading(true);
-    setResults(prev => [...prev, `🧪 Running: ${testName}...`]);
+    setResults(prev => [...prev, `>� Running: ${testName}...`]);
     
     try {
       const success = await testFn();
@@ -43,7 +43,7 @@ export default function TestEdgeFunctions() {
 
       {/* AI Tests */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>🤖 AI Service Tests</Text>
+        <Text style={styles.sectionTitle}>> AI Service Tests</Text>
         
         <TestButton
           title="Test AI (Simple)"
@@ -66,7 +66,7 @@ export default function TestEdgeFunctions() {
 
       {/* Exercise Tests */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>🏋️ Exercise Service Tests</Text>
+        <Text style={styles.sectionTitle}> Exercise Service Tests</Text>
         
         <TestButton
           title="Test Exercise Search"
@@ -90,7 +90,7 @@ export default function TestEdgeFunctions() {
       {/* Results */}
       <View style={styles.resultsSection}>
         <View style={styles.resultsHeader}>
-          <Text style={styles.sectionTitle}>📊 Results</Text>
+          <Text style={styles.sectionTitle}>=� Results</Text>
           <Pressable onPress={clearResults}>
             <Text style={styles.clearButton}>Clear</Text>
           </Pressable>
@@ -115,7 +115,7 @@ export default function TestEdgeFunctions() {
       </View>
 
       <View style={styles.note}>
-        <Text style={styles.noteTitle}>ℹ️ Note:</Text>
+        <Text style={styles.noteTitle}>9 Note:</Text>
         <Text style={styles.noteText}>
           • Check the console for detailed logs{'\n'}
           • Make sure you're logged in{'\n'}

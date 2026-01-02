@@ -21,7 +21,7 @@ export async function logWeightAndSync(
     const logDate = date || new Date();
     const dateStr = logDate.toISOString().split('T')[0];
 
-    logger.log(`âš–ï¸ Logging weight: ${weight} ${unit} (${weightKg.toFixed(2)} kg)`);
+    logger.log(`�a��� Logging weight: ${weight} ${unit} (${weightKg.toFixed(2)} kg)`);
 
     // 1. Save to Supabase
     const { error } = await supabase.from('body_weight_log').upsert(
@@ -40,7 +40,7 @@ export async function logWeightAndSync(
 
     if (error) throw error;
 
-    logger.log('âœ… Weight saved to database');
+    logger.log('�S& Weight saved to database');
 
     // 2. Sync to health platform if enabled
     const { healthSyncEnabled, syncWeight } = useSettingsStore.getState();
@@ -60,17 +60,17 @@ export async function logWeightAndSync(
           .eq('user_id', userId)
           .eq('logged_at', dateStr);
 
-        logger.log('âœ… Weight synced to health platform');
+        logger.log('�S& Weight synced to health platform');
       } else {
-        logger.warn('âš ï¸ Weight saved but health sync failed');
+        logger.warn('�a���� Weight saved but health sync failed');
       }
     } else {
-      logger.log('â„¹ï¸ Health sync disabled for weight');
+      logger.log('����� Health sync disabled for weight');
     }
 
     return true;
   } catch (error) {
-    logger.error('âŒ Error logging weight:', error);
+    logger.error('�R Error logging weight:', error);
     return false;
   }
 }
@@ -83,7 +83,7 @@ export async function importWeightFromHealth(
   daysBack: number = 30
 ): Promise<{ imported: number; skipped: number; errors: number }> {
   try {
-    logger.log(`ðŸ“¥ Importing weight data from health platform (last ${daysBack} days)...`);
+    logger.log(`�x� Importing weight data from health platform (last ${daysBack} days)...`);
 
     // Calculate date range
     const endDate = new Date();
@@ -94,11 +94,11 @@ export async function importWeightFromHealth(
     const healthWeights = await healthService.getWeightHistory(startDate, endDate);
 
     if (healthWeights.length === 0) {
-      logger.log('â„¹ï¸ No weight data found in health platform');
+      logger.log('����� No weight data found in health platform');
       return { imported: 0, skipped: 0, errors: 0 };
     }
 
-    logger.log(`ðŸ“Š Found ${healthWeights.length} weight entries in health platform`);
+    logger.log(`�x` Found ${healthWeights.length} weight entries in health platform`);
 
     // Get existing weights from database
     const { data: existingWeights } = await supabase
@@ -143,22 +143,22 @@ export async function importWeightFromHealth(
         });
 
         if (error) {
-          logger.error(`âŒ Failed to import weight for ${dateStr}:`, error);
+          logger.error(`�R Failed to import weight for ${dateStr}:`, error);
           errors++;
         } else {
           imported++;
         }
       } catch (error) {
-        logger.error(`âŒ Error processing weight entry for ${dateStr}:`, error);
+        logger.error(`�R Error processing weight entry for ${dateStr}:`, error);
         errors++;
       }
     }
 
-    logger.log(`âœ… Import complete: ${imported} imported, ${skipped} skipped, ${errors} errors`);
+    logger.log(`�S& Import complete: ${imported} imported, ${skipped} skipped, ${errors} errors`);
 
     return { imported, skipped, errors };
   } catch (error) {
-    logger.error('âŒ Error importing weight from health:', error);
+    logger.error('�R Error importing weight from health:', error);
     return { imported: 0, skipped: 0, errors: 0 };
   }
 }
@@ -171,7 +171,7 @@ export async function syncUnsyncedWeights(userId: string): Promise<{
   failed: number;
 }> {
   try {
-    logger.log('ðŸ“¤ Syncing unsynced weight entries to health platform...');
+    logger.log('�x� Syncing unsynced weight entries to health platform...');
 
     // Get unsynced weights
     const { data: unsyncedWeights, error } = await supabase
@@ -185,11 +185,11 @@ export async function syncUnsyncedWeights(userId: string): Promise<{
     if (error) throw error;
 
     if (!unsyncedWeights || unsyncedWeights.length === 0) {
-      logger.log('â„¹ï¸ No unsynced weight entries found');
+      logger.log('����� No unsynced weight entries found');
       return { synced: 0, failed: 0 };
     }
 
-    logger.log(`ðŸ“Š Found ${unsyncedWeights.length} unsynced weight entries`);
+    logger.log(`�x` Found ${unsyncedWeights.length} unsynced weight entries`);
 
     let synced = 0;
     let failed = 0;
@@ -223,16 +223,16 @@ export async function syncUnsyncedWeights(userId: string): Promise<{
           failed++;
         }
       } catch (error) {
-        logger.error(`âŒ Failed to sync weight for ${entry.logged_at}:`, error);
+        logger.error(`�R Failed to sync weight for ${entry.logged_at}:`, error);
         failed++;
       }
     }
 
-    logger.log(`âœ… Sync complete: ${synced} synced, ${failed} failed`);
+    logger.log(`�S& Sync complete: ${synced} synced, ${failed} failed`);
 
     return { synced, failed };
   } catch (error) {
-    logger.error('âŒ Error syncing unsynced weights:', error);
+    logger.error('�R Error syncing unsynced weights:', error);
     return { synced: 0, failed: 0 };
   }
 }
@@ -266,7 +266,7 @@ export async function getLatestHealthWeight(): Promise<{
       bodyFatPercent: latest.bodyFatPercent,
     };
   } catch (error) {
-    logger.error('âŒ Error getting latest health weight:', error);
+    logger.error('�R Error getting latest health weight:', error);
     return null;
   }
 }

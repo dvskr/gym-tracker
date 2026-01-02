@@ -104,7 +104,7 @@ export async function checkForPR(
       });
     }
 
-    // Check for max volume PR (weight Ã— reps)
+    // Check for max volume PR (weight × reps)
     if (!maxVolumeRecord || volume > maxVolumeRecord.value) {
       results.push({
         isNewPR: true,
@@ -304,11 +304,11 @@ export function getPRTypeLabel(prType: PRType): string {
 export function formatPRValue(prType: PRType, value: number, weight?: number, reps?: number): string {
   switch (prType) {
     case 'max_weight':
-      return `${value} lbs${reps ? ` Ã— ${reps}` : ''}`;
+      return `${value} lbs${reps ? ` × ${reps}` : ''}`;
     case 'max_reps':
       return `${value} reps${weight ? ` @ ${weight} lbs` : ''}`;
     case 'max_volume':
-      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight} Ã— ${reps})` : ''}`;
+      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight} × ${reps})` : ''}`;
     default:
       return value.toString();
   }

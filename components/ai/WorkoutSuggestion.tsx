@@ -142,7 +142,7 @@ export function WorkoutSuggestion() {
               {cleanExerciseName(ex.name)}
             </Text>
             <Text style={styles.exerciseSets}>
-              {ex.sets} Ã— {ex.reps}
+              {ex.sets} × {ex.reps}
             </Text>
           </View>
         ))}

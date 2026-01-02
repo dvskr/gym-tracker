@@ -82,7 +82,7 @@ const duplicateMappings = [
 ];
 
 async function main() {
-  console.log('📋 COPYING GIFS FROM ORIGINAL EXERCISES TO DUPLICATES\n');
+  console.log('=� COPYING GIFS FROM ORIGINAL EXERCISES TO DUPLICATES\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -119,7 +119,7 @@ async function main() {
     );
 
     if (!duplicate) {
-      console.log(`  ⏭️  ${mapping.name.padEnd(40)} - Not found or already has external_id`);
+      console.log(`  �  ${mapping.name.padEnd(40)} - Not found or already has external_id`);
       skipped++;
       continue;
     }
@@ -191,7 +191,7 @@ async function main() {
 
   // Step 2: Upload to Supabase
   if (copied > 0) {
-    console.log(`\n☁️  Uploading ${copied} new GIFs and thumbnails to Supabase...\n`);
+    console.log(`\n  Uploading ${copied} new GIFs and thumbnails to Supabase...\n`);
 
     const GIF_BUCKET = 'exercise-gifs';
     const THUMBNAIL_BUCKET = 'exercise-thumbnails';
@@ -258,7 +258,7 @@ async function main() {
     // #endregion
 
     // Step 3: Update database URLs
-    console.log(`\n📝 Updating database URLs...\n`);
+    console.log(`\n=� Updating database URLs...\n`);
 
     let updated = 0;
     for (const mapping of duplicateMappings) {
@@ -307,12 +307,12 @@ async function main() {
   const total = finalExercises?.length || 0;
 
   console.log('\n' + '='.repeat(60));
-  console.log('📊 FINAL SUMMARY');
+  console.log('=� FINAL SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n✅ Copied: ${copied}`);
-  console.log(`⏭️  Skipped: ${skipped}`);
+  console.log(`�  Skipped: ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`\n🎯 COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
+  console.log(`\n COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
 
   // #region agent log
   debugLog('copy-duplicates.ts:main:complete', 'Process complete', {

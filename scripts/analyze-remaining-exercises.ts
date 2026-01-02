@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
 
 async function main() {
-  console.log('🔍 ANALYZING REMAINING EXERCISES WITHOUT GIFS\n');
+  console.log('= ANALYZING REMAINING EXERCISES WITHOUT GIFS\n');
   console.log('='.repeat(60));
 
   // Get existing local GIFs
@@ -82,7 +82,7 @@ async function main() {
     }
   }
 
-  console.log('📊 MISSING BY EQUIPMENT:\n');
+  console.log('=� MISSING BY EQUIPMENT:\n');
   const sortedEquipment = Object.entries(byEquipment).sort((a, b) => b[1].length - a[1].length);
   
   for (const [equipment, exercises] of sortedEquipment) {
@@ -95,18 +95,18 @@ async function main() {
   }
 
   console.log('\n' + '='.repeat(60));
-  console.log('📋 FULL LIST OF MISSING EXERCISES:\n');
+  console.log('=� FULL LIST OF MISSING EXERCISES:\n');
 
   const withExternalId = missing.filter(ex => ex.hasExternalId);
   const withoutExternalId = missing.filter(ex => !ex.hasExternalId);
 
-  console.log(`\n🔗 WITH external_id (${withExternalId.length}):`);
+  console.log(`\n= WITH external_id (${withExternalId.length}):`);
   console.log('   (These should be downloadable from ExerciseDB)\n');
   withExternalId.forEach(ex => {
     console.log(`   - ${ex.name.padEnd(40)} (${ex.equipment})`);
   });
 
-  console.log(`\n⚠️  WITHOUT external_id (${withoutExternalId.length}):`);
+  console.log(`\n�  WITHOUT external_id (${withoutExternalId.length}):`);
   console.log('   (These need alternative sourcing or should be marked inactive)\n');
   
   // Common vs niche
@@ -139,41 +139,41 @@ async function main() {
   console.log(`   ✨ Common/Important (${common.length}):`);
   common.forEach(ex => console.log(`      - ${ex.name} (${ex.equipment})`));
 
-  console.log(`\n   🏃 Cardio/Conditioning (${cardio.length}):`);
+  console.log(`\n    Cardio/Conditioning (${cardio.length}):`);
   cardio.forEach(ex => console.log(`      - ${ex.name} (${ex.equipment})`));
 
-  console.log(`\n   🏋️  Olympic Lifts (${olympic.length}):`);
+  console.log(`\n     Olympic Lifts (${olympic.length}):`);
   olympic.forEach(ex => console.log(`      - ${ex.name} (${ex.equipment})`));
 
-  console.log(`\n   🔧 Other (${other.length}):`);
+  console.log(`\n   =' Other (${other.length}):`);
   other.forEach(ex => console.log(`      - ${ex.name} (${ex.equipment})`));
 
   // Recommendations
   console.log('\n' + '='.repeat(60));
-  console.log('💡 RECOMMENDATIONS:\n');
+  console.log('=� RECOMMENDATIONS:\n');
   
   if (withExternalId.length > 0) {
     console.log(`1. ✅ Run complete-missing-gifs.ts again to download ${withExternalId.length} exercises with external_id`);
   }
   
   if (common.length > 0) {
-    console.log(`2. 🔍 ${common.length} common exercises need manual GIF sourcing or external_id mapping`);
+    console.log(`2. = ${common.length} common exercises need manual GIF sourcing or external_id mapping`);
   }
   
   if (cardio.length > 0) {
-    console.log(`3. 🏃 ${cardio.length} cardio exercises - consider marking as inactive or finding generic cardio GIFs`);
+    console.log(`3.  ${cardio.length} cardio exercises - consider marking as inactive or finding generic cardio GIFs`);
   }
   
   if (olympic.length > 0) {
-    console.log(`4. 🏋️  ${olympic.length} Olympic lifts - specialized, may need manual sourcing`);
+    console.log(`4.   ${olympic.length} Olympic lifts - specialized, may need manual sourcing`);
   }
 
   const currentCompletion = ((existingGifs.size / (allExercises?.length || 1)) * 100).toFixed(1);
   const potentialCompletion = (((existingGifs.size + withExternalId.length) / (allExercises?.length || 1)) * 100).toFixed(1);
 
-  console.log(`\n📈 Current completion: ${currentCompletion}%`);
-  console.log(`📈 Potential with external_id downloads: ${potentialCompletion}%`);
-  console.log(`📈 To reach 100%: Need ${missing.length} more exercises`);
+  console.log(`\n=� Current completion: ${currentCompletion}%`);
+  console.log(`=� Potential with external_id downloads: ${potentialCompletion}%`);
+  console.log(`=� To reach 100%: Need ${missing.length} more exercises`);
 }
 
 main().catch(console.error);

@@ -10,12 +10,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function findOrphanedGifs() {
   console.log('');
-  console.log('🔍 CHECKING FOR ORPHANED/UNUSED GIFS');
+  console.log('= CHECKING FOR ORPHANED/UNUSED GIFS');
   console.log('═'.repeat(70));
   console.log('');
 
   // Step 1: Get all active exercises and their gif_urls
-  console.log('📂 Fetching active exercises from database...');
+  console.log('=� Fetching active exercises from database...');
   const { data: exercises } = await supabase
     .from('exercises')
     .select('id, name, gif_url')
@@ -38,7 +38,7 @@ async function findOrphanedGifs() {
   console.log('');
 
   // Step 2: Get all GIF files from storage
-  console.log('📂 Fetching GIF files from storage...');
+  console.log('=� Fetching GIF files from storage...');
   const { data: files } = await supabase.storage
     .from('exercise-gifs')
     .list('', { limit: 1000 });
@@ -52,15 +52,15 @@ async function findOrphanedGifs() {
   const usedFiles = allGifs.filter(f => usedFilenames.has(f.name));
 
   console.log('═'.repeat(70));
-  console.log('📊 RESULTS');
+  console.log('=� RESULTS');
   console.log('═'.repeat(70));
   console.log('');
   console.log('✅ Used GIFs (referenced by active exercises):', usedFiles.length);
-  console.log('⚠️  Orphaned GIFs (not used by any active exercise):', orphanedFiles.length);
+  console.log('�  Orphaned GIFs (not used by any active exercise):', orphanedFiles.length);
   console.log('');
 
   if (orphanedFiles.length > 0) {
-    console.log('🗑️  ORPHANED FILES (these can be deleted):');
+    console.log('=�  ORPHANED FILES (these can be deleted):');
     console.log('═'.repeat(70));
     
     // Calculate total size
@@ -91,7 +91,7 @@ async function findOrphanedGifs() {
 
   console.log('');
   console.log('═'.repeat(70));
-  console.log('📈 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('═'.repeat(70));
   console.log(`Total GIFs in storage:              ${allGifs.length}`);
   console.log(`Used by active exercises:           ${usedFiles.length}`);

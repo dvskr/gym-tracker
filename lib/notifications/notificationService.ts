@@ -22,7 +22,7 @@ class NotificationService {
    */
   async initialize(): Promise<string | null> {
     if (!Device.isDevice) {
-      logger.log('âš ï¸ Push notifications require physical device');
+      logger.log('�a���� Push notifications require physical device');
       return null;
     }
 
@@ -36,7 +36,7 @@ class NotificationService {
     }
 
     if (finalStatus !== 'granted') {
-      logger.log('âŒ Failed to get push notification permissions');
+      logger.log('�R Failed to get push notification permissions');
       return null;
     }
 
@@ -48,7 +48,7 @@ class NotificationService {
       await this.setupAndroidChannels();
     }
 
-    logger.log('âœ… Notifications initialized');
+    logger.log('�S& Notifications initialized');
     return this.expoPushToken;
   }
 
@@ -60,7 +60,7 @@ class NotificationService {
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
 
       if (!projectId) {
-        logger.warn('âš ï¸ No project ID found for push notifications');
+        logger.warn('�a���� No project ID found for push notifications');
         return null;
       }
 
@@ -68,10 +68,10 @@ class NotificationService {
         projectId,
       });
 
-      logger.log('ðŸ“± Push token:', token.data);
+      logger.log('�x� Push token:', token.data);
       return token.data;
     } catch (error) {
-      logger.error('âŒ Failed to get push token:', error);
+      logger.error('�R Failed to get push token:', error);
       return null;
     }
   }
@@ -121,7 +121,7 @@ class NotificationService {
       sound: null,
     });
 
-    logger.log('âœ… Android notification channels configured');
+    logger.log('�S& Android notification channels configured');
   }
 
   /**

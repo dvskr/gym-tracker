@@ -36,7 +36,7 @@ class ManualSync {
    * Combines queue processing and background sync
    */
   async syncNow(): Promise<SyncResult> {
-    logger.log('ðŸ”„ Manual sync initiated...');
+    logger.log('�x Manual sync initiated...');
 
     const result: SyncResult = {
       success: false,
@@ -51,7 +51,7 @@ class ManualSync {
       const netInfo = await NetInfo.fetch();
       if (!netInfo.isConnected) {
         result.error = 'No internet connection';
-        logger.log('âŒ Sync failed: offline');
+        logger.log('�R Sync failed: offline');
         return result;
       }
 
@@ -59,24 +59,24 @@ class ManualSync {
       const settings = await this.getSettings();
       if (settings.syncOnWifiOnly && netInfo.type !== 'wifi') {
         result.error = 'WiFi required for sync (check settings)';
-        logger.log('âŒ Sync failed: WiFi only enabled');
+        logger.log('�R Sync failed: WiFi only enabled');
         return result;
       }
 
-      logger.log('âœ… Network check passed');
+      logger.log('�S& Network check passed');
 
       // 2. Process sync queue (push local changes)
       const queueResult = await syncQueue.syncAll();
       result.syncedCount = queueResult.synced;
       result.failedCount = queueResult.failed;
       
-      logger.log(`ðŸ“¤ Pushed ${queueResult.synced} changes, ${queueResult.failed} failed`);
+      logger.log(`�x� Pushed ${queueResult.synced} changes, ${queueResult.failed} failed`);
 
       // 3. Pull latest from server (background sync)
       const bgSyncResult = await backgroundSync.syncNow();
       result.pulledCount = bgSyncResult.itemsPulled;
       
-      logger.log(`ðŸ“¥ Pulled ${bgSyncResult.itemsPulled} updates`);
+      logger.log(`�x� Pulled ${bgSyncResult.itemsPulled} updates`);
 
       // 4. Update last sync time
       await this.updateLastSyncTime();
@@ -85,10 +85,10 @@ class ManualSync {
       await this.trackDataUsage(result);
 
       result.success = true;
-      logger.log('âœ… Manual sync completed successfully');
+      logger.log('�S& Manual sync completed successfully');
       
     } catch (error) {
-      logger.error('âŒ Manual sync error:', error);
+      logger.error('�R Manual sync error:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
 
@@ -99,7 +99,7 @@ class ManualSync {
    * Retry all failed operations
    */
   async retryAllFailed(): Promise<SyncResult> {
-    logger.log('ðŸ” Retrying all failed operations...');
+    logger.log('�x� Retrying all failed operations...');
 
     const result: SyncResult = {
       success: false,
@@ -120,10 +120,10 @@ class ManualSync {
       result.failedCount = retryResult.failed;
       result.success = true;
 
-      logger.log(`âœ… Retry complete: ${retryResult.synced} synced, ${retryResult.failed} still failed`);
+      logger.log(`�S& Retry complete: ${retryResult.synced} synced, ${retryResult.failed} still failed`);
       
     } catch (error) {
-      logger.error('âŒ Retry failed:', error);
+      logger.error('�R Retry failed:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
 
@@ -135,14 +135,14 @@ class ManualSync {
    * Removes them from the queue without syncing
    */
   async discardAllFailed(): Promise<number> {
-    logger.log('ðŸ—‘ï¸ Discarding all failed operations...');
+    logger.log('�x️ Discarding all failed operations...');
 
     try {
       const count = await syncQueue.clearFailedOperations();
-      logger.log(`âœ… Discarded ${count} failed operation(s)`);
+      logger.log(`�S& Discarded ${count} failed operation(s)`);
       return count;
     } catch (error) {
-      logger.error('âŒ Discard failed:', error);
+      logger.error('�R Discard failed:', error);
       return 0;
     }
   }
@@ -180,7 +180,7 @@ class ManualSync {
   async discardOperation(operationId: string): Promise<boolean> {
     try {
       await localDB.removeFromSyncQueue(operationId);
-      logger.log('âœ… Operation discarded:', operationId);
+      logger.log('�S& Operation discarded:', operationId);
       return true;
     } catch (error) {
       logger.error('Discard operation failed:', error);
@@ -227,7 +227,7 @@ class ManualSync {
         backgroundSync.stop();
       }
 
-      logger.log('âœ… Sync settings updated:', updated);
+      logger.log('�S& Sync settings updated:', updated);
     } catch (error) {
       logger.error('Error updating sync settings:', error);
     }

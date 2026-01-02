@@ -38,7 +38,7 @@ function debugLog(location: string, message: string, data: any, hypothesisId: st
 // #endregion
 
 async function main() {
-  console.log('🔄 SYNCING LOCAL GIFS TO DATABASE\n');
+  console.log('= SYNCING LOCAL GIFS TO DATABASE\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -58,7 +58,7 @@ async function main() {
       : []
   );
 
-  console.log(`\n📁 Local files:`);
+  console.log(`\n=� Local files:`);
   console.log(`   GIFs: ${localGifs.size}`);
   console.log(`   Thumbnails: ${localThumbs.size}`);
 
@@ -73,7 +73,7 @@ async function main() {
     return;
   }
 
-  console.log(`\n📊 Database:`);
+  console.log(`\n=� Database:`);
   console.log(`   Total active: ${allExercises?.length || 0}`);
   console.log(`   With GIF URL: ${allExercises?.filter(e => e.gif_url).length || 0}`);
   console.log(`   With Thumbnail URL: ${allExercises?.filter(e => e.thumbnail_url).length || 0}`);
@@ -115,7 +115,7 @@ async function main() {
   }, 'H2');
   // #endregion
 
-  console.log(`\n🔍 Analysis:`);
+  console.log(`\n= Analysis:`);
   console.log(`   Exercises needing URL update: ${needsUrlUpdate.length}`);
 
   if (needsUrlUpdate.length === 0) {
@@ -124,7 +124,7 @@ async function main() {
   }
 
   // Step 4: Upload missing files to Supabase
-  console.log(`\n☁️  STEP 1: Uploading files to Supabase...\n`);
+  console.log(`\n  STEP 1: Uploading files to Supabase...\n`);
 
   const GIF_BUCKET = 'exercise-gifs';
   const THUMBNAIL_BUCKET = 'exercise-thumbnails';
@@ -186,7 +186,7 @@ async function main() {
   // #endregion
 
   // Step 5: Update database URLs
-  console.log(`\n📝 STEP 2: Updating database URLs...\n`);
+  console.log(`\n=� STEP 2: Updating database URLs...\n`);
 
   let updated = 0;
 
@@ -234,11 +234,11 @@ async function main() {
   const total = finalExercises?.length || 0;
 
   console.log('\n' + '='.repeat(60));
-  console.log('📊 FINAL SUMMARY');
+  console.log('=� FINAL SUMMARY');
   console.log('='.repeat(60));
-  console.log(`\n☁️  Uploaded: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
-  console.log(`📝 Updated URLs: ${updated}`);
-  console.log(`\n🎯 COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
+  console.log(`\n  Uploaded: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
+  console.log(`=� Updated URLs: ${updated}`);
+  console.log(`\n COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
 
   // #region agent log
   debugLog('sync-local.ts:main:complete', 'Sync complete', {

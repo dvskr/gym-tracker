@@ -110,7 +110,7 @@ export function SyncStatusPanel() {
 
         <View style={styles.statusItem}>
           <Text style={[styles.statusValue, isOnline ? styles.statusSuccess : styles.statusError]}>
-            {isOnline ? '🟢' : '🔴'}
+            {isOnline ? '=�' : '=4'}
           </Text>
           <Text style={styles.statusLabel}>{isOnline ? 'Online' : 'Offline'}</Text>
         </View>
@@ -235,14 +235,14 @@ export function SyncSettingsSection() {
       >
         <Text style={styles.settingsItemText}>Sync Now</Text>
         <Text style={styles.settingsItemValue}>
-          {syncing ? '⏳' : isOnline ? '🔄' : '📵'}
+          {syncing ? '⏳' : isOnline ? '=' : '=�'}
         </Text>
       </TouchableOpacity>
 
       <View style={styles.settingsItem}>
         <Text style={styles.settingsItemText}>Connection Status</Text>
         <Text style={styles.settingsItemValue}>
-          {isOnline ? '🟢 Online' : '🔴 Offline'}
+          {isOnline ? '=� Online' : '=4 Offline'}
         </Text>
       </View>
 
@@ -260,7 +260,7 @@ export function SyncSettingsSection() {
           disabled={!isOnline}
         >
           <Text style={[styles.settingsItemText, styles.textWarning]}>
-            ⚠️ {failedCount} Failed - Tap to Retry
+            � {failedCount} Failed - Tap to Retry
           </Text>
         </TouchableOpacity>
       )}
@@ -309,7 +309,7 @@ export function SyncManagementScreen() {
       {/* Connection Status */}
       <View style={styles.connectionCard}>
         <Text style={styles.connectionStatus}>
-          {isOnline ? '🟢 Connected to Internet' : '🔴 No Internet Connection'}
+          {isOnline ? '=� Connected to Internet' : '=4 No Internet Connection'}
         </Text>
         {!isOnline && (
           <Text style={styles.connectionNote}>
@@ -326,7 +326,7 @@ export function SyncManagementScreen() {
           disabled={!isOnline || isSyncing}
         >
           <Text style={styles.actionButtonText}>
-            {isSyncing ? '⏳ Syncing...' : '🔄 Sync Now'}
+            {isSyncing ? '⏳ Syncing...' : '= Sync Now'}
           </Text>
         </TouchableOpacity>
 
@@ -338,7 +338,7 @@ export function SyncManagementScreen() {
               disabled={!isOnline}
             >
               <Text style={styles.actionButtonText}>
-                🔁 Retry Failed ({failedCount})
+                = Retry Failed ({failedCount})
               </Text>
             </TouchableOpacity>
 
@@ -355,7 +355,7 @@ export function SyncManagementScreen() {
                 );
               }}
             >
-              <Text style={styles.actionButtonText}>🗑️ Clear Failed</Text>
+              <Text style={styles.actionButtonText}>=� Clear Failed</Text>
             </TouchableOpacity>
           </>
         )}

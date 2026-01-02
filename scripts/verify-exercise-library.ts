@@ -8,7 +8,7 @@ const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function verifyExerciseLibrary() {
-  console.log('🔍 Verifying Exercise Library...\n');
+  console.log('= Verifying Exercise Library...\n');
   
   // Total counts
   const { count: totalCount } = await supabase
@@ -38,7 +38,7 @@ async function verifyExerciseLibrary() {
     .eq('is_active', true)
     .not('measurement_type', 'is', null);
   
-  console.log('📊 EXERCISE LIBRARY SUMMARY');
+  console.log('=� EXERCISE LIBRARY SUMMARY');
   console.log('='.repeat(50));
   console.log(`Total Exercises:        ${totalCount}`);
   console.log(`Active Exercises:       ${activeCount} (${((activeCount || 0) / (totalCount || 1) * 100).toFixed(1)}%)`);
@@ -58,7 +58,7 @@ async function verifyExerciseLibrary() {
     equipmentCounts[eq] = (equipmentCounts[eq] || 0) + 1;
   });
   
-  console.log('\n📦 ACTIVE BY EQUIPMENT');
+  console.log('\n=� ACTIVE BY EQUIPMENT');
   console.log('='.repeat(50));
   Object.entries(equipmentCounts)
     .sort((a, b) => b[1] - a[1])
@@ -68,7 +68,7 @@ async function verifyExerciseLibrary() {
     });
   
   // Check for issues
-  console.log('\n⚠️  POTENTIAL ISSUES');
+  console.log('\n�  POTENTIAL ISSUES');
   console.log('='.repeat(50));
   
   // Active without GIF
@@ -138,15 +138,15 @@ async function verifyExerciseLibrary() {
     
     if (data) {
       const status = data.is_active ? '✅' : '❌';
-      const gif = data.gif_url ? '🎬' : '⚪';
-      const mt = data.measurement_type ? '📏' : '⚪';
+      const gif = data.gif_url ? '' : '⚪';
+      const mt = data.measurement_type ? '=�' : '⚪';
       console.log(`${status} ${gif} ${mt} ${name}`);
     } else {
       console.log(`❓ ⚪ ⚪ ${name} (not found)`);
     }
   }
   
-  console.log('\nLegend: ✅=Active ❌=Inactive 🎬=Has GIF 📏=Has Measurement Type');
+  console.log('\nLegend: ✅=Active ❌=Inactive =Has GIF =�=Has Measurement Type');
   console.log('\n✅ Verification complete!');
 }
 

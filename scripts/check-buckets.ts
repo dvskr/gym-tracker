@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function checkBuckets() {
-  console.log('🪣 Checking Storage Buckets...\n');
+  console.log('>� Checking Storage Buckets...\n');
   
   // List all buckets
   const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
@@ -24,10 +24,10 @@ async function checkBuckets() {
     console.log(`  - ${b.name} (${b.public ? 'public' : 'private'})`);
   });
   
-  console.log('\n📊 Detailed Bucket Analysis:\n');
+  console.log('\n=� Detailed Bucket Analysis:\n');
   
   // Check exercise-gifs
-  console.log('1️⃣ exercise-gifs bucket:');
+  console.log('1� exercise-gifs bucket:');
   const { data: gifs, error: gifsError } = await supabase.storage
     .from('exercise-gifs')
     .list('', { limit: 1000 });
@@ -41,7 +41,7 @@ async function checkBuckets() {
   }
   
   // Check exercise-thumbnails
-  console.log('\n2️⃣ exercise-thumbnails bucket:');
+  console.log('\n2� exercise-thumbnails bucket:');
   const { data: thumbs, error: thumbsError } = await supabase.storage
     .from('exercise-thumbnails')
     .list('', { limit: 1000 });
@@ -58,7 +58,7 @@ async function checkBuckets() {
   }
   
   // Try to upload a test file
-  console.log('\n🧪 Testing Upload to exercise-thumbnails...');
+  console.log('\n>� Testing Upload to exercise-thumbnails...');
   const testData = Buffer.from('test');
   const { data: uploadData, error: uploadError } = await supabase.storage
     .from('exercise-thumbnails')

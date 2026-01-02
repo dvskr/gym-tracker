@@ -112,7 +112,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             </Text>
             <Text style={styles.compactMeta}>
               {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
-              {template.estimated_duration ? ` â€¢ ~${template.estimated_duration}min` : ''}
+              {template.estimated_duration ? ` • ~${template.estimated_duration}min` : ''}
             </Text>
           </View>
 
@@ -179,7 +179,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             <Calendar size={12} color="#475569" />
             <Text style={styles.lastUsedText}>{lastUsed}</Text>
             {template.times_used ? (
-              <Text style={styles.usageCount}>â€¢ Used {template.times_used}x</Text>
+              <Text style={styles.usageCount}>• Used {template.times_used}x</Text>
             ) : null}
           </View>
 
@@ -443,7 +443,7 @@ const FolderSection: React.FC<FolderSectionProps> = ({
 
 const EmptyState: React.FC<{ onCreatePress: () => void }> = ({ onCreatePress }) => (
   <View style={styles.emptyContainer}>
-    <Text style={styles.emptyIcon}>ðŸ‹ï¸</Text>
+    <Text style={styles.emptyIcon}>�x�9️</Text>
     <Text style={styles.emptyTitle}>No Templates Yet</Text>
     <Text style={styles.emptyDescription}>
       Create a template to quickly start your favorite workouts.

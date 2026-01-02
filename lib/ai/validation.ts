@@ -113,7 +113,7 @@ export const initExerciseValidator = async () => {
         keys: ['name'],
       });
       
-      logger.log(`âœ… Exercise validator initialized with ${exerciseNames.length} exercises`);
+      logger.log(`�S& Exercise validator initialized with ${exerciseNames.length} exercises`);
     }
   } catch (error) {
     logger.error('Failed to initialize exercise validator:', error);
@@ -138,12 +138,12 @@ export const validateExerciseName = (name: string): string | null => {
   if (fuse) {
     const results = fuse.search(normalized);
     if (results.length > 0 && results[0].score !== undefined && results[0].score < 0.3) {
-      logger.log(`âœ… Fuzzy matched "${normalized}" -> "${results[0].item}" (score: ${results[0].score})`);
+      logger.log(`�S& Fuzzy matched "${normalized}" -> "${results[0].item}" (score: ${results[0].score})`);
       return results[0].item;
     }
   }
   
-  logger.warn(`âŒ No valid exercise match found for: "${normalized}"`);
+  logger.warn(`�R No valid exercise match found for: "${normalized}"`);
   return null;
 };
 
@@ -526,11 +526,11 @@ export const checkResponseSpecificity = (
   const issues: string[] = [];
   let score = 0;
   
-  // Check for specific numbers (e.g., "185Ã—8", "225 lbs")
+  // Check for specific numbers (e.g., "185×8", "225 lbs")
   const weightPattern = /\d+\s*(lbs?|kg|pounds?|kilos?)/gi;
   const hasSpecificWeight = weightPattern.test(response);
   
-  const repsPattern = /\d+\s*(Ã—|x|reps?|sets?)/gi;
+  const repsPattern = /\d+\s*(×|x|reps?|sets?)/gi;
   const hasSpecificReps = repsPattern.test(response);
   
   if (hasSpecificWeight) {

@@ -13,7 +13,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
 
 async function verifyGifCoverage() {
-  console.log('🔍 Verifying GIF coverage...\n');
+  console.log('= Verifying GIF coverage...\n');
   
   // Get downloaded GIFs
   const downloadedGifs = new Set<string>();
@@ -48,10 +48,10 @@ async function verifyGifCoverage() {
   console.log('='.repeat(60));
   console.log('GIF COVERAGE VERIFICATION');
   console.log('='.repeat(60));
-  console.log(`\n📊 SUMMARY`);
+  console.log(`\n=� SUMMARY`);
   console.log(`   Total Active: ${exercises?.length || 0}`);
   console.log(`   ✅ With Downloaded GIF: ${withGif.length} (${((withGif.length / (exercises?.length || 1)) * 100).toFixed(1)}%)`);
-  console.log(`   ⚠️  Missing GIF: ${withoutGif.length}`);
+  console.log(`   �  Missing GIF: ${withoutGif.length}`);
   
   // Group missing by equipment
   const missingByEquipment: Record<string, any[]> = {};
@@ -62,7 +62,7 @@ async function verifyGifCoverage() {
   });
   
   if (withoutGif.length > 0) {
-    console.log(`\n⚠️  STILL MISSING BY EQUIPMENT:`);
+    console.log(`\n�  STILL MISSING BY EQUIPMENT:`);
     Object.entries(missingByEquipment)
       .sort((a, b) => b[1].length - a[1].length)
       .forEach(([eq, exs]) => {
@@ -82,12 +82,12 @@ async function verifyGifCoverage() {
     'trap bar deadlift',
   ];
   
-  console.log(`\n🎯 KEY EXERCISE STATUS:`);
+  console.log(`\n KEY EXERCISE STATUS:`);
   for (const name of keyExercises) {
     const ex = exercises?.find(e => e.name.toLowerCase() === name.toLowerCase());
     if (ex) {
       const hasGif = withGif.some(g => g.id === ex.id);
-      const status = hasGif ? '✅' : '⚠️';
+      const status = hasGif ? '✅' : '�';
       console.log(`   ${status} ${name}`);
     } else {
       console.log(`   ❓ ${name} (not found)`);

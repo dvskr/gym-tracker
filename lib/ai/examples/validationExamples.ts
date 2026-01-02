@@ -21,9 +21,9 @@ import {
  * Call this once when your app starts (e.g., in App.tsx or _layout.tsx)
  */
 export const initializeValidator = async () => {
-  logger.log('ðŸ”„ Initializing exercise validator...');
+  logger.log('�x Initializing exercise validator...');
   await initExerciseValidator();
-  logger.log('âœ… Exercise validator ready!');
+  logger.log('�S& Exercise validator ready!');
 };
 
 // ==========================================
@@ -31,7 +31,7 @@ export const initializeValidator = async () => {
 // ==========================================
 
 export const validateSingleExercises = () => {
-  logger.log('\nðŸ“ Testing single exercise validation:');
+  logger.log('\n�x� Testing single exercise validation:');
   
   // Test cases with typos and variations
   const testCases = [
@@ -54,7 +54,7 @@ export const validateSingleExercises = () => {
 // ==========================================
 
 export const checkExerciseEquipment = () => {
-  logger.log('\nðŸ‹ï¸ Checking exercise equipment:');
+  logger.log('\n�x�9️ Checking exercise equipment:');
   
   const exercises = ['Bench Press', 'Pull-ups', 'Dumbbell Row'];
   
@@ -71,7 +71,7 @@ export const checkExerciseEquipment = () => {
 // ==========================================
 
 export const validateWorkoutExample = () => {
-  logger.log('\nðŸ’ª Validating workout suggestion:');
+  logger.log('\n�x� Validating workout suggestion:');
   
   // Simulated AI response with typos and invalid exercises
   const aiSuggestion: WorkoutSuggestion = {
@@ -106,7 +106,7 @@ export const validateWorkoutExample = () => {
 // ==========================================
 
 export const validateWithEquipment = () => {
-  logger.log('\nðŸŽ¯ Validating with equipment restrictions:');
+  logger.log('\n�x}� Validating with equipment restrictions:');
   
   const aiSuggestion: WorkoutSuggestion = {
     type: 'Upper Body',
@@ -141,7 +141,7 @@ export const validateWithEquipment = () => {
 // ==========================================
 
 export const validateWithInjuries = () => {
-  logger.log('\nðŸ©¹ Validating with injury restrictions:');
+  logger.log('\n�x�� Validating with injury restrictions:');
   
   const aiSuggestion: WorkoutSuggestion = {
     type: 'Upper Body',
@@ -176,7 +176,7 @@ export const validateWithInjuries = () => {
 // ==========================================
 
 export const completeExample = async () => {
-  logger.log('\nðŸš€ Complete validation workflow:');
+  logger.log('\n�xa� Complete validation workflow:');
   
   // 1. Initialize (do this once at app start)
   await initializeValidator();
@@ -195,14 +195,14 @@ export const completeExample = async () => {
     confidence: 'high',
   };
   
-  logger.log('ðŸ“¥ Received AI suggestion with', aiSuggestion.exercises.length, 'exercises');
+  logger.log('�x� Received AI suggestion with', aiSuggestion.exercises.length, 'exercises');
   
   // 3. User profile data
   const userEquipment = ['barbell', 'dumbbell', 'bodyweight'];
   const userInjuries = ['shoulder'];
   
-  logger.log('ðŸ‘¤ User has equipment:', userEquipment);
-  logger.log('ðŸ‘¤ User has injuries:', userInjuries);
+  logger.log('�x� User has equipment:', userEquipment);
+  logger.log('�x� User has injuries:', userInjuries);
   
   // 4. Validate and filter
   const validated = validateWorkoutSuggestionAdvanced(
@@ -212,19 +212,19 @@ export const completeExample = async () => {
   );
   
   // 5. Check results
-  logger.log('\nðŸ“¤ Validation complete:');
+  logger.log('\n�x� Validation complete:');
   logger.log('  - Exercises before:', aiSuggestion.exercises.length);
   logger.log('  - Exercises after:', validated.exercises.length);
   logger.log('  - Was filtered:', validated.wasFiltered);
   
-  logger.log('\nâœ… Final workout:');
+  logger.log('\n�S& Final workout:');
   validated.exercises.forEach((ex, i) => {
-    logger.log(`  ${i + 1}. ${ex.name} - ${ex.sets} Ã— ${ex.reps} (${ex.equipment})`);
+    logger.log(`  ${i + 1}. ${ex.name} - ${ex.sets} × ${ex.reps} (${ex.equipment})`);
   });
   
   // 6. Handle edge case: too many filtered
   if (validated.exercises.length < 3 && validated.wasFiltered) {
-    logger.warn('\nâš ï¸ Warning: Too many exercises filtered!');
+    logger.warn('\n�a���� Warning: Too many exercises filtered!');
     logger.log('Consider regenerating with fallback logic');
   }
 };
@@ -291,9 +291,9 @@ export class WorkoutSuggestionServiceExample {
 // ==========================================
 
 export const runAllExamples = async () => {
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   logger.log('   EXERCISE VALIDATION EXAMPLES');
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   
   await initializeValidator();
   
@@ -304,8 +304,8 @@ export const runAllExamples = async () => {
   validateWithInjuries();
   await completeExample();
   
-  logger.log('\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•');
+  logger.log('\n�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"');
   logger.log('   ALL EXAMPLES COMPLETE');
-  logger.log('â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n');
+  logger.log('�"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"��"\n');
 };
 

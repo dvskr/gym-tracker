@@ -22,7 +22,7 @@ interface Exercise {
 const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
 
 async function findExercisesMissingGifs() {
-  console.log('🔍 Finding active exercises missing GIFs...\n');
+  console.log('= Finding active exercises missing GIFs...\n');
   
   // Get list of downloaded GIF filenames
   const downloadedGifs = new Set<string>();
@@ -32,7 +32,7 @@ async function findExercisesMissingGifs() {
       .forEach(f => downloadedGifs.add(f.toLowerCase()));
   }
   
-  console.log(`📁 Found ${downloadedGifs.size} downloaded GIFs in ${GIF_DIR}\n`);
+  console.log(`=� Found ${downloadedGifs.size} downloaded GIFs in ${GIF_DIR}\n`);
   
   // Fetch all active exercises
   const { data: exercises, error } = await supabase
@@ -84,12 +84,12 @@ async function findExercisesMissingGifs() {
   console.log('=' .repeat(60));
   console.log('ACTIVE EXERCISES MISSING GIFS');
   console.log('='.repeat(60));
-  console.log(`\n📊 SUMMARY`);
+  console.log(`\n=� SUMMARY`);
   console.log(`   Total Active: ${exercises?.length || 0}`);
   console.log(`   With Downloaded GIF: ${hasGifs.length}`);
-  console.log(`   ⚠️  Missing GIF: ${missingGifs.length}`);
+  console.log(`   �  Missing GIF: ${missingGifs.length}`);
   
-  console.log(`\n📦 MISSING BY EQUIPMENT:`);
+  console.log(`\n=� MISSING BY EQUIPMENT:`);
   Object.entries(byEquipment)
     .sort((a, b) => b[1].length - a[1].length)
     .forEach(([eq, exs]) => {
@@ -136,7 +136,7 @@ async function findExercisesMissingGifs() {
   console.log(`   - missing-gifs-by-equipment.json`);
   
   // Print exercises that can be downloaded
-  console.log(`\n🎬 EXERCISES WITH DOWNLOADABLE GIFS (${canDownload.length}):`);
+  console.log(`\n EXERCISES WITH DOWNLOADABLE GIFS (${canDownload.length}):`);
   Object.entries(byEquipment).forEach(([eq, exs]) => {
     const withUrl = exs.filter(e => e.gif_url);
     if (withUrl.length > 0) {

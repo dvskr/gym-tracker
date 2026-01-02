@@ -9,14 +9,14 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function getAccurateCounts() {
-  console.log('📊 ACCURATE CURRENT STATE - FRESH COUNT');
+  console.log('=� ACCURATE CURRENT STATE - FRESH COUNT');
   console.log('═'.repeat(80));
   console.log('');
 
   // ============================================
   // STEP 1: Count Supabase Storage Files
   // ============================================
-  console.log('📂 STEP 1: Supabase Storage Counts');
+  console.log('=� STEP 1: Supabase Storage Counts');
   console.log('─'.repeat(80));
 
   // Count exercise-gifs
@@ -62,7 +62,7 @@ async function getAccurateCounts() {
   // ============================================
   // STEP 2: Count Database Exercises
   // ============================================
-  console.log('📊 STEP 2: Database Exercise Counts');
+  console.log('=� STEP 2: Database Exercise Counts');
   console.log('─'.repeat(80));
 
   // Total exercises
@@ -102,7 +102,7 @@ async function getAccurateCounts() {
   // ============================================
   // STEP 3: Sample gif_url Format
   // ============================================
-  console.log('📝 STEP 3: Sample gif_url Format (10 examples)');
+  console.log('=� STEP 3: Sample gif_url Format (10 examples)');
   console.log('─'.repeat(80));
 
   const { data: sampleExercises } = await supabase
@@ -130,7 +130,7 @@ async function getAccurateCounts() {
   // ============================================
   // STEP 4: Analyze gif_url Patterns
   // ============================================
-  console.log('🔍 STEP 4: Analyze ALL gif_url Patterns');
+  console.log('= STEP 4: Analyze ALL gif_url Patterns');
   console.log('─'.repeat(80));
 
   const { data: allActive } = await supabase
@@ -169,7 +169,7 @@ async function getAccurateCounts() {
   // SUMMARY TABLE
   // ============================================
   console.log('═'.repeat(80));
-  console.log('📋 SUMMARY TABLE');
+  console.log('=� SUMMARY TABLE');
   console.log('═'.repeat(80));
   console.log('');
   console.log('STORAGE:');

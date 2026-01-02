@@ -53,12 +53,12 @@ async function fetchExercisesFromAPI(): Promise<ExerciseDBExercise[]> {
   const limit = 10; // RapidAPI free tier limit per request
   const maxExercises = 2000; // Safety limit
   
-  console.log('🏋️ Starting to fetch exercises from ExerciseDB API...');
+  console.log(' Starting to fetch exercises from ExerciseDB API...');
   console.log('   (This may take a while due to API rate limits)\n');
 
   while (offset < maxExercises) {
     try {
-      console.log(`📥 Fetching batch at offset ${offset}...`);
+      console.log(`=� Fetching batch at offset ${offset}...`);
       
       const response = await fetch(
         `${EXERCISEDB_BASE_URL}/exercises?limit=${limit}&offset=${offset}`,
@@ -104,7 +104,7 @@ async function fetchExercisesFromAPI(): Promise<ExerciseDBExercise[]> {
     }
   }
 
-  console.log(`\n📊 Total exercises fetched: ${allExercises.length}\n`);
+  console.log(`\n=� Total exercises fetched: ${allExercises.length}\n`);
   return allExercises;
 }
 
@@ -125,7 +125,7 @@ function transformExercise(exercise: ExerciseDBExercise): SupabaseExercise {
 }
 
 async function seedExercises() {
-  console.log('🚀 Exercise Seeding Script Started\n');
+  console.log('=� Exercise Seeding Script Started\n');
   console.log('='.repeat(50));
   
   // Validate environment variables
@@ -147,17 +147,17 @@ async function seedExercises() {
   const apiExercises = await fetchExercisesFromAPI();
   
   if (apiExercises.length === 0) {
-    console.log('⚠️ No exercises fetched from API. Exiting.');
+    console.log('� No exercises fetched from API. Exiting.');
     return;
   }
 
   // Transform to Supabase format
-  console.log('🔄 Transforming exercises for database...');
+  console.log('= Transforming exercises for database...');
   const supabaseExercises = apiExercises.map(transformExercise);
   console.log(`   Transformed ${supabaseExercises.length} exercises\n`);
 
   // Insert into database in batches
-  console.log('💾 Inserting exercises into Supabase...\n');
+  console.log('=� Inserting exercises into Supabase...\n');
   
   const batchSize = 100;
   let inserted = 0;
@@ -190,12 +190,12 @@ async function seedExercises() {
   }
 
   console.log('\n' + '='.repeat(50));
-  console.log('📊 SEEDING COMPLETE');
+  console.log('=� SEEDING COMPLETE');
   console.log('='.repeat(50));
   console.log(`   ✅ Inserted: ${inserted}`);
-  console.log(`   ⏭️ Skipped (duplicates): ${skipped}`);
+  console.log(`   � Skipped (duplicates): ${skipped}`);
   console.log(`   ❌ Errors: ${errors}`);
-  console.log(`   📊 Total processed: ${supabaseExercises.length}`);
+  console.log(`   =� Total processed: ${supabaseExercises.length}`);
   console.log('='.repeat(50) + '\n');
 
   // Verify count in database
@@ -203,7 +203,7 @@ async function seedExercises() {
     .from('exercises')
     .select('*', { count: 'exact', head: true });
   
-  console.log(`🔍 Total exercises in database: ${count}\n`);
+  console.log(`= Total exercises in database: ${count}\n`);
 }
 
 // Run the script
@@ -213,7 +213,7 @@ seedExercises()
     process.exit(0);
   })
   .catch((error) => {
-    console.error('💥 Script failed:', error);
+    console.error('=� Script failed:', error);
     process.exit(1);
   });
 

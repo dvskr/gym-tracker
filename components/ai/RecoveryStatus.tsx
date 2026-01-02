@@ -90,16 +90,16 @@ export function RecoveryStatus() {
   };
 
   const getStatusEmoji = () => {
-    if (!status) return 'ðŸ’ª';
+    if (!status) return '�x�';
     switch (status.overall) {
       case 'recovered':
-        return 'ðŸ’ª';
+        return '�x�';
       case 'moderate':
-        return 'ðŸ‘';
+        return '�x�';
       case 'fatigued':
-        return 'ðŸ˜“';
+        return '�x�';
       case 'overtrained':
-        return 'ðŸ˜´';
+        return '�xܴ';
     }
   };
 

@@ -40,7 +40,7 @@ export const useNotificationStore = create<NotificationStore>()(
           };
         });
 
-        logger.log('ðŸ“¬ Added notification:', newNotification.title);
+        logger.log('�x� Added notification:', newNotification.title);
       },
 
       markAsRead: (id) => {
@@ -63,7 +63,7 @@ export const useNotificationStore = create<NotificationStore>()(
           unreadCount: 0,
         }));
 
-        logger.log('âœ… Marked all notifications as read');
+        logger.log('�S& Marked all notifications as read');
       },
 
       deleteNotification: (id) => {
@@ -80,7 +80,7 @@ export const useNotificationStore = create<NotificationStore>()(
 
       clearAll: () => {
         set({ notifications: [], unreadCount: 0 });
-        logger.log('ðŸ—‘ï¸ Cleared all notifications');
+        logger.log('�x️ Cleared all notifications');
       },
 
       getUnreadCount: () => {

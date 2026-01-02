@@ -38,7 +38,7 @@ class DeviceManager {
     if (!id) {
       id = this.generateDeviceId();
       await AsyncStorage.setItem(this.DEVICE_ID_KEY, id);
-      logger.log('ðŸ“± New device ID created:', id);
+      logger.log('�x� New device ID created:', id);
     }
 
     this.deviceId = id;
@@ -49,11 +49,11 @@ class DeviceManager {
    * Register this device in the database
    */
   async registerDevice(): Promise<void> {
-    logger.log('ðŸ“± Registering device...');
+    logger.log('�x� Registering device...');
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) {
-      logger.log('âš ï¸ No user ID, skipping device registration');
+      logger.log('�a���� No user ID, skipping device registration');
       return;
     }
 
@@ -74,12 +74,12 @@ class DeviceManager {
       );
 
       if (error) {
-        logger.error('âŒ Error registering device:', error);
+        logger.error('�R Error registering device:', error);
       } else {
-        logger.log('âœ… Device registered successfully');
+        logger.log('�S& Device registered successfully');
       }
     } catch (error) {
-      logger.error('âŒ Error in registerDevice:', error);
+      logger.error('�R Error in registerDevice:', error);
     }
   }
 
@@ -117,7 +117,7 @@ class DeviceManager {
       this.updateLastActive();
     }, 5 * 60 * 1000);
 
-    logger.log('â° Started periodic device updates (every 5 min)');
+    logger.log('⏰ Started periodic device updates (every 5 min)');
   }
 
   /**
@@ -127,7 +127,7 @@ class DeviceManager {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.log('â¸ï¸ Stopped periodic device updates');
+      logger.log('⏸��� Stopped periodic device updates');
     }
   }
 
@@ -171,7 +171,7 @@ class DeviceManager {
    * Remove a device (logout from device)
    */
   async removeDevice(deviceId: string): Promise<void> {
-    logger.log('ðŸ—‘ï¸ Removing device:', deviceId);
+    logger.log('�x️ Removing device:', deviceId);
 
     try {
       const { error } = await supabase.from('user_devices').delete().eq('id', deviceId);
@@ -181,7 +181,7 @@ class DeviceManager {
         throw error;
       }
 
-      logger.log('âœ… Device removed successfully');
+      logger.log('�S& Device removed successfully');
     } catch (error) {
       logger.error('Error in removeDevice:', error);
       throw error;
@@ -192,7 +192,7 @@ class DeviceManager {
    * Remove all devices except current
    */
   async removeAllOtherDevices(): Promise<number> {
-    logger.log('ðŸ—‘ï¸ Removing all other devices...');
+    logger.log('�x️ Removing all other devices...');
 
     const userId = useAuthStore.getState().user?.id;
     const currentDeviceId = await this.getDeviceId();
@@ -210,7 +210,7 @@ class DeviceManager {
       if (error) throw error;
 
       const count = data?.length || 0;
-      logger.log(`âœ… Removed ${count} device(s)`);
+      logger.log(`�S& Removed ${count} device(s)`);
       return count;
     } catch (error) {
       logger.error('Error removing other devices:', error);
@@ -273,7 +273,7 @@ class DeviceManager {
    * End workout on another device
    */
   async endWorkoutOnOtherDevice(workoutId: string): Promise<void> {
-    logger.log('â¹ï¸ Ending workout on other device:', workoutId);
+    logger.log('⏹��� Ending workout on other device:', workoutId);
 
     try {
       const { error } = await supabase
@@ -286,7 +286,7 @@ class DeviceManager {
 
       if (error) throw error;
 
-      logger.log('âœ… Workout ended on other device');
+      logger.log('�S& Workout ended on other device');
     } catch (error) {
       logger.error('Error ending workout on other device:', error);
       throw error;
@@ -338,13 +338,13 @@ class DeviceManager {
   getPlatformIcon(platform: string): string {
     switch (platform) {
       case 'ios':
-        return 'ðŸ“±';
+        return '�x�';
       case 'android':
-        return 'ðŸ¤–';
+        return '�x�';
       case 'web':
-        return 'ðŸŒ';
+        return '�xR�';
       default:
-        return 'ðŸ“±';
+        return '�x�';
     }
   }
 

@@ -111,7 +111,7 @@ function downloadFileWithHeaders(url: string, outputPath: string, headers: Recor
 }
 
 async function findMissingExercises(): Promise<Exercise[]> {
-  console.log('\n🔍 STEP 1: Finding exercises without GIFs...');
+  console.log('\n= STEP 1: Finding exercises without GIFs...');
   
   // #region agent log
   debugLog('complete-missing.ts:findMissing:start', 'Finding missing exercises', {}, 'H1');
@@ -167,7 +167,7 @@ async function findMissingExercises(): Promise<Exercise[]> {
   console.log(`  Missing (no external_id): ${noExternalId.length}`);
 
   if (noExternalId.length > 0) {
-    console.log(`\n  ⚠️  Warning: ${noExternalId.length} exercises have no external_id`);
+    console.log(`\n  �  Warning: ${noExternalId.length} exercises have no external_id`);
     console.log(`     First 5: ${noExternalId.slice(0, 5).map(e => e.name).join(', ')}`);
   }
 
@@ -175,7 +175,7 @@ async function findMissingExercises(): Promise<Exercise[]> {
 }
 
 async function downloadFromExerciseDB(exercises: Exercise[]): Promise<{ downloaded: number; failed: number }> {
-  console.log('\n⬇️  STEP 2: Downloading from ExerciseDB API...');
+  console.log('\n  STEP 2: Downloading from ExerciseDB API...');
   
   if (!exerciseDbApiKey) {
     console.error('  ❌ Missing EXPO_PUBLIC_EXERCISEDB_API_KEY in .env file');
@@ -248,7 +248,7 @@ async function downloadFromExerciseDB(exercises: Exercise[]): Promise<{ download
 }
 
 async function generateThumbnails(): Promise<{ generated: number; skipped: number; failed: number }> {
-  console.log('\n🖼️  STEP 3: Generating 216px thumbnails with Sharp...');
+  console.log('\n=�  STEP 3: Generating 216px thumbnails with Sharp...');
   
   // #region agent log
   debugLog('complete-missing.ts:thumbnails:start', 'Starting thumbnail generation', {}, 'H3');
@@ -312,14 +312,14 @@ async function generateThumbnails(): Promise<{ generated: number; skipped: numbe
   // #endregion
 
   console.log(`\n  ✅ Generated: ${generated}`);
-  console.log(`  ⏭️  Skipped (exists): ${skipped}`);
+  console.log(`  �  Skipped (exists): ${skipped}`);
   console.log(`  ❌ Failed: ${failed}`);
 
   return { generated, skipped, failed };
 }
 
 async function uploadToSupabase(): Promise<{ gifs: number; thumbnails: number }> {
-  console.log('\n☁️  STEP 4: Uploading to Supabase Storage...');
+  console.log('\n  STEP 4: Uploading to Supabase Storage...');
   
   // #region agent log
   debugLog('complete-missing.ts:upload:start', 'Starting Supabase upload', {}, 'H4');
@@ -389,7 +389,7 @@ async function uploadToSupabase(): Promise<{ gifs: number; thumbnails: number }>
 }
 
 async function updateDatabaseUrls(): Promise<number> {
-  console.log('\n📝 STEP 5: Updating database URLs...');
+  console.log('\n=� STEP 5: Updating database URLs...');
   
   // #region agent log
   debugLog('complete-missing.ts:updateUrls:start', 'Starting database URL update', {}, 'H5');
@@ -460,7 +460,7 @@ async function updateDatabaseUrls(): Promise<number> {
 }
 
 async function getFinalStats() {
-  console.log('\n📊 STEP 6: Calculating final statistics...');
+  console.log('\n=� STEP 6: Calculating final statistics...');
   
   // #region agent log
   debugLog('complete-missing.ts:stats:start', 'Calculating final stats', {}, 'H6');
@@ -506,7 +506,7 @@ async function getFinalStats() {
   console.log(`  Completion: ${((withBoth.length / (allExercises?.length || 1)) * 100).toFixed(1)}%`);
 
   if (withNeither.length > 0) {
-    console.log(`\n  ⚠️  Still missing: ${withNeither.length} exercises`);
+    console.log(`\n  �  Still missing: ${withNeither.length} exercises`);
     console.log(`     First 10: ${withNeither.slice(0, 10).map(e => e.name).join(', ')}`);
   }
 
@@ -514,7 +514,7 @@ async function getFinalStats() {
 }
 
 async function main() {
-  console.log('🎯 COMPLETE MISSION: Get to 100% GIF Coverage\n');
+  console.log(' COMPLETE MISSION: Get to 100% GIF Coverage\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -525,7 +525,7 @@ async function main() {
   const missingExercises = await findMissingExercises();
 
   if (missingExercises.length === 0) {
-    console.log('\n🎉 All exercises already have GIFs!');
+    console.log('\n All exercises already have GIFs!');
     await getFinalStats();
     return;
   }
@@ -547,16 +547,16 @@ async function main() {
 
   // Final summary
   console.log('\n' + '='.repeat(60));
-  console.log('🎊 MISSION COMPLETE');
+  console.log(' MISSION COMPLETE');
   console.log('='.repeat(60));
-  console.log(`\n⬇️  Downloaded from ExerciseDB: ${downloaded} (failed: ${downloadFailed})`);
-  console.log(`🖼️  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
-  console.log(`☁️  Uploaded to Supabase: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
-  console.log(`📝 Updated database URLs: ${updatedUrls}`);
-  console.log(`\n🎯 FINAL RESULT: ${finalStats.withBoth}/${finalStats.total} exercises complete (${((finalStats.withBoth / finalStats.total) * 100).toFixed(1)}%)`);
+  console.log(`\n  Downloaded from ExerciseDB: ${downloaded} (failed: ${downloadFailed})`);
+  console.log(`=�  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
+  console.log(`  Uploaded to Supabase: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
+  console.log(`=� Updated database URLs: ${updatedUrls}`);
+  console.log(`\n FINAL RESULT: ${finalStats.withBoth}/${finalStats.total} exercises complete (${((finalStats.withBoth / finalStats.total) * 100).toFixed(1)}%)`);
 
   if (finalStats.withNeither.length > 0) {
-    console.log(`\n⚠️  Note: ${finalStats.withNeither.length} exercises still missing (likely no external_id in database)`);
+    console.log(`\n�  Note: ${finalStats.withNeither.length} exercises still missing (likely no external_id in database)`);
   }
 
   // #region agent log

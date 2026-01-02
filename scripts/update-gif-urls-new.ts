@@ -10,7 +10,7 @@ const supabase = createClient(
 );
 
 async function updateGifUrls() {
-  console.log('🔄 Updating GIF URLs in database...\n');
+  console.log('= Updating GIF URLs in database...\n');
   
   // Load the mapping file
   const mapping = JSON.parse(
@@ -61,7 +61,7 @@ async function updateGifUrls() {
   console.log('='.repeat(60));
   console.log(`Updated: ${updated}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n📊 Total exercises with GIFs: ${count}\n`);
+  console.log(`\n=� Total exercises with GIFs: ${count}\n`);
 }
 
 updateGifUrls();

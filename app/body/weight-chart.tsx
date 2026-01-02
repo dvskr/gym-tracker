@@ -445,10 +445,10 @@ export default function WeightChartScreen() {
               <View style={styles.insightContainer}>
                 <Text style={styles.insightText}>
                   {stats.weeklyRate === 0
-                    ? "ðŸ“Š Your weight has been stable"
+                    ? "�x` Your weight has been stable"
                     : stats.weeklyRate > 0
-                    ? `ðŸ“ˆ You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
-                    : `ðŸ“‰ You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
+                    ? `�x� You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
+                    : `�x0 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
                 </Text>
               </View>
             </View>

@@ -32,10 +32,10 @@ class TabDataCache {
     if (this.isValid(key, duration)) {
       const entry = this.cache.get(key);
       const age = Math.round((Date.now() - entry!.lastFetched) / 1000);
-      logger.log(`[Cache] âœ“ ${key} hit (age: ${age}s)`);
+      logger.log(`[Cache] �S ${key} hit (age: ${age}s)`);
       return entry!.data;
     }
-    logger.log(`[Cache] âœ— ${key} miss`);
+    logger.log(`[Cache] �S ${key} miss`);
     return null;
   }
 
@@ -47,7 +47,7 @@ class TabDataCache {
       lastFetched: Date.now(),
       data,
     });
-    logger.log(`[Cache] âœŽ ${key} stored`);
+    logger.log(`[Cache] �S} ${key} stored`);
   }
 
   /**
@@ -55,7 +55,7 @@ class TabDataCache {
    */
   invalidate(key: string): void {
     this.cache.delete(key);
-    logger.log(`[Cache] âœ— ${key} invalidated`);
+    logger.log(`[Cache] �S ${key} invalidated`);
   }
 
   /**
@@ -63,7 +63,7 @@ class TabDataCache {
    */
   clear(): void {
     this.cache.clear();
-    logger.log('[Cache] âœ— All cleared');
+    logger.log('[Cache] �S All cleared');
   }
 
   /**

@@ -49,7 +49,7 @@ export function cleanExerciseName(name: string): string {
   return name
     .replace(/\*\*/g, '')        // Remove bold markdown
     .replace(/^\d+\.\s*/, '')    // Remove numbered prefix (1. )
-    .replace(/^[-â€¢*]\s*/, '')    // Remove bullet prefix (- or â€¢ or *)
+    .replace(/^[-•*]\s*/, '')    // Remove bullet prefix (- or • or *)
     .replace(/\s+/g, ' ')        // Normalize whitespace
     .trim();
 }

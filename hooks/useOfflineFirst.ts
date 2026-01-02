@@ -105,7 +105,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
       await localDB.setLastSyncTime(storageKey, now);
       setLastSyncTime(now);
       
-      logger.log(`âœ… Synced ${storageKey}: ${cloudData.length} items from cloud`);
+      logger.log(`�S& Synced ${storageKey}: ${cloudData.length} items from cloud`);
     } catch (err) {
       logger.error(`Error fetching from cloud (${storageKey}):`, err);
       setError(err as Error);
@@ -159,7 +159,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
   // Handle reconnection
   useEffect(() => {
     if (isOnline && wasOffline && refetchOnReconnect) {
-      logger.log('ðŸ“¡ Reconnected - syncing data...');
+      logger.log('�x� Reconnected - syncing data...');
       refetchFromCloud();
     }
     setWasOffline(!isOnline);

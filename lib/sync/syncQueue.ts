@@ -23,7 +23,7 @@ class SyncQueue {
       return;
     }
 
-    logger.log('ðŸ”„ Starting auto-sync...');
+    logger.log('�x Starting auto-sync...');
     
     // Sync immediately
     this.syncAll();
@@ -41,7 +41,7 @@ class SyncQueue {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      logger.log('â¸ï¸ Auto-sync stopped');
+      logger.log('⏸��� Auto-sync stopped');
     }
   }
 
@@ -66,11 +66,11 @@ class SyncQueue {
       const queue = await localDB.getSyncQueue();
       
       if (queue.length === 0) {
-        logger.log('âœ… Sync queue is empty');
+        logger.log('�S& Sync queue is empty');
         return result;
       }
 
-      logger.log(`ðŸ”„ Syncing ${queue.length} operation(s)...`);
+      logger.log(`�x Syncing ${queue.length} operation(s)...`);
 
       // Process each operation
       for (const operation of queue) {
@@ -104,7 +104,7 @@ class SyncQueue {
         }
       }
 
-      logger.log(`âœ… Sync complete: ${result.synced} synced, ${result.failed} failed`);
+      logger.log(`�S& Sync complete: ${result.synced} synced, ${result.failed} failed`);
     } catch (error) {
       logger.error('Error during sync:', error);
       result.success = false;
@@ -151,7 +151,7 @@ class SyncQueue {
       throw new Error(`Failed to create in ${table}: ${error.message}`);
     }
 
-    logger.log(`âœ… Created in ${table}: ${data.id}`);
+    logger.log(`�S& Created in ${table}: ${data.id}`);
   }
 
   /**
@@ -169,7 +169,7 @@ class SyncQueue {
       throw new Error(`Failed to update in ${table}: ${error.message}`);
     }
 
-    logger.log(`âœ… Updated in ${table}: ${id}`);
+    logger.log(`�S& Updated in ${table}: ${id}`);
   }
 
   /**
@@ -182,7 +182,7 @@ class SyncQueue {
       throw new Error(`Failed to delete from ${table}: ${error.message}`);
     }
 
-    logger.log(`âœ… Deleted from ${table}: ${id}`);
+    logger.log(`�S& Deleted from ${table}: ${id}`);
   }
 
   /**
@@ -261,7 +261,7 @@ class SyncQueue {
       return { success: true, synced: 0, failed: 0, errors: [] };
     }
 
-    logger.log(`ðŸ”„ Retrying ${failed.length} failed operation(s)...`);
+    logger.log(`�x Retrying ${failed.length} failed operation(s)...`);
 
     const result: SyncResult = {
       success: true,

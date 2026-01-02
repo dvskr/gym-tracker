@@ -9,7 +9,7 @@ const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function checkThumbnails() {
-  console.log('📂 Checking exercise-thumbnails bucket...\n');
+  console.log('=� Checking exercise-thumbnails bucket...\n');
   
   const { data: thumbnails, error } = await supabase.storage
     .from('exercise-thumbnails')
@@ -46,7 +46,7 @@ async function checkThumbnails() {
   const names = pngFiles.map(f => f.name);
   const uniqueNames = new Set(names);
   if (names.length !== uniqueNames.size) {
-    console.log('\n⚠️ DUPLICATE FILES DETECTED!');
+    console.log('\n� DUPLICATE FILES DETECTED!');
   }
 }
 

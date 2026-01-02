@@ -195,7 +195,7 @@ export function PlateauAlerts() {
 
             <Text style={styles.alertText}>
               No progress for {plateau.weeksStalled} week{plateau.weeksStalled > 1 ? 's' : ''} at{' '}
-              {plateau.lastWeight}lbs Ã— {plateau.lastReps} reps
+              {plateau.lastWeight}lbs × {plateau.lastReps} reps
             </Text>
 
             <View style={styles.quickTip}>
@@ -248,7 +248,7 @@ export function PlateauAlerts() {
                   <View style={styles.modalStat}>
                     <Text style={styles.modalStatLabel}>Current Max</Text>
                     <Text style={styles.modalStatValue}>
-                      {selectedPlateau.lastWeight}lbs Ã— {selectedPlateau.lastReps}
+                      {selectedPlateau.lastWeight}lbs × {selectedPlateau.lastReps}
                     </Text>
                   </View>
                 </View>

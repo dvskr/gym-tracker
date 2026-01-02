@@ -13,7 +13,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 const LOCAL_GIFS_DIR = path.join(__dirname, '..', 'exercise-gifs');
 
 async function checkMissingGifs() {
-  console.log('🔍 Checking if Missing GIFs Exist Locally\n');
+  console.log('= Checking if Missing GIFs Exist Locally\n');
   console.log('═'.repeat(80));
 
   // Load the broken exercises data
@@ -50,7 +50,7 @@ async function checkMissingGifs() {
     }
   }
 
-  console.log('📊 RESULTS:');
+  console.log('=� RESULTS:');
   console.log('═'.repeat(80));
   console.log(`✅ Found locally: ${found.length}`);
   console.log(`❌ Missing locally: ${missing.length}`);
@@ -79,7 +79,7 @@ async function checkMissingGifs() {
   // Check exercises with NULL external_id
   const withoutExternalId = brokenExercises.filter((ex: any) => !ex.external_id);
   if (withoutExternalId.length > 0) {
-    console.log('⚠️  EXERCISES WITHOUT external_id (need manual GIF sourcing):');
+    console.log('�  EXERCISES WITHOUT external_id (need manual GIF sourcing):');
     console.log('═'.repeat(80));
     withoutExternalId.forEach((ex: any) => {
       console.log(`${ex.name}`);
@@ -97,7 +97,7 @@ async function checkMissingGifs() {
   console.log('✅ Upload list saved to scripts/gifs-to-upload.json\n');
 
   // Summary
-  console.log('📋 SUMMARY:');
+  console.log('=� SUMMARY:');
   console.log('═'.repeat(80));
   console.log(`Total broken exercises: ${brokenExercises.length}`);
   console.log(`  - Have external_id: ${withExternalId.length}`);

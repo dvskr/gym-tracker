@@ -16,7 +16,7 @@ async function countGifs() {
   const gifs = files?.filter(f => f.name.endsWith('.gif')) || [];
   
   console.log('');
-  console.log('📦 SUPABASE STORAGE: exercise-gifs bucket');
+  console.log('=� SUPABASE STORAGE: exercise-gifs bucket');
   console.log('═'.repeat(50));
   console.log('Total GIF files:', gifs.length);
   console.log('');

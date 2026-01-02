@@ -14,7 +14,7 @@ const THUMBNAIL_DIR = 'exercise-thumbnails';
 const BUCKET_NAME = 'exercise-thumbnails';
 
 async function uploadThumbnails() {
-  console.log('📤 Uploading 373 thumbnails to Supabase (replacing old ones)...\n');
+  console.log('=� Uploading 373 thumbnails to Supabase (replacing old ones)...\n');
   
   // Check if bucket exists, create if not
   const { data: buckets } = await supabase.storage.listBuckets();
@@ -84,7 +84,7 @@ async function uploadThumbnails() {
   console.log('='.repeat(60));
   console.log(`Uploaded: ${uploaded}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n📊 Total in Supabase: ${uploaded} thumbnails`);
+  console.log(`\n=� Total in Supabase: ${uploaded} thumbnails`);
   
   // Calculate actual size based on new thumbnail size
   const totalSize = thumbnailFiles.reduce((sum, file) => {
@@ -92,14 +92,14 @@ async function uploadThumbnails() {
     return sum + stats.size;
   }, 0);
   
-  console.log(`💾 Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
-  console.log(`📊 Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail\n`);
+  console.log(`=� Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
+  console.log(`=� Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail\n`);
   
   // Show sample URLs
   if (uploaded > 0) {
     const sampleFile = thumbnailFiles[0];
     const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!.replace('https://', '');
-    console.log('📎 Sample thumbnail URL:');
+    console.log('=� Sample thumbnail URL:');
     console.log(`https://${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/${sampleFile}\n`);
   }
 }

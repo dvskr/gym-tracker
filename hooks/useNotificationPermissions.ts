@@ -70,10 +70,10 @@ export function useNotificationPermissions(): NotificationPermissions {
       setStatus(newStatus as NotificationPermissionStatus);
       
       if (newStatus === 'granted') {
-        logger.log('âœ… Notification permissions granted');
+        logger.log('�S& Notification permissions granted');
         return true;
       } else {
-        logger.log('âŒ Notification permissions denied');
+        logger.log('�R Notification permissions denied');
         return false;
       }
     } catch (error) {

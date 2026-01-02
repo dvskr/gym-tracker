@@ -7,7 +7,7 @@ const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || process.env.EXPO_PUBLIC_EXERCIS
 const RAPIDAPI_HOST = 'exercisedb.p.rapidapi.com';
 
 async function testAPI() {
-  console.log('🧪 Testing ExerciseDB API\n');
+  console.log('>� Testing ExerciseDB API\n');
   console.log(`API Key: ${RAPIDAPI_KEY.substring(0, 10)}...`);
   console.log(`API Host: ${RAPIDAPI_HOST}\n`);
 

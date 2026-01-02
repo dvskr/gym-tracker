@@ -14,7 +14,7 @@ const GIF_DIR = 'exercise-gifs';
 const BUCKET_NAME = 'exercise-gifs';
 
 async function fixGifUrls() {
-  console.log('🔧 Fixing gif_url fields in database...\n');
+  console.log('=' Fixing gif_url fields in database...\n');
 
   // Get all GIF files from local directory
   const gifFiles = fs.readdirSync(GIF_DIR).filter(f => f.endsWith('.gif'));
@@ -89,7 +89,7 @@ async function fixGifUrls() {
     // Check if this file exists in storage
     const fileExists = storageFiles.some(f => f.name === filename);
     if (!fileExists) {
-      console.log(`⚠️ ${exercise.name}: GIF file not found in storage (${filename})`);
+      console.log(`� ${exercise.name}: GIF file not found in storage (${filename})`);
       skipped++;
       continue;
     }
@@ -123,7 +123,7 @@ async function fixGifUrls() {
   console.log(`Updated: ${updated}`);
   console.log(`Skipped: ${skipped} (no external_id or no mapping)`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n📊 Exercises with GIFs: ${updated}/${exercises.length}\n`);
+  console.log(`\n=� Exercises with GIFs: ${updated}/${exercises.length}\n`);
 
   // Verify the fix
   const { count } = await supabase

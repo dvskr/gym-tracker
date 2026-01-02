@@ -42,7 +42,7 @@ class NotificationAnalyticsService {
       const trimmed = events.slice(-this.MAX_EVENTS);
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
       
-      logger.log(`ðŸ“Š Tracked ${event.type} event for ${event.notificationType}`);
+      logger.log(`�x` Tracked ${event.type} event for ${event.notificationType}`);
       
       // Sync to server (async, don't wait)
       this.syncToServer(event).catch(error => {
@@ -204,7 +204,7 @@ class NotificationAnalyticsService {
    */
   async clearAnalytics(): Promise<void> {
     await AsyncStorage.removeItem(this.STORAGE_KEY);
-    logger.log('ðŸ—‘ï¸ Notification analytics cleared');
+    logger.log('�x️ Notification analytics cleared');
   }
 
   /**
@@ -240,7 +240,7 @@ class NotificationAnalyticsService {
         created_at: event.timestamp,
       });
       
-      logger.log('âœ… Synced notification event to server');
+      logger.log('�S& Synced notification event to server');
     } catch (error) {
       // Silent fail - analytics shouldn't break the app
       logger.warn('Failed to sync notification event to server:', error);

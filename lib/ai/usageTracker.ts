@@ -164,7 +164,7 @@ class AIUsageTracker {
     const stats = await this.getUsage();
 
     if (level === 'critical') {
-      return `âš ï¸ You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
+      return `�a���� You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
     } else if (level === 'warning') {
       return `You've used ${stats.percentUsed}% of your monthly AI limit`;
     }
@@ -193,7 +193,7 @@ class AIUsageTracker {
       lastReset.getMonth() !== now.getMonth() || lastReset.getFullYear() !== now.getFullYear();
 
     if (isDifferentMonth) {
-      logger.log('ðŸ“… New month detected, resetting AI usage stats');
+      logger.log('�x& New month detected, resetting AI usage stats');
       await this.reset();
     }
   }

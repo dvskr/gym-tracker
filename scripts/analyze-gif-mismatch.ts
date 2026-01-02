@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function analyzeGifMismatch() {
-  console.log('🔍 Analyzing GIF URL Mismatch...\n');
+  console.log('= Analyzing GIF URL Mismatch...\n');
 
   // Get sample of broken exercises
   const brokenExerciseNames = [
@@ -26,7 +26,7 @@ async function analyzeGifMismatch() {
   ];
 
   // Step 1: Get database gif_url for these exercises
-  console.log('📊 STEP 1: Database gif_url Values');
+  console.log('=� STEP 1: Database gif_url Values');
   console.log('═'.repeat(80));
   
   const { data: exercises } = await supabase
@@ -45,7 +45,7 @@ async function analyzeGifMismatch() {
   });
 
   // Step 2: Get all files in storage
-  console.log('\n📂 STEP 2: Listing Files in Storage');
+  console.log('\n=� STEP 2: Listing Files in Storage');
   console.log('═'.repeat(80));
   
   const { data: allFiles } = await supabase.storage
@@ -59,7 +59,7 @@ async function analyzeGifMismatch() {
   const storageFileMap = new Map(gifFiles.map(f => [f.name, f]));
 
   // Step 3: Try to find matching files
-  console.log('\n🔎 STEP 3: Searching for Potential Matches');
+  console.log('\n= STEP 3: Searching for Potential Matches');
   console.log('═'.repeat(80));
   
   exercises?.forEach(ex => {
@@ -87,7 +87,7 @@ async function analyzeGifMismatch() {
   });
 
   // Step 4: Sample of actual storage filenames
-  console.log('\n\n📝 STEP 4: Sample of Actual Storage Filenames (first 30)');
+  console.log('\n\n=� STEP 4: Sample of Actual Storage Filenames (first 30)');
   console.log('═'.repeat(80));
   
   gifFiles.slice(0, 30).forEach((f, i) => {
@@ -95,7 +95,7 @@ async function analyzeGifMismatch() {
   });
 
   // Step 5: Check filename patterns
-  console.log('\n\n🔢 STEP 5: Filename Pattern Analysis');
+  console.log('\n\n=" STEP 5: Filename Pattern Analysis');
   console.log('═'.repeat(80));
   
   const numericFiles = gifFiles.filter(f => /^\d+\.gif$/.test(f.name));
@@ -115,7 +115,7 @@ async function analyzeGifMismatch() {
   }
 
   // Step 6: Check what database expects vs what exists
-  console.log('\n\n📊 STEP 6: Summary');
+  console.log('\n\n=� STEP 6: Summary');
   console.log('═'.repeat(80));
   
   const { data: allActiveExercises } = await supabase

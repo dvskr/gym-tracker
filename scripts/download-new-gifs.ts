@@ -15,7 +15,7 @@ const supabase = createClient(
 const OUTPUT_DIR = 'exercise-gifs';
 
 async function downloadNewGifs() {
-  console.log('📥 Downloading GIFs for 29 new exercises...\n');
+  console.log('=� Downloading GIFs for 29 new exercises...\n');
   
   // Load the mapping file
   const mapping = JSON.parse(
@@ -47,7 +47,7 @@ async function downloadNewGifs() {
       
       // Check if already exists
       if (fs.existsSync(filepath)) {
-        console.log(`⏭️  ${exercise.name} - already exists`);
+        console.log(`�  ${exercise.name} - already exists`);
         skipped++;
         continue;
       }
@@ -95,7 +95,7 @@ async function downloadNewGifs() {
   console.log(`Downloaded: ${downloaded}`);
   console.log(`Failed: ${failed}`);
   console.log(`Skipped: ${skipped}`);
-  console.log(`\n📊 Local GIFs: ${downloaded + skipped} new + 344 existing = ${344 + downloaded + skipped} total\n`);
+  console.log(`\n=� Local GIFs: ${downloaded + skipped} new + 344 existing = ${344 + downloaded + skipped} total\n`);
 }
 
 downloadNewGifs();

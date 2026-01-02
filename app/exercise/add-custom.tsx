@@ -159,7 +159,7 @@ export default function AddCustomExerciseScreen() {
       if (error) throw error;
 
       Alert.alert(
-        'Success! ðŸŽ‰',
+        'Success! �x}0',
         'Your custom exercise has been added and is ready to use!',
         [
           {

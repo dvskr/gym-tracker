@@ -363,7 +363,7 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
       <View style={styles.goalFooter}>
         <Text style={styles.goalRemaining}>
-          {progress.remaining === 0 ? 'ðŸŽ‰ Goal reached!' : `${remaining} ${weightUnit} to go`}
+          {progress.remaining === 0 ? '�x}0 Goal reached!' : `${remaining} ${weightUnit} to go`}
         </Text>
         <Text style={styles.goalTarget}>Target: {targetWeight} {weightUnit}</Text>
       </View>

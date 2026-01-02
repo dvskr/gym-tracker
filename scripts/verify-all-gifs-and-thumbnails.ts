@@ -34,12 +34,12 @@ async function checkUrlExists(url: string): Promise<boolean> {
 }
 
 async function main() {
-  console.log('🔍 COMPREHENSIVE GIF & THUMBNAIL VERIFICATION');
+  console.log('= COMPREHENSIVE GIF & THUMBNAIL VERIFICATION');
   console.log('═'.repeat(60));
   console.log('');
 
   // Step 1: Get all exercises with GIFs
-  console.log('📊 Step 1: Fetching exercises from database...');
+  console.log('=� Step 1: Fetching exercises from database...');
   const { data: exercises, error } = await supabase
     .from('exercises')
     .select('id, name, gif_url, thumbnail_url')
@@ -55,7 +55,7 @@ async function main() {
   console.log(`✅ Found ${exercises.length} exercises with GIF URLs\n`);
 
   // Step 2: Check Supabase storage for actual files
-  console.log('📦 Step 2: Checking Supabase storage...');
+  console.log('=� Step 2: Checking Supabase storage...');
   
   const { data: gifFiles } = await supabase.storage
     .from('exercise-gifs')
@@ -72,7 +72,7 @@ async function main() {
   console.log(`   Thumbnails in storage: ${thumbnailSet.size}\n`);
 
   // Step 3: Verify each exercise
-  console.log('🔎 Step 3: Verifying each exercise...\n');
+  console.log('= Step 3: Verifying each exercise...\n');
 
   const issues: string[] = [];
   const missingThumbnails: Exercise[] = [];
@@ -124,14 +124,14 @@ async function main() {
 
   // Step 4: Report results
   console.log('\n' + '═'.repeat(60));
-  console.log('📊 VERIFICATION RESULTS');
+  console.log('=� VERIFICATION RESULTS');
   console.log('═'.repeat(60));
   console.log(`✅ Perfectly verified: ${verified}/${exercises.length}`);
   console.log(`❌ Issues found: ${issues.length}`);
   console.log('');
 
   if (issues.length > 0) {
-    console.log('⚠️  ISSUES DETECTED:\n');
+    console.log('�  ISSUES DETECTED:\n');
     
     if (brokenGifs.length > 0) {
       console.log(`❌ Missing GIF files in storage: ${brokenGifs.length}`);
@@ -167,12 +167,12 @@ async function main() {
       console.log('');
     }
   } else {
-    console.log('🎉 PERFECT! All exercises have working GIFs and thumbnails!');
+    console.log(' PERFECT! All exercises have working GIFs and thumbnails!');
   }
 
   // Step 5: Check for orphaned files
   console.log('═'.repeat(60));
-  console.log('🔍 Checking for orphaned files...\n');
+  console.log('= Checking for orphaned files...\n');
 
   const exerciseIds = new Set(exercises.map(ex => ex.id));
   const orphanedGifs = Array.from(gifSet).filter(filename => {
@@ -185,42 +185,42 @@ async function main() {
     return !exerciseIds.has(id);
   });
 
-  console.log(`📦 Orphaned GIF files: ${orphanedGifs.length}`);
+  console.log(`=� Orphaned GIF files: ${orphanedGifs.length}`);
   if (orphanedGifs.length > 0 && orphanedGifs.length <= 20) {
     orphanedGifs.forEach(f => console.log(`   - ${f}`));
   }
 
-  console.log(`📦 Orphaned thumbnail files: ${orphanedThumbnails.length}`);
+  console.log(`=� Orphaned thumbnail files: ${orphanedThumbnails.length}`);
   if (orphanedThumbnails.length > 0 && orphanedThumbnails.length <= 20) {
     orphanedThumbnails.forEach(f => console.log(`   - ${f}`));
   }
 
   // Step 6: Recommendations
   console.log('\n' + '═'.repeat(60));
-  console.log('📋 RECOMMENDATIONS');
+  console.log('=� RECOMMENDATIONS');
   console.log('═'.repeat(60));
 
   if (missingThumbnailUrls.length > 0 || missingThumbnails.length > 0) {
-    console.log('🔧 Fix missing thumbnails:');
+    console.log('=' Fix missing thumbnails:');
     console.log('   npm run thumbnails:generate');
     console.log('');
   }
 
   if (brokenGifs.length > 0) {
-    console.log('🔧 Re-download broken GIFs:');
+    console.log('=' Re-download broken GIFs:');
     console.log('   (Manual investigation required)');
     console.log('');
   }
 
   if (orphanedGifs.length > 0 || orphanedThumbnails.length > 0) {
-    console.log('🧹 Clean up orphaned files:');
+    console.log('>� Clean up orphaned files:');
     console.log('   npm run storage:cleanup');
     console.log('');
   }
 
   // Final summary
   console.log('═'.repeat(60));
-  console.log('📈 FINAL STATUS');
+  console.log('=� FINAL STATUS');
   console.log('═'.repeat(60));
   console.log(`Total exercises checked: ${exercises.length}`);
   console.log(`Fully working: ${verified} (${((verified / exercises.length) * 100).toFixed(1)}%)`);
@@ -228,9 +228,9 @@ async function main() {
   console.log('');
 
   if (verified === exercises.length) {
-    console.log('🎉🎉🎉 PERFECT SCORE! Everything is working! 🎉🎉🎉');
+    console.log(' PERFECT SCORE! Everything is working! ');
   } else {
-    console.log('⚠️  Some issues need to be fixed.');
+    console.log('�  Some issues need to be fixed.');
   }
 }
 

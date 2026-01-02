@@ -129,10 +129,10 @@ export function getStreakMessage(currentStreak: number): string {
   if (currentStreak === 0) return "Start your streak today!";
   if (currentStreak === 1) return "1 day - Keep it going!";
   if (currentStreak < 7) return `${currentStreak} days - Building momentum!`;
-  if (currentStreak < 14) return `${currentStreak} days - Week warrior! 🔥`;
-  if (currentStreak < 30) return `${currentStreak} days - On fire! 🔥🔥`;
-  if (currentStreak < 60) return `${currentStreak} days - Unstoppable! 🔥🔥🔥`;
-  return `${currentStreak} days - LEGENDARY! 👑`;
+  if (currentStreak < 14) return `${currentStreak} days - Week warrior! =%`;
+  if (currentStreak < 30) return `${currentStreak} days - On fire! =%=%`;
+  if (currentStreak < 60) return `${currentStreak} days - Unstoppable! =%=%=%`;
+  return `${currentStreak} days - LEGENDARY! =Q`;
 }
 
 /**

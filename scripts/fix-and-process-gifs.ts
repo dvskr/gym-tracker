@@ -56,7 +56,7 @@ interface Exercise {
 }
 
 async function fixMalformedUrls(): Promise<number> {
-  console.log('\n🔧 STEP 1: Fixing malformed URLs in database...');
+  console.log('\n=' STEP 1: Fixing malformed URLs in database...');
   
   // #region agent log
   debugLog('fix-and-process.ts:fixUrls:start', 'Starting URL fix', {}, 'H2');
@@ -164,7 +164,7 @@ function downloadFile(url: string, outputPath: string): Promise<boolean> {
 }
 
 async function downloadMissingGifs(): Promise<{ downloaded: number; failed: number }> {
-  console.log('\n⬇️  STEP 2: Downloading missing GIFs...');
+  console.log('\n  STEP 2: Downloading missing GIFs...');
   
   // #region agent log
   debugLog('fix-and-process.ts:download:start', 'Starting GIF downloads', {}, 'H2');
@@ -246,7 +246,7 @@ async function downloadMissingGifs(): Promise<{ downloaded: number; failed: numb
 }
 
 async function generateThumbnails(): Promise<{ generated: number; skipped: number; failed: number }> {
-  console.log('\n🖼️  STEP 3: Generating 216px thumbnails with Sharp...');
+  console.log('\n=�  STEP 3: Generating 216px thumbnails with Sharp...');
   
   // #region agent log
   debugLog('fix-and-process.ts:thumbnails:start', 'Starting thumbnail generation', {}, 'H4');
@@ -312,14 +312,14 @@ async function generateThumbnails(): Promise<{ generated: number; skipped: numbe
   // #endregion
 
   console.log(`\n  ✅ Generated: ${generated}`);
-  console.log(`  ⏭️  Skipped (exists): ${skipped}`);
+  console.log(`  �  Skipped (exists): ${skipped}`);
   console.log(`  ❌ Failed: ${failed}`);
 
   return { generated, skipped, failed };
 }
 
 async function uploadToSupabase(): Promise<{ gifs: number; thumbnails: number }> {
-  console.log('\n☁️  STEP 4: Uploading to Supabase Storage...');
+  console.log('\n  STEP 4: Uploading to Supabase Storage...');
   
   // #region agent log
   debugLog('fix-and-process.ts:upload:start', 'Starting Supabase upload', {}, 'H5');
@@ -403,7 +403,7 @@ async function uploadToSupabase(): Promise<{ gifs: number; thumbnails: number }>
 }
 
 async function updateDatabaseUrls(): Promise<number> {
-  console.log('\n📝 STEP 5: Updating database URLs...');
+  console.log('\n=� STEP 5: Updating database URLs...');
   
   // #region agent log
   debugLog('fix-and-process.ts:updateUrls:start', 'Starting database URL update', {}, 'H5');
@@ -474,7 +474,7 @@ async function updateDatabaseUrls(): Promise<number> {
 }
 
 async function main() {
-  console.log('🚀 GIF PIPELINE: Fix, Download, Process & Upload\n');
+  console.log('=� GIF PIPELINE: Fix, Download, Process & Upload\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -498,13 +498,13 @@ async function main() {
 
   // Final summary
   console.log('\n' + '='.repeat(60));
-  console.log('📊 FINAL SUMMARY');
+  console.log('=� FINAL SUMMARY');
   console.log('='.repeat(60));
-  console.log(`\n🔧 Fixed malformed URLs: ${fixedUrls}`);
-  console.log(`⬇️  Downloaded GIFs: ${downloaded} (failed: ${downloadFailed})`);
-  console.log(`🖼️  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
-  console.log(`☁️  Uploaded to Supabase: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
-  console.log(`📝 Updated database URLs: ${updatedUrls}`);
+  console.log(`\n=' Fixed malformed URLs: ${fixedUrls}`);
+  console.log(`  Downloaded GIFs: ${downloaded} (failed: ${downloadFailed})`);
+  console.log(`=�  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
+  console.log(`  Uploaded to Supabase: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
+  console.log(`=� Updated database URLs: ${updatedUrls}`);
 
   // #region agent log
   debugLog('fix-and-process.ts:main:complete', 'Pipeline complete', {

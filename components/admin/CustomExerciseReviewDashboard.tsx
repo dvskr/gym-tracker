@@ -137,7 +137,7 @@ export default function AdminReviewDashboard() {
       await supabase.from('notifications').insert({
         user_id: exercise.user_id,
         type: 'exercise_approved',
-        title: 'ðŸŽ‰ Your Exercise Was Added!',
+        title: '�x}0 Your Exercise Was Added!',
         message: `Your custom exercise "${exercise.name}" has been approved and added to the exercise library. Thank you for contributing!`,
         data: {
           exercise_id: newExercise.id,
@@ -146,7 +146,7 @@ export default function AdminReviewDashboard() {
         is_read: false,
       });
 
-      alert(`âœ… "${exercise.name}" has been added to the library!`);
+      alert(`�S& "${exercise.name}" has been added to the library!`);
       setReviewNotes('');
       loadExercises();
     } catch (error: any) {
@@ -323,14 +323,14 @@ export default function AdminReviewDashboard() {
                     </div>
 
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-400">
-                      <span className="capitalize">ðŸ“¦ {exercise.equipment}</span>
-                      <span className="capitalize">ðŸŽ¯ {exercise.category}</span>
-                      <span>ðŸ’ª {exercise.primary_muscles.join(', ')}</span>
+                      <span className="capitalize">�x� {exercise.equipment}</span>
+                      <span className="capitalize">�x}� {exercise.category}</span>
+                      <span>�x� {exercise.primary_muscles.join(', ')}</span>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
                         {exercise.unique_users_count} user{exercise.unique_users_count !== 1 ? 's' : ''}
                       </span>
-                      <span>ðŸ” Used {exercise.times_used}x</span>
+                      <span>�x� Used {exercise.times_used}x</span>
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
                         {new Date(exercise.created_at).toLocaleDateString()}

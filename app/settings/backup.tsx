@@ -179,7 +179,7 @@ export default function BackupScreen() {
       if (result.success) {
         Alert.alert(
           'Restore Complete!',
-          `âœ… Restored ${result.itemsRestored} items\nðŸ“Š Tables: ${result.tablesRestored.join(', ')}`,
+          `�S& Restored ${result.itemsRestored} items\n�x` Tables: ${result.tablesRestored.join(', ')}`,
           [
             {
               text: 'OK',
@@ -193,7 +193,7 @@ export default function BackupScreen() {
       } else {
         Alert.alert(
           'Restore Completed with Errors',
-          `âœ… ${result.itemsRestored} items restored\nâŒ ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
+          `�S& ${result.itemsRestored} items restored\n�R ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
           [
             {
               text: 'View Details',
@@ -492,12 +492,12 @@ export default function BackupScreen() {
             <View style={styles.infoTextContainer}>
               <Text style={styles.infoTitle}>What's included in backups?</Text>
               <Text style={styles.infoText}>
-                â€¢ All workout history and sets{'\n'}
-                â€¢ Workout templates{'\n'}
-                â€¢ Body weight and measurements{'\n'}
-                â€¢ Personal records{'\n'}
-                â€¢ Custom exercises{'\n'}
-                â€¢ App settings
+                • All workout history and sets{'\n'}
+                • Workout templates{'\n'}
+                • Body weight and measurements{'\n'}
+                • Personal records{'\n'}
+                • Custom exercises{'\n'}
+                • App settings
               </Text>
             </View>
           </View>
@@ -507,10 +507,10 @@ export default function BackupScreen() {
             <View style={styles.infoTextContainer}>
               <Text style={[styles.infoTitle, styles.infoTitleWarning]}>Important Notes</Text>
               <Text style={styles.infoText}>
-                â€¢ Backups are stored securely in the cloud{'\n'}
-                â€¢ Restoring will overwrite current data{'\n'}
-                â€¢ Keep backups for data safety{'\n'}
-                â€¢ Download backups for offline storage
+                • Backups are stored securely in the cloud{'\n'}
+                • Restoring will overwrite current data{'\n'}
+                • Keep backups for data safety{'\n'}
+                • Download backups for offline storage
               </Text>
             </View>
           </View>

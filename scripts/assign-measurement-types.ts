@@ -100,7 +100,7 @@ const detectMeasurementType = (exercise: any): MeasurementType => {
 };
 
 async function assignMeasurementTypes() {
-  console.log('🔄 Assigning measurement types to all exercises...\n');
+  console.log('= Assigning measurement types to all exercises...\n');
   
   const { data: exercises, error } = await supabase
     .from('exercises')
@@ -150,15 +150,15 @@ async function assignMeasurementTypes() {
   console.log('='.repeat(70));
   console.log(`\n✅ Updated: ${updated}/${exercises.length} exercises\n`);
   
-  console.log('📊 Breakdown by Type:\n');
-  console.log(`  🏋️  Reps + Weight: ${stats.reps_weight.length} exercises`);
-  console.log(`  ⏱️  Time Only: ${stats.time.length} exercises`);
-  console.log(`  🏃  Time + Distance: ${stats.time_distance.length} exercises`);
-  console.log(`  🚶  Time + Weight: ${stats.time_weight.length} exercises`);
-  console.log(`  💪  Reps Only: ${stats.reps_only.length} exercises`);
-  console.log(`  🤝  Assisted: ${stats.assisted.length} exercises`);
+  console.log('=� Breakdown by Type:\n');
+  console.log(`    Reps + Weight: ${stats.reps_weight.length} exercises`);
+  console.log(`  �  Time Only: ${stats.time.length} exercises`);
+  console.log(`    Time + Distance: ${stats.time_distance.length} exercises`);
+  console.log(`  =�  Time + Weight: ${stats.time_weight.length} exercises`);
+  console.log(`  =�  Reps Only: ${stats.reps_only.length} exercises`);
+  console.log(`  >  Assisted: ${stats.assisted.length} exercises`);
   
-  console.log('\n📋 Examples:\n');
+  console.log('\n=� Examples:\n');
   if (stats.time.length > 0) {
     console.log('  Time Only:', stats.time.slice(0, 5).join(', '));
   }

@@ -16,7 +16,7 @@ const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
 const THUMBNAIL_DIR = path.join(process.cwd(), 'exercise-thumbnails');
 
 async function updateExerciseUrls() {
-  console.log('📝 Updating exercise GIF and thumbnail URLs in database...\n');
+  console.log('=� Updating exercise GIF and thumbnail URLs in database...\n');
   
   // Get list of uploaded GIFs and thumbnails
   const uploadedGifs = new Set<string>();
@@ -34,7 +34,7 @@ async function updateExerciseUrls() {
       .forEach(f => uploadedThumbnails.add(f.toLowerCase()));
   }
   
-  console.log(`📁 Found ${uploadedGifs.size} GIFs and ${uploadedThumbnails.size} thumbnails locally\n`);
+  console.log(`=� Found ${uploadedGifs.size} GIFs and ${uploadedThumbnails.size} thumbnails locally\n`);
   
   // Fetch all exercises
   const { data: exercises, error } = await supabase
@@ -46,7 +46,7 @@ async function updateExerciseUrls() {
     throw new Error(`Failed to fetch exercises: ${error.message}`);
   }
   
-  console.log(`📋 Processing ${exercises?.length || 0} active exercises...\n`);
+  console.log(`=� Processing ${exercises?.length || 0} active exercises...\n`);
   
   let updated = 0;
   let skipped = 0;
@@ -115,17 +115,17 @@ async function updateExerciseUrls() {
   }
   
   console.log('\n\n' + '='.repeat(60));
-  console.log('📊 URL UPDATE SUMMARY');
+  console.log('=� URL UPDATE SUMMARY');
   console.log('='.repeat(60));
   console.log(`✅ Updated: ${updated} exercises`);
-  console.log(`⏭️  Skipped (no local GIF): ${skipped} exercises`);
+  console.log(`�  Skipped (no local GIF): ${skipped} exercises`);
   console.log(`❌ Errors: ${errors} exercises`);
   console.log('='.repeat(60));
   
   if (updated > 0) {
     console.log('\n✅ Database URLs successfully updated!');
-    console.log(`\n🔗 GIF URL format: ${supabaseUrl}/storage/v1/object/public/${GIF_BUCKET}/[filename]`);
-    console.log(`🔗 Thumbnail URL format: ${supabaseUrl}/storage/v1/object/public/${THUMBNAIL_BUCKET}/[filename]`);
+    console.log(`\n= GIF URL format: ${supabaseUrl}/storage/v1/object/public/${GIF_BUCKET}/[filename]`);
+    console.log(`= Thumbnail URL format: ${supabaseUrl}/storage/v1/object/public/${THUMBNAIL_BUCKET}/[filename]`);
   }
 }
 

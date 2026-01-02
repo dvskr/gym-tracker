@@ -18,7 +18,7 @@ interface Exercise {
 }
 
 async function verifyMeasurementTypes() {
-  console.log('🔍 Verifying measurement types for all exercises...\n');
+  console.log('= Verifying measurement types for all exercises...\n');
   
   // Get all active exercises
   const { data: exercises, error } = await supabase
@@ -53,16 +53,16 @@ async function verifyMeasurementTypes() {
   
   // Display statistics
   console.log('='.repeat(70));
-  console.log('📊 MEASUREMENT TYPE DISTRIBUTION');
+  console.log('=� MEASUREMENT TYPE DISTRIBUTION');
   console.log('='.repeat(70));
   console.log('');
   
-  console.log(`🏋️  Reps + Weight: ${grouped.reps_weight.length} exercises`);
-  console.log(`⏱️  Time Only: ${grouped.time.length} exercises`);
-  console.log(`🏃  Time + Distance: ${grouped.time_distance.length} exercises`);
-  console.log(`🚶  Time + Weight: ${grouped.time_weight.length} exercises`);
-  console.log(`💪  Reps Only: ${grouped.reps_only.length} exercises`);
-  console.log(`🤝  Assisted: ${grouped.assisted.length} exercises`);
+  console.log(`  Reps + Weight: ${grouped.reps_weight.length} exercises`);
+  console.log(`�  Time Only: ${grouped.time.length} exercises`);
+  console.log(`  Time + Distance: ${grouped.time_distance.length} exercises`);
+  console.log(`=�  Time + Weight: ${grouped.time_weight.length} exercises`);
+  console.log(`=�  Reps Only: ${grouped.reps_only.length} exercises`);
+  console.log(`>  Assisted: ${grouped.assisted.length} exercises`);
   if (grouped.null.length > 0) {
     console.log(`❌  No Type Assigned: ${grouped.null.length} exercises`);
   }
@@ -70,13 +70,13 @@ async function verifyMeasurementTypes() {
   
   // Show examples from each category
   console.log('='.repeat(70));
-  console.log('📋 EXAMPLES BY TYPE');
+  console.log('=� EXAMPLES BY TYPE');
   console.log('='.repeat(70));
   console.log('');
   
   // Time Only Examples
   if (grouped.time.length > 0) {
-    console.log(`⏱️  TIME ONLY (${grouped.time.length} total):`);
+    console.log(`�  TIME ONLY (${grouped.time.length} total):`);
     grouped.time.slice(0, 15).forEach(ex => {
       console.log(`   • ${ex.name} (${ex.equipment})`);
     });
@@ -88,7 +88,7 @@ async function verifyMeasurementTypes() {
   
   // Time + Distance Examples
   if (grouped.time_distance.length > 0) {
-    console.log(`🏃  TIME + DISTANCE (${grouped.time_distance.length} total):`);
+    console.log(`  TIME + DISTANCE (${grouped.time_distance.length} total):`);
     grouped.time_distance.forEach(ex => {
       console.log(`   • ${ex.name} (${ex.equipment})`);
     });
@@ -97,7 +97,7 @@ async function verifyMeasurementTypes() {
   
   // Time + Weight Examples
   if (grouped.time_weight.length > 0) {
-    console.log(`🚶  TIME + WEIGHT (${grouped.time_weight.length} total):`);
+    console.log(`=�  TIME + WEIGHT (${grouped.time_weight.length} total):`);
     grouped.time_weight.forEach(ex => {
       console.log(`   • ${ex.name} (${ex.equipment})`);
     });
@@ -106,7 +106,7 @@ async function verifyMeasurementTypes() {
   
   // Reps Only Examples
   if (grouped.reps_only.length > 0) {
-    console.log(`💪  REPS ONLY (${grouped.reps_only.length} total):`);
+    console.log(`=�  REPS ONLY (${grouped.reps_only.length} total):`);
     grouped.reps_only.slice(0, 15).forEach(ex => {
       console.log(`   • ${ex.name} (${ex.equipment})`);
     });
@@ -118,7 +118,7 @@ async function verifyMeasurementTypes() {
   
   // Assisted Examples
   if (grouped.assisted.length > 0) {
-    console.log(`🤝  ASSISTED (${grouped.assisted.length} total):`);
+    console.log(`>  ASSISTED (${grouped.assisted.length} total):`);
     grouped.assisted.forEach(ex => {
       console.log(`   • ${ex.name} (${ex.equipment})`);
     });
@@ -127,7 +127,7 @@ async function verifyMeasurementTypes() {
   
   // Potential Issues Detection
   console.log('='.repeat(70));
-  console.log('⚠️  POTENTIAL ISSUES TO REVIEW');
+  console.log('�  POTENTIAL ISSUES TO REVIEW');
   console.log('='.repeat(70));
   console.log('');
   
@@ -189,7 +189,7 @@ async function verifyMeasurementTypes() {
   );
   
   if (bodyweightWithWeight.length > 0) {
-    console.log(`⚠️  Bodyweight exercises using REPS+WEIGHT (${bodyweightWithWeight.length}):`);
+    console.log(`�  Bodyweight exercises using REPS+WEIGHT (${bodyweightWithWeight.length}):`);
     console.log(`   (These might be correct if user can add weight, review manually):`);
     bodyweightWithWeight.slice(0, 10).forEach(ex => {
       console.log(`   • ${ex.name}`);
@@ -220,9 +220,9 @@ async function verifyMeasurementTypes() {
     console.log('✅  All exercises have appropriate measurement types!');
     console.log('✅  No issues found - ready to implement UI!');
   } else {
-    console.log(`⚠️  Found ${issues.length} potential issues`);
+    console.log(`�  Found ${issues.length} potential issues`);
     console.log('');
-    console.log('📝  SQL Fix Script:');
+    console.log('=�  SQL Fix Script:');
     console.log('');
     console.log('-- Copy and run this in Supabase SQL Editor:');
     console.log('');
@@ -254,7 +254,7 @@ async function verifyMeasurementTypes() {
     JSON.stringify(report, null, 2)
   );
   
-  console.log('💾  Detailed report saved to: scripts/measurement-verification-report.json\n');
+  console.log('=�  Detailed report saved to: scripts/measurement-verification-report.json\n');
 }
 
 verifyMeasurementTypes();

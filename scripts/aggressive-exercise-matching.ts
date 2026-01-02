@@ -200,7 +200,7 @@ function findBestMatch(targetName: string, candidates: Exercise[]): { match: Exe
 }
 
 async function main() {
-  console.log('🔍 AGGRESSIVE EXERCISE MATCHING (WITH VARIATIONS)\n');
+  console.log('= AGGRESSIVE EXERCISE MATCHING (WITH VARIATIONS)\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -213,7 +213,7 @@ async function main() {
   }
 
   // Step 1: Get exercises without external_id
-  console.log('\n📋 STEP 1: Finding exercises without external_id...');
+  console.log('\n=� STEP 1: Finding exercises without external_id...');
   
   const { data: missingExercises, error } = await supabase
     .from('exercises')
@@ -235,7 +235,7 @@ async function main() {
   // #endregion
 
   // Step 2: Fetch ExerciseDB list
-  console.log('🌐 STEP 2: Fetching ExerciseDB exercise list...');
+  console.log('< STEP 2: Fetching ExerciseDB exercise list...');
   
   let exerciseDBList: Exercise[];
   try {
@@ -253,7 +253,7 @@ async function main() {
   // #endregion
 
   // Step 3: Match with variations
-  console.log('🔗 STEP 3: Matching with variations...\n');
+  console.log('= STEP 3: Matching with variations...\n');
   
   const matches: Array<{ 
     id: string; 
@@ -293,7 +293,7 @@ async function main() {
   // #endregion
 
   // Step 4: Update database (skip duplicates)
-  console.log(`\n📝 STEP 4: Updating database with ${matches.length} matches...\n`);
+  console.log(`\n=� STEP 4: Updating database with ${matches.length} matches...\n`);
   
   let updated = 0;
   let skipped = 0;
@@ -319,7 +319,7 @@ async function main() {
   }
 
   console.log(`\n  ✅ Successfully updated ${updated} exercises`);
-  if (skipped > 0) console.log(`  ⏭️  Skipped ${skipped} (duplicate external_id)`);
+  if (skipped > 0) console.log(`  �  Skipped ${skipped} (duplicate external_id)`);
   if (failed > 0) console.log(`  ❌ Failed ${failed}`);
 
   // #region agent log
@@ -332,16 +332,16 @@ async function main() {
 
   // Summary
   console.log('\n' + '='.repeat(60));
-  console.log('📊 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n✅ Matched: ${matches.length}`);
   console.log(`✅ Updated: ${updated}`);
-  console.log(`⏭️  Skipped (duplicates): ${skipped}`);
+  console.log(`�  Skipped (duplicates): ${skipped}`);
   console.log(`❌ No match: ${noMatches.length}`);
   console.log(`❌ Update failed: ${failed}`);
 
   if (noMatches.length > 0) {
-    console.log(`\n⚠️  Exercises without matches (${noMatches.length}):`);
+    console.log(`\n�  Exercises without matches (${noMatches.length}):`);
     noMatches.forEach(name => console.log(`   - ${name}`));
   }
 
@@ -355,7 +355,7 @@ async function main() {
   // #endregion
 
   if (updated > 0) {
-    console.log('\n💡 TIP: Run complete-missing-gifs.ts again to download GIFs for newly matched exercises!');
+    console.log('\n=� TIP: Run complete-missing-gifs.ts again to download GIFs for newly matched exercises!');
   }
 }
 

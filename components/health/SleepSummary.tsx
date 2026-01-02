@@ -321,15 +321,15 @@ export function RecoveryRecommendation() {
   const getRecommendationStyle = () => {
     switch (recommendation.recommendation) {
       case 'intense':
-        return { backgroundColor: '#22c55e20', borderColor: '#22c55e', icon: '💪' };
+        return { backgroundColor: '#22c55e20', borderColor: '#22c55e', icon: '=�' };
       case 'moderate':
-        return { backgroundColor: '#3b82f620', borderColor: '#3b82f6', icon: '👍' };
+        return { backgroundColor: '#3b82f620', borderColor: '#3b82f6', icon: '=M' };
       case 'light':
-        return { backgroundColor: '#f59e0b20', borderColor: '#f59e0b', icon: '🚶' };
+        return { backgroundColor: '#f59e0b20', borderColor: '#f59e0b', icon: '=�' };
       case 'rest':
-        return { backgroundColor: '#ef444420', borderColor: '#ef4444', icon: '😴' };
+        return { backgroundColor: '#ef444420', borderColor: '#ef4444', icon: '=4' };
       default:
-        return { backgroundColor: '#64748b20', borderColor: '#64748b', icon: 'ℹ️' };
+        return { backgroundColor: '#64748b20', borderColor: '#64748b', icon: '9' };
     }
   };
 

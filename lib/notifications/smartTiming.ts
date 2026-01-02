@@ -45,8 +45,8 @@ class SmartTimingService {
       
       await this.saveActivity(activity);
       
-      logger.log(`ðŸ“Š Recorded workout: ${this.getDayName(day)} at ${hour}:00`);
-      logger.log(`ðŸ“ˆ Total recorded workouts: ${activity.workoutTimes.length}`);
+      logger.log(`�x` Recorded workout: ${this.getDayName(day)} at ${hour}:00`);
+      logger.log(`�x� Total recorded workouts: ${activity.workoutTimes.length}`);
     } catch (error) {
       logger.error('Failed to record workout time:', error);
     }
@@ -60,7 +60,7 @@ class SmartTimingService {
     
     if (activity.workoutTimes.length < 5) {
       // Not enough data, use default (6 PM)
-      logger.log('âš ï¸ Not enough data for smart timing, using default (6 PM)');
+      logger.log('�a���� Not enough data for smart timing, using default (6 PM)');
       return { hour: 18, minute: 0 };
     }
 
@@ -76,7 +76,7 @@ class SmartTimingService {
     const mostCommonHour = sortedHours[0][0];
     const occurrences = sortedHours[0][1];
 
-    logger.log(`ðŸŽ¯ Most common workout hour: ${mostCommonHour}:00 (${occurrences} times)`);
+    logger.log(`�x}� Most common workout hour: ${mostCommonHour}:00 (${occurrences} times)`);
 
     // Remind 1 hour before typical workout time
     let reminderHour = mostCommonHour - 1;
@@ -103,7 +103,7 @@ class SmartTimingService {
     
     if (activity.workoutDays.length < 5) {
       // Default to Mon, Wed, Fri
-      logger.log('âš ï¸ Not enough data for smart days, using default (Mon/Wed/Fri)');
+      logger.log('�a���� Not enough data for smart days, using default (Mon/Wed/Fri)');
       return [1, 3, 5];
     }
 
@@ -120,7 +120,7 @@ class SmartTimingService {
       .map(([day]) => day)
       .sort((a, b) => a - b); // Sort by day of week
 
-    logger.log('ðŸ“… Optimal workout days:', optimalDays.map(d => this.getDayName(d)).join(', '));
+    logger.log('�x& Optimal workout days:', optimalDays.map(d => this.getDayName(d)).join(', '));
 
     return optimalDays.length > 0 ? optimalDays : [1, 3, 5];
   }
@@ -140,7 +140,7 @@ class SmartTimingService {
     const days = await this.getOptimalDays();
     const time = await this.getOptimalReminderTime();
 
-    logger.log(`ðŸ”® Smart schedule suggestion (${confidence} confidence):`);
+    logger.log(`�x� Smart schedule suggestion (${confidence} confidence):`);
     logger.log(`   Days: ${days.map(d => this.getDayName(d)).join(', ')}`);
     logger.log(`   Time: ${this.formatTime(time.hour, time.minute)}`);
     logger.log(`   Based on ${dataPoints} workouts`);
@@ -231,7 +231,7 @@ class SmartTimingService {
    */
   async resetActivity(): Promise<void> {
     await AsyncStorage.removeItem(this.STORAGE_KEY);
-    logger.log('ðŸ—‘ï¸ Activity data reset');
+    logger.log('�x️ Activity data reset');
   }
 
   /**

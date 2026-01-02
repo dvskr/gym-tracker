@@ -347,7 +347,7 @@ export default function ProgressScreen() {
             </View>
             {weeklyStats.volumeChange !== 0 && (
               <Text style={styles.weeklyComparison}>
-                {weeklyStats.volumeChange > 0 ? 'â†‘' : 'â†“'} {Math.abs(weeklyStats.volumeChange)}% vs last week
+                {weeklyStats.volumeChange > 0 ? '� ' : '� '} {Math.abs(weeklyStats.volumeChange)}% vs last week
               </Text>
             )}
           </View>
@@ -396,7 +396,7 @@ export default function ProgressScreen() {
               label="Most Trained"
               value={allTimeStats.mostTrainedMuscle ? 
                 allTimeStats.mostTrainedMuscle.charAt(0).toUpperCase() + allTimeStats.mostTrainedMuscle.slice(1) 
-                : 'â€”'}
+                : '�'}
             />
           </View>
         ) : null}
@@ -499,7 +499,7 @@ export default function ProgressScreen() {
           </View>
         ) : (
           <View style={styles.emptyAchievements}>
-            <Text style={styles.emptyAchievementIcon}>ðŸ†</Text>
+            <Text style={styles.emptyAchievementIcon}>�x� </Text>
             <Text style={styles.emptyPRsText}>Start unlocking achievements!</Text>
             <Text style={styles.emptyPRsSubtext}>Complete workouts to earn badges</Text>
           </View>

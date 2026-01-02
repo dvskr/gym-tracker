@@ -379,7 +379,7 @@ export function PRCelebration({
                   },
                 ]}
               >
-                <Text style={styles.trophy}>🏆</Text>
+                <Text style={styles.trophy}></Text>
               </Animated.View>
 
               {/* Title */}
@@ -409,7 +409,7 @@ export function PRCelebration({
                   onPress={handleDismiss}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.dismissButtonText}>Nice! 🎉</Text>
+                  <Text style={styles.dismissButtonText}>Nice! </Text>
                 </TouchableOpacity>
               </Animated.View>
             </Animated.View>

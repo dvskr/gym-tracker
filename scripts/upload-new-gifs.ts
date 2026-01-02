@@ -14,7 +14,7 @@ const GIF_DIR = 'exercise-gifs';
 const BUCKET_NAME = 'exercise-gifs';
 
 async function uploadNewGifs() {
-  console.log('📤 Uploading 29 new GIFs to Supabase...\n');
+  console.log('=� Uploading 29 new GIFs to Supabase...\n');
   
   // Get all GIF files
   const allGifs = fs.readdirSync(GIF_DIR).filter(f => f.endsWith('.gif'));
@@ -47,7 +47,7 @@ async function uploadNewGifs() {
         .list('', { search: filename });
       
       if (existingFile && existingFile.length > 0) {
-        console.log(`⏭️  ${filename} - Already uploaded`);
+        console.log(`�  ${filename} - Already uploaded`);
         skipped++;
         continue;
       }
@@ -87,7 +87,7 @@ async function uploadNewGifs() {
   console.log(`Uploaded: ${uploaded}`);
   console.log(`Skipped: ${skipped}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n📊 Total in Supabase: ${344 + uploaded} GIFs\n`);
+  console.log(`\n=� Total in Supabase: ${344 + uploaded} GIFs\n`);
 }
 
 uploadNewGifs();

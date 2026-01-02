@@ -222,7 +222,7 @@ export default function AISettingsScreen() {
                 </Pressable>
               </View>
               <Text style={styles.apiKeyValue}>
-                {showApiKey ? settings.aiApiKey : `â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢${settings.aiApiKey.slice(-4)}`}
+                {showApiKey ? settings.aiApiKey : `""""""""""""${settings.aiApiKey.slice(-4)}`}
               </Text>
               <View style={styles.apiKeyActions}>
                 <Pressable
@@ -263,7 +263,7 @@ export default function AISettingsScreen() {
               5. Copy and paste it here
             </Text>
             <Text style={styles.helpNote}>
-              ðŸ’¡ Keys start with "sk-" and are about 50 characters long
+              �x� Keys start with "sk-" and are about 50 characters long
             </Text>
           </View>
         </View>

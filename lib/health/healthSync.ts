@@ -25,13 +25,13 @@ class HealthSyncService {
     // Check if health sync is enabled
     const { healthSyncEnabled } = useSettingsStore.getState();
     if (!healthSyncEnabled) {
-      logger.log('â„¹ï¸ Health sync disabled');
+      logger.log('����� Health sync disabled');
       return null;
     }
 
     // Check if already syncing
     if (this.isSyncing) {
-      logger.log('â„¹ï¸ Sync already in progress');
+      logger.log('����� Sync already in progress');
       return null;
     }
 
@@ -39,7 +39,7 @@ class HealthSyncService {
     if (this.lastSyncTime && Date.now() - this.lastSyncTime.getTime() < this.SYNC_INTERVAL) {
       const remainingMs = this.SYNC_INTERVAL - (Date.now() - this.lastSyncTime.getTime());
       const remainingMin = Math.ceil(remainingMs / 60000);
-      logger.log(`â„¹ï¸ Recently synced, next sync in ${remainingMin}min`);
+      logger.log(`����� Recently synced, next sync in ${remainingMin}min`);
       return null;
     }
 
@@ -67,7 +67,7 @@ class HealthSyncService {
 
     try {
       this.isSyncing = true;
-      logger.log('ðŸ”„ Starting health sync...');
+      logger.log('�x Starting health sync...');
 
       // 1. Sync unprocessed workouts to health
       const workoutsResult = await this.syncUnprocessedWorkouts();
@@ -90,16 +90,16 @@ class HealthSyncService {
       result.success = result.errors.length === 0;
 
       logger.log(
-        `âœ… Health sync complete: ${result.workoutsSynced} workouts, ${result.weightsSynced} weights synced, ${result.weightsImported} weights imported`
+        `�S& Health sync complete: ${result.workoutsSynced} workouts, ${result.weightsSynced} weights synced, ${result.weightsImported} weights imported`
       );
 
       if (result.errors.length > 0) {
-        logger.warn(`âš ï¸ Sync completed with ${result.errors.length} error(s)`);
+        logger.warn(`�a���� Sync completed with ${result.errors.length} error(s)`);
       }
 
       return result;
     } catch (error) {
-      logger.error('âŒ Health sync failed:', error);
+      logger.error('�R Health sync failed:', error);
       result.errors.push(error instanceof Error ? error.message : 'Unknown error');
       return result;
     } finally {
@@ -116,7 +116,7 @@ class HealthSyncService {
     try {
       const { healthAutoSync } = useSettingsStore.getState();
       if (!healthAutoSync) {
-        logger.log('â„¹ï¸ Auto-sync workouts disabled');
+        logger.log('����� Auto-sync workouts disabled');
         return result;
       }
 
@@ -126,7 +126,7 @@ class HealthSyncService {
         return result;
       }
 
-      logger.log('ðŸ’ª Syncing unprocessed workouts...');
+      logger.log('�x� Syncing unprocessed workouts...');
 
       const { data: unsynced, error } = await supabase
         .from('workouts')
@@ -143,11 +143,11 @@ class HealthSyncService {
       }
 
       if (!unsynced || unsynced.length === 0) {
-        logger.log('â„¹ï¸ No workouts to sync');
+        logger.log('����� No workouts to sync');
         return result;
       }
 
-      logger.log(`ðŸ“Š Found ${unsynced.length} workout(s) to sync`);
+      logger.log(`�x` Found ${unsynced.length} workout(s) to sync`);
 
       for (const workout of unsynced) {
         try {
@@ -189,7 +189,7 @@ class HealthSyncService {
         }
       }
 
-      logger.log(`âœ… Synced ${result.synced}/${unsynced.length} workout(s)`);
+      logger.log(`�S& Synced ${result.synced}/${unsynced.length} workout(s)`);
     } catch (error) {
       result.errors.push(
         `Workout sync error: ${error instanceof Error ? error.message : 'Unknown'}`
@@ -208,7 +208,7 @@ class HealthSyncService {
     try {
       const { syncWeight } = useSettingsStore.getState();
       if (!syncWeight) {
-        logger.log('â„¹ï¸ Weight sync disabled');
+        logger.log('����� Weight sync disabled');
         return result;
       }
 
@@ -218,7 +218,7 @@ class HealthSyncService {
         return result;
       }
 
-      logger.log('âš–ï¸ Syncing unprocessed weight entries...');
+      logger.log('�a��� Syncing unprocessed weight entries...');
 
       const { data: unsynced, error } = await supabase
         .from('body_weight_log')
@@ -234,11 +234,11 @@ class HealthSyncService {
       }
 
       if (!unsynced || unsynced.length === 0) {
-        logger.log('â„¹ï¸ No weight entries to sync');
+        logger.log('����� No weight entries to sync');
         return result;
       }
 
-      logger.log(`ðŸ“Š Found ${unsynced.length} weight entry(s) to sync`);
+      logger.log(`�x` Found ${unsynced.length} weight entry(s) to sync`);
 
       for (const entry of unsynced) {
         try {
@@ -278,7 +278,7 @@ class HealthSyncService {
         }
       }
 
-      logger.log(`âœ… Synced ${result.synced}/${unsynced.length} weight entry(s)`);
+      logger.log(`�S& Synced ${result.synced}/${unsynced.length} weight entry(s)`);
     } catch (error) {
       result.errors.push(
         `Weight sync error: ${error instanceof Error ? error.message : 'Unknown'}`
@@ -297,7 +297,7 @@ class HealthSyncService {
     try {
       const { syncWeight } = useSettingsStore.getState();
       if (!syncWeight) {
-        logger.log('â„¹ï¸ Weight import disabled');
+        logger.log('����� Weight import disabled');
         return result;
       }
 
@@ -307,7 +307,7 @@ class HealthSyncService {
         return result;
       }
 
-      logger.log('ðŸ“¥ Importing weight from health...');
+      logger.log('�x� Importing weight from health...');
 
       // Import last 7 days of weight from health
       const sevenDaysAgo = new Date();
@@ -316,11 +316,11 @@ class HealthSyncService {
       const healthWeights = await healthService.getWeightHistory(sevenDaysAgo, new Date());
 
       if (healthWeights.length === 0) {
-        logger.log('â„¹ï¸ No weight data in health to import');
+        logger.log('����� No weight data in health to import');
         return result;
       }
 
-      logger.log(`ðŸ“Š Found ${healthWeights.length} weight entry(s) in health`);
+      logger.log(`�x` Found ${healthWeights.length} weight entry(s) in health`);
 
       // Get user's preferred weight unit
       const { weightUnit } = useSettingsStore.getState();
@@ -365,7 +365,7 @@ class HealthSyncService {
             result.errors.push(`Failed to import weight for ${dateStr}: ${insertError.message}`);
           } else {
             result.imported++;
-            logger.log(`âœ… Imported weight for ${dateStr}`);
+            logger.log(`�S& Imported weight for ${dateStr}`);
           }
         } catch (error) {
           result.errors.push(
@@ -374,7 +374,7 @@ class HealthSyncService {
         }
       }
 
-      logger.log(`âœ… Imported ${result.imported} weight entry(s)`);
+      logger.log(`�S& Imported ${result.imported} weight entry(s)`);
     } catch (error) {
       result.errors.push(
         `Weight import error: ${error instanceof Error ? error.message : 'Unknown'}`

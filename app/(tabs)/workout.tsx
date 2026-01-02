@@ -54,7 +54,7 @@ const RecentWorkoutRow: React.FC<RecentWorkoutRowProps> = ({ workout, onPress })
           {workout.name || 'Workout'}
         </Text>
         <Text style={styles.recentMeta}>
-          {timeAgo} â€¢ {workout.total_sets} sets
+          {timeAgo} • {workout.total_sets} sets
         </Text>
       </View>
       <ChevronRight size={18} color="#475569" />

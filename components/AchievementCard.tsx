@@ -240,7 +240,7 @@ export function AchievementToast({ achievement }: AchievementToastProps) {
         <Text style={styles.toastIconText}>{achievement.icon}</Text>
       </View>
       <View style={styles.toastContent}>
-        <Text style={styles.toastLabel}>🎉 Achievement Unlocked!</Text>
+        <Text style={styles.toastLabel}> Achievement Unlocked!</Text>
         <Text style={styles.toastTitle}>{achievement.title}</Text>
         <Text style={styles.toastDescription}>{achievement.description}</Text>
       </View>

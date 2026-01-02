@@ -139,7 +139,7 @@ const SetTypePicker: React.FC<SetTypePickerProps> = ({
             </View>
             {currentType === option.type && (
               <View style={[styles.setTypeCheck, { backgroundColor: option.color }]}>
-                <Text style={styles.setTypeCheckText}>âœ“</Text>
+                <Text style={styles.setTypeCheckText}>�S</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -184,7 +184,7 @@ const SetRow: React.FC<SetRowProps> = ({ set, onUpdate, onDelete, onTypePress })
           value={set.target_weight}
           onChangeText={(text) => onUpdate({ target_weight: text.replace(/[^0-9.]/g, '') })}
           keyboardType="decimal-pad"
-          placeholder="â€”"
+          placeholder="�"
           placeholderTextColor="#64748b"
           selectTextOnFocus={true}
         />

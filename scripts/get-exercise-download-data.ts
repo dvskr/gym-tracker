@@ -11,7 +11,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function getExerciseDataForDownload() {
-  console.log('📋 GETTING EXERCISE DATA FOR DOWNLOAD SCRIPT');
+  console.log('=� GETTING EXERCISE DATA FOR DOWNLOAD SCRIPT');
   console.log('═'.repeat(80));
   console.log('');
 
@@ -48,7 +48,7 @@ async function getExerciseDataForDownload() {
   console.log('];\n');
 
   if (withoutExternalId.length > 0) {
-    console.log('⚠️  EXERCISES WITHOUT external_id (cannot download from API):');
+    console.log('�  EXERCISES WITHOUT external_id (cannot download from API):');
     console.log('─'.repeat(80));
     console.log(`Count: ${withoutExternalId.length}\n`);
     withoutExternalId.forEach(ex => {
@@ -80,7 +80,7 @@ async function getExerciseDataForDownload() {
   console.log('✅ Data saved to scripts/exercise-download-data.json');
   console.log('');
   console.log('═'.repeat(80));
-  console.log('📊 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total broken exercises: ${exercises?.length}`);
   console.log(`Can download from API: ${withExternalId.length}`);

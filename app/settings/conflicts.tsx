@@ -128,7 +128,7 @@ export default function ConflictsScreen() {
 
             <View style={styles.versions}>
               <View style={styles.version}>
-                <Text style={styles.versionLabel}>📱 This Device</Text>
+                <Text style={styles.versionLabel}>=� This Device</Text>
                 <Text style={styles.versionTime}>
                   {new Date(conflict.localUpdatedAt).toLocaleString()}
                 </Text>
@@ -140,7 +140,7 @@ export default function ConflictsScreen() {
               <Text style={styles.vs}>VS</Text>
 
               <View style={styles.version}>
-                <Text style={styles.versionLabel}>☁️ Other Device</Text>
+                <Text style={styles.versionLabel}> Other Device</Text>
                 <Text style={styles.versionTime}>
                   {new Date(conflict.serverUpdatedAt).toLocaleString()}
                 </Text>

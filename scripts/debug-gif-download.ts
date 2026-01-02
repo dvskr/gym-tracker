@@ -199,7 +199,7 @@ async function checkExerciseExists(externalId: string): Promise<boolean> {
 // MAIN DEBUG FUNCTION
 // ============================================
 async function debugGifDownload() {
-  console.log('🐛 DEBUG MODE: Testing GIF Download Issues\n');
+  console.log('= DEBUG MODE: Testing GIF Download Issues\n');
   console.log('═'.repeat(80));
   console.log('Testing with 2 exercises:');
   console.log('  1. Exercise 0056 (broken)');
@@ -212,12 +212,12 @@ async function debugGifDownload() {
     console.log(`  External ID: ${exercise.externalId}`);
 
     // H3: Check if exercise exists in API
-    console.log('  🔍 Step 1: Checking if exercise exists in API...');
+    console.log('  = Step 1: Checking if exercise exists in API...');
     const exists = await checkExerciseExists(exercise.externalId);
     console.log(`     ${exists ? '✅' : '❌'} Exercise ${exists ? 'EXISTS' : 'DOES NOT EXIST'} in API`);
 
     // H1, H2, H4: Test different URL patterns
-    console.log('  🔍 Step 2: Testing URL patterns...');
+    console.log('  = Step 2: Testing URL patterns...');
     const workingUrl = await testUrlPatterns(exercise.externalId);
     
     if (workingUrl) {
@@ -231,7 +231,7 @@ async function debugGifDownload() {
   }
 
   console.log('═'.repeat(80));
-  console.log('📋 DEBUG COMPLETE');
+  console.log('=� DEBUG COMPLETE');
   console.log('═'.repeat(80));
   console.log('');
   console.log('Check debug.log file for detailed hypothesis results');

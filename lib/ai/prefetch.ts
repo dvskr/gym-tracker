@@ -56,10 +56,10 @@ export async function prefetchAIData(userId: string): Promise<void> {
       }
       
       setCacheData(userId, keys[index], dataToCache);
-      logger.log(`[AI Prefetch] âœ“ ${keys[index]} cached`);
+      logger.log(`[AI Prefetch] �S ${keys[index]} cached`);
       successCount++;
     } else {
-      logger.warn(`[AI Prefetch] âœ— ${keys[index]} failed:`, result.reason?.message || result.reason);
+      logger.warn(`[AI Prefetch] �S ${keys[index]} failed:`, result.reason?.message || result.reason);
     }
   });
   
@@ -91,7 +91,7 @@ export function getCachedData<T>(
     return null;
   }
   
-  logger.log(`[AI Cache] âœ“ ${key} hit (age: ${Math.round(age / 1000)}s)`);
+  logger.log(`[AI Cache] �S ${key} hit (age: ${Math.round(age / 1000)}s)`);
   return cached.data as T;
 }
 

@@ -19,12 +19,12 @@ const CACHED_TIPS: Record<string, FormTip> = {
     cues: [
       'Retract shoulder blades and squeeze them together',
       'Plant feet firmly on the floor',
-      'Lower bar to mid-chest with elbows at 45Â°',
+      'Lower bar to mid-chest with elbows at 45°',
       'Drive through your feet as you press',
     ],
     commonMistakes: [
       'Bouncing bar off chest',
-      'Flaring elbows to 90Â°',
+      'Flaring elbows to 90°',
       'Lifting hips off bench',
     ],
     breathingPattern: 'Inhale on the way down, exhale as you press up',
@@ -102,7 +102,7 @@ const CACHED_TIPS: Record<string, FormTip> = {
     cues: [
       'Hinge at hips with chest over bar',
       'Pull to lower chest/upper abs',
-      'Keep elbows close to body (45Â°)',
+      'Keep elbows close to body (45°)',
       'Squeeze shoulder blades at top',
     ],
     commonMistakes: [
@@ -231,7 +231,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
     let breathingPattern = 'Exhale during exertion, inhale during release';
     
     for (const line of lines) {
-      const cleanLine = line.replace(/^[-â€¢*\d.]\s*/, '').trim();
+      const cleanLine = line.replace(/^[-•*\d.]\s*/, '').trim();
       
       if (!cleanLine) continue;
       
@@ -241,7 +241,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
         safetyTips.push(cleanLine);
       } else if (line.toLowerCase().includes('mistake') || line.toLowerCase().includes('avoid') || line.toLowerCase().includes('don\'t')) {
         if (mistakes.length < 3) mistakes.push(cleanLine);
-      } else if (line.match(/^\d\./) || line.match(/^[-â€¢]/)) {
+      } else if (line.match(/^\d\./) || line.match(/^[-•]/)) {
         if (cues.length < 4) cues.push(cleanLine);
       }
     }
@@ -312,7 +312,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       if (data) {
         const parsed = JSON.parse(data);
         this.cache = new Map(Object.entries(parsed));
-        logger.log(`ðŸ“š Loaded ${this.cache.size} cached form tips`);
+        logger.log(`�xa Loaded ${this.cache.size} cached form tips`);
       }
     } catch (error) {
       logger.error('Failed to load form tips cache:', error);
@@ -337,7 +337,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
   async clearCache(): Promise<void> {
     this.cache.clear();
     await AsyncStorage.removeItem(this.CACHE_STORAGE_KEY);
-    logger.log('ðŸ—‘ï¸ Form tips cache cleared');
+    logger.log('�x️ Form tips cache cleared');
   }
 
   /**

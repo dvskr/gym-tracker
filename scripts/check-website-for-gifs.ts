@@ -36,7 +36,7 @@ function checkWebsiteForGif(externalId: string): Promise<{ found: boolean; url?:
 }
 
 async function scanWebsite() {
-  console.log('\n🔍 CHECKING EXERCISEDB WEBSITE FOR GIFS\n');
+  console.log('\n= CHECKING EXERCISEDB WEBSITE FOR GIFS\n');
   console.log('═'.repeat(70));
   
   let found = 0;
@@ -60,7 +60,7 @@ async function scanWebsite() {
   }
   
   console.log('\n═'.repeat(70));
-  console.log(`📊 RESULTS`);
+  console.log(`=� RESULTS`);
   console.log(`✅ Found on website: ${found}`);
   console.log(`❌ Not found: ${notFound}`);
 }

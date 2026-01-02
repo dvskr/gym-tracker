@@ -97,7 +97,7 @@ export function WeightRecommendation({
       >
         {getProgressIcon()}
         <Text style={styles.textCompact}>
-          {recommendation.weight} Ã— {recommendation.reps}
+          {recommendation.weight} × {recommendation.reps}
         </Text>
       </Pressable>
     );
@@ -113,7 +113,7 @@ export function WeightRecommendation({
         <View style={styles.badgeContent}>
           {getProgressIcon()}
           <Text style={styles.recommendText}>
-            Try {recommendation.weight}lbs Ã— {recommendation.reps}
+            Try {recommendation.weight}lbs × {recommendation.reps}
           </Text>
           <View style={[styles.confidenceDot, { backgroundColor: getConfidenceColor() }]} />
         </View>
@@ -124,7 +124,7 @@ export function WeightRecommendation({
         <View style={styles.reasoningBox}>
           <Text style={styles.reasoningText}>{recommendation.reasoning}</Text>
           <Pressable style={styles.applyButton} onPress={handleApply}>
-            <Text style={styles.applyButtonText}>Apply âœ“</Text>
+            <Text style={styles.applyButtonText}>Apply �S</Text>
           </Pressable>
         </View>
       )}
@@ -186,7 +186,7 @@ export function WeightRecommendationBadge({
     >
       <Sparkles size={12} color="#f59e0b" />
       <Text style={styles.inlineBadgeText}>
-        {recommendation.weight} Ã— {recommendation.reps}
+        {recommendation.weight} × {recommendation.reps}
       </Text>
     </Pressable>
   );

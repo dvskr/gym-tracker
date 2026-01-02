@@ -27,7 +27,7 @@ interface Exercise {
 }
 
 async function generateExercisesReport() {
-  console.log('📊 Fetching all exercises from database...\n');
+  console.log('=� Fetching all exercises from database...\n');
 
   // Get list of downloaded GIF files
   let downloadedGifs: Set<string> = new Set();
@@ -36,7 +36,7 @@ async function generateExercisesReport() {
     downloadedGifs = new Set(gifFiles);
     console.log(`  Found ${gifFiles.length} downloaded GIF files locally\n`);
   } else {
-    console.log(`  ⚠️  GIF directory not found: ${GIF_DIR}\n`);
+    console.log(`  �  GIF directory not found: ${GIF_DIR}\n`);
   }
 
   // Fetch ALL exercises (no limit)
@@ -106,7 +106,7 @@ async function generateExercisesReport() {
   markdown += `**Note:** GIF availability is based on locally downloaded files in \`exercise-gifs/\` directory.\n\n`;
   markdown += `---\n\n`;
   
-  markdown += `## 📊 Statistics\n\n`;
+  markdown += `## =� Statistics\n\n`;
   markdown += `| Metric | Count | Percentage |\n`;
   markdown += `|--------|-------|------------|\n`;
   markdown += `| **Total Exercises** | ${totalExercises} | 100% |\n`;
@@ -118,11 +118,11 @@ async function generateExercisesReport() {
   markdown += `\n`;
 
   markdown += `---\n\n`;
-  markdown += `## 💪 Exercises by Muscle Group\n\n`;
+  markdown += `## =� Exercises by Muscle Group\n\n`;
   markdown += `### Legend\n`;
   markdown += `- ✅ = Active\n`;
   markdown += `- ❌ = Inactive\n`;
-  markdown += `- 🎬 = Has Downloaded GIF\n`;
+  markdown += `-  = Has Downloaded GIF\n`;
   markdown += `- ⚪ = No Downloaded GIF\n\n`;
   markdown += `---\n\n`;
 
@@ -163,7 +163,7 @@ async function generateExercisesReport() {
 
     sortedMuscleExercises.forEach((ex, index) => {
       const activeIcon = ex.is_active ? '✅ Yes' : '❌ No';
-      const gifIcon = hasDownloadedGif(ex) ? '🎬 Yes' : '⚪ No';
+      const gifIcon = hasDownloadedGif(ex) ? ' Yes' : '⚪ No';
       const equipment = ex.equipment || 'N/A';
       const secondary = ex.secondary_muscles || '-';
       const category = muscle;
@@ -176,7 +176,7 @@ async function generateExercisesReport() {
 
   // Add summary by equipment
   markdown += `---\n\n`;
-  markdown += `## 🏋️ Exercises by Equipment\n\n`;
+  markdown += `##  Exercises by Equipment\n\n`;
 
   const byEquipment: Record<string, Exercise[]> = {};
   exercises.forEach((ex: Exercise) => {
@@ -235,15 +235,15 @@ async function generateExercisesReport() {
   fs.writeFileSync(outputPath, markdown);
 
   console.log(`\n✅ Report generated successfully!`);
-  console.log(`📄 File: ${outputPath}`);
-  console.log(`\n📊 Summary:`);
+  console.log(`=� File: ${outputPath}`);
+  console.log(`\n=� Summary:`);
   console.log(`   - Total Exercises: ${totalExercises}`);
   console.log(`   - Active: ${activeExercises}`);
   console.log(`   - With Downloaded GIF: ${withGifs}`);
   console.log(`   - Active + Downloaded GIF: ${activeWithGifs}`);
   console.log(`   - Muscle Groups: ${sortedMuscles.length}`);
   console.log(`   - Equipment Types: ${sortedEquipment.length}`);
-  console.log(`\n💾 Checking against ${downloadedGifs.size} locally downloaded GIF files`);
+  console.log(`\n=� Checking against ${downloadedGifs.size} locally downloaded GIF files`);
 }
 
 generateExercisesReport().catch(console.error);

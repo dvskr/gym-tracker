@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 async function diagnoseAndFix() {
-  console.log('🔍 DIAGNOSING GIF URL ISSUE...\n');
+  console.log('= DIAGNOSING GIF URL ISSUE...\n');
 
   // Step 1: Check database state
   const { data: exercises, error } = await supabase
@@ -26,7 +26,7 @@ async function diagnoseAndFix() {
   const withGif = exercises.filter(ex => ex.gif_url);
   const withoutGif = exercises.filter(ex => !ex.gif_url);
 
-  console.log('📊 DATABASE STATE:');
+  console.log('=� DATABASE STATE:');
   console.log(`Total active exercises: ${exercises.length}`);
   console.log(`With gif_url: ${withGif.length}`);
   console.log(`Without gif_url: ${withoutGif.length}\n`);
@@ -42,7 +42,7 @@ async function diagnoseAndFix() {
     return;
   }
 
-  console.log(`📦 SUPABASE STORAGE:`);
+  console.log(`=� SUPABASE STORAGE:`);
   console.log(`GIF files in storage: ${storageFiles.length}\n`);
 
   // Step 3: Show sample exercises without GIFs
@@ -66,7 +66,7 @@ async function diagnoseAndFix() {
   console.log('\nMismatch suggests exercises and GIF files are not properly linked.\n');
 
   // Step 5: Attempt to fix by matching external_id
-  console.log('🔧 ATTEMPTING TO FIX...\n');
+  console.log('=' ATTEMPTING TO FIX...\n');
 
   // For exercises with external_id, try to find a matching GIF in storage
   // The GIF files should be named after external_id or be in a mapping

@@ -75,7 +75,7 @@ const AboutTab: React.FC<{
         {/* Personal Records Section */}
         {stats && (stats.bestWeight || stats.bestReps || stats.bestVolume || stats.estimated1RM) && (
           <View style={styles.prSection}>
-            <Text style={styles.prSectionTitle}>🏆 Your Personal Records</Text>
+            <Text style={styles.prSectionTitle}> Your Personal Records</Text>
             
             <View style={styles.prGrid}>
               {/* Max Weight */}

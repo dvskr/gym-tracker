@@ -14,7 +14,7 @@ const supabase = createClient(
 const GIF_DIR = 'exercise-gifs';
 
 async function checkGifQuality() {
-  console.log('🔍 Checking GIF quality...\n');
+  console.log('= Checking GIF quality...\n');
   
   const gifFiles = fs.readdirSync(GIF_DIR).filter(f => f.endsWith('.gif'));
   console.log(`Found ${gifFiles.length} GIF files\n`);
@@ -55,11 +55,11 @@ async function checkGifQuality() {
   }
   
   console.log('='.repeat(60));
-  console.log('📊 GIF QUALITY REPORT');
+  console.log('=� GIF QUALITY REPORT');
   console.log('='.repeat(60));
   console.log(`\n✅ HD Quality (1080px): ${results.hd.length} GIFs`);
   console.log(`❌ SD Quality (360px): ${results.sd.length} GIFs`);
-  console.log(`⚠️  Errors: ${results.errors.length} files\n`);
+  console.log(`�  Errors: ${results.errors.length} files\n`);
   
   if (results.sd.length > 0) {
     console.log('Sample SD GIFs (need upgrading):');
@@ -72,7 +72,7 @@ async function checkGifQuality() {
   }
   
   // Get external IDs for SD GIFs
-  console.log('\n🔍 Finding external IDs for SD GIFs...\n');
+  console.log('\n= Finding external IDs for SD GIFs...\n');
   
   const sdFilenames = results.sd.map(gif => gif.filename);
   
@@ -91,7 +91,7 @@ async function checkGifQuality() {
   const withExternalId = needsUpgrade.filter(ex => ex.external_id);
   const withoutExternalId = needsUpgrade.filter(ex => !ex.external_id);
   
-  console.log(`📋 SD GIFs to upgrade: ${needsUpgrade.length}`);
+  console.log(`=� SD GIFs to upgrade: ${needsUpgrade.length}`);
   console.log(`✅ With external_id (can upgrade): ${withExternalId.length}`);
   console.log(`❌ Without external_id (need manual): ${withoutExternalId.length}\n`);
   
@@ -109,7 +109,7 @@ async function checkGifQuality() {
     }, null, 2)
   );
   
-  console.log('💾 Saved upgrade list to: scripts/gifs-to-upgrade.json\n');
+  console.log('=� Saved upgrade list to: scripts/gifs-to-upgrade.json\n');
   
   return {
     totalSD: results.sd.length,

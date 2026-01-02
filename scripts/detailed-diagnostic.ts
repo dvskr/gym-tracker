@@ -14,7 +14,7 @@ const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
 const THUMBNAIL_DIR = path.join(process.cwd(), 'exercise-thumbnails');
 
 async function main() {
-  console.log('🔍 DETAILED DIAGNOSTIC\n');
+  console.log('= DETAILED DIAGNOSTIC\n');
   console.log('='.repeat(60));
 
   // Get all local GIF files
@@ -29,7 +29,7 @@ async function main() {
     localGifFiles.map(f => f.replace('.gif', '').toLowerCase())
   );
 
-  console.log(`\n📁 Local GIF files: ${localGifs.size}`);
+  console.log(`\n=� Local GIF files: ${localGifs.size}`);
 
   // Get ALL exercises (both active and inactive)
   const { data: allExercises } = await supabase
@@ -39,7 +39,7 @@ async function main() {
   const activeExercises = allExercises?.filter(e => e.is_active) || [];
   const inactiveExercises = allExercises?.filter(e => !e.is_active) || [];
 
-  console.log(`\n📊 Database:`);
+  console.log(`\n=� Database:`);
   console.log(`   Total exercises: ${allExercises?.length || 0}`);
   console.log(`   Active: ${activeExercises.length}`);
   console.log(`   Inactive: ${inactiveExercises.length}`);
@@ -80,7 +80,7 @@ async function main() {
   console.log(`   Has local GIF but NO URL: ${activeHasGifNoUrl.length}`);
 
   if (activeHasGifNoUrl.length > 0) {
-    console.log(`\n   📋 Exercises with local GIF but no URL (first 10):`);
+    console.log(`\n   =� Exercises with local GIF but no URL (first 10):`);
     activeHasGifNoUrl.slice(0, 10).forEach(ex => {
       console.log(`      - ${ex.name} (${ex.id})`);
     });
@@ -95,7 +95,7 @@ async function main() {
   console.log(`   With local GIF: ${inactiveWithLocalGif.length}`);
 
   if (inactiveWithLocalGif.length > 0) {
-    console.log(`\n   📋 First 10 inactive exercises with GIFs:`);
+    console.log(`\n   =� First 10 inactive exercises with GIFs:`);
     inactiveWithLocalGif.slice(0, 10).forEach(ex => {
       console.log(`      - ${ex.name} (${ex.id})`);
     });
@@ -112,14 +112,14 @@ async function main() {
   });
 
   if (orphanedGifs.length > 0) {
-    console.log(`\n🗑️  Orphaned GIFs (no corresponding exercise):`);
+    console.log(`\n=�  Orphaned GIFs (no corresponding exercise):`);
     console.log(`   Count: ${orphanedGifs.length}`);
     console.log(`   Files: ${orphanedGifs.slice(0, 10).join(', ')}`);
   }
 
   // Summary
   console.log('\n' + '='.repeat(60));
-  console.log('📈 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('='.repeat(60));
   console.log(`\nLocal GIFs: ${localGifs.size}`);
   console.log(`  - Active exercises: ${activeWithLocalGif.length}`);
@@ -133,7 +133,7 @@ async function main() {
 
   // Gap analysis
   const discrepancy = localGifs.size - activeWithUrl.length;
-  console.log(`\n🔍 Discrepancy analysis:`);
+  console.log(`\n= Discrepancy analysis:`);
   console.log(`   Local GIFs (${localGifs.size}) - URLs (${activeWithUrl.length}) = ${discrepancy}`);
   console.log(`   Explained by:`);
   console.log(`     - Inactive with GIFs: ${inactiveWithLocalGif.length}`);

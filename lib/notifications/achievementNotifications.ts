@@ -26,19 +26,19 @@ export interface Achievement {
 
 const PR_MESSAGES = {
   weight: [
-    "New weight PR! {exercise}: {value}{unit} ðŸ†",
+    "New weight PR! {exercise}: {value}{unit} �x� ",
     "You're getting stronger! {exercise} PR: {value}{unit}",
-    "Beast mode! New {exercise} record: {value}{unit} ðŸ’ª",
+    "Beast mode! New {exercise} record: {value}{unit} �x�",
     "Crushing it! {exercise}: {value}{unit} personal best!",
   ],
   reps: [
-    "Rep record! {exercise}: {value} reps ðŸŽ¯",
+    "Rep record! {exercise}: {value} reps �x}�",
     "More reps than ever! {exercise}: {value}",
-    "Rep beast! New {exercise} record: {value} reps ðŸ’¯",
+    "Rep beast! New {exercise} record: {value} reps �x�",
   ],
   volume: [
-    "Volume PR! {exercise}: {value}{unit} total ðŸ“ˆ",
-    "Massive volume! {exercise}: {value}{unit} ðŸš€",
+    "Volume PR! {exercise}: {value}{unit} total �x�",
+    "Massive volume! {exercise}: {value}{unit} �xa�",
   ],
 };
 
@@ -65,14 +65,14 @@ class AchievementNotificationService {
       // Add to notification center
       useNotificationStore.getState().addNotification({
         type: 'pr',
-        title: 'New Personal Record! ðŸ†',
+        title: 'New Personal Record! �x� ',
         message: `${pr.exerciseName}: ${pr.newValue}${pr.unit || ''}`,
         data: pr,
       });
 
       // Push notification (only if app is backgrounded)
       await notificationService.sendNotification(
-        'ðŸ† New Personal Record!',
+        '�x�  New Personal Record!',
         message,
         {
           channelId: 'achievements',
@@ -85,7 +85,7 @@ class AchievementNotificationService {
         }
       );
 
-      logger.log(`ðŸ† PR notification sent: ${pr.exerciseName} ${pr.type}`);
+      logger.log(`�x�  PR notification sent: ${pr.exerciseName} ${pr.type}`);
     } catch (error) {
       logger.error('Failed to notify PR:', error);
     }
@@ -130,7 +130,7 @@ class AchievementNotificationService {
         }
       );
 
-      logger.log(`ðŸŽ–ï¸ Achievement unlocked: ${achievement.title}`);
+      logger.log(`�x}️ Achievement unlocked: ${achievement.title}`);
     } catch (error) {
       logger.error('Failed to notify achievement:', error);
     }
@@ -156,7 +156,7 @@ class AchievementNotificationService {
           id: 'first_workout',
           title: 'First Steps',
           description: 'Completed your first workout',
-          icon: 'ðŸŽ¯',
+          icon: '�x}�',
           category: 'workout',
         });
       }
@@ -168,7 +168,7 @@ class AchievementNotificationService {
           id: `workouts_${workoutStats.totalWorkouts}`,
           title: `${workoutStats.totalWorkouts} Workouts!`,
           description: `Completed ${workoutStats.totalWorkouts} workouts`,
-          icon: workoutStats.totalWorkouts >= 500 ? 'ðŸ†' : 'ðŸ’ª',
+          icon: workoutStats.totalWorkouts >= 500 ? '�x� ' : '�x�',
           category: 'workout',
         });
       }
@@ -180,7 +180,7 @@ class AchievementNotificationService {
           id: `streak_${workoutStats.streak}`,
           title: `${workoutStats.streak}-Day Warrior!`,
           description: `Worked out ${workoutStats.streak} days in a row`,
-          icon: 'ðŸ”¥',
+          icon: '�x�',
           category: 'streak',
         });
       }
@@ -192,7 +192,7 @@ class AchievementNotificationService {
           id: `sets_${workoutStats.totalSets}`,
           title: `${workoutStats.totalSets.toLocaleString()} Sets!`,
           description: `Completed ${workoutStats.totalSets.toLocaleString()} total sets`,
-          icon: 'ðŸ“Š',
+          icon: '�x`',
           category: 'volume',
         });
       }
@@ -204,7 +204,7 @@ class AchievementNotificationService {
           id: `reps_${workoutStats.totalReps}`,
           title: `${workoutStats.totalReps.toLocaleString()} Reps!`,
           description: `Completed ${workoutStats.totalReps.toLocaleString()} total reps`,
-          icon: 'ðŸ”¢',
+          icon: '�x�',
           category: 'volume',
         });
       }
@@ -225,7 +225,7 @@ class AchievementNotificationService {
             id: `volume_${milestone.value}`,
             title: milestone.title,
             description: `Lifted ${milestone.value.toLocaleString()}+ lbs total`,
-            icon: milestone.value >= 1000000 ? 'ðŸ‹ï¸' : 'ðŸ’¯',
+            icon: milestone.value >= 1000000 ? '�x�9️' : '�x�',
             category: 'volume',
           });
         }

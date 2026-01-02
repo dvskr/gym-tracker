@@ -26,20 +26,20 @@ const GYM_TYPES: { value: GymType; label: string; description: string; icon: any
 ];
 
 const ALL_EQUIPMENT = [
-  { id: 'barbell', name: 'Barbell', emoji: 'ðŸ‹ï¸' },
-  { id: 'dumbbells', name: 'Dumbbells', emoji: 'ðŸ’ª' },
-  { id: 'kettlebells', name: 'Kettlebells', emoji: 'âš«' },
-  { id: 'cables', name: 'Cable Machine', emoji: 'ðŸ”Œ' },
-  { id: 'machines', name: 'Weight Machines', emoji: 'ðŸ¤–' },
-  { id: 'pull_up_bar', name: 'Pull-up Bar', emoji: 'ðŸ“Š' },
-  { id: 'dip_bars', name: 'Dip Bars', emoji: 'ðŸŽ¯' },
-  { id: 'resistance_bands', name: 'Resistance Bands', emoji: 'ðŸŽ€' },
-  { id: 'bench', name: 'Weight Bench', emoji: 'ðŸ›‹ï¸' },
-  { id: 'squat_rack', name: 'Squat Rack', emoji: 'ðŸ—ï¸' },
-  { id: 'leg_press', name: 'Leg Press', emoji: 'ðŸ¦µ' },
-  { id: 'smith_machine', name: 'Smith Machine', emoji: 'âš™ï¸' },
-  { id: 'ez_bar', name: 'EZ Bar', emoji: 'ã€°ï¸' },
-  { id: 'trap_bar', name: 'Trap Bar', emoji: 'â¬¡' },
+  { id: 'barbell', name: 'Barbell', emoji: '�x�9️' },
+  { id: 'dumbbells', name: 'Dumbbells', emoji: '�x�' },
+  { id: 'kettlebells', name: 'Kettlebells', emoji: '�a�' },
+  { id: 'cables', name: 'Cable Machine', emoji: '�xR' },
+  { id: 'machines', name: 'Weight Machines', emoji: '�x�' },
+  { id: 'pull_up_bar', name: 'Pull-up Bar', emoji: '�x`' },
+  { id: 'dip_bars', name: 'Dip Bars', emoji: '�x}�' },
+  { id: 'resistance_bands', name: 'Resistance Bands', emoji: '�x}�' },
+  { id: 'bench', name: 'Weight Bench', emoji: '�x:9️' },
+  { id: 'squat_rack', name: 'Squat Rack', emoji: '�x�️' },
+  { id: 'leg_press', name: 'Leg Press', emoji: '�x��' },
+  { id: 'smith_machine', name: 'Smith Machine', emoji: '�a"���' },
+  { id: 'ez_bar', name: 'EZ Bar', emoji: '㬰���' },
+  { id: 'trap_bar', name: 'Trap Bar', emoji: '⬡' },
 ];
 
 const EQUIPMENT_PRESETS: Record<GymType, string[]> = {
@@ -241,7 +241,7 @@ export default function EquipmentSettingsScreen() {
 
         <View style={styles.infoBox}>
           <Text style={styles.infoText}>
-            ðŸ’¡ Your workout suggestions will only include exercises that can be performed with your selected equipment.
+            �x� Your workout suggestions will only include exercises that can be performed with your selected equipment.
           </Text>
         </View>
 

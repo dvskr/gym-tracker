@@ -30,7 +30,7 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
       fields: ['weight', 'reps'],
       displayFormat: (set) => `${set.weight || 0} lbs × ${set.reps || 0} reps`,
       shortFormat: (set) => `${set.weight || 0} × ${set.reps || 0}`,
-      icon: '🏋️',
+      icon: '',
     },
     time: {
       type: 'time',
@@ -49,7 +49,7 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
         const remainingSecs = secs % 60;
         return mins > 0 ? `${mins}:${remainingSecs.toString().padStart(2, '0')}` : `${secs}s`;
       },
-      icon: '⏱️',
+      icon: '�',
     },
     time_distance: {
       type: 'time_distance',
@@ -66,7 +66,7 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
         const miles = ((set.distance_meters || 0) / 1609.34).toFixed(2);
         return `${miles} mi`;
       },
-      icon: '🏃',
+      icon: '',
     },
     time_weight: {
       type: 'time_weight',
@@ -79,21 +79,21 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
         return `${set.weight || 0} lbs for ${timeStr}`;
       },
       shortFormat: (set) => `${set.weight || 0} lbs × ${set.duration_seconds || 0}s`,
-      icon: '🚶',
+      icon: '=�',
     },
     reps_only: {
       type: 'reps_only',
       fields: ['reps'],
       displayFormat: (set) => `${set.reps || 0} reps`,
       shortFormat: (set) => `${set.reps || 0}`,
-      icon: '💪',
+      icon: '=�',
     },
     assisted: {
       type: 'assisted',
       fields: ['reps', 'assistance_weight'],
       displayFormat: (set) => `${set.reps || 0} reps @ -${set.assistance_weight || 0} lbs assist`,
       shortFormat: (set) => `${set.reps || 0} (-${set.assistance_weight || 0})`,
-      icon: '🤝',
+      icon: '>',
     },
   };
 

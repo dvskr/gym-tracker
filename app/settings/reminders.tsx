@@ -378,7 +378,7 @@ export default function RemindersScreen() {
                 <View style={styles.smartHeaderText}>
                   <Text style={styles.smartTitle}>Smart Schedule Suggestion</Text>
                   <Text style={styles.smartConfidence}>
-                    {smartSuggestion.confidence === 'high' ? 'â­â­â­ High confidence' : 'â­â­ Medium confidence'}
+                    {smartSuggestion.confidence === 'high' ? '⭐���� High confidence' : '⭐��� Medium confidence'}
                   </Text>
                 </View>
               </View>

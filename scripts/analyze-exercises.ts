@@ -22,11 +22,11 @@ async function analyzeExercises() {
     return;
   }
 
-  console.log(`📊 TOTAL EXERCISES: ${exercises.length}\n`);
+  console.log(`=� TOTAL EXERCISES: ${exercises.length}\n`);
   console.log('='.repeat(60));
 
   // Analysis 1: By Primary Muscle
-  console.log('\n🎯 BY PRIMARY MUSCLE GROUP:\n');
+  console.log('\n BY PRIMARY MUSCLE GROUP:\n');
   const byMuscle = new Map<string, any[]>();
   
   exercises.forEach(ex => {
@@ -45,7 +45,7 @@ async function analyzeExercises() {
   });
 
   // Analysis 2: By Equipment
-  console.log('\n\n🏋️ BY EQUIPMENT TYPE:\n');
+  console.log('\n\n BY EQUIPMENT TYPE:\n');
   const byEquipment = new Map<string, any[]>();
   
   exercises.forEach(ex => {
@@ -64,7 +64,7 @@ async function analyzeExercises() {
   });
 
   // Analysis 3: By Category (if exists)
-  console.log('\n\n📋 BY CATEGORY:\n');
+  console.log('\n\n=� BY CATEGORY:\n');
   const byCategory = new Map<string, any[]>();
   
   exercises.forEach(ex => {
@@ -83,7 +83,7 @@ async function analyzeExercises() {
   });
 
   // Analysis 4: Sample exercise names by muscle group (first 5 of each)
-  console.log('\n\n📝 SAMPLE EXERCISES BY MUSCLE GROUP:\n');
+  console.log('\n\n=� SAMPLE EXERCISES BY MUSCLE GROUP:\n');
   sortedMuscles.forEach(([muscle, exs]) => {
     console.log(`\n${muscle.toUpperCase()}:`);
     exs.slice(0, 5).forEach((ex: any) => {

@@ -116,7 +116,7 @@ function scoreExercise(exercise: any): number {
 // MAIN SELECTION LOGIC
 // ==========================================
 async function selectExercises() {
-  console.log('🔍 Fetching all exercises from database...\n');
+  console.log('= Fetching all exercises from database...\n');
 
   const { data: allExercises, error } = await supabase
     .from('exercises')
@@ -128,7 +128,7 @@ async function selectExercises() {
     return;
   }
 
-  console.log(`📊 Total exercises in database: ${allExercises.length}\n`);
+  console.log(`=� Total exercises in database: ${allExercises.length}\n`);
 
   // Score all exercises
   const scored = allExercises.map(ex => ({
@@ -159,7 +159,7 @@ async function selectExercises() {
   // Display results
   console.log('✅ SELECTED 400 EXERCISES\n');
   console.log('='.repeat(60));
-  console.log('\n📊 BREAKDOWN BY MUSCLE GROUP:\n');
+  console.log('\n=� BREAKDOWN BY MUSCLE GROUP:\n');
 
   Object.entries(muscleCounts)
     .sort((a, b) => b[1] - a[1])
@@ -190,7 +190,7 @@ async function selectExercises() {
   );
 
   console.log('\n✅ Results saved to: scripts/selected-400-exercises.json');
-  console.log('\n📋 NEXT STEPS:');
+  console.log('\n=� NEXT STEPS:');
   console.log('1. Review the selected exercises');
   console.log('2. Make manual adjustments if needed');
   console.log('3. Run the database update script to mark as active');

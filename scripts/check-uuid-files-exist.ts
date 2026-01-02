@@ -9,14 +9,14 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function checkUuidFilesExist() {
-  console.log('🔍 CHECKING UUID FILES FOR BROKEN EXERCISES');
+  console.log('= CHECKING UUID FILES FOR BROKEN EXERCISES');
   console.log('═'.repeat(80));
   console.log('');
 
   // ============================================
   // STEP 1: Get exercises with broken gif_url (no .gif extension)
   // ============================================
-  console.log('📊 STEP 1: Getting exercises with broken gif_url (no .gif extension)');
+  console.log('=� STEP 1: Getting exercises with broken gif_url (no .gif extension)');
   console.log('─'.repeat(80));
 
   const { data: brokenExercises, error: dbError } = await supabase
@@ -51,7 +51,7 @@ async function checkUuidFilesExist() {
   // ============================================
   // STEP 2: Get all files in storage
   // ============================================
-  console.log('📂 STEP 2: Listing all files in exercise-gifs storage');
+  console.log('=� STEP 2: Listing all files in exercise-gifs storage');
   console.log('─'.repeat(80));
 
   const { data: files, error: storageError } = await supabase.storage
@@ -69,7 +69,7 @@ async function checkUuidFilesExist() {
   // ============================================
   // STEP 3: Check if UUID files exist
   // ============================================
-  console.log('🔎 STEP 3: Checking if UUID files exist for broken exercises');
+  console.log('= STEP 3: Checking if UUID files exist for broken exercises');
   console.log('─'.repeat(80));
   console.log('');
 
@@ -104,7 +104,7 @@ async function checkUuidFilesExist() {
   // STEP 4: Summary
   // ============================================
   console.log('═'.repeat(80));
-  console.log('📋 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total broken exercises: ${brokenExercises.length}`);
   console.log(`✅ UUID files exist in storage: ${existingFiles.length}`);
@@ -145,17 +145,17 @@ async function checkUuidFilesExist() {
   // STEP 5: Recommendation
   // ============================================
   console.log('═'.repeat(80));
-  console.log('💡 RECOMMENDATION');
+  console.log('=� RECOMMENDATION');
   console.log('═'.repeat(80));
 
   if (missingFiles.length === 0) {
-    console.log('🎉 ALL UUID FILES EXIST!');
+    console.log(' ALL UUID FILES EXIST!');
     console.log('');
     console.log('✅ Safe to update database gif_url to use UUID pattern.');
     console.log('');
     console.log('Next step: Run fix script to update all 23 exercises.');
   } else if (existingFiles.length > 0) {
-    console.log('⚠️  MIXED RESULTS');
+    console.log('�  MIXED RESULTS');
     console.log('');
     console.log(`✅ ${existingFiles.length} exercises can be fixed immediately`);
     console.log(`❌ ${missingFiles.length} exercises need files uploaded or deactivation`);

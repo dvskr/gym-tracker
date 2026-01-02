@@ -374,11 +374,11 @@ export const useSettingsStore = create<SettingsState>()(
 
       syncFromProfile: (profile) => {
         if (!profile) {
-          logger.log('[Settings] âš ï¸ syncFromProfile called with no profile');
+          logger.log('[Settings] �a���� syncFromProfile called with no profile');
           return;
         }
 
-        logger.log('[Settings] ðŸ“¥ Syncing settings FROM database profile');
+        logger.log('[Settings] �x� Syncing settings FROM database profile');
         const newSettings = {
           unitSystem: profile.unit_system || DEFAULT_SETTINGS.unitSystem,
           weightUnit: profile.weight_unit || (profile.unit_system === 'metric' ? 'kg' : 'lbs'),
@@ -397,22 +397,22 @@ export const useSettingsStore = create<SettingsState>()(
           streakReminders: profile.streak_reminders ?? DEFAULT_SETTINGS.streakReminders,
         };
         
-        logger.log('[Settings] ðŸ“¥ New settings from DB:', {
+        logger.log('[Settings] �x� New settings from DB:', {
           unitSystem: newSettings.unitSystem,
           theme: newSettings.theme,
           restTimerDefault: newSettings.restTimerDefault,
         });
         
         set(newSettings);
-        logger.log('[Settings] âœ… Settings updated in store');
+        logger.log('[Settings] �S& Settings updated in store');
       },
 
       syncToProfile: async (userId) => {
         try {
           const state = get();
           
-          logger.log('[Settings] ðŸ“¤ Syncing settings TO database for user:', userId);
-          logger.log('[Settings] ðŸ“¤ Current state:', {
+          logger.log('[Settings] �x� Syncing settings TO database for user:', userId);
+          logger.log('[Settings] �x� Current state:', {
             unitSystem: state.unitSystem,
             theme: state.theme,
             restTimerDefault: state.restTimerDefault,
@@ -441,12 +441,12 @@ export const useSettingsStore = create<SettingsState>()(
             .eq('id', userId);
 
           if (error) {
-            logger.error('[Settings] âŒ Error syncing settings to profile:', error);
+            logger.error('[Settings] �R Error syncing settings to profile:', error);
           } else {
-            logger.log('[Settings] âœ… Settings synced to database successfully');
+            logger.log('[Settings] �S& Settings synced to database successfully');
           }
         } catch (error) {
-          logger.error('[Settings] âŒ Error syncing settings:', error);
+          logger.error('[Settings] �R Error syncing settings:', error);
         }
       },
     }),
@@ -493,7 +493,7 @@ function debounceSyncToProfile() {
  */
 export async function initializeSettings(userId: string) {
   try {
-    logger.log('[Settings] ðŸ”„ Initializing settings from DB for user:', userId);
+    logger.log('[Settings] �x Initializing settings from DB for user:', userId);
     
     const { data: profile, error } = await supabase
       .from('profiles')
@@ -502,22 +502,22 @@ export async function initializeSettings(userId: string) {
       .single();
 
     if (error) {
-      logger.error('[Settings] âŒ Error loading profile settings:', error);
+      logger.error('[Settings] �R Error loading profile settings:', error);
       return;
     }
 
     if (profile) {
-      logger.log('[Settings] âœ… Profile loaded from DB:', {
+      logger.log('[Settings] �S& Profile loaded from DB:', {
         unit_system: profile.unit_system,
         theme: profile.theme,
         rest_timer_default: profile.rest_timer_default,
       });
       useSettingsStore.getState().syncFromProfile(profile);
-      logger.log('[Settings] âœ… Settings synced from DB to store');
+      logger.log('[Settings] �S& Settings synced from DB to store');
     } else {
-      logger.log('[Settings] âš ï¸ No profile found in database');
+      logger.log('[Settings] �a���� No profile found in database');
     }
   } catch (error) {
-    logger.error('[Settings] âŒ Error initializing settings:', error);
+    logger.error('[Settings] �R Error initializing settings:', error);
   }
 }

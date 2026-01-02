@@ -86,7 +86,7 @@ export function StepCounter({ goal = 10000, showGoal = true, compact = false, on
               <View style={styles.goalRow}>
                 <Target size={14} color="#64748b" />
                 <Text style={styles.goalText}>
-                  {goalMet ? 'Goal reached! 🎉' : `${(goal - (steps || 0)).toLocaleString()} to go`}
+                  {goalMet ? 'Goal reached! ' : `${(goal - (steps || 0)).toLocaleString()} to go`}
                 </Text>
               </View>
             </>

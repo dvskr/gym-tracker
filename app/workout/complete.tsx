@@ -368,7 +368,7 @@ export default function WorkoutCompleteScreen() {
       return volume > maxVolume ? set : max;
     });
 
-    return `${best.weight || 0} Ã— ${best.reps || 0}`;
+    return `${best.weight || 0} × ${best.reps || 0}`;
   };
 
   const getRatingText = (value: number): string => {
@@ -378,7 +378,7 @@ export default function WorkoutCompleteScreen() {
       case 2: return 'It was okay';
       case 3: return 'Good workout';
       case 4: return 'Great workout!';
-      case 5: return 'Best workout ever! ðŸ”¥';
+      case 5: return 'Best workout ever! �x�';
       default: return '';
     }
   };
@@ -404,17 +404,17 @@ export default function WorkoutCompleteScreen() {
             <Trophy size={56} color="#fbbf24" />
           </View>
           <View style={styles.confettiLeft}>
-            <Text style={styles.confettiEmoji}>ðŸŽ‰</Text>
+            <Text style={styles.confettiEmoji}>�x}0</Text>
           </View>
           <View style={styles.confettiRight}>
-            <Text style={styles.confettiEmoji}>ðŸŽŠ</Text>
+            <Text style={styles.confettiEmoji}>�x}`</Text>
           </View>
         </Animated.View>
 
         {/* Congratulations Text */}
         <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Workout Complete!</Text>
-          <Text style={styles.subtitle}>Amazing work! You crushed it ðŸ’ª</Text>
+          <Text style={styles.subtitle}>Amazing work! You crushed it �x�</Text>
         </Animated.View>
 
         {/* PR Callout */}
@@ -542,7 +542,7 @@ export default function WorkoutCompleteScreen() {
                           {exercise.exercises?.name || 'Exercise'}
                         </Text>
                         <Text style={styles.exerciseMeta}>
-                          {completedSets} sets â€¢ Best: {getBestSet(exercise)}
+                          {completedSets} sets • Best: {getBestSet(exercise)}
                         </Text>
                       </View>
                     </View>

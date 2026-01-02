@@ -67,7 +67,7 @@ class PlateauDetectionService {
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
-    // Group by week and get max volume (weight Ã— reps) per week
+    // Group by week and get max volume (weight × reps) per week
     const weeklyMaxVolume = this.getWeeklyMaxVolume(sortedHistory);
     
     if (weeklyMaxVolume.length < this.PLATEAU_WEEKS) return null;

@@ -10,7 +10,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function analyzeGifIssues() {
   console.log('');
-  console.log('🔍 DETAILED GIF ANALYSIS');
+  console.log('= DETAILED GIF ANALYSIS');
   console.log('═'.repeat(70));
   console.log('');
 
@@ -45,16 +45,16 @@ async function analyzeGifIssues() {
     }
   });
 
-  console.log('📊 EXERCISE BREAKDOWN');
+  console.log('=� EXERCISE BREAKDOWN');
   console.log('═'.repeat(70));
   console.log(`Total active exercises:                 ${exercises?.length}`);
   console.log(`  ✅ With working GIF:                  ${withWorkingGif.length}`);
   console.log(`  ❌ With broken gif_url:                ${withBrokenGif.length}`);
-  console.log(`  ⚠️  With NULL gif_url:                 ${withNull.length}`);
+  console.log(`  �  With NULL gif_url:                 ${withNull.length}`);
   console.log('');
 
   if (withNull.length > 0) {
-    console.log('⚠️  EXERCISES WITH NULL GIF_URL:');
+    console.log('�  EXERCISES WITH NULL GIF_URL:');
     console.log('═'.repeat(70));
     withNull.forEach(ex => {
       console.log(`  - ${ex.name}`);
@@ -77,7 +77,7 @@ async function analyzeGifIssues() {
   }
 
   console.log('═'.repeat(70));
-  console.log('🎯 TOTAL ISSUES: ' + (withNull.length + withBrokenGif.length));
+  console.log(' TOTAL ISSUES: ' + (withNull.length + withBrokenGif.length));
   console.log('═'.repeat(70));
   console.log('');
 }

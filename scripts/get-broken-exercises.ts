@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function getBrokenExercises() {
-  console.log('🔍 Getting 26 Broken Exercises from Database\n');
+  console.log('= Getting 26 Broken Exercises from Database\n');
   console.log('═'.repeat(80));
 
   const brokenNames = [

@@ -152,7 +152,7 @@ export const logAIQuality = async (quality: AIResponseQuality): Promise<void> =>
     
     // Log to console for development
     if (process.env.NODE_ENV === 'development') {
-      logger.log('ðŸ“Š AI Quality:', {
+      logger.log('�x` AI Quality:', {
         feature: quality.feature,
         specificityScore: quality.specificityScore,
         exercisesFiltered: quality.exercisesFiltered,
@@ -237,7 +237,7 @@ async function checkQualityAlerts(quality: AIResponseQuality): Promise<void> {
   
   // Log alerts
   if (alerts.length > 0) {
-    logger.warn('âš ï¸ AI Quality Alerts:', alerts);
+    logger.warn('�a���� AI Quality Alerts:', alerts);
     
     // Insert alerts into database
     await supabase.from('ai_quality_alerts').insert(

@@ -42,7 +42,7 @@ class ConflictResolver {
   async setStrategy(strategy: ConflictStrategy): Promise<void> {
     this.strategy = strategy;
     await AsyncStorage.setItem(this.STRATEGY_KEY, strategy);
-    logger.log(`ðŸ”§ Conflict strategy set to: ${strategy}`);
+    logger.log(`�x� Conflict strategy set to: ${strategy}`);
   }
 
   /**
@@ -84,7 +84,7 @@ class ConflictResolver {
     server: any,
     table: string
   ): Promise<ConflictResolutionResult> {
-    logger.log(`ðŸ” Resolving conflict for ${table}/${local.id || server.id} using strategy: ${this.strategy}`);
+    logger.log(`�x� Resolving conflict for ${table}/${local.id || server.id} using strategy: ${this.strategy}`);
 
     const conflict: Conflict = {
       id: this.generateConflictId(),
@@ -105,7 +105,7 @@ class ConflictResolver {
           data: { ...server, _synced: true },
           resolution: 'server',
         };
-        logger.log('âœ… Server wins');
+        logger.log('�S& Server wins');
         break;
 
       case 'client_wins':
@@ -113,7 +113,7 @@ class ConflictResolver {
           data: { ...local, _synced: false }, // Keep as unsynced to push to server
           resolution: 'local',
         };
-        logger.log('âœ… Client wins');
+        logger.log('�S& Client wins');
         break;
 
       case 'latest_wins':
@@ -125,13 +125,13 @@ class ConflictResolver {
             data: { ...local, _synced: false },
             resolution: 'local',
           };
-          logger.log('âœ… Latest wins: Local (newer)');
+          logger.log('�S& Latest wins: Local (newer)');
         } else {
           result = {
             data: { ...server, _synced: true },
             resolution: 'server',
           };
-          logger.log('âœ… Latest wins: Server (newer)');
+          logger.log('�S& Latest wins: Server (newer)');
         }
         break;
 
@@ -146,7 +146,7 @@ class ConflictResolver {
           resolution: 'deferred',
           conflict,
         };
-        logger.log('â¸ï¸ Manual resolution required - using server temporarily');
+        logger.log('⏸��� Manual resolution required - using server temporarily');
         break;
 
       default:
@@ -258,7 +258,7 @@ class ConflictResolver {
       throw new Error(`Conflict ${conflictId} not found`);
     }
 
-    logger.log(`ðŸ‘¤ Manual resolution: ${resolution} for ${conflict.table}/${conflict.itemId}`);
+    logger.log(`�x� Manual resolution: ${resolution} for ${conflict.table}/${conflict.itemId}`);
 
     let winner: any;
 
@@ -299,7 +299,7 @@ class ConflictResolver {
 
     await this.saveConflicts();
     
-    logger.log('âœ… Conflict resolved manually');
+    logger.log('�S& Conflict resolved manually');
   }
 
   /**
@@ -324,7 +324,7 @@ class ConflictResolver {
     await this.saveConflicts();
     
     const cleared = before - this.conflicts.length;
-    logger.log(`ðŸ§¹ Cleared ${cleared} resolved conflict(s)`);
+    logger.log(`�x�� Cleared ${cleared} resolved conflict(s)`);
     return cleared;
   }
 
@@ -334,7 +334,7 @@ class ConflictResolver {
   async clearAllConflicts(): Promise<void> {
     this.conflicts = [];
     await AsyncStorage.removeItem(this.CONFLICTS_KEY);
-    logger.log('ðŸ§¹ All conflicts cleared');
+    logger.log('�x�� All conflicts cleared');
   }
 
   /**

@@ -12,7 +12,7 @@ const supabase = createClient(
 );
 
 async function verifyThumbnailSizes() {
-  console.log('🔍 Verifying thumbnail dimensions in Supabase Storage...\n');
+  console.log('= Verifying thumbnail dimensions in Supabase Storage...\n');
 
   // Get list of files
   const { data: files, error } = await supabase
@@ -67,7 +67,7 @@ async function verifyThumbnailSizes() {
         console.log('='.repeat(60));
         if (metadata.width === 224 && metadata.height === 224) {
           console.log('✅ VERIFIED: Thumbnails are 224x224px in Supabase!');
-          console.log('ULTRA-PREMIUM 4x retina quality confirmed. 🚀\n');
+          console.log('ULTRA-PREMIUM 4x retina quality confirmed. =�\n');
         } else if (metadata.width === 168 && metadata.height === 168) {
           console.log('✅ VERIFIED: Thumbnails are 168x168px in Supabase!');
           console.log('Ultra-sharp 3x retina quality confirmed.\n');
@@ -78,7 +78,7 @@ async function verifyThumbnailSizes() {
           console.log('❌ PROBLEM: Thumbnails are still 32x32px in Supabase!');
           console.log('The upload did NOT replace the old files.\n');
         } else {
-          console.log(`⚠️  UNEXPECTED: Thumbnails are ${metadata.width}x${metadata.height}px\n`);
+          console.log(`�  UNEXPECTED: Thumbnails are ${metadata.width}x${metadata.height}px\n`);
         }
         console.log('='.repeat(60));
         break;

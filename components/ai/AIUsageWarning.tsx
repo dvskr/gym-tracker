@@ -41,7 +41,7 @@ export function AIUsageWarning() {
             {isCritical ? 'AI Limit Almost Reached' : 'AI Usage Warning'}
           </Text>
           <Text style={styles.message}>
-            {usage.percentUsed}% used â€¢ {usage.requestsRemaining} requests remaining
+            {usage.percentUsed}% used • {usage.requestsRemaining} requests remaining
           </Text>
           <Text style={styles.resetInfo}>
             Resets in {usage.daysUntilReset} day{usage.daysUntilReset !== 1 ? 's' : ''}

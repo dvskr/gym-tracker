@@ -888,7 +888,7 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
         Math.floor((Date.now() - new Date(workoutStartedAt).getTime()) / 60000) // Duration in minutes
       );
       
-      logger.log('âœ… Engagement notifications triggered');
+      logger.log('�S& Engagement notifications triggered');
     } catch (error) {
       logger.error('Failed to trigger engagement notifications:', error);
     }

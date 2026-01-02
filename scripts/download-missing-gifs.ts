@@ -20,7 +20,7 @@ const GIF_BUCKET = 'exercise-gifs';
 // ============================================
 // VALIDATION
 // ============================================
-console.log('🔍 Checking environment variables...');
+console.log('= Checking environment variables...');
 
 if (!EXERCISEDB_API_KEY) {
   console.error('❌ Missing EXPO_PUBLIC_EXERCISEDB_API_KEY');
@@ -186,9 +186,9 @@ async function updateDatabase(exerciseUuid: string, filename: string): Promise<b
 // ============================================
 
 async function main() {
-  console.log('🔽 DOWNLOAD MISSING GIFS FROM EXERCISEDB');
+  console.log('== DOWNLOAD MISSING GIFS FROM EXERCISEDB');
   console.log('═'.repeat(50));
-  console.log(`📋 Exercises to download: ${exercisesToDownload.length}`);
+  console.log(`=� Exercises to download: ${exercisesToDownload.length}`);
   console.log('');
 
   // Check if UUIDs are filled in
@@ -218,19 +218,19 @@ async function main() {
 
     try {
       // Step 1: Download GIF directly from ExerciseDB image endpoint
-      console.log('    📡 Downloading from ExerciseDB...');
+      console.log('    =� Downloading from ExerciseDB...');
       const gifBuffer = await downloadGifFromExerciseDB(exercise.externalId);
       const sizeMB = (gifBuffer.length / 1024 / 1024).toFixed(2);
-      console.log(`    📦 Size: ${sizeMB} MB`);
+      console.log(`    =� Size: ${sizeMB} MB`);
 
       // Step 2: Upload to Supabase with UUID filename
       const filename = `${exercise.uuid}.gif`;
-      console.log(`    ☁️  Uploading: ${filename}`);
+      console.log(`      Uploading: ${filename}`);
       const uploaded = await uploadToSupabase(filename, gifBuffer);
       if (!uploaded) throw new Error('Upload failed');
 
       // Step 3: Update database gif_url
-      console.log('    💾 Updating database...');
+      console.log('    =� Updating database...');
       const updated = await updateDatabase(exercise.uuid, filename);
       if (!updated) throw new Error('DB update failed');
 
@@ -248,7 +248,7 @@ async function main() {
 
   // Summary
   console.log('═'.repeat(50));
-  console.log('📊 RESULTS');
+  console.log('=� RESULTS');
   console.log('═'.repeat(50));
   console.log(`✅ Success: ${success}`);
   console.log(`❌ Failed: ${failed}`);
@@ -258,8 +258,8 @@ async function main() {
     failures.forEach((f) => console.log(`   - ${f}`));
   }
 
-  console.log('\n🎉 Done!');
-  console.log('\n📌 Next step: Generate thumbnails');
+  console.log('\n Done!');
+  console.log('\n=� Next step: Generate thumbnails');
   console.log('   npm run thumbnails:generate');
 }
 

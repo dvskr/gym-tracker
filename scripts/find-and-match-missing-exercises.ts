@@ -128,7 +128,7 @@ function findBestMatch(targetName: string, candidates: Exercise[]): { match: Exe
 }
 
 async function main() {
-  console.log('🔍 FINDING AND MATCHING MISSING EXERCISES\n');
+  console.log('= FINDING AND MATCHING MISSING EXERCISES\n');
   console.log('='.repeat(60));
 
   // #region agent log
@@ -141,7 +141,7 @@ async function main() {
   }
 
   // Step 1: Get exercises without external_id
-  console.log('\n📋 STEP 1: Finding exercises without external_id...');
+  console.log('\n=� STEP 1: Finding exercises without external_id...');
   
   const { data: missingExercises, error } = await supabase
     .from('exercises')
@@ -164,7 +164,7 @@ async function main() {
   // #endregion
 
   // Step 2: Fetch all ExerciseDB exercises
-  console.log('\n🌐 STEP 2: Fetching ExerciseDB exercise list...');
+  console.log('\n< STEP 2: Fetching ExerciseDB exercise list...');
   
   let exerciseDBList: Exercise[];
   try {
@@ -182,7 +182,7 @@ async function main() {
   // #endregion
 
   // Step 3: Match exercises
-  console.log('\n🔗 STEP 3: Matching exercises...\n');
+  console.log('\n= STEP 3: Matching exercises...\n');
   
   const matches: Array<{ 
     id: string; 
@@ -224,7 +224,7 @@ async function main() {
   // #endregion
 
   // Step 4: Update database with matches
-  console.log(`\n📝 STEP 4: Updating database with ${matches.length} matches...\n`);
+  console.log(`\n=� STEP 4: Updating database with ${matches.length} matches...\n`);
   
   let updated = 0;
   let failed = 0;
@@ -258,14 +258,14 @@ async function main() {
 
   // Summary
   console.log('\n' + '='.repeat(60));
-  console.log('📊 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n✅ Matched and updated: ${updated}`);
   console.log(`❌ No match found: ${noMatches.length}`);
   console.log(`❌ Update failed: ${failed}`);
 
   if (noMatches.length > 0) {
-    console.log(`\n⚠️  Exercises without matches (${noMatches.length}):`);
+    console.log(`\n�  Exercises without matches (${noMatches.length}):`);
     noMatches.forEach(ex => {
       console.log(`   - ${ex.name} (${ex.equipment})`);
     });
@@ -281,7 +281,7 @@ async function main() {
   // #endregion
 
   if (updated > 0) {
-    console.log('\n💡 TIP: Run complete-missing-gifs.ts again to download GIFs for newly matched exercises!');
+    console.log('\n=� TIP: Run complete-missing-gifs.ts again to download GIFs for newly matched exercises!');
   }
 }
 

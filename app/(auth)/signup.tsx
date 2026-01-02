@@ -144,7 +144,7 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
-                    placeholder="••••••••"
+                    placeholder=""""""""""
                     placeholderTextColor="#64748b"
                     value={value}
                     onChangeText={onChange}
@@ -180,7 +180,7 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
-                    placeholder="••••••••"
+                    placeholder=""""""""""
                     placeholderTextColor="#64748b"
                     value={value}
                     onChangeText={onChange}

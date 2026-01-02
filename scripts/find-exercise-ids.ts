@@ -84,7 +84,7 @@ const nameMapping: Record<string, string> = {
 };
 
 async function findExerciseIds() {
-  console.log('🔍 Finding ExerciseDB IDs for new exercises...\n');
+  console.log('= Finding ExerciseDB IDs for new exercises...\n');
   
   // Get exercises without GIFs
   const { data: exercises, error } = await supabase
@@ -165,7 +165,7 @@ async function findExerciseIds() {
     JSON.stringify(results, null, 2)
   );
   
-  console.log('💾 Saved to: scripts/exercise-id-mapping.json\n');
+  console.log('=� Saved to: scripts/exercise-id-mapping.json\n');
 }
 
 findExerciseIds();

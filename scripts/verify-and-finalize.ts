@@ -39,7 +39,7 @@ function debugLog(location: string, message: string, data: any, hypothesisId: st
 // #endregion
 
 async function verifyGIFQuality(): Promise<{ checked: number; lowQuality: number }> {
-  console.log('\n🔍 STEP 1: Verifying GIF quality...');
+  console.log('\n= STEP 1: Verifying GIF quality...');
   
   // #region agent log
   debugLog('verify.ts:quality:start', 'Starting quality check', {}, 'H1');
@@ -95,7 +95,7 @@ async function verifyGIFQuality(): Promise<{ checked: number; lowQuality: number
 }
 
 async function verifyThumbnailQuality(): Promise<{ checked: number; wrongSize: number }> {
-  console.log('\n🖼️  STEP 2: Verifying thumbnail quality...');
+  console.log('\n=�  STEP 2: Verifying thumbnail quality...');
   
   const thumbs = fs.existsSync(THUMBNAIL_DIR)
     ? fs.readdirSync(THUMBNAIL_DIR).filter(f => f.endsWith('.jpg'))
@@ -138,7 +138,7 @@ async function verifyThumbnailQuality(): Promise<{ checked: number; wrongSize: n
 }
 
 async function ensureAllUploaded(): Promise<{ uploaded: number; skipped: number }> {
-  console.log('\n☁️  STEP 3: Ensuring all files are uploaded to Supabase...');
+  console.log('\n  STEP 3: Ensuring all files are uploaded to Supabase...');
   
   // #region agent log
   debugLog('verify.ts:upload:start', 'Starting upload verification', {}, 'H2');
@@ -227,7 +227,7 @@ async function ensureAllUploaded(): Promise<{ uploaded: number; skipped: number 
 }
 
 async function updateAllDatabaseURLs(): Promise<{ updated: number; errors: number }> {
-  console.log('\n📝 STEP 4: Updating ALL database URLs...');
+  console.log('\n=� STEP 4: Updating ALL database URLs...');
   
   // #region agent log
   debugLog('verify.ts:dbupdate:start', 'Starting database update', {}, 'H3');
@@ -311,7 +311,7 @@ async function updateAllDatabaseURLs(): Promise<{ updated: number; errors: numbe
 }
 
 async function getFinalStatistics() {
-  console.log('\n📊 STEP 5: Gathering final statistics...');
+  console.log('\n=� STEP 5: Gathering final statistics...');
   
   const { data: allExercises } = await supabase
     .from('exercises')
@@ -334,18 +334,18 @@ async function getFinalStatistics() {
 
   const completion = ((withBoth / totalActive) * 100).toFixed(1);
 
-  console.log(`\n  📁 Local Files:`);
+  console.log(`\n  =� Local Files:`);
   console.log(`     GIFs: ${localGifs}`);
   console.log(`     Thumbnails: ${localThumbs}`);
   
-  console.log(`\n  📊 Database (Active Exercises):`);
+  console.log(`\n  =� Database (Active Exercises):`);
   console.log(`     Total: ${totalActive}`);
   console.log(`     With GIF URL: ${withGif}`);
   console.log(`     With Thumbnail URL: ${withThumb}`);
   console.log(`     With Both: ${withBoth}`);
   console.log(`     With Neither: ${withNeither}`);
   
-  console.log(`\n  🎯 Completion: ${completion}%`);
+  console.log(`\n   Completion: ${completion}%`);
 
   // #region agent log
   debugLog('verify.ts:stats:complete', 'Final statistics', {
@@ -397,28 +397,28 @@ async function main() {
 
   // Summary
   console.log('\n' + '='.repeat(60));
-  console.log('🎊 VERIFICATION COMPLETE');
+  console.log(' VERIFICATION COMPLETE');
   console.log('='.repeat(60));
   
   console.log(`\n✅ Quality Check:`);
   console.log(`   GIFs sampled: ${gifQuality.checked}`);
   console.log(`   Thumbnails sampled: ${thumbQuality.checked}`);
   
-  console.log(`\n☁️  Supabase Upload:`);
+  console.log(`\n  Supabase Upload:`);
   console.log(`   Files verified/uploaded: ${uploadResults.uploaded}`);
   console.log(`   Errors: ${uploadResults.skipped}`);
   
-  console.log(`\n📝 Database:`);
+  console.log(`\n=� Database:`);
   console.log(`   URLs updated: ${dbResults.updated}`);
   console.log(`   Errors: ${dbResults.errors}`);
   
-  console.log(`\n🎯 FINAL STATUS:`);
+  console.log(`\n FINAL STATUS:`);
   console.log(`   ${finalStats.withBoth}/${finalStats.totalActive} exercises complete (${finalStats.completion}%)`);
   console.log(`   ${finalStats.localGifs} GIF files`);
   console.log(`   ${finalStats.localThumbs} thumbnail files`);
 
   if (finalStats.withNeither > 0) {
-    console.log(`\n   ⚠️  ${finalStats.withNeither} exercises still without GIFs`);
+    console.log(`\n   �  ${finalStats.withNeither} exercises still without GIFs`);
   }
 
   // #region agent log

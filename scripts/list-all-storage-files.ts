@@ -11,7 +11,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function listAllStorageFiles() {
-  console.log('📂 LISTING ALL STORAGE FILES');
+  console.log('=� LISTING ALL STORAGE FILES');
   console.log('═'.repeat(80));
   console.log('');
 

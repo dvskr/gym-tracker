@@ -440,9 +440,9 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
             addExerciseWithSets(exercise, prefillSets);
             successCount++;
             
-            logger.log(`âœ… Added exercise: ${exercise.name} (${exerciseData.sets} sets Ã— ${repsNum} reps)`);
+            logger.log(`�S& Added exercise: ${exercise.name} (${exerciseData.sets} sets × ${repsNum} reps)`);
           } else {
-            logger.warn(`âš ï¸ Exercise not found: ${exerciseData.name}`);
+            logger.warn(`�a���� Exercise not found: ${exerciseData.name}`);
           }
         } catch (error) {
           logger.error(`Failed to add exercise ${exerciseData.name}:`, error);

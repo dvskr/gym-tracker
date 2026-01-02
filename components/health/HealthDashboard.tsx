@@ -148,7 +148,7 @@ export function HealthDashboard() {
           <Text style={styles.label}>Steps</Text>
           {summary?.steps !== null && summary.steps >= 10000 && (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>Goal! ðŸŽ‰</Text>
+              <Text style={styles.badgeText}>Goal! �x}0</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -289,35 +289,35 @@ export function HealthInsights() {
         return {
           backgroundColor: '#22c55e20',
           borderColor: '#22c55e',
-          icon: 'ðŸ’ª',
+          icon: '�x�',
           color: '#22c55e',
         };
       case 'moderate':
         return {
           backgroundColor: '#3b82f620',
           borderColor: '#3b82f6',
-          icon: 'ðŸ‘',
+          icon: '�x�',
           color: '#3b82f6',
         };
       case 'light':
         return {
           backgroundColor: '#f59e0b20',
           borderColor: '#f59e0b',
-          icon: 'ðŸš¶',
+          icon: '�xa�',
           color: '#f59e0b',
         };
       case 'rest':
         return {
           backgroundColor: '#ef444420',
           borderColor: '#ef4444',
-          icon: 'ðŸ˜´',
+          icon: '�xܴ',
           color: '#ef4444',
         };
       default:
         return {
           backgroundColor: '#64748b20',
           borderColor: '#64748b',
-          icon: 'â„¹ï¸',
+          icon: '�����',
           color: '#64748b',
         };
     }

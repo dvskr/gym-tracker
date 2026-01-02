@@ -338,7 +338,7 @@ export function PlateCalculator({
               {!calculation.isExact && calculation.remaining > 0 && (
                 <View style={styles.warningBox}>
                   <Text style={styles.warningText}>
-                    ⚠️ Cannot make exact weight. {calculation.remaining} {unit} remaining per side.
+                    � Cannot make exact weight. {calculation.remaining} {unit} remaining per side.
                   </Text>
                 </View>
               )}

@@ -9,7 +9,7 @@ const SUPABASE_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function compare() {
-  console.log('🔍 Comparing GIFs and Thumbnails...\n');
+  console.log('= Comparing GIFs and Thumbnails...\n');
   
   // Get GIFs
   const { data: gifs } = await supabase.storage
@@ -31,7 +31,7 @@ async function compare() {
               .map(f => f.name.replace('.png', '')) || []
   );
   
-  console.log('📊 FILE COMPARISON');
+  console.log('=� FILE COMPARISON');
   console.log('==================');
   console.log('GIF files:', gifNames.size);
   console.log('Thumbnail files (PNG):', thumbNames.size);
@@ -45,7 +45,7 @@ async function compare() {
   
   // Thumbnails without GIFs (orphaned)
   const thumbsWithoutGifs = [...thumbNames].filter(n => !gifNames.has(n));
-  console.log('\n⚠️ Thumbnails WITHOUT GIFs (orphaned):', thumbsWithoutGifs.length);
+  console.log('\n� Thumbnails WITHOUT GIFs (orphaned):', thumbsWithoutGifs.length);
   if (thumbsWithoutGifs.length > 0 && thumbsWithoutGifs.length <= 20) {
     thumbsWithoutGifs.forEach(n => console.log('  -', n));
   }

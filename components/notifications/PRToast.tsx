@@ -93,7 +93,7 @@ export function PRToast() {
       <View style={styles.iconContainer}>{getIcon()}</View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>New Personal Record! 🎉</Text>
+        <Text style={styles.title}>New Personal Record! </Text>
         <Text style={styles.exercise}>{prData.exerciseName}</Text>
         <View style={styles.details}>
           <Text style={styles.label}>{getTypeLabel()}</Text>
@@ -113,7 +113,7 @@ export function PRToast() {
       </View>
 
       <View style={styles.confetti}>
-        <Text style={styles.confettiEmoji}>🎊</Text>
+        <Text style={styles.confettiEmoji}></Text>
       </View>
     </Animated.View>
   );

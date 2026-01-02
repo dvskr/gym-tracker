@@ -97,7 +97,7 @@ export function AchievementToast() {
       </Animated.View>
 
       <View style={styles.content}>
-        <Text style={styles.header}>🎖️ Achievement Unlocked!</Text>
+        <Text style={styles.header}> Achievement Unlocked!</Text>
         <View style={styles.titleRow}>
           <Text style={styles.icon}>{achievement.icon}</Text>
           <Text style={styles.title}>{achievement.title}</Text>

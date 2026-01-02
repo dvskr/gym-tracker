@@ -187,12 +187,12 @@ export async function getPhotoFileSize(uri: string): Promise<number> {
  * Photo type display information with icons
  */
 export const PHOTO_TYPES: { type: PhotoType; label: string; icon: string }[] = [
-  { type: 'front', label: PHOTO_TYPE_LABELS.front, icon: '🧍' },
-  { type: 'side_left', label: PHOTO_TYPE_LABELS.side_left, icon: '👈' },
-  { type: 'side_right', label: PHOTO_TYPE_LABELS.side_right, icon: '👉' },
-  { type: 'back', label: PHOTO_TYPE_LABELS.back, icon: '🔙' },
-  { type: 'flexed_front', label: PHOTO_TYPE_LABELS.flexed_front, icon: '💪' },
-  { type: 'flexed_back', label: PHOTO_TYPE_LABELS.flexed_back, icon: '🦾' },
+  { type: 'front', label: PHOTO_TYPE_LABELS.front, icon: '>�' },
+  { type: 'side_left', label: PHOTO_TYPE_LABELS.side_left, icon: '=H' },
+  { type: 'side_right', label: PHOTO_TYPE_LABELS.side_right, icon: '=I' },
+  { type: 'back', label: PHOTO_TYPE_LABELS.back, icon: '=' },
+  { type: 'flexed_front', label: PHOTO_TYPE_LABELS.flexed_front, icon: '=�' },
+  { type: 'flexed_back', label: PHOTO_TYPE_LABELS.flexed_back, icon: '>�' },
 ];
 
 /**

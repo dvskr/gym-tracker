@@ -9,7 +9,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function findBrokenGifs() {
-  console.log('🔍 Finding exercises with broken GIF URLs...\n');
+  console.log('= Finding exercises with broken GIF URLs...\n');
 
   // Get all active exercises with gif_url
   const { data: exercises } = await supabase
@@ -40,7 +40,7 @@ async function findBrokenGifs() {
     }
   });
 
-  console.log('📊 RESULTS:');
+  console.log('=� RESULTS:');
   console.log('═'.repeat(60));
   console.log(`✅ Working GIFs:     ${working.length}`);
   console.log(`❌ Broken GIF URLs:  ${broken.length}`);

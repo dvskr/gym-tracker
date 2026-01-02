@@ -79,7 +79,7 @@ const WeightEntryRow: React.FC<WeightEntryRowProps> = ({ entry, onPress }) => {
 
   const getChangeText = () => {
     if (entry.change === undefined) return '';
-    if (entry.change === 0) return 'â€”';
+    if (entry.change === 0) return '�';
     const sign = entry.change > 0 ? '+' : '';
     return `${sign}${entry.change}`;
   };

@@ -152,11 +152,11 @@ export default function AboutScreen() {
         {/* App Info */}
         <View style={styles.appInfoSection}>
           <View style={styles.appIcon}>
-            <Text style={styles.appIconText}>ðŸ’ª</Text>
+            <Text style={styles.appIconText}>�x�</Text>
           </View>
           <Text style={styles.appName}>GymTracker</Text>
           <Text style={styles.appVersion}>Version {getVersionString()}</Text>
-          <Text style={styles.appCopyright}>Â© 2024 GymTracker</Text>
+          <Text style={styles.appCopyright}>© 2024 GymTracker</Text>
           <Text style={styles.appTagline}>Track. Progress. Achieve.</Text>
         </View>
 
@@ -257,7 +257,7 @@ export default function AboutScreen() {
               <Copy size={16} color="#64748b" />
             </View>
           </TouchableOpacity>
-          {copiedUserId && <Text style={styles.copiedText}>âœ“ Copied</Text>}
+          {copiedUserId && <Text style={styles.copiedText}>�S Copied</Text>}
           
           <View style={styles.debugRow}>
             <Text style={styles.debugLabel}>Device:</Text>
@@ -277,7 +277,7 @@ export default function AboutScreen() {
           </View>
         </View>
 
-        <Text style={styles.madeWithLove}>Made with â¤ï¸ for fitness enthusiasts</Text>
+        <Text style={styles.madeWithLove}>Made with ❤��� for fitness enthusiasts</Text>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>

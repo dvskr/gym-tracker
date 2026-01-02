@@ -156,7 +156,7 @@ export function PRToastContent({ exerciseName, type, value, previousValue }: PRT
         <Trophy size={24} color="#fbbf24" fill="#fbbf24" />
       </View>
       <View style={styles.toastContent}>
-        <Text style={styles.toastTitle}>🏆 NEW PR!</Text>
+        <Text style={styles.toastTitle}> NEW PR!</Text>
         <Text style={styles.toastExercise}>{exerciseName}</Text>
         <Text style={styles.toastValue}>
           {formatPRType(type)}: {formattedValue}

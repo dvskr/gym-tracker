@@ -37,7 +37,7 @@ async function downloadGif(
   
   // Skip if already exists
   if (fs.existsSync(filepath)) {
-    console.log(`  ⏭️  Already exists: ${filename}`);
+    console.log(`  �  Already exists: ${filename}`);
     return true;
   }
   
@@ -60,7 +60,7 @@ async function downloadGif(
     
   } catch (error) {
     if (retries > 0) {
-      console.log(`  ⚠️  Retry ${MAX_RETRIES - retries + 1}/${MAX_RETRIES} for ${filename}`);
+      console.log(`  �  Retry ${MAX_RETRIES - retries + 1}/${MAX_RETRIES} for ${filename}`);
       await sleep(1000);
       return downloadGif(url, filename, retries - 1);
     }
@@ -71,7 +71,7 @@ async function downloadGif(
 }
 
 async function downloadExerciseGifs(exerciseIds?: string[]) {
-  console.log('🎬 Starting GIF download process...\n');
+  console.log(' Starting GIF download process...\n');
   
   // Build query
   let query = supabase
@@ -89,7 +89,7 @@ async function downloadExerciseGifs(exerciseIds?: string[]) {
     throw new Error(`Failed to fetch exercises: ${error.message}`);
   }
   
-  console.log(`📋 Found ${exercises?.length || 0} exercises with GIF URLs\n`);
+  console.log(`=� Found ${exercises?.length || 0} exercises with GIF URLs\n`);
   
   let downloaded = 0;
   let skipped = 0;
@@ -128,12 +128,12 @@ async function downloadExerciseGifs(exerciseIds?: string[]) {
   }
   
   console.log('\n' + '='.repeat(50));
-  console.log('📊 DOWNLOAD SUMMARY');
+  console.log('=� DOWNLOAD SUMMARY');
   console.log('='.repeat(50));
   console.log(`✅ Successfully downloaded: ${downloaded}`);
-  console.log(`⏭️  Already existed/skipped: ${skipped}`);
+  console.log(`�  Already existed/skipped: ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`📁 GIFs saved to: ${GIF_DIR}`);
+  console.log(`=� GIFs saved to: ${GIF_DIR}`);
 }
 
 // Load priority exercises from analysis output
@@ -141,14 +141,14 @@ async function downloadPriorityGifs() {
   const priorityFile = path.join(process.cwd(), 'scripts', 'output', 'exercises-need-gif-download.json');
   
   if (!fs.existsSync(priorityFile)) {
-    console.log('⚠️  Run analyze-inactive-exercises.ts first');
+    console.log('�  Run analyze-inactive-exercises.ts first');
     return;
   }
   
   const exercises = JSON.parse(fs.readFileSync(priorityFile, 'utf-8')) as Exercise[];
   const exerciseIds = exercises.map(e => e.id);
   
-  console.log(`📋 Downloading GIFs for ${exerciseIds.length} priority exercises\n`);
+  console.log(`=� Downloading GIFs for ${exerciseIds.length} priority exercises\n`);
   
   await downloadExerciseGifs(exerciseIds);
 }

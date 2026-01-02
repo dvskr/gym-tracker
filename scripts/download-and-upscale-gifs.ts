@@ -231,10 +231,10 @@ async function downloadBatch(exercises: Exercise[], upscale: boolean = true): Pr
 }
 
 async function main() {
-  console.log('🎬 Starting GIF download for active exercises...\n');
-  console.log(`📐 Target Resolution: ${TARGET_RESOLUTION}x${TARGET_RESOLUTION}p`);
-  console.log(`📁 Original GIFs: ${GIF_DIR}`);
-  console.log(`📁 1080p GIFs: ${GIF_1080P_DIR}\n`);
+  console.log(' Starting GIF download for active exercises...\n');
+  console.log(`=� Target Resolution: ${TARGET_RESOLUTION}x${TARGET_RESOLUTION}p`);
+  console.log(`=� Original GIFs: ${GIF_DIR}`);
+  console.log(`=� 1080p GIFs: ${GIF_1080P_DIR}\n`);
   
   // Check ffmpeg/ffprobe availability
   try {
@@ -252,7 +252,7 @@ async function main() {
   const inputFile = path.join(process.cwd(), 'scripts', 'output', 'can-download-gifs.json');
   
   if (!fs.existsSync(inputFile)) {
-    console.log('⚠️  Run find-missing-gifs.ts first');
+    console.log('�  Run find-missing-gifs.ts first');
     return;
   }
   
@@ -270,7 +270,7 @@ async function main() {
       filteredExercises = exercises.filter(e => 
         e.equipment?.toLowerCase().includes(equipment)
       );
-      console.log(`📦 Filtered to ${equipment}: ${filteredExercises.length} exercises\n`);
+      console.log(`=� Filtered to ${equipment}: ${filteredExercises.length} exercises\n`);
     }
   }
   
@@ -300,22 +300,22 @@ async function main() {
   // Skip upscaling option
   const skipUpscale = args.includes('--no-upscale');
   
-  console.log(`📋 ${filteredExercises.length} exercises to process`);
-  console.log(`🔄 Upscaling: ${skipUpscale ? 'DISABLED' : 'ENABLED (to 1080p)'}\n`);
+  console.log(`=� ${filteredExercises.length} exercises to process`);
+  console.log(`= Upscaling: ${skipUpscale ? 'DISABLED' : 'ENABLED (to 1080p)'}\n`);
   
   // Download
   const result = await downloadBatch(filteredExercises, !skipUpscale);
   
   // Summary
   console.log('\n' + '='.repeat(50));
-  console.log('📊 DOWNLOAD SUMMARY');
+  console.log('=� DOWNLOAD SUMMARY');
   console.log('='.repeat(50));
   console.log(`✅ Downloaded/Processed: ${result.downloaded}`);
-  console.log(`📐 At 1080p: ${result.upscaled}`);
-  console.log(`⏭️  Skipped: ${result.skipped}`);
+  console.log(`=� At 1080p: ${result.upscaled}`);
+  console.log(`�  Skipped: ${result.skipped}`);
   console.log(`❌ Failed: ${result.failed}`);
-  console.log(`📁 Original GIFs: ${GIF_DIR}`);
-  console.log(`📁 1080p GIFs: ${GIF_1080P_DIR}`);
+  console.log(`=� Original GIFs: ${GIF_DIR}`);
+  console.log(`=� 1080p GIFs: ${GIF_1080P_DIR}`);
   
   if (result.errors.length > 0) {
     console.log('\n❌ Failed downloads:');

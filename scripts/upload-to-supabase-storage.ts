@@ -27,7 +27,7 @@ function getGifDirectory(): string {
       return GIF_DIR_1080P;
     }
   }
-  console.log('ℹ️  Using original GIFs from exercise-gifs/');
+  console.log('9  Using original GIFs from exercise-gifs/');
   return GIF_DIR_ORIGINAL;
 }
 
@@ -86,14 +86,14 @@ async function uploadDirectory(
   const result = { uploaded: 0, failed: 0, totalSize: 0, urlMap: new Map<string, string>() };
   
   if (!fs.existsSync(sourceDir)) {
-    console.log(`⚠️  Directory not found: ${sourceDir}`);
+    console.log(`�  Directory not found: ${sourceDir}`);
     return result;
   }
   
   const files = fs.readdirSync(sourceDir)
     .filter(f => f.toLowerCase().endsWith(extension));
   
-  console.log(`📋 Uploading ${files.length} ${extension} files to ${bucketName}...\n`);
+  console.log(`=� Uploading ${files.length} ${extension} files to ${bucketName}...\n`);
   
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
@@ -119,7 +119,7 @@ async function uploadDirectory(
 }
 
 async function updateDatabaseUrls(gifUrlMap: Map<string, string>, thumbnailUrlMap: Map<string, string>) {
-  console.log('\n📝 Updating database URLs...\n');
+  console.log('\n=� Updating database URLs...\n');
   
   let gifUpdated = 0;
   let thumbnailUpdated = 0;
@@ -164,26 +164,26 @@ async function main() {
   const args = process.argv.slice(2);
   const shouldUpdateUrls = args.includes('--update-urls');
   
-  console.log('☁️  Uploading to Supabase Storage...\n');
+  console.log('  Uploading to Supabase Storage...\n');
   
   const gifDir = getGifDirectory();
-  console.log(`📁 Thumbnail Source: ${THUMBNAIL_DIR}\n`);
+  console.log(`=� Thumbnail Source: ${THUMBNAIL_DIR}\n`);
   
   // Ensure buckets exist
   await ensureBucketExists(GIF_BUCKET);
   await ensureBucketExists(THUMBNAIL_BUCKET);
   
   // Upload GIFs (1080p if available)
-  console.log('\n📤 Uploading GIFs...');
+  console.log('\n=� Uploading GIFs...');
   const gifResult = await uploadDirectory(gifDir, GIF_BUCKET, '.gif');
   
   // Upload Thumbnails (216px highest quality)
-  console.log('\n📤 Uploading 216px Thumbnails...');
+  console.log('\n=� Uploading 216px Thumbnails...');
   const thumbResult = await uploadDirectory(THUMBNAIL_DIR, THUMBNAIL_BUCKET, '.jpg');
   
   // Summary
   console.log('\n' + '='.repeat(50));
-  console.log('📊 UPLOAD SUMMARY');
+  console.log('=� UPLOAD SUMMARY');
   console.log('='.repeat(50));
   console.log(`GIFs: ${gifResult.uploaded} uploaded, ${gifResult.failed} failed`);
   console.log(`   Total Size: ${(gifResult.totalSize / 1024 / 1024).toFixed(1)} MB`);
@@ -194,7 +194,7 @@ async function main() {
   if (shouldUpdateUrls) {
     await updateDatabaseUrls(gifResult.urlMap, thumbResult.urlMap);
   } else {
-    console.log('\nℹ️  Use --update-urls flag to update database with new URLs');
+    console.log('\n9  Use --update-urls flag to update database with new URLs');
   }
 }
 

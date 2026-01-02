@@ -11,7 +11,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function matchRenamedExercises() {
-  console.log('🔍 MATCHING RENAMED EXERCISES TO GIF FILES');
+  console.log('= MATCHING RENAMED EXERCISES TO GIF FILES');
   console.log('═'.repeat(80));
   console.log('');
 
@@ -103,7 +103,7 @@ async function matchRenamedExercises() {
     }).slice(0, 5); // Limit to 5 best matches
 
     if (possibleMatches.length > 0) {
-      console.log(`  🔍 Possible matches:`);
+      console.log(`  = Possible matches:`);
       possibleMatches.forEach(m => console.log(`     - ${m}`));
       
       matches.push({
@@ -121,7 +121,7 @@ async function matchRenamedExercises() {
   // STEP 4: Summary
   // ============================================
   console.log('═'.repeat(80));
-  console.log('📊 MATCHING SUMMARY');
+  console.log('=� MATCHING SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total broken exercises: ${brokenExercises?.length}`);
   console.log(`Exercises with possible matches: ${matches.length}`);

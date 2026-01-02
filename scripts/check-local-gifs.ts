@@ -19,7 +19,7 @@ interface CheckResult {
 }
 
 async function checkLocalGifs() {
-  console.log('🔍 CHECKING LOCAL FOLDER FOR MISSING GIFs');
+  console.log('= CHECKING LOCAL FOLDER FOR MISSING GIFs');
   console.log('═'.repeat(80));
   console.log(`Folder: ${LOCAL_GIF_FOLDER}\n`);
 
@@ -67,7 +67,7 @@ async function checkLocalGifs() {
   const missing = results.filter(r => !r.found);
 
   console.log('\n═'.repeat(80));
-  console.log('📊 SUMMARY');
+  console.log('=� SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total checked: ${missingExternalIds.length}`);
   console.log(`✅ Found locally: ${found.length}`);
@@ -120,16 +120,16 @@ async function checkLocalGifs() {
   );
 
   console.log('═'.repeat(80));
-  console.log('📄 Results saved to scripts/local-gif-check-results.json');
+  console.log('=� Results saved to scripts/local-gif-check-results.json');
   console.log('═'.repeat(80));
   console.log('');
 
   // Recommendation
-  console.log('💡 NEXT STEPS:');
+  console.log('=� NEXT STEPS:');
   console.log('─'.repeat(80));
   
   if (found.length === missingExternalIds.length) {
-    console.log('🎉 ALL FILES FOUND!');
+    console.log(' ALL FILES FOUND!');
     console.log('');
     console.log('Next: Upload these files to Supabase with UUID names');
     console.log('      and update database gif_url values.');

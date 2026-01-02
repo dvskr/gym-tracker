@@ -170,7 +170,7 @@ export default function DevicesScreen() {
                     </View>
 
                     <Text style={styles.devicePlatform}>
-                      {device.platform.charAt(0).toUpperCase() + device.platform.slice(1)} â€¢ v
+                      {device.platform.charAt(0).toUpperCase() + device.platform.slice(1)} • v
                       {device.appVersion}
                     </Text>
 
@@ -235,10 +235,10 @@ export default function DevicesScreen() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>About Device Management</Text>
           <Text style={styles.infoText}>
-            â€¢ Your account can be signed in on multiple devices{'\n'}
-            â€¢ Data syncs automatically across all devices{'\n'}
-            â€¢ Remove devices you no longer use for security{'\n'}
-            â€¢ Device names are detected automatically
+            • Your account can be signed in on multiple devices{'\n'}
+            • Data syncs automatically across all devices{'\n'}
+            • Remove devices you no longer use for security{'\n'}
+            • Device names are detected automatically
           </Text>
         </View>
 
