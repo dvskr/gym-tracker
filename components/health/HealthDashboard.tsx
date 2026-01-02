@@ -289,14 +289,14 @@ export function HealthInsights() {
         return {
           backgroundColor: '#22c55e20',
           borderColor: '#22c55e',
-          icon: '�x�',
+          icon: 'x',
           color: '#22c55e',
         };
       case 'moderate':
         return {
           backgroundColor: '#3b82f620',
           borderColor: '#3b82f6',
-          icon: '�x�',
+          icon: 'x',
           color: '#3b82f6',
         };
       case 'light':
@@ -317,7 +317,7 @@ export function HealthInsights() {
         return {
           backgroundColor: '#64748b20',
           borderColor: '#64748b',
-          icon: '�����',
+          icon: '',
           color: '#64748b',
         };
     }

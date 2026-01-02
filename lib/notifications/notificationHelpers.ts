@@ -7,7 +7,7 @@ import { logger } from '@/lib/utils/logger';
 export async function scheduleWorkoutReminder(
   day: string,
   time: { hour: number; minute: number },
-  message: string = "Time to crush your workout! �x�"
+  message: string = "Time to crush your workout! x"
 ): Promise<string> {
   const trigger: any = {
     hour: time.hour,
@@ -85,7 +85,7 @@ export async function sendPRNotification(exercise: string, newRecord: string): P
  */
 export async function sendStreakReminderNotification(streakDays: number): Promise<void> {
   const messages = [
-    `�x Don't break your ${streakDays}-day streak!`,
+    `x Don't break your ${streakDays}-day streak!`,
     `You're on fire! ${streakDays} days strong - keep it going!`,
     `${streakDays} days in a row! One more workout to keep the streak alive`,
   ];
@@ -112,7 +112,7 @@ export async function sendMilestoneNotification(
   description: string
 ): Promise<void> {
   await notificationService.sendNotification(
-    `Milestone Unlocked: ${milestone}! �x `,
+    `Milestone Unlocked: ${milestone}! x `,
     description,
     {
       channelId: 'achievements',

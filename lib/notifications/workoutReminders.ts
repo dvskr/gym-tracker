@@ -14,12 +14,12 @@ export interface WorkoutReminder {
 }
 
 const REMINDER_MESSAGES = [
-  "Time to crush it! �x�",
+  "Time to crush it! x",
   "Your workout is waiting!",
   "Let's get stronger today!",
   "Ready to make progress?",
   "Your future self will thank you!",
-  "No excuses - let's go! �x�",
+  "No excuses - let's go! x",
   "Gains don't wait!",
   "Make today count!",
   "Turn your goals into results!",

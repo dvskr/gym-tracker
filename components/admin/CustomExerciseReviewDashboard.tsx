@@ -323,14 +323,14 @@ export default function AdminReviewDashboard() {
                     </div>
 
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-400">
-                      <span className="capitalize">�x� {exercise.equipment}</span>
+                      <span className="capitalize">x {exercise.equipment}</span>
                       <span className="capitalize">🎯 {exercise.category}</span>
-                      <span>�x� {exercise.primary_muscles.join(', ')}</span>
+                      <span>x {exercise.primary_muscles.join(', ')}</span>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
                         {exercise.unique_users_count} user{exercise.unique_users_count !== 1 ? 's' : ''}
                       </span>
-                      <span>�x� Used {exercise.times_used}x</span>
+                      <span>x Used {exercise.times_used}x</span>
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
                         {new Date(exercise.created_at).toLocaleDateString()}

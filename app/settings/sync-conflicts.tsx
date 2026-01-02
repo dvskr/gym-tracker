@@ -28,7 +28,7 @@ const STRATEGY_OPTIONS: Array<{
     value: 'client_wins',
     label: 'This Device Wins',
     description: 'Always prefer changes made on this device',
-    icon: '=�',
+    icon: '=',
   },
   {
     value: 'server_wins',
@@ -120,7 +120,7 @@ export default function SyncConflictSettingsScreen() {
             onPress={handleViewConflicts}
           >
             <View style={styles.conflictAlertContent}>
-              <Text style={styles.conflictAlertIcon}>�</Text>
+              <Text style={styles.conflictAlertIcon}></Text>
               <View style={styles.conflictAlertText}>
                 <Text style={styles.conflictAlertTitle}>
                   {pendingConflicts} Conflict{pendingConflicts > 1 ? 's' : ''} Pending

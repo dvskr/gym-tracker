@@ -316,7 +316,7 @@ export default function ExportDataScreen() {
           </TouchableOpacity>
         ) : (
           <View style={styles.successCard}>
-            <Text style={styles.successTitle}>�S& Export Ready!</Text>
+            <Text style={styles.successTitle}>S& Export Ready!</Text>
             <Text style={styles.successText}>
               Your data has been exported successfully.
             </Text>

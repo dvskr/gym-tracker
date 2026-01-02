@@ -89,7 +89,7 @@ export default function DeleteAccountModal({
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.warningBox}>
-              <Text style={styles.warningTitle}>� This action cannot be undone!</Text>
+              <Text style={styles.warningTitle}> This action cannot be undone!</Text>
               <Text style={styles.warningText}>
                 All your data will be permanently deleted and cannot be recovered.
               </Text>

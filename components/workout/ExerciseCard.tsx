@@ -73,6 +73,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   // State for form tips collapse
   const [formTipsExpanded, setFormTipsExpanded] = useState(false);
 
+  // State for exercise detail modal
+  const [showExerciseDetail, setShowExerciseDetail] = useState(false);
+
   // Fetch previous workout data for this exercise
   const { data: previousWorkout, getPreviousSet, daysAgo } = usePreviousWorkout(exercise.id);
   
@@ -143,6 +146,12 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
     }
   }, [getPreviousSet, onUpdateSet]);
 
+  // Handle opening exercise detail
+  const handleExercisePress = useCallback(() => {
+    lightHaptic();
+    setShowExerciseDetail(true);
+  }, []);
+
   return (
     <Card variant="default" style={styles.card}>
       {/* Exercise Header */}
@@ -158,23 +167,27 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           <GripVertical size={20} color="#6b7280" />
         </TouchableOpacity>
 
-        {/* Exercise Thumbnail (PNG, not GIF) */}
+        {/* Exercise Thumbnail (PNG, not GIF) - Tappable */}
         {exercise.gifUrl && (
-          <Image
-            source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
-            style={styles.gif}
-            contentFit="cover"
-            cachePolicy="memory-disk"
-            placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
-            transition={150}
-          />
+          <TouchableOpacity onPress={handleExercisePress} activeOpacity={0.7}>
+            <Image
+              source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
+              style={styles.gif}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
+              transition={150}
+            />
+          </TouchableOpacity>
         )}
 
-        {/* Exercise Info */}
+        {/* Exercise Info - Make name tappable */}
         <View style={styles.exerciseInfo}>
-          <Text style={styles.exerciseName} numberOfLines={2}>
-            {exercise.name}
-          </Text>
+          <TouchableOpacity onPress={handleExercisePress} activeOpacity={0.7}>
+            <Text style={styles.exerciseName} numberOfLines={2}>
+              {exercise.name}
+            </Text>
+          </TouchableOpacity>
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>
               {exercise.bodyPart} • {exercise.equipment}
@@ -334,6 +347,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 }}
                 onPreviousTap={() => handleCopyPrevious(set.id, set.setNumber)}
                 onComplete={() => onCompleteSet(set.id)}
+                onDelete={() => onDeleteSet(set.id)}
               />
             </React.Fragment>
           );
@@ -352,6 +366,64 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 
       {/* Inline Rest Timer */}
       <InlineRestTimer exerciseId={workoutExercise.id} />
+
+      {/* Exercise Detail Modal */}
+      <Modal
+        visible={showExerciseDetail}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowExerciseDetail(false)}
+      >
+        <View style={styles.detailModalOverlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setShowExerciseDetail(false)}
+          />
+          <View style={styles.detailModalContent}>
+            {/* Header */}
+            <View style={styles.detailModalHeader}>
+              <Text style={styles.detailModalTitle} numberOfLines={2}>
+                {exercise.name}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowExerciseDetail(false)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <X size={24} color="#9CA3AF" />
+              </TouchableOpacity>
+            </View>
+
+            {/* GIF */}
+            {exercise.gifUrl && (
+              <Image
+                source={{ uri: exercise.gifUrl }}
+                style={styles.detailModalGif}
+                contentFit="contain"
+                cachePolicy="memory-disk"
+              />
+            )}
+
+            {/* Meta Info */}
+            <View style={styles.detailModalMeta}>
+              <Text style={styles.detailModalMetaText}>
+                {exercise.bodyPart} • {exercise.target} • {exercise.equipment}
+              </Text>
+            </View>
+
+            {/* Instructions */}
+            {exercise.instructions && exercise.instructions.length > 0 && (
+              <View style={styles.detailModalInstructions}>
+                <Text style={styles.detailModalInstructionsTitle}>Instructions</Text>
+                {exercise.instructions.map((instruction, idx) => (
+                  <Text key={idx} style={styles.detailModalInstructionText}>
+                    {idx + 1}. {instruction}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       {/* Reorder Menu Modal */}
       <Modal
@@ -731,5 +803,77 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontSize: 15,
     textAlign: 'center',
+  },
+
+  // Exercise Detail Modal
+  detailModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  detailModalContent: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    width: '90%',
+    maxWidth: 500,
+    maxHeight: '80%',
+    overflow: 'hidden',
+  },
+
+  detailModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
+  },
+
+  detailModalTitle: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'capitalize',
+    flex: 1,
+    marginRight: 8,
+  },
+
+  detailModalGif: {
+    width: '100%',
+    height: 250,
+    backgroundColor: '#0f172a',
+  },
+
+  detailModalMeta: {
+    padding: 16,
+    backgroundColor: '#0f172a',
+  },
+
+  detailModalMetaText: {
+    color: '#9CA3AF',
+    fontSize: 14,
+    textAlign: 'center',
+    textTransform: 'capitalize',
+  },
+
+  detailModalInstructions: {
+    padding: 16,
+    maxHeight: 200,
+  },
+
+  detailModalInstructionsTitle: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+
+  detailModalInstructionText: {
+    color: '#D1D5DB',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 8,
   },
 });

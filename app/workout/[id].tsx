@@ -58,6 +58,7 @@ interface ExerciseCardProps {
   index: number;
   isExpanded: boolean;
   onToggle: () => void;
+  weightUnit: string;
 }
 
 // ============================================
@@ -69,6 +70,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   index,
   isExpanded,
   onToggle,
+  weightUnit,
 }) => {
   const [heightAnim] = useState(new Animated.Value(isExpanded ? 1 : 0));
 
@@ -499,6 +501,7 @@ export default function WorkoutDetailScreen() {
                 index={index}
                 isExpanded={expandedExercises.has(we.id)}
                 onToggle={() => toggleExercise(we.id)}
+                weightUnit={weightUnit}
               />
             ))}
         </View>
@@ -1103,4 +1106,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+});

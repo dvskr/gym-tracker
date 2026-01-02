@@ -3,8 +3,8 @@ import { logger } from '@/lib/utils/logger';
  * Background Sync Usage Examples
  * 
  * The background sync system handles bidirectional synchronization:
- * - PUSH: Local changes �  Supabase (via sync queue)
- * - PULL: Supabase changes �  Local (for multi-device support)
+ * - PUSH: Local changes   Supabase (via sync queue)
+ * - PULL: Supabase changes   Local (for multi-device support)
  */
 
 import { backgroundSync, SyncStats } from '@/lib/sync/backgroundSync';
@@ -39,8 +39,8 @@ export function ManualSyncButton() {
       Alert.alert(
         'Sync Complete',
         `S& Synced: ${stats.itemsSynced}\n` +
-        `�x Pulled: ${stats.itemsPulled}\n` +
-        `${stats.errors.length > 0 ? `�a��� Errors: ${stats.errors.length}` : ''}`
+        `x Pulled: ${stats.itemsPulled}\n` +
+        `${stats.errors.length > 0 ? `a Errors: ${stats.errors.length}` : ''}`
       );
     } catch (error) {
       Alert.alert('Sync Failed', error instanceof Error ? error.message : 'Unknown error');
@@ -91,8 +91,8 @@ export function SyncStatusDisplay() {
 
   return (
     <View>
-      <Text>Status: {status.isRunning ? '�xx� Running' : '⏸��� Stopped'}</Text>
-      <Text>Network: {status.isOnline ? '�xR� Online' : '�x� Offline'}</Text>
+      <Text>Status: {status.isRunning ? 'xx Running' : '⏸ Stopped'}</Text>
+      <Text>Network: {status.isOnline ? 'xR Online' : 'x Offline'}</Text>
       <Text>Syncing: {status.isSyncing ? '⏳ Yes' : 'S& No'}</Text>
       {lastSyncTime && (
         <Text>
@@ -229,7 +229,7 @@ export function NetworkAwareSyncMonitor() {
       {!isOnline && (
         <View style={{ backgroundColor: '#f59e0b', padding: 8 }}>
           <Text style={{ color: '#fff' }}>
-            �x Offline - Will sync when reconnected
+            x Offline - Will sync when reconnected
           </Text>
         </View>
       )}
@@ -314,11 +314,11 @@ export function SyncSettingsScreen() {
       </View>
 
       <View>
-        <Text>Connection: {status.isOnline ? '�xx� Online' : '�x� Offline'}</Text>
+        <Text>Connection: {status.isOnline ? 'xx Online' : 'x Offline'}</Text>
       </View>
 
       <View>
-        <Text>Status: {status.isSyncing ? '⏳ Syncing...' : '�S& Idle'}</Text>
+        <Text>Status: {status.isSyncing ? '⏳ Syncing...' : 'S& Idle'}</Text>
       </View>
 
       {lastSync && (
@@ -379,13 +379,13 @@ async function fetchPersonalRecordsFromServer() {
 // Key Benefits of Background Sync:
 // ============================================================================
 //
-// 1. �S& Bidirectional sync (push local, pull server changes)
-// 2. �S& Multi-device support (changes from other devices sync in)
-// 3. �S& Automatic (no user intervention needed)
-// 4. �S& Smart merging (timestamp-based conflict resolution)
-// 5. �S& Battery efficient (stops when app is in background)
-// 6. �S& Network aware (syncs when online, queues when offline)
-// 7. �S& App lifecycle aware (syncs on app open/foreground)
+// 1. S& Bidirectional sync (push local, pull server changes)
+// 2. S& Multi-device support (changes from other devices sync in)
+// 3. S& Automatic (no user intervention needed)
+// 4. S& Smart merging (timestamp-based conflict resolution)
+// 5. S& Battery efficient (stops when app is in background)
+// 6. S& Network aware (syncs when online, queues when offline)
+// 7. S& App lifecycle aware (syncs on app open/foreground)
 //
 // ============================================================================
 

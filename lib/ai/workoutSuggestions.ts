@@ -539,7 +539,7 @@ class WorkoutSuggestionService {
       // 1. Bench Press - 4 x 6-8
       // - Squats - 3 x 8-10
       // • Deadlifts: 4 sets of 6-8 reps
-      const match = line.match(/[-•*\d.]\s*(.+?)[-:�]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-~]\d+|\d+)/i);
+      const match = line.match(/[-•*\d.]\s*(.+?)[-:]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-~]\d+|\d+)/i);
       
       if (match && exercises.length < 5) {
         exercises.push({

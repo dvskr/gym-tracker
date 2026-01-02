@@ -7,8 +7,8 @@ import { conflictResolver } from './conflictResolver';
  * Now with conflict detection and resolution
  * 
  * Conflict Resolution Strategy:
- * 1. If item only exists on server �  Add to local
- * 2. If item only exists locally �  Keep (will sync via queue)
+ * 1. If item only exists on server   Add to local
+ * 2. If item only exists locally   Keep (will sync via queue)
  * 3. If item exists in both:
  *    - Check for conflicts using conflictResolver
  *    - Resolve based on configured strategy

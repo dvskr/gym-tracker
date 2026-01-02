@@ -532,7 +532,7 @@ export default function WeightGoalScreen() {
 
         {/* Tips Card */}
         <View style={styles.tipsCard}>
-          <Text style={styles.tipsTitle}>�x� Healthy Tips</Text>
+          <Text style={styles.tipsTitle}>x Healthy Tips</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipText}>
               • For weight loss: 0.5-1 lb/week is sustainable

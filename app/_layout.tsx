@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { Slot } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { clearMemoryCache } from '@/lib/images/cacheManager';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useAuthStore } from '@/stores/authStore';
@@ -39,8 +40,10 @@ export default function RootLayout() {
   };
 
   return (
-    <ThemeProvider>
-      <Slot />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <Slot />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
-}
+}

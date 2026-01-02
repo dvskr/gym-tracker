@@ -26,19 +26,19 @@ export interface Achievement {
 
 const PR_MESSAGES = {
   weight: [
-    "New weight PR! {exercise}: {value}{unit} �x� ",
+    "New weight PR! {exercise}: {value}{unit} x ",
     "You're getting stronger! {exercise} PR: {value}{unit}",
-    "Beast mode! New {exercise} record: {value}{unit} �x�",
+    "Beast mode! New {exercise} record: {value}{unit} x",
     "Crushing it! {exercise}: {value}{unit} personal best!",
   ],
   reps: [
-    "Rep record! {exercise}: {value} reps �x}�",
+    "Rep record! {exercise}: {value} reps x}",
     "More reps than ever! {exercise}: {value}",
-    "Rep beast! New {exercise} record: {value} reps �x�",
+    "Rep beast! New {exercise} record: {value} reps x",
   ],
   volume: [
-    "Volume PR! {exercise}: {value}{unit} total �x�",
-    "Massive volume! {exercise}: {value}{unit} �xa�",
+    "Volume PR! {exercise}: {value}{unit} total x",
+    "Massive volume! {exercise}: {value}{unit} xa",
   ],
 };
 
@@ -65,14 +65,14 @@ class AchievementNotificationService {
       // Add to notification center
       useNotificationStore.getState().addNotification({
         type: 'pr',
-        title: 'New Personal Record! �x� ',
+        title: 'New Personal Record! x ',
         message: `${pr.exerciseName}: ${pr.newValue}${pr.unit || ''}`,
         data: pr,
       });
 
       // Push notification (only if app is backgrounded)
       await notificationService.sendNotification(
-        '�x  New Personal Record!',
+        'x  New Personal Record!',
         message,
         {
           channelId: 'achievements',
@@ -156,7 +156,7 @@ class AchievementNotificationService {
           id: 'first_workout',
           title: 'First Steps',
           description: 'Completed your first workout',
-          icon: '�x}',
+          icon: 'x}',
           category: 'workout',
         });
       }
@@ -168,7 +168,7 @@ class AchievementNotificationService {
           id: `workouts_${workoutStats.totalWorkouts}`,
           title: `${workoutStats.totalWorkouts} Workouts!`,
           description: `Completed ${workoutStats.totalWorkouts} workouts`,
-          icon: workoutStats.totalWorkouts >= 500 ? '�x� ' : '�x',
+          icon: workoutStats.totalWorkouts >= 500 ? 'x ' : 'x',
           category: 'workout',
         });
       }
@@ -180,7 +180,7 @@ class AchievementNotificationService {
           id: `streak_${workoutStats.streak}`,
           title: `${workoutStats.streak}-Day Warrior!`,
           description: `Worked out ${workoutStats.streak} days in a row`,
-          icon: '�x',
+          icon: 'x',
           category: 'streak',
         });
       }
@@ -204,7 +204,7 @@ class AchievementNotificationService {
           id: `reps_${workoutStats.totalReps}`,
           title: `${workoutStats.totalReps.toLocaleString()} Reps!`,
           description: `Completed ${workoutStats.totalReps.toLocaleString()} total reps`,
-          icon: '�x',
+          icon: 'x',
           category: 'volume',
         });
       }
@@ -225,7 +225,7 @@ class AchievementNotificationService {
             id: `volume_${milestone.value}`,
             title: milestone.title,
             description: `Lifted ${milestone.value.toLocaleString()}+ lbs total`,
-            icon: milestone.value >= 1000000 ? '�x�9️' : '�x�',
+            icon: milestone.value >= 1000000 ? 'x9️' : 'x',
             category: 'volume',
           });
         }

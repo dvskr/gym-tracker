@@ -129,9 +129,10 @@ interface WorkoutCardProps {
   item: WorkoutHistoryItem;
   onPress: () => void;
   showDate?: boolean;
+  weightUnit: string;
 }
 
-const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = true }) => {
+const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = true, weightUnit }) => {
   const formatDuration = (seconds: number): string => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -604,6 +605,7 @@ export default function HistoryScreen() {
               <WorkoutCard
                 item={item}
                 onPress={() => handleWorkoutPress(item.id)}
+                weightUnit={weightUnit}
               />
             )}
             keyExtractor={(item) => item.id}
@@ -703,6 +705,7 @@ export default function HistoryScreen() {
                     item={item}
                     onPress={() => handleWorkoutPress(item.id)}
                     showDate={false}
+                    weightUnit={weightUnit}
                   />
                 )}
                 keyExtractor={(item) => item.id}
@@ -1103,4 +1106,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
+

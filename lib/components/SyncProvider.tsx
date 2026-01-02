@@ -65,7 +65,7 @@ export function OfflineStatusBanner() {
         {isOnline ? (
           pendingCount > 0 ? `⏳ Syncing ${pendingCount} item(s)...` : 'S& All synced'
         ) : (
-          `�x� Offline${pendingCount > 0 ? ` • ${pendingCount} pending` : ''}`
+          `x Offline${pendingCount > 0 ? ` • ${pendingCount} pending` : ''}`
         )}
       </Text>
     </View>
@@ -187,7 +187,7 @@ export function DebugSyncPanel() {
       <View style={styles.debugRow}>
         <Text style={styles.debugLabel}>Status:</Text>
         <Text style={styles.debugValue}>
-          {status.isSyncing ? '�x Syncing' : '⏸��� Idle'}
+          {status.isSyncing ? 'x Syncing' : '⏸ Idle'}
         </Text>
       </View>
 

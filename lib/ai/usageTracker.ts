@@ -164,7 +164,7 @@ class AIUsageTracker {
     const stats = await this.getUsage();
 
     if (level === 'critical') {
-      return `�a��� You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
+      return `a You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
     } else if (level === 'warning') {
       return `You've used ${stats.percentUsed}% of your monthly AI limit`;
     }

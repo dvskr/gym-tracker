@@ -235,14 +235,14 @@ export function SyncSettingsSection() {
       >
         <Text style={styles.settingsItemText}>Sync Now</Text>
         <Text style={styles.settingsItemValue}>
-          {syncing ? '⏳' : isOnline ? '=' : '=�'}
+          {syncing ? '⏳' : isOnline ? '=' : '='}
         </Text>
       </TouchableOpacity>
 
       <View style={styles.settingsItem}>
         <Text style={styles.settingsItemText}>Connection Status</Text>
         <Text style={styles.settingsItemValue}>
-          {isOnline ? '=� Online' : '=4 Offline'}
+          {isOnline ? '= Online' : '=4 Offline'}
         </Text>
       </View>
 
@@ -260,7 +260,7 @@ export function SyncSettingsSection() {
           disabled={!isOnline}
         >
           <Text style={[styles.settingsItemText, styles.textWarning]}>
-            � {failedCount} Failed - Tap to Retry
+             {failedCount} Failed - Tap to Retry
           </Text>
         </TouchableOpacity>
       )}
@@ -309,7 +309,7 @@ export function SyncManagementScreen() {
       {/* Connection Status */}
       <View style={styles.connectionCard}>
         <Text style={styles.connectionStatus}>
-          {isOnline ? '=� Connected to Internet' : '=4 No Internet Connection'}
+          {isOnline ? '= Connected to Internet' : '=4 No Internet Connection'}
         </Text>
         {!isOnline && (
           <Text style={styles.connectionNote}>
@@ -355,7 +355,7 @@ export function SyncManagementScreen() {
                 );
               }}
             >
-              <Text style={styles.actionButtonText}>=� Clear Failed</Text>
+              <Text style={styles.actionButtonText}>= Clear Failed</Text>
             </TouchableOpacity>
           </>
         )}

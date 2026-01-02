@@ -21,6 +21,7 @@ import {
   Target,
   Calendar,
   Scale,
+  ChevronRight,
 } from 'lucide-react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { format, subDays, subMonths, subYears } from 'date-fns';
@@ -39,6 +40,7 @@ import {
   formatWeeklyRate,
 } from '@/lib/utils/weightTrends';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -273,7 +275,14 @@ export default function WeightChartScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => {
+          // #region agent log
+          const parentTab = getCurrentTab();
+          console.log('[DEBUG_NAV] Back button pressed:', JSON.stringify({from:'/body/weight-chart',action:'navigate to parent tab',parentTab,timestamp:Date.now()}));
+          // #endregion
+          // Navigate to parent tab instead of router.back()
+          router.push(getCurrentTab());
+        }}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Weight Progress</Text>
@@ -333,6 +342,36 @@ export default function WeightChartScreen() {
                 />
               </View>
             </View>
+
+            {/* Recent Entries List */}
+            {chartData.length > 0 && (
+              <View style={styles.recentEntriesCard}>
+                <Text style={styles.recentEntriesTitle}>RECENT ENTRIES</Text>
+                {chartData.slice(0, 7).map((entry) => (
+                  <TouchableOpacity
+                    key={entry.id}
+                    style={styles.entryRow}
+                    onPress={() => router.push(`/body/weight`)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.entryDate}>
+                      {format(new Date(entry.logged_at), 'EEE, MMM d')}
+                    </Text>
+                    <Text style={styles.entryWeight}>
+                      {Math.round(convertWeight(entry.weight, entry.weight_unit as 'lbs' | 'kg') * 10) / 10} {bodyWeight.label}
+                    </Text>
+                    <ChevronRight size={18} color="#475569" />
+                  </TouchableOpacity>
+                ))}
+                <TouchableOpacity
+                  style={styles.viewAllButton}
+                  onPress={() => router.push('/body/weight')}
+                >
+                  <Text style={styles.viewAllText}>View All & Edit</Text>
+                  <ChevronRight size={16} color="#3b82f6" />
+                </TouchableOpacity>
+              </View>
+            )}
 
             {/* Time Range Selector */}
             <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
@@ -447,7 +486,7 @@ export default function WeightChartScreen() {
                   {stats.weeklyRate === 0
                     ? "x` Your weight has been stable"
                     : stats.weeklyRate > 0
-                    ? `�x You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
+                    ? `x You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
                     : `x0 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
                 </Text>
               </View>
@@ -844,5 +883,57 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
+
+  // Recent Entries
+  recentEntriesCard: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+  },
+
+  recentEntriesTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#94a3b8',
+    marginBottom: 12,
+    letterSpacing: 0.5,
+  },
+
+  entryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
+  },
+
+  entryDate: {
+    flex: 1,
+    fontSize: 14,
+    color: '#94a3b8',
+  },
+
+  entryWeight: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
+    marginRight: 8,
+  },
+
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    marginTop: 8,
+    gap: 4,
+  },
+
+  viewAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#3b82f6',
+  },
 });
-
+

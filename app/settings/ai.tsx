@@ -263,7 +263,7 @@ export default function AISettingsScreen() {
               5. Copy and paste it here
             </Text>
             <Text style={styles.helpNote}>
-              �x� Keys start with "sk-" and are about 50 characters long
+              x Keys start with "sk-" and are about 50 characters long
             </Text>
           </View>
         </View>

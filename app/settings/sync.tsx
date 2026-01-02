@@ -74,7 +74,7 @@ export default function SyncSettingsScreen() {
         await loadData();
         Alert.alert(
           'Sync Complete',
-          `�S& Synced ${result.syncedCount} changes\n�x Pulled ${result.pulledCount} updates`
+          `S& Synced ${result.syncedCount} changes\nx Pulled ${result.pulledCount} updates`
         );
       } else {
         Alert.alert('Sync Failed', result.error || 'Unknown error');
@@ -97,7 +97,7 @@ export default function SyncSettingsScreen() {
       
       Alert.alert(
         'Retry Complete',
-        `S& ${result.syncedCount} succeeded\n${result.failedCount || 0 > 0 ? `�R ${result.failedCount} still failed` : ''}`
+        `S& ${result.syncedCount} succeeded\n${result.failedCount || 0 > 0 ? `R ${result.failedCount} still failed` : ''}`
       );
     } finally {
       setSyncing(false);

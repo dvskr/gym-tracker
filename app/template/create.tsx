@@ -139,7 +139,7 @@ const SetTypePicker: React.FC<SetTypePickerProps> = ({
             </View>
             {currentType === option.type && (
               <View style={[styles.setTypeCheck, { backgroundColor: option.color }]}>
-                <Text style={styles.setTypeCheckText}>�S</Text>
+                <Text style={styles.setTypeCheckText}>S</Text>
               </View>
             )}
           </TouchableOpacity>

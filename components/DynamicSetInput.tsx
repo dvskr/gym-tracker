@@ -39,7 +39,7 @@ export const DynamicSetInput: React.FC<DynamicSetInputProps> = ({
     switch (type) {
       case 'reps_weight':
         return previousSet.weight && previousSet.reps 
-          ? `${previousSet.weight}${previousSet.reps}`
+          ? `${previousSet.weight} × ${previousSet.reps}`
           : '—';
       
       case 'time':
@@ -56,7 +56,7 @@ export const DynamicSetInput: React.FC<DynamicSetInputProps> = ({
       
       case 'time_weight':
         return previousSet.duration_seconds && previousSet.weight
-          ? `${previousSet.duration_seconds}s  ${previousSet.weight}`
+          ? `${previousSet.duration_seconds}s × ${previousSet.weight}`
           : '—';
       
       case 'reps_only':
@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
     color: '#f1f5f9',
     textAlign: 'center',
   },
-});
+});

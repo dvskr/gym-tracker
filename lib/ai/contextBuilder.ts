@@ -490,13 +490,13 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
 
       // Add wellness-based recommendations
       if (c.sleep_quality && c.sleep_quality <= 2) {
-        context += '\n⚠️ï¿½ Note: Poor sleep - consider lighter training\n';
+        context += '\n⚠️ Note: Poor sleep - consider lighter training\n';
       }
       if (c.energy_level && c.energy_level <= 2) {
-        context += '⚠️ï¿½ Note: Low energy - may need active recovery\n';
+        context += '⚠️ Note: Low energy - may need active recovery\n';
       }
       if (c.soreness_level && c.soreness_level >= 4) {
-        context += '⚠️ï¿½ Note: High soreness - focus on unaffected muscle groups\n';
+        context += '⚠️ Note: High soreness - focus on unaffected muscle groups\n';
       }
     }
 
@@ -729,11 +729,11 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
       }
       
       if (injury.notes) {
-        context += `  ï¿½x Note: ${injury.notes}\n`;
+        context += `  x Note: ${injury.notes}\n`;
       }
     }
 
-    context += '\nï¿½x CRITICAL INSTRUCTIONS:\n';
+    context += '\nx CRITICAL INSTRUCTIONS:\n';
     context += '- DO NOT suggest any avoided exercises or movements\n';
     context += '- Suggest safe alternatives that don\'t stress injured areas\n';
     context += '- Consider injury severity when programming volume/intensity\n';
@@ -810,7 +810,7 @@ export const buildCoachContext = async (userId: string): Promise<CoachContext> =
     // ==========================================
     if (dataState.isNewUser) {
       contextText += `
-⚠️ï¿½ï¿½aï¿½ï¸⚠️ï¿½ NEW USE❌ - ZERO WORKOUT DATA ⚠️ï¿½ï¿½aï¿½ï¸⚠️
+⚠️aï¸⚠️ NEW USE❌ - ZERO WORKOUT DATA ⚠️aï¸⚠️
 
 CRITICAL INSTRUCTIONS:
 - This user has NO workout history in the system
@@ -840,15 +840,15 @@ YOU MUST BE HONEST: "I don't have any workout history for you yet. Let's start f
     if (dataState.hasInjuries && injuries.length > 0) {
       contextText += `
 
-🚨🚨🚨 ACTIVE INJURIES - CRITICAL 🚨🚨ï¿½xa
+🚨🚨🚨 ACTIVE INJURIES - CRITICAL 🚨🚨xa
 
 `;
       for (const injury of injuries) {
         contextText += `
-ï¿½xï¿½ ${injury.bodyPart.toUpperCase()} - ${injury.type || 'Injury'} (Severity: ${injury.severity})
+x ${injury.bodyPart.toUpperCase()} - ${injury.type || 'Injury'} (Severity: ${injury.severity})
    ❌ NEVE❌ suggest: ${(injury.avoidExercises || []).join(', ') || 'N/A'}
    ❌ NEVE❌ suggest movements: ${(injury.avoidMovements || []).join(', ') || 'N/A'}
-   ${injury.notes ? `ï¿½xï¿½ Note: ${injury.notes}` : ''}
+   ${injury.notes ? `x Note: ${injury.notes}` : ''}
 `;
       }
 
@@ -866,7 +866,7 @@ x MANDATORY RULES:
     // PROFILE DATA (If available)
     // ==========================================
     if (profile) {
-      contextText += '\nï¿½x` USE❌ PROFILE:\n';
+      contextText += '\nx` USE❌ PROFILE:\n';
       
       if (profile.fitness_goal) {
         contextText += `- Primary Goal: ${profile.fitness_goal}\n`;
@@ -892,7 +892,7 @@ x MANDATORY RULES:
     // TODAY'S CHECK-IN (If available)
     // ==========================================
     if (dataState.hasCheckin && checkin) {
-      contextText += `\nï¿½x TODAY'S CHECK-IN:\n`;
+      contextText += `\nx TODAY'S CHECK-IN:\n`;
       contextText += `- Energy Level: ${checkin.energyLevel}/10\n`;
       contextText += `- Motivation: ${checkin.motivation}/10\n`;
       
@@ -915,14 +915,14 @@ x MANDATORY RULES:
     // ==========================================
     contextText += `\n
 x9 DATA AVAILABILITY SUMMARY:
-- Workout History: ${dataState.hasWorkouts ? `ï¿½✅ Yes (${dataState.workoutCount} recent)` : '❌ None'}
-- Personal Records: ${dataState.hasPRs ? 'ï¿½✅ Yes' : '❌ None'}
-- Active Injuries: ${dataState.hasInjuries ? '🚨 Yes (see above)' : 'ï¿½✅ None'}
-- Today's Check-in: ${dataState.hasCheckin ? 'ï¿½✅ Yes (see above)' : '❌ None'}
-- Equipment Info: ${dataState.hasEquipment ? 'ï¿½✅ Yes (see above)' : '❌ Not specified'}
-- Goals Set: ${dataState.hasGoals ? 'ï¿½✅ Yes' : '❌ Not specified'}
+- Workout History: ${dataState.hasWorkouts ? `✅ Yes (${dataState.workoutCount} recent)` : '❌ None'}
+- Personal Records: ${dataState.hasPRs ? '✅ Yes' : '❌ None'}
+- Active Injuries: ${dataState.hasInjuries ? '🚨 Yes (see above)' : '✅ None'}
+- Today's Check-in: ${dataState.hasCheckin ? '✅ Yes (see above)' : '❌ None'}
+- Equipment Info: ${dataState.hasEquipment ? '✅ Yes (see above)' : '❌ Not specified'}
+- Goals Set: ${dataState.hasGoals ? '✅ Yes' : '❌ Not specified'}
 
-⚠️ï¿½ IMPORTANT: Base your responses ONLY on the data marked with ï¿½✅ above.
+⚠️ IMPORTANT: Base your responses ONLY on the data marked with ✅ above.
 DO NOT make claims about data marked with R.
 `;
 
@@ -936,7 +936,7 @@ DO NOT make claims about data marked with R.
     
     // Return minimal safe context on error
     return {
-      text: '⚠️ï¿½ Error loading user data. Provide general guidance only.',
+      text: '⚠️ Error loading user data. Provide general guidance only.',
       flags: {
         hasWorkouts: false,
         hasPRs: false,
@@ -1070,7 +1070,7 @@ async function getTodayCheckin(userId: string): Promise<any | null> {
 function buildWorkoutHistoryContext(workouts: any[]): string {
   if (workouts.length === 0) return '';
 
-  let context = '\nï¿½x RECENT WORKOUT HISTORY:\n\n';
+  let context = '\nx RECENT WORKOUT HISTORY:\n\n';
 
   // Show last 3 workouts with details
   const recentWorkouts = workouts.slice(0, 3);

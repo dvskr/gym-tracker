@@ -141,9 +141,9 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
           {getVolumeIcon()}
           <Text style={[styles.statValue, { color: getVolumeColor() }]}>
             {analysis.volumeComparison === 'higher'
-              ? '� '
+              ? ' '
               : analysis.volumeComparison === 'lower'
-              ? '� '
+              ? ' '
               : analysis.volumeComparison === 'same'
               ? '='
               : '—'}
@@ -174,7 +174,7 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
       {analysis.highlights.length > 0 && (
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>�x� Highlights</Text>
+            <Text style={styles.sectionTitle}>x Highlights</Text>
           </View>
           <View style={styles.bulletList}>
             {analysis.highlights.map((highlight, index) => (
@@ -193,7 +193,7 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
       {analysis.improvements.length > 0 && (
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>�x� Areas for Growth</Text>
+            <Text style={styles.sectionTitle}>x Areas for Growth</Text>
           </View>
           <View style={styles.bulletList}>
             {analysis.improvements.map((improvement, index) => (

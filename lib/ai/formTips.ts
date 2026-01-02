@@ -137,6 +137,27 @@ class FormTipsService {
   private isInitialized = false;
 
   /**
+   * Clean markdown from a string
+   */
+  private cleanMarkdown(text: string): string {
+    if (!text) return text;
+    return text
+      .replace(/^###\s*/gm, '')           // Remove ### headers
+      .replace(/^\*\*(.+?)\*\*$/gm, '$1') // Remove bold **text**
+      .replace(/\*\*(.+?)\*\*/g, '$1')    // Remove inline bold
+      .replace(/^[-•*]\s*/gm, '')         // Remove bullet points
+      .replace(/^\d+\.\s*/gm, '')         // Remove numbered lists
+      .trim();
+  }
+
+  /**
+   * Clean markdown from arrays
+   */
+  private cleanArray(arr: string[]): string[] {
+    return arr.map(item => this.cleanMarkdown(item)).filter(Boolean);
+  }
+
+  /**
    * Get form tips for an exercise (with intelligent caching)
    */
   async getFormTips(exerciseName: string): Promise<FormTip> {
@@ -204,11 +225,11 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
         return {
-          exerciseName: parsed.exerciseName || exerciseName,
-          cues: parsed.cues || [],
-          commonMistakes: parsed.commonMistakes || [],
-          breathingPattern: parsed.breathingPattern || 'Breathe naturally',
-          safetyTips: parsed.safetyTips,
+          exerciseName: this.cleanMarkdown(parsed.exerciseName || exerciseName),
+          cues: this.cleanArray(parsed.cues || []),
+          commonMistakes: this.cleanArray(parsed.commonMistakes || []),
+          breathingPattern: this.cleanMarkdown(parsed.breathingPattern || 'Breathe naturally'),
+          safetyTips: parsed.safetyTips ? this.cleanArray(parsed.safetyTips) : undefined,
           cachedAt: new Date().toISOString(),
         };
       }
@@ -231,7 +252,8 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
     let breathingPattern = 'Exhale during exertion, inhale during release';
     
     for (const line of lines) {
-      const cleanLine = line.replace(/^[-•*\d.]\s*/, '').trim();
+      // Clean markdown syntax
+      const cleanLine = this.cleanMarkdown(line);
       
       if (!cleanLine) continue;
       
@@ -353,4 +375,4 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
 }
 
 export const formTipsService = new FormTipsService();
-
+

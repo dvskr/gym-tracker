@@ -174,7 +174,7 @@ export function shouldSyncMeasurements(): boolean {
  */
 export function getMeasurementSyncLimitations(): string {
   return `
-�a��� Health Platform Limitations:
+a Health Platform Limitations:
 
 Measurements that sync:
 • Weight

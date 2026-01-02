@@ -217,10 +217,12 @@ export function RecoveryStatus() {
 
         {/* Status Info */}
         <View style={styles.statusInfo}>
-          <Text style={styles.emoji}>{getStatusEmoji()}</Text>
-          <Text style={[styles.statusTitle, { color: getStatusColor() }]}>
-            {getStatusTitle()}
-          </Text>
+          <View style={styles.statusTitleRow}>
+            <Text style={styles.emoji}>{getStatusEmoji()}</Text>
+            <Text style={[styles.statusTitle, { color: getStatusColor() }]}>
+              {getStatusTitle()}
+            </Text>
+          </View>
           <Text style={styles.message}>{getStatusMessage()}</Text>
         </View>
       </View>
@@ -390,14 +392,18 @@ const styles = StyleSheet.create({
   statusInfo: {
     flex: 1,
   },
+  statusTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
   emoji: {
     fontSize: 24,
-    marginBottom: 4,
+    marginRight: 8,
   },
   statusTitle: {
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 4,
   },
   message: {
     fontSize: 13,
@@ -517,4 +523,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
+

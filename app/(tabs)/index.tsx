@@ -137,7 +137,6 @@ const ContinueBanner: React.FC<ContinueBannerProps> = ({
       onPress={onContinue}
       activeOpacity={0.8}
     >
-      <View style={styles.continuePulse} />
       <View style={styles.continueContent}>
         <View style={styles.continueLeft}>
           <Text style={styles.continueLabel}>WORKOUT IN PROGRESS</Text>
@@ -733,21 +732,11 @@ const styles = StyleSheet.create({
 
   // Continue Banner
   continueBanner: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#1e293b', // Dark background, no green
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#22c55e',
-  },
-
-  continuePulse: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-    backgroundColor: '#22c55e',
+    // No border at all
   },
 
   continueContent: {
@@ -1009,4 +998,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748b',
   },
-});
+});

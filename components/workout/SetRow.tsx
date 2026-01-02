@@ -5,10 +5,13 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
-import { Check } from 'lucide-react-native';
+import { Check, Trash2 } from 'lucide-react-native';
 import { lightHaptic, successHaptic } from '@/lib/utils/haptics';
 import { useSettingsStore } from '@/stores/settingsStore';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 // ============================================
 // Types
@@ -27,6 +30,7 @@ interface SetRowProps {
   onRepsChange: (value: string) => void;
   onComplete: () => void;
   onPreviousTap: () => void;
+  onDelete?: () => void; // Add delete handler
   // New props for flexible measurements
   measurementType?: MeasurementType;
   durationSeconds?: number;
@@ -52,6 +56,7 @@ function SetRowComponent({
   onRepsChange,
   onComplete,
   onPreviousTap,
+  onDelete,
   measurementType = 'reps_weight',
   durationSeconds,
   distanceMeters,
@@ -121,7 +126,7 @@ function SetRowComponent({
     }
     if (measurementType === 'time_weight') {
       return durationSeconds && previousWeight
-        ? `${durationSeconds}s  ${previousWeight}`
+        ? `${durationSeconds}s × ${previousWeight}`
         : '—';
     }
     if (measurementType === 'assisted') {
@@ -132,9 +137,9 @@ function SetRowComponent({
     if (measurementType === 'reps_only') {
       return previousReps || '—';
     }
-    // Default: reps_weight
+    // Default: reps_weight - Format as "weight × reps"
     return previousWeight && previousReps
-      ? `${previousWeight}${previousReps}`
+      ? `${previousWeight} × ${previousReps}`
       : '—';
   };
 
@@ -154,6 +159,42 @@ function SetRowComponent({
     successHaptic();
     onComplete();
   }, [onComplete]);
+
+  // Handle delete with confirmation
+  const handleDelete = useCallback(() => {
+    if (!onDelete) return;
+    
+    Alert.alert(
+      'Delete Set',
+      `Delete set ${setNumber}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            lightHaptic();
+            onDelete();
+          },
+        },
+      ]
+    );
+  }, [onDelete, setNumber]);
+
+  // Render right swipe action (delete button)
+  const renderRightActions = useCallback(() => {
+    if (!onDelete) return null;
+    
+    return (
+      <TouchableOpacity
+        style={styles.deleteAction}
+        onPress={handleDelete}
+        activeOpacity={0.8}
+      >
+        <Trash2 size={20} color="#ffffff" />
+      </TouchableOpacity>
+    );
+  }, [onDelete, handleDelete]);
 
   // Handle weight input change - update local state immediately
   const handleWeightInputChange = useCallback((text: string) => {
@@ -404,37 +445,44 @@ function SetRowComponent({
   };
 
   return (
-    <View style={[styles.row, isCompleted && styles.rowCompleted]}>
-      {/* SET */}
-      <View style={styles.setColumn}>
-        <Text style={styles.setNumber}>{setNumber}</Text>
+    <Swipeable
+      renderRightActions={renderRightActions}
+      overshootRight={false}
+      friction={2}
+      enableTrackpadTwoFingerGesture
+    >
+      <View style={[styles.row, isCompleted && styles.rowCompleted]}>
+        {/* SET */}
+        <View style={styles.setColumn}>
+          <Text style={styles.setNumber}>{setNumber}</Text>
+        </View>
+
+        {/* PREVIOUS - Only show if setting is enabled */}
+        {showPreviousWorkout && (
+        <Pressable
+          style={styles.previousColumn}
+          onPress={handlePreviousTap}
+          disabled={!hasPrevious}
+        >
+          <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
+            {previousText}
+          </Text>
+        </Pressable>
+        )}
+
+        {/* DYNAMIC INPUTS */}
+        {renderInputs()}
+
+        {/* CHECKMARK */}
+        <Pressable
+          style={[styles.checkButton, isCompleted && styles.checkButtonCompleted]}
+          onPress={handleComplete}
+          hitSlop={8}
+        >
+          {isCompleted && <Check size={16} color="#ffffff" strokeWidth={3} />}
+        </Pressable>
       </View>
-
-      {/* PREVIOUS - Only show if setting is enabled */}
-      {showPreviousWorkout && (
-      <Pressable
-        style={styles.previousColumn}
-        onPress={handlePreviousTap}
-        disabled={!hasPrevious}
-      >
-        <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
-          {previousText}
-        </Text>
-      </Pressable>
-      )}
-
-      {/* DYNAMIC INPUTS */}
-      {renderInputs()}
-
-      {/* CHECKMARK */}
-      <Pressable
-        style={[styles.checkButton, isCompleted && styles.checkButtonCompleted]}
-        onPress={handleComplete}
-        hitSlop={8}
-      >
-        {isCompleted && <Check size={16} color="#ffffff" strokeWidth={3} />}
-      </Pressable>
-    </View>
+    </Swipeable>
   );
 }
 
@@ -453,7 +501,8 @@ export const SetRow = memo(SetRowComponent, (prev, next) => {
     prev.measurementType === next.measurementType &&
     prev.durationSeconds === next.durationSeconds &&
     prev.distanceMeters === next.distanceMeters &&
-    prev.assistanceWeight === next.assistanceWeight
+    prev.assistanceWeight === next.assistanceWeight &&
+    prev.onDelete === next.onDelete
   );
 });
 
@@ -540,4 +589,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#22c55e',
     borderColor: '#22c55e',
   },
-});
+
+  // Swipe Delete Action
+  deleteAction: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '100%',
+  },
+});

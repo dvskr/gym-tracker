@@ -97,9 +97,9 @@ export function MyComponent() {
 
   return (
     <View>
-      <Text>Status: {isOnline ? '=� Online' : '=4 Offline'}</Text>
+      <Text>Status: {isOnline ? '= Online' : '=4 Offline'}</Text>
       <Text>Connection: {connectionType}</Text>
-      {!isWifi && <Text>� Not on WiFi - large uploads will use data</Text>}
+      {!isWifi && <Text> Not on WiFi - large uploads will use data</Text>}
     </View>
   );
 }

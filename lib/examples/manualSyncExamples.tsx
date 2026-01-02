@@ -32,10 +32,10 @@ export function WorkoutsScreenWithRefresh() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      // �S& Sync data
+      // S& Sync data
       await manualSync.syncNow();
       
-      // �S& Reload from local storage
+      // S& Reload from local storage
       await loadWorkouts();
     } finally {
       setRefreshing(false);
@@ -46,7 +46,7 @@ export function WorkoutsScreenWithRefresh() {
     <FlatList
       data={workouts}
       renderItem={({ item }) => <WorkoutCard workout={item} />}
-      // �S& Pull-to-refresh control
+      // S& Pull-to-refresh control
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -169,7 +169,7 @@ export function ManualSyncWithProgress() {
         setProgress('Complete!');
         Alert.alert(
           'Sync Complete',
-          `�S& ${result.syncedCount} synced\n�x ${result.pulledCount} pulled`
+          `S& ${result.syncedCount} synced\nx ${result.pulledCount} pulled`
         );
       } else {
         Alert.alert('Sync Failed', result.error);
@@ -225,7 +225,7 @@ export function SyncOnFocusScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // �S& Sync when screen comes into focus
+      // S& Sync when screen comes into focus
       const syncOnFocus = async () => {
         const result = await manualSync.syncNow();
         if (result.success) {
@@ -251,7 +251,7 @@ export function SyncOnFocusScreen() {
 
 export function PeriodicSyncScreen() {
   useEffect(() => {
-    // �S& Sync every 5 minutes
+    // S& Sync every 5 minutes
     const interval = setInterval(async () => {
       const settings = await manualSync.getSettings();
       if (settings.autoSync) {
@@ -271,7 +271,7 @@ export function PeriodicSyncScreen() {
 
 export function SyncBeforeAction() {
   const handleStartWorkout = async () => {
-    // �S& Sync before starting workout to get latest templates
+    // S& Sync before starting workout to get latest templates
     await manualSync.syncNow();
     
     // Then start workout
@@ -414,7 +414,7 @@ export function SyncOnAppForeground() {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', async (nextAppState) => {
       if (nextAppState === 'active') {
-        // �S& App came to foreground - sync
+        // S& App came to foreground - sync
  logger.log('App active - syncing...');
         await manualSync.syncNow();
       }
@@ -509,14 +509,14 @@ const styles = StyleSheet.create({
 // Key Benefits:
 // ============================================================================
 //
-// 1. �S& Pull-to-refresh on any screen
-// 2. �S& Manual sync button in headers
-// 3. �S& Automatic sync on app foreground
-// 4. �S& Sync before important actions
-// 5. �S& Retry failed operations easily
-// 6. �S& Full control over sync settings
-// 7. �S& Data usage tracking
-// 8. �S& WiFi-only option
+// 1. S& Pull-to-refresh on any screen
+// 2. S& Manual sync button in headers
+// 3. S& Automatic sync on app foreground
+// 4. S& Sync before important actions
+// 5. S& Retry failed operations easily
+// 6. S& Full control over sync settings
+// 7. S& Data usage tracking
+// 8. S& WiFi-only option
 //
 // ============================================================================
 

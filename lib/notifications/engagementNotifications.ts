@@ -10,32 +10,32 @@ export interface StreakData {
 
 const STREAK_MESSAGES = {
   reminder: [
-    "Don't let your {streak}-day streak end! �x�",
-    "Keep the fire alive! {streak} days strong �x�",
+    "Don't let your {streak}-day streak end! x",
+    "Keep the fire alive! {streak} days strong x",
     "One workout away from {nextStreak} days!",
     "Your {streak}-day streak is counting on you!",
-    "{streak} days of progress - keep going! �x�",
+    "{streak} days of progress - keep going! x",
   ],
   celebration: [
-    "Amazing! {streak} days in a row! �x}0",
+    "Amazing! {streak} days in a row! x}0",
     "{streak}-day streak! You're unstoppable!",
-    "New streak record: {streak} days! �x� ",
+    "New streak record: {streak} days! x ",
     "Incredible dedication! {streak} consecutive days!",
     "{streak} days strong! This is your year! ⭐",
   ],
   milestone: [
-    "�x}` Milestone Alert: {streak} days!",
-    "�x�  {streak}-Day Warrior!",
+    "x}` Milestone Alert: {streak} days!",
+    "x  {streak}-Day Warrior!",
     "⭐ Legend Status: {streak} Days!",
   ],
 };
 
 const INACTIVITY_MESSAGES = [
-  { days: 3, message: "Haven't seen you in a bit! Ready to train? �x�" },
-  { days: 7, message: "A week without a workout? Let's fix that! �x�9️" },
-  { days: 14, message: "We miss you! Start fresh today �xRx" },
-  { days: 21, message: "Three weeks is long enough. Your comeback starts now! �x�" },
-  { days: 30, message: "It's never too late to restart. One workout at a time �xa" },
+  { days: 3, message: "Haven't seen you in a bit! Ready to train? x" },
+  { days: 7, message: "A week without a workout? Let's fix that! x9️" },
+  { days: 14, message: "We miss you! Start fresh today xRx" },
+  { days: 21, message: "Three weeks is long enough. Your comeback starts now! x" },
+  { days: 30, message: "It's never too late to restart. One workout at a time xa" },
 ];
 
 const MILESTONE_STREAKS = [7, 14, 21, 30, 60, 90, 100, 150, 200, 250, 300, 365];
@@ -86,7 +86,7 @@ class EngagementNotificationService {
         .replace('{nextStreak}', (streak + 1).toString());
 
       await notificationService.scheduleNotification(
-        'Streak Alert! �x',
+        'Streak Alert! x',
         message,
         {
           type: 'date' as const,
@@ -140,7 +140,7 @@ class EngagementNotificationService {
         // Only schedule if in the future
         if (reminderDate > new Date()) {
           await notificationService.scheduleNotification(
-            days <= 7 ? 'Missing You! �x�' : 'Ready to Restart? xRx',
+            days <= 7 ? 'Missing You! x' : 'Ready to Restart? xRx',
             message,
             {
               type: 'date' as const,

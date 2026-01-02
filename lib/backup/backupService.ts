@@ -435,7 +435,7 @@ class BackupService {
           );
         }
       } else {
-        completeStep('�S No custom exercises');
+        completeStep('S No custom exercises');
       }
 
       // Step 8: Restore settings

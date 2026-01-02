@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/utils/logger';
 import {
   View,
   Text,
+  FlatList,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
@@ -443,7 +444,7 @@ const FolderSection: React.FC<FolderSectionProps> = ({
 
 const EmptyState: React.FC<{ onCreatePress: () => void }> = ({ onCreatePress }) => (
   <View style={styles.emptyContainer}>
-    <Text style={styles.emptyIcon}>�x9️</Text>
+    <Text style={styles.emptyIcon}>x9️</Text>
     <Text style={styles.emptyTitle}>No Templates Yet</Text>
     <Text style={styles.emptyDescription}>
       Create a template to quickly start your favorite workouts.
@@ -704,6 +705,100 @@ export default function TemplatesScreen() {
   const totalTemplates =
     folders.reduce((acc, f) => acc + f.templates.length, 0) + uncategorizedTemplates.length;
 
+  // Define list item types for FlatList
+  type ListItemType =
+    | { type: 'folder'; data: TemplateFolder & { templates: Template[] } }
+    | { type: 'uncategorizedHeader' }
+    | { type: 'template'; data: Template };
+
+  // Memoize combined list data
+  const listData = useMemo((): ListItemType[] => {
+    const items: ListItemType[] = [];
+
+    // Add folders
+    folders.forEach((folder) => {
+      items.push({ type: 'folder', data: folder });
+    });
+
+    // Add uncategorized section
+    if (uncategorizedTemplates.length > 0) {
+      items.push({ type: 'uncategorizedHeader' });
+      uncategorizedTemplates.forEach((template) => {
+        items.push({ type: 'template', data: template });
+      });
+    }
+
+    return items;
+  }, [folders, uncategorizedTemplates]);
+
+  // Memoized render function
+  const renderItem = useCallback(
+    ({ item }: { item: ListItemType }) => {
+      if (item.type === 'folder') {
+        return (
+          <FolderSection
+            folder={item.data}
+            onTemplatePress={handleTemplatePress}
+            onStartWorkout={handleStartWorkout}
+            onEditTemplate={handleEditTemplate}
+            onDuplicateTemplate={handleDuplicateTemplate}
+            onDeleteTemplate={handleDeleteTemplate}
+            onMoveToFolder={(template) => setMovingTemplate(template)}
+            onEditFolder={() => {
+              setEditingFolder(item.data);
+              setNewFolderName(item.data.name);
+              setSelectedColor(item.data.color);
+            }}
+            onDeleteFolder={() => handleDeleteFolder(item.data.id)}
+          />
+        );
+      }
+
+      if (item.type === 'uncategorizedHeader') {
+        return (
+          <View style={styles.uncategorizedSection}>
+            <View style={styles.uncategorizedHeader}>
+              <Text style={styles.uncategorizedTitle}>Uncategorized</Text>
+              <Text style={styles.uncategorizedCount}>
+                {uncategorizedTemplates.length}
+              </Text>
+            </View>
+          </View>
+        );
+      }
+
+      // item.type === 'template'
+      return (
+        <View style={styles.uncategorizedSection}>
+          <TemplateCard
+            template={item.data}
+            onPress={() => handleTemplatePress(item.data.id!)}
+            onStartWorkout={() => handleStartWorkout(item.data)}
+            onEdit={() => handleEditTemplate(item.data.id!)}
+            onDuplicate={() => handleDuplicateTemplate(item.data)}
+            onDelete={() => handleDeleteTemplate(item.data.id!)}
+            onMoveToFolder={() => setMovingTemplate(item.data)}
+          />
+        </View>
+      );
+    },
+    [
+      handleTemplatePress,
+      handleStartWorkout,
+      handleEditTemplate,
+      handleDuplicateTemplate,
+      handleDeleteTemplate,
+      uncategorizedTemplates.length,
+    ]
+  );
+
+  // Key extractor
+  const keyExtractor = useCallback((item: ListItemType, index: number) => {
+    if (item.type === 'folder') return `folder-${item.data.id}`;
+    if (item.type === 'uncategorizedHeader') return 'uncategorized-header';
+    return `template-${item.data.id}-${index}`;
+  }, []);
+
   // Loading state
   if (isLoading) {
     return (
@@ -776,10 +871,16 @@ export default function TemplatesScreen() {
       {totalTemplates === 0 ? (
         <EmptyState onCreatePress={handleCreateTemplate} />
       ) : (
-        <ScrollView
+        <FlatList
+          data={listData}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={5}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -788,53 +889,8 @@ export default function TemplatesScreen() {
               colors={['#3b82f6']}
             />
           }
-        >
-          {/* Folders */}
-          {folders.map((folder) => (
-            <FolderSection
-              key={folder.id}
-              folder={folder}
-              onTemplatePress={handleTemplatePress}
-              onStartWorkout={handleStartWorkout}
-              onEditTemplate={handleEditTemplate}
-              onDuplicateTemplate={handleDuplicateTemplate}
-              onDeleteTemplate={handleDeleteTemplate}
-              onMoveToFolder={(template) => setMovingTemplate(template)}
-              onEditFolder={() => {
-                setEditingFolder(folder);
-                setNewFolderName(folder.name);
-                setSelectedColor(folder.color);
-              }}
-              onDeleteFolder={() => handleDeleteFolder(folder.id)}
-            />
-          ))}
-
-          {/* Uncategorized */}
-          {uncategorizedTemplates.length > 0 && (
-            <View style={styles.uncategorizedSection}>
-              <View style={styles.uncategorizedHeader}>
-                <Text style={styles.uncategorizedTitle}>Uncategorized</Text>
-                <Text style={styles.uncategorizedCount}>{uncategorizedTemplates.length}</Text>
-              </View>
-
-              {uncategorizedTemplates.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  onPress={() => handleTemplatePress(template.id!)}
-                  onStartWorkout={() => handleStartWorkout(template)}
-                  onEdit={() => handleEditTemplate(template.id!)}
-                  onDuplicate={() => handleDuplicateTemplate(template)}
-                  onDelete={() => handleDeleteTemplate(template.id!)}
-                  onMoveToFolder={() => setMovingTemplate(template)}
-                />
-              ))}
-            </View>
-          )}
-
-          {/* Bottom spacing */}
-          <View style={styles.bottomSpacer} />
-        </ScrollView>
+          ListFooterComponent={<View style={styles.bottomSpacer} />}
+        />
       )}
 
       {/* Create/Edit Folder Modal */}
@@ -1654,4 +1710,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
-});
+});

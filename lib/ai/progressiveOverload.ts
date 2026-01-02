@@ -108,13 +108,13 @@ class ProgressiveOverloadService {
         const hitTargetPreviously = secondLastMatchingSet.reps >= targetRepsToHit;
         
         if (hitTargetPreviously) {
-          // Hit target reps at this weight for 2 sessions �  increase weight
+          // Hit target reps at this weight for 2 sessions   increase weight
           const increment = this.getWeightIncrement(suggestedWeight);
           suggestedWeight += increment;
           progressType = 'weight';
-          reasoning = `You hit ${lastMatchingSet.reps} reps at ${lastMatchingSet.weight}lbs for 2+ sessions. Time to add ${increment}lbs! �x`;
+          reasoning = `You hit ${lastMatchingSet.reps} reps at ${lastMatchingSet.weight}lbs for 2+ sessions. Time to add ${increment}lbs! x`;
         } else {
-          // Hit target this time but not last time �  maintain
+          // Hit target this time but not last time   maintain
           progressType = 'maintain';
           reasoning = `Great progress! You hit ${lastMatchingSet.reps} reps. Try to match or beat this at ${suggestedWeight}lbs.`;
         }
@@ -128,7 +128,7 @@ class ProgressiveOverloadService {
       progressType = 'reps';
       const repsToAdd = Math.min(2, targetRepsToHit - lastMatchingSet.reps);
       suggestedReps = lastMatchingSet.reps + repsToAdd;
-      reasoning = `Last time: ${lastMatchingSet.weight}lbs × ${lastMatchingSet.reps}. Try for ${suggestedReps}+ reps today! �x�`;
+      reasoning = `Last time: ${lastMatchingSet.weight}lbs × ${lastMatchingSet.reps}. Try for ${suggestedReps}+ reps today! x`;
     } else {
       // Hit target but no history to compare   maintain
       progressType = 'maintain';
@@ -149,7 +149,7 @@ class ProgressiveOverloadService {
     if (history.personalRecord) {
       const { weight: prWeight, reps: prReps } = history.personalRecord;
       if (suggestedWeight > prWeight || (suggestedWeight === prWeight && suggestedReps > prReps)) {
-        reasoning += ` �x�  This would be a new PR! (Current: ${prWeight}lbs  ${prReps})`;
+        reasoning += ` x  This would be a new PR! (Current: ${prWeight}lbs  ${prReps})`;
       }
     }
 

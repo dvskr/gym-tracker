@@ -378,7 +378,7 @@ export default function WorkoutCompleteScreen() {
       case 2: return 'It was okay';
       case 3: return 'Good workout';
       case 4: return 'Great workout!';
-      case 5: return 'Best workout ever! �x�';
+      case 5: return 'Best workout ever! 🔥';
       default: return '';
     }
   };
@@ -404,17 +404,17 @@ export default function WorkoutCompleteScreen() {
             <Trophy size={56} color="#fbbf24" />
           </View>
           <View style={styles.confettiLeft}>
-            <Text style={styles.confettiEmoji}>�x}0</Text>
+            <Text style={styles.confettiEmoji}>🎉</Text>
           </View>
           <View style={styles.confettiRight}>
-            <Text style={styles.confettiEmoji}>�x}`</Text>
+            <Text style={styles.confettiEmoji}>✨</Text>
           </View>
         </Animated.View>
 
         {/* Congratulations Text */}
         <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Workout Complete!</Text>
-          <Text style={styles.subtitle}>Amazing work! You crushed it �x</Text>
+          <Text style={styles.subtitle}>Amazing work! You crushed it 💪</Text>
         </Animated.View>
 
         {/* PR Callout */}
@@ -754,12 +754,12 @@ const styles = StyleSheet.create({
 
   // PR Callout
   prContainer: {
-    backgroundColor: '#422006',
+    backgroundColor: 'rgba(245, 158, 11, 0.15)', // Subtle amber tint
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#fbbf24',
+    borderLeftWidth: 4,
+    borderLeftColor: '#fbbf24', // Left accent instead of full border
   },
 
   prHeader: {
@@ -1061,4 +1061,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+});

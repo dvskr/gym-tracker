@@ -207,7 +207,7 @@ Total Volume: ${previousVolume} lbs
 ${previousVolume > 0 ? `Volume Change: ${((currentVolume - previousVolume) / previousVolume * 100).toFixed(1)}%` : ''}`
       : '\n\nThis is their first workout of this type!';
 
-    const prContext = prCount > 0 ? `\n\n�x  ${prCount} NEW PERSONAL RECORD${prCount > 1 ? 'S' : ''} SET!` : '';
+    const prContext = prCount > 0 ? `\n\nx  ${prCount} NEW PERSONAL RECORD${prCount > 1 ? 'S' : ''} SET!` : '';
 
     const prompt = `Analyze this completed workout and provide encouraging feedback.
 
@@ -333,7 +333,7 @@ Respond in this exact JSON format:
 
     // Add PR callout to summary
     if (prCount > 0) {
-      summary += ` �x  ${prCount} new PR${prCount > 1 ? 's' : ''}!`;
+      summary += ` x  ${prCount} new PR${prCount > 1 ? 's' : ''}!`;
     }
 
     // Build highlights

@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { preloadAllAppData, PreloadProgress } from '@/lib/services/preloadService';
 import { AppLoadingScreen } from '@/components/AppLoadingScreen';
 import { PreloadProvider } from '@/contexts/PreloadContext';
+import { setCurrentTab } from '@/lib/navigation/navigationState';
 
 const tabs = [
   { name: 'index', title: 'Home', icon: Home, path: '/(tabs)' },
@@ -29,6 +30,16 @@ export default function TabsLayout() {
     percentage: 0,
     isComplete: false,
   });
+
+  // #region agent log
+  useEffect(() => {
+    console.log('[DEBUG_NAV] Pathname changed:', JSON.stringify({pathname,timestamp:Date.now()}));
+    // Log navigation state
+    if (typeof router.canGoBack === 'function') {
+      console.log('[DEBUG_NAV] Can go back:', router.canGoBack());
+    }
+  }, [pathname]);
+  // #endregion
 
   useEffect(() => {
     // Reset preload flag if user changed
@@ -65,8 +76,45 @@ export default function TabsLayout() {
   }
 
   const isActive = (tabPath: string, tabName: string) => {
+    // #region agent log
+    let result = false;
+    
+    //  IMPORTANT: Don't let nested routes (like /settings/* or /body/*) trigger tab changes
+    // These routes should preserve the current tab as active
+    
     if (tabName === 'index') {
-      return pathname === '/' || pathname === '/(tabs)' || pathname === '/(tabs)/index';
+      result = pathname === '/' || pathname === '/(tabs)' || pathname === '/(tabs)/index' || pathname.includes('/coach');
+    } else if (tabName === 'workout') {
+      // Workout tab owns /template/* and /workout/* and /exercise/* routes
+      result = pathname.includes('/workout') || pathname.includes('/template') || pathname.includes('/exercise');
+    } else if (tabName === 'history') {
+      result = pathname.includes('/history');
+    } else if (tabName === 'progress') {
+      // Progress tab owns /body/* routes
+      result = pathname.includes('/progress') || pathname.includes('/body/');
+    } else if (tabName === 'profile') {
+      // Profile tab owns /settings/* routes
+      result = pathname.includes('/profile') || pathname.includes('/settings');
+    } else {
+      result = pathname.includes(tabName);
+    }
+    
+    console.log('[DEBUG_NAV] isActive check:', JSON.stringify({tabName,tabPath,pathname,result,timestamp:Date.now()}));
+    // #endregion
+    
+    if (tabName === 'index') {
+      return pathname === '/' || pathname === '/(tabs)' || pathname === '/(tabs)/index' || pathname.includes('/coach');
+    } else if (tabName === 'workout') {
+      // Workout tab owns /template/* and /workout/* routes
+      return pathname.includes('/workout') || pathname.includes('/template') || pathname.includes('/exercise');
+    } else if (tabName === 'history') {
+      return pathname.includes('/history');
+    } else if (tabName === 'progress') {
+      // Progress tab owns /body/* routes (weight, measurements, photos, etc.)
+      return pathname.includes('/progress') || pathname.includes('/body/');
+    } else if (tabName === 'profile') {
+      // Profile tab owns /settings/* routes
+      return pathname.includes('/profile') || pathname.includes('/settings');
     }
     return pathname.includes(tabName);
   };
@@ -87,7 +135,25 @@ export default function TabsLayout() {
               <TouchableOpacity
                 key={tab.name}
                 style={styles.tabItem}
-                onPress={() => router.push(tab.path as any)}
+                onPress={() => {
+                  // #region agent log
+                  const isTabActive = isActive(tab.path, tab.name);
+                  console.log('[DEBUG_NAV] Tab clicked:', JSON.stringify({tabName:tab.name,tabPath:tab.path,currentPathname:pathname,isTabActive,willNavigate:!isTabActive,timestamp:Date.now()}));
+                  // #endregion
+                  if (!isActive(tab.path, tab.name)) {
+                    // #region agent log
+                    console.log('[DEBUG_NAV] Executing router.replace:', JSON.stringify({from:pathname,to:tab.path,tabName:tab.name,canGoBack:typeof router.canGoBack === 'function' ? router.canGoBack() : 'unknown',timestamp:Date.now()}));
+                    // #endregion
+                    // Track current tab for back navigation
+                    setCurrentTab(tab.path);
+                    // Use replace for tab switches to avoid stack pollution
+                    // This prevents: [Home, Workout, Profile] stacking up
+                    router.replace(tab.path as any);
+                    // #region agent log
+                    console.log('[DEBUG_NAV] router.replace completed:', JSON.stringify({tabName:tab.name,tabPath:tab.path,timestamp:Date.now()}));
+                    // #endregion
+                  }
+                }}
               >
                 <Icon 
                   color={active ? '#3b82f6' : '#94a3b8'} 
@@ -135,4 +201,4 @@ const styles = StyleSheet.create({
   tabLabelActive: {
     color: '#3b82f6',
   },
-});
+});

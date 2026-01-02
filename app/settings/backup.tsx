@@ -193,7 +193,7 @@ export default function BackupScreen() {
       } else {
         Alert.alert(
           'Restore Completed with Errors',
-          `�S& ${result.itemsRestored} items restored\nR ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
+          `S& ${result.itemsRestored} items restored\nR ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
           [
             {
               text: 'View Details',

@@ -79,7 +79,7 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
         return `${set.weight || 0} lbs for ${timeStr}`;
       },
       shortFormat: (set) => `${set.weight || 0} lbs  ${set.duration_seconds || 0}s`,
-      icon: '=�',
+      icon: '=',
     },
     reps_only: {
       type: 'reps_only',

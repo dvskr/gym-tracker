@@ -79,7 +79,7 @@ const WeightEntryRow: React.FC<WeightEntryRowProps> = ({ entry, onPress }) => {
 
   const getChangeText = () => {
     if (entry.change === undefined) return '';
-    if (entry.change === 0) return '�';
+    if (entry.change === 0) return '';
     const sign = entry.change > 0 ? '+' : '';
     return `${sign}${entry.change}`;
   };
@@ -531,21 +531,6 @@ export default function BodyWeightScreen() {
           )}
         </View>
 
-        {/* View Chart Link */}
-        {recentEntries.length > 0 && (
-          <TouchableOpacity
-            style={styles.chartLink}
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push('/body/weight-chart');
-            }}
-          >
-            <TrendingUp size={20} color="#3b82f6" />
-            <Text style={styles.chartLinkText}>View Weight Chart</Text>
-            <ChevronRight size={18} color="#3b82f6" />
-          </TouchableOpacity>
-        )}
-
         {/* Bottom Spacer */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -792,23 +777,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // Chart Link
-  chartLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1e293b',
-    paddingVertical: 14,
-    borderRadius: 12,
-    gap: 8,
-  },
-
-  chartLinkText: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#3b82f6',
-  },
-
   // Modal
   modalOverlay: {
     flex: 1,
@@ -960,4 +928,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

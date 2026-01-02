@@ -338,13 +338,13 @@ class DeviceManager {
   getPlatformIcon(platform: string): string {
     switch (platform) {
       case 'ios':
-        return '�x�';
+        return 'x';
       case 'android':
-        return '�x�';
+        return 'x';
       case 'web':
-        return '�xR�';
+        return 'xR';
       default:
-        return '�x';
+        return 'x';
     }
   }
 

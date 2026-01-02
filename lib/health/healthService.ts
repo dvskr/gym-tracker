@@ -881,7 +881,7 @@ class HealthService {
 
     try {
  logger.log(
-        `❤�� Reading heart rate from ${startTime.toLocaleTimeString()} to ${endTime.toLocaleTimeString()}`
+        `❤ Reading heart rate from ${startTime.toLocaleTimeString()} to ${endTime.toLocaleTimeString()}`
       );
 
       const records = await readRecords('HeartRate', {
@@ -1091,7 +1091,7 @@ class HealthService {
 
     try {
  logger.log(
-        `�x Reading steps from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
+        `x Reading steps from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
       );
 
       const records = await readRecords('Steps', {
@@ -1285,7 +1285,7 @@ class HealthService {
         };
 
  logger.log(
-          `�x Sleep stages: ${sleepData.stages.deep}m deep, ${sleepData.stages.rem}m REM, ${sleepData.stages.light}m light`
+          `x Sleep stages: ${sleepData.stages.deep}m deep, ${sleepData.stages.rem}m REM, ${sleepData.stages.light}m light`
         );
       }
 

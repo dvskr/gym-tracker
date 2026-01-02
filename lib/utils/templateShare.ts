@@ -11,7 +11,7 @@ import { Template } from '@/lib/api/templates';
  * Generate shareable text format for a template
  */
 export function generateTemplateShareText(template: Template): string {
-  let text = `�x9️ ${template.name} Template\n\n`;
+  let text = `x9️ ${template.name} Template\n\n`;
 
   if (template.description) {
     text += `${template.description}\n\n`;
@@ -45,7 +45,7 @@ export function generateTemplateShareText(template: Template): string {
     text += `\nDuration: ~${template.estimated_duration} min`;
   }
 
-  text += `\n\nCreated with GymTracker �x`;
+  text += `\n\nCreated with GymTracker x`;
 
   return text;
 }
@@ -54,24 +54,24 @@ export function generateTemplateShareText(template: Template): string {
  * Generate detailed text with instructions
  */
 export function generateDetailedShareText(template: Template): string {
-  let text = `�����������������������������������������������\n`;
-  text += `�x9️ ${template.name.toUpperCase()}\n`;
-  text += `�����������������������������������������������\n\n`;
+  let text = `\n`;
+  text += `x9️ ${template.name.toUpperCase()}\n`;
+  text += `\n\n`;
 
   if (template.description) {
-    text += `�x ${template.description}\n\n`;
+    text += `x ${template.description}\n\n`;
   }
 
   if (template.target_muscles && template.target_muscles.length > 0) {
-    text += `�x} Target: ${template.target_muscles.join(' • ')}\n`;
+    text += `x} Target: ${template.target_muscles.join(' • ')}\n`;
   }
 
   if (template.estimated_duration) {
-    text += `⏱�� Duration: ~${template.estimated_duration} min\n`;
+    text += `⏱ Duration: ~${template.estimated_duration} min\n`;
   }
 
   text += `\nx9 EXERCISES\n`;
-  text += `�����������������������������������������������\n`;
+  text += `\n`;
 
   (template.exercises || []).forEach((ex, index) => {
     const exerciseName = ex.exercise?.name || 'Unknown Exercise';
@@ -96,12 +96,12 @@ export function generateDetailedShareText(template: Template): string {
     text += `\n`;
 
     if (ex.notes) {
-      text += `   �x ${ex.notes}\n`;
+      text += `   x ${ex.notes}\n`;
     }
   });
 
-  text += `\n�����������������������������������������������\n`;
-  text += `Created with GymTracker �x\n`;
+  text += `\n\n`;
+  text += `Created with GymTracker x\n`;
 
   return text;
 }

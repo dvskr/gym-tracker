@@ -78,9 +78,9 @@ const PhotoTypeCard: React.FC<PhotoTypeCardProps> = ({
       case 'back':
         return <User size={24} color={isSelected ? '#3b82f6' : '#64748b'} style={{ transform: [{ scaleX: -1 }] }} />;
       case 'flexed_front':
-        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>�x�</Text>;
+        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>x</Text>;
       case 'flexed_back':
-        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>>�</Text>;
+        return <Text style={[styles.typeEmoji, isSelected && styles.typeEmojiSelected]}>></Text>;
       default:
         return <User size={24} color={isSelected ? '#3b82f6' : '#64748b'} />;
     }
@@ -336,7 +336,7 @@ export default function CapturePhotoScreen() {
         {/* Privacy Notice */}
         <View style={styles.privacyNotice}>
           <Text style={styles.privacyText}>
-            �x Photos are stored locally on your device and are not uploaded to the cloud.
+            x Photos are stored locally on your device and are not uploaded to the cloud.
           </Text>
         </View>
 

@@ -70,7 +70,7 @@ export async function scheduleWorkoutReminders(
     for (const day of days) {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "Time to Workout! �x�",
+          title: "Time to Workout! x",
           body: "Don't break your streak! Let's get moving today.",
           sound: true,
           priority: Notifications.AndroidNotificationPriority.HIGH,
@@ -144,7 +144,7 @@ export async function scheduleStreakReminder(
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: `Don't Break Your ${daysStreak}-Day Streak! �x`,
+        title: `Don't Break Your ${daysStreak}-Day Streak! x`,
         body: "You're doing amazing! One more workout to keep it going.",
         sound: true,
       },
@@ -182,7 +182,7 @@ export async function sendMilestoneNotification(
 ): Promise<void> {
   try {
     await sendLocalNotification(
-      `Milestone Reached! �x `,
+      `Milestone Reached! x `,
       `Congratulations on completing ${milestone} workouts!`,
       { type: 'milestone', count: milestone }
     );

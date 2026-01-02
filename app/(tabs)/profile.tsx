@@ -149,6 +149,9 @@ export default function ProfileScreen() {
   // #endregion
 
   const handleEditProfile = () => {
+    // #region agent log
+    console.log('[DEBUG_NAV] Profile: navigating to settings/profile', JSON.stringify({from:'Profile tab',to:'/settings/profile',timestamp:Date.now()}));
+    // #endregion
     router.push('/settings/profile');
   };
 
@@ -158,7 +161,13 @@ export default function ProfileScreen() {
   };
 
   const handleUnitsSettings = () => {
-    router.push('/settings/units');
+    // #region agent log
+    console.log('[DEBUG_NAV] Profile: navigating to settings/units with return path');
+    // #endregion
+    router.push({
+      pathname: '/settings/units',
+      params: { returnTo: '/(tabs)/profile' }
+    });
   };
 
   const handleRestTimerSettings = () => {
@@ -577,4 +586,4 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: 32,
   },
-});
+});

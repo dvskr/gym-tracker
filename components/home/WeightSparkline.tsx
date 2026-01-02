@@ -76,6 +76,9 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
 
   const handlePress = () => {
     lightHaptic();
+    // #region agent log
+    console.log('[DEBUG_NAV] Weight chart navigation:', JSON.stringify({from:'Home',to:'/body/weight-chart',timestamp:Date.now()}));
+    // #endregion
     router.push('/body/weight-chart');
   };
 
@@ -285,4 +288,4 @@ const styles = StyleSheet.create({
 });
 
 export default WeightSparkline;
-
+

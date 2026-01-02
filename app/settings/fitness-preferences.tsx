@@ -30,12 +30,12 @@ type TrainingSplit = 'full_body' | 'upper_lower' | 'push_pull_legs' | 'bro_split
 const DAYS_OF_WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const FITNESS_GOALS: { value: FitnessGoal; label: string; description: string; icon: string }[] = [
-  { value: 'build_muscle', label: 'Build Muscle', description: 'Hypertrophy & size gains', icon: '�x�' },
-  { value: 'lose_fat', label: 'Lose Fat', description: 'Fat loss & definition', icon: '�x�' },
-  { value: 'strength', label: 'Get Stronger', description: 'Maximal strength focus', icon: '�x�9️' },
-  { value: 'endurance', label: 'Endurance', description: 'Stamina & conditioning', icon: '�x��' },
-  { value: 'maintain', label: 'Maintain', description: 'Keep current fitness', icon: '�S&' },
-  { value: 'general_fitness', label: 'General Fitness', description: 'Overall health', icon: '�xRx' },
+  { value: 'build_muscle', label: 'Build Muscle', description: 'Hypertrophy & size gains', icon: 'x' },
+  { value: 'lose_fat', label: 'Lose Fat', description: 'Fat loss & definition', icon: 'x' },
+  { value: 'strength', label: 'Get Stronger', description: 'Maximal strength focus', icon: 'x9️' },
+  { value: 'endurance', label: 'Endurance', description: 'Stamina & conditioning', icon: 'x' },
+  { value: 'maintain', label: 'Maintain', description: 'Keep current fitness', icon: 'S&' },
+  { value: 'general_fitness', label: 'General Fitness', description: 'Overall health', icon: 'xRx' },
 ];
 
 const EXPERIENCE_LEVELS: { value: ExperienceLevel; label: string; description: string }[] = [
