@@ -6,4 +6,4 @@ export * from './streaks';
 export * from './export';
 export * from './unitConversion';
 export * from './logger';
-export * from './exerciseImages';
+export * from './exerciseImages';

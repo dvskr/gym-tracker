@@ -126,7 +126,7 @@ export default function RemindersScreen() {
       const suggestion = await smartTimingService.getSuggestedSchedule();
       setSmartSuggestion(suggestion);
     } catch (error) {
-      logger.error('Failed to load smart suggestion:', error);
+ logger.error('Failed to load smart suggestion:', error);
     } finally {
       setIsLoadingSuggestion(false);
     }
@@ -378,7 +378,7 @@ export default function RemindersScreen() {
                 <View style={styles.smartHeaderText}>
                   <Text style={styles.smartTitle}>Smart Schedule Suggestion</Text>
                   <Text style={styles.smartConfidence}>
-                    {smartSuggestion.confidence === 'high' ? '⭐���� High confidence' : '⭐��� Medium confidence'}
+                    {smartSuggestion.confidence === 'high' ? '⭐���� High confidence' : '⭐�� Medium confidence'}
                   </Text>
                 </View>
               </View>
@@ -735,4 +735,4 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
   },
 });
-
+

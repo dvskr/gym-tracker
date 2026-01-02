@@ -74,7 +74,7 @@ export async function calculateStreak(userId: string): Promise<StreakData> {
       longestStreak,
     };
   } catch (error) {
-    logger.error('Error calculating streak:', error);
+ logger.error('Error calculating streak:', error);
     return {
       currentStreak: 0,
       lastWorkoutDate: new Date().toISOString(),
@@ -95,13 +95,13 @@ export async function getWorkoutCount(userId: string): Promise<number> {
       .not('ended_at', 'is', null);
 
     if (error) {
-      logger.error('Error getting workout count:', error);
+ logger.error('Error getting workout count:', error);
       return 0;
     }
 
     return count || 0;
   } catch (error) {
-    logger.error('Error getting workout count:', error);
+ logger.error('Error getting workout count:', error);
     return 0;
   }
 }
@@ -130,8 +130,8 @@ export async function getDaysSinceLastWorkout(userId: string): Promise<number> {
 
     return daysDiff;
   } catch (error) {
-    logger.error('Error getting days since last workout:', error);
+ logger.error('Error getting days since last workout:', error);
     return -1;
   }
 }
-
+

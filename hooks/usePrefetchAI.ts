@@ -19,14 +19,14 @@ export function usePrefetchAI() {
   
   useEffect(() => {
     if (user?.id) {
-      logger.log('[usePrefetchAI] Triggering prefetch for user');
+ logger.log('[usePrefetchAI] Triggering prefetch for user');
       
       // Pre-fetch in background, don't block UI
       prefetchAIData(user.id).catch((error) => {
-        logger.warn('[usePrefetchAI] Failed:', error);
+ logger.warn('[usePrefetchAI] Failed:', error);
         // Don't throw - prefetch failures shouldn't break the app
       });
     }
   }, [user?.id]);
 }
-
+

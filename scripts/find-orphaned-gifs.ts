@@ -38,7 +38,7 @@ async function findOrphanedGifs() {
   console.log('');
 
   // Step 2: Get all GIF files from storage
-  console.log('=� Fetching GIF files from storage...');
+  console.log('= Fetching GIF files from storage...');
   const { data: files } = await supabase.storage
     .from('exercise-gifs')
     .list('', { limit: 1000 });
@@ -60,7 +60,7 @@ async function findOrphanedGifs() {
   console.log('');
 
   if (orphanedFiles.length > 0) {
-    console.log('=�  ORPHANED FILES (these can be deleted):');
+    console.log('=  ORPHANED FILES (these can be deleted):');
     console.log('═'.repeat(70));
     
     // Calculate total size
@@ -91,7 +91,7 @@ async function findOrphanedGifs() {
 
   console.log('');
   console.log('═'.repeat(70));
-  console.log('=� SUMMARY');
+  console.log('= SUMMARY');
   console.log('═'.repeat(70));
   console.log(`Total GIFs in storage:              ${allGifs.length}`);
   console.log(`Used by active exercises:           ${usedFiles.length}`);
@@ -101,4 +101,4 @@ async function findOrphanedGifs() {
 }
 
 findOrphanedGifs();
-
+

@@ -246,7 +246,7 @@ async function downloadMissingGifs(): Promise<{ downloaded: number; failed: numb
 }
 
 async function generateThumbnails(): Promise<{ generated: number; skipped: number; failed: number }> {
-  console.log('\n=�  STEP 3: Generating 216px thumbnails with Sharp...');
+  console.log('\n=  STEP 3: Generating 216px thumbnails with Sharp...');
   
   // #region agent log
   debugLog('fix-and-process.ts:thumbnails:start', 'Starting thumbnail generation', {}, 'H4');
@@ -312,7 +312,7 @@ async function generateThumbnails(): Promise<{ generated: number; skipped: numbe
   // #endregion
 
   console.log(`\n  ✅ Generated: ${generated}`);
-  console.log(`  �  Skipped (exists): ${skipped}`);
+  console.log(`    Skipped (exists): ${skipped}`);
   console.log(`  ❌ Failed: ${failed}`);
 
   return { generated, skipped, failed };
@@ -403,7 +403,7 @@ async function uploadToSupabase(): Promise<{ gifs: number; thumbnails: number }>
 }
 
 async function updateDatabaseUrls(): Promise<number> {
-  console.log('\n=� STEP 5: Updating database URLs...');
+  console.log('\n= STEP 5: Updating database URLs...');
   
   // #region agent log
   debugLog('fix-and-process.ts:updateUrls:start', 'Starting database URL update', {}, 'H5');
@@ -498,13 +498,13 @@ async function main() {
 
   // Final summary
   console.log('\n' + '='.repeat(60));
-  console.log('=� FINAL SUMMARY');
+  console.log('= FINAL SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n=' Fixed malformed URLs: ${fixedUrls}`);
   console.log(`  Downloaded GIFs: ${downloaded} (failed: ${downloadFailed})`);
-  console.log(`=�  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
+  console.log(`=  Generated thumbnails: ${thumbsGenerated} (skipped: ${thumbsSkipped}, failed: ${thumbsFailed})`);
   console.log(`  Uploaded to Supabase: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
-  console.log(`=� Updated database URLs: ${updatedUrls}`);
+  console.log(`= Updated database URLs: ${updatedUrls}`);
 
   // #region agent log
   debugLog('fix-and-process.ts:main:complete', 'Pipeline complete', {
@@ -522,4 +522,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

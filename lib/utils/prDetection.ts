@@ -71,7 +71,7 @@ export async function checkForPR(
       .eq('exercise_id', exerciseId);
 
     if (error) {
-      logger.error('Error fetching PRs:', error);
+ logger.error('Error fetching PRs:', error);
       return results;
     }
 
@@ -118,7 +118,7 @@ export async function checkForPR(
 
     return results;
   } catch (error) {
-    logger.error('Error checking for PR:', error);
+ logger.error('Error checking for PR:', error);
     return results;
   }
 }
@@ -156,13 +156,13 @@ export async function savePR(
       );
 
     if (error) {
-      logger.error('Error saving PR:', error);
+ logger.error('Error saving PR:', error);
       return { success: false, error: error.message };
     }
 
     return { success: true };
   } catch (error) {
-    logger.error('Error saving PR:', error);
+ logger.error('Error saving PR:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to save PR',
@@ -304,11 +304,11 @@ export function getPRTypeLabel(prType: PRType): string {
 export function formatPRValue(prType: PRType, value: number, weight?: number, reps?: number): string {
   switch (prType) {
     case 'max_weight':
-      return `${value} lbs${reps ? ` × ${reps}` : ''}`;
+      return `${value} lbs${reps ? `  ${reps}` : ''}`;
     case 'max_reps':
       return `${value} reps${weight ? ` @ ${weight} lbs` : ''}`;
     case 'max_volume':
-      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight} × ${reps})` : ''}`;
+      return `${value.toLocaleString()} lbs${weight && reps ? ` (${weight}  ${reps})` : ''}`;
     default:
       return value.toString();
   }
@@ -320,4 +320,4 @@ export function formatPRValue(prType: PRType, value: number, weight?: number, re
 export function celebratePR() {
   successHaptic();
 }
-
+

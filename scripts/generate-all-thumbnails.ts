@@ -117,11 +117,11 @@ async function uploadThumbnail(filename: string, buffer: Buffer): Promise<boolea
 
 async function main() {
   console.log('');
-  console.log('=�  THUMBNAIL GENERATOR');
+  console.log('=  THUMBNAIL GENERATOR');
   console.log('═'.repeat(50));
   console.log(`=� Source bucket:      ${GIF_BUCKET}`);
-  console.log(`=� Destination bucket: ${THUMBNAIL_BUCKET}`);
-  console.log(`=� Thumbnail size:     ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (2x retina)`);
+  console.log(`= Destination bucket: ${THUMBNAIL_BUCKET}`);
+  console.log(`= Thumbnail size:     ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (2x retina)`);
   console.log(` Format:             PNG`);
   console.log('═'.repeat(50));
   console.log('');
@@ -129,7 +129,7 @@ async function main() {
   // ========================================
   // Step 1: Get all GIFs
   // ========================================
-  console.log('=� Fetching GIF list from Supabase...');
+  console.log('= Fetching GIF list from Supabase...');
   
   const { data: gifFiles, error: listError } = await supabase.storage
     .from(GIF_BUCKET)
@@ -151,7 +151,7 @@ async function main() {
   // ========================================
   // Step 2: Get existing thumbnails
   // ========================================
-  console.log('=� Checking existing thumbnails...');
+  console.log('= Checking existing thumbnails...');
   
   const { data: existingFiles } = await supabase.storage
     .from(THUMBNAIL_BUCKET)
@@ -222,12 +222,12 @@ async function main() {
   // ========================================
   console.log('');
   console.log('═'.repeat(50));
-  console.log('=� RESULTS');
+  console.log('= RESULTS');
   console.log('═'.repeat(50));
   console.log(`✅ Created:  ${created}`);
-  console.log(`�  Skipped:  ${skipped} (already exist)`);
+  console.log(`  Skipped:  ${skipped} (already exist)`);
   console.log(`❌ Failed:   ${failed}`);
-  console.log(`=� Total:    ${existingSet.size + created} thumbnails`);
+  console.log(`= Total:    ${existingSet.size + created} thumbnails`);
   console.log('═'.repeat(50));
 
   if (failures.length > 0 && failures.length <= 10) {
@@ -238,4 +238,4 @@ async function main() {
   console.log('\n Done!\n');
 }
 
-main().catch(console.error);
+main().catch(console.error);

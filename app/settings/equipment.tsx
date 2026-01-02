@@ -88,7 +88,7 @@ export default function EquipmentSettingsScreen() {
         if (data.available_equipment) setAvailableEquipment(data.available_equipment);
       }
     } catch (error) {
-      logger.error('Error loading equipment:', error);
+ logger.error('Error loading equipment:', error);
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ export default function EquipmentSettingsScreen() {
       successHaptic();
       router.back();
     } catch (error) {
-      logger.error('Error saving equipment:', error);
+ logger.error('Error saving equipment:', error);
     } finally {
       setSaving(false);
     }
@@ -440,4 +440,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

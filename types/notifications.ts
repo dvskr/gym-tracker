@@ -15,4 +15,4 @@ export interface NotificationGroup {
   date: string;
   notifications: AppNotification[];
 }
-
+

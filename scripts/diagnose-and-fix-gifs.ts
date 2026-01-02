@@ -42,7 +42,7 @@ async function diagnoseAndFix() {
     return;
   }
 
-  console.log(`=� SUPABASE STORAGE:`);
+  console.log(`= SUPABASE STORAGE:`);
   console.log(`GIF files in storage: ${storageFiles.length}\n`);
 
   // Step 3: Show sample exercises without GIFs
@@ -96,4 +96,4 @@ async function diagnoseAndFix() {
 }
 
 diagnoseAndFix();
-
+

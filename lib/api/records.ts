@@ -101,7 +101,7 @@ export async function checkAndUpdatePRs(
   // Get exercise UUID
   const exerciseUUID = await getExerciseUUID(exerciseId);
   if (!exerciseUUID) {
-    logger.error('Exercise not found:', exerciseId);
+ logger.error('Exercise not found:', exerciseId);
     return newPRs;
   }
 
@@ -607,4 +607,4 @@ export function formatPRValue(recordType: RecordType, value: number): string {
       return value.toString();
   }
 }
-
+

@@ -257,4 +257,4 @@ export async function getWorkoutCount(userId: string): Promise<number> {
   if (error) throw error;
   return count || 0;
 }
-
+

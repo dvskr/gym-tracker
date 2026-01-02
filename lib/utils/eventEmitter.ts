@@ -59,7 +59,7 @@ class EventEmitter {
         try {
           cb(data);
         } catch (error) {
-          logger.error(`Error in event callback for ${event}:`, error);
+ logger.error(`Error in event callback for ${event}:`, error);
         }
       });
     }
@@ -126,4 +126,4 @@ export const Events = {
 } as const;
 
 export default eventEmitter;
-
+

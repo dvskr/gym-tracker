@@ -61,8 +61,8 @@ async function updateGifUrls() {
   console.log('='.repeat(60));
   console.log(`Updated: ${updated}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n=� Total exercises with GIFs: ${count}\n`);
+  console.log(`\n= Total exercises with GIFs: ${count}\n`);
 }
 
 updateGifUrls();
-
+

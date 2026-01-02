@@ -265,7 +265,7 @@ export function OfflineBanner() {
   return (
     <View style={styles.offlineBanner}>
       <Text style={styles.offlineText}>
-        =� Offline Mode
+        = Offline Mode
         {status.queueLength > 0 && ` • ${status.queueLength} pending sync`}
       </Text>
     </View>
@@ -298,4 +298,4 @@ const styles = StyleSheet.create({
 // 7. ✅ GRACEFUL DEGRADATION - Full features offline
 // 
 // ============================================================================
-
+

@@ -32,7 +32,7 @@ export async function getCacheSize(): Promise<{
     
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
   } catch (error) {
-    logger.error('[Cache] Error getting size:', error);
+ logger.error('[Cache] Error getting size:', error);
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
   }
 }
@@ -42,7 +42,7 @@ export async function getCacheSize(): Promise<{
  */
 export async function clearImageCache(): Promise<boolean> {
   try {
-    logger.log('[Cache] Clearing image cache...');
+ logger.log('[Cache] Clearing image cache...');
     
     // Clear expo-image memory cache
     await Image.clearMemoryCache();
@@ -50,10 +50,10 @@ export async function clearImageCache(): Promise<boolean> {
     // Clear expo-image disk cache
     await Image.clearDiskCache();
     
-    logger.log('[Cache] Image cache cleared!');
+ logger.log('[Cache] Image cache cleared!');
     return true;
   } catch (error) {
-    logger.error('[Cache] Error clearing cache:', error);
+ logger.error('[Cache] Error clearing cache:', error);
     return false;
   }
 }
@@ -65,9 +65,9 @@ export async function clearImageCache(): Promise<boolean> {
 export async function clearMemoryCache(): Promise<void> {
   try {
     await Image.clearMemoryCache();
-    logger.log('[Cache] Memory cache cleared');
+ logger.log('[Cache] Memory cache cleared');
   } catch (error) {
-    logger.error('[Cache] Error clearing memory cache:', error);
+ logger.error('[Cache] Error clearing memory cache:', error);
   }
 }
 
@@ -82,7 +82,7 @@ export async function autoClearCacheIfNeeded(
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
   
   if (sizeBytes > maxSizeBytes) {
-    logger.log(`[Cache] Size ${(sizeBytes / 1024 / 1024).toFixed(2)}MB exceeds ${maxSizeMB}MB limit`);
+ logger.log(`[Cache] Size ${(sizeBytes / 1024 / 1024).toFixed(2)}MB exceeds ${maxSizeMB}MB limit`);
     return await clearImageCache();
   }
   
@@ -118,4 +118,4 @@ function formatBytes(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
-
+

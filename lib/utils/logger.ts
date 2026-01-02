@@ -4,9 +4,9 @@
  * 
  * Usage:
  *   import { logger } from '@/lib/utils/logger';
- *   logger.log('message');
- *   logger.warn('warning');
- *   logger.error('error');
+ * logger.log('message');
+ * logger.warn('warning');
+ * logger.error('error');
  */
 
 type LogLevel = 'log' | 'warn' | 'error' | 'info' | 'debug';
@@ -85,4 +85,4 @@ export const createTaggedLogger = (tag: string): Logger => {
     timeEnd: (label: string) => console.timeEnd(`[${tag}] ${label}`),
   };
 };
-
+

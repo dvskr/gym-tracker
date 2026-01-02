@@ -249,7 +249,7 @@ export default function PhotoGalleryScreen() {
       const data = await getPhotos(user.id);
       setPhotos(data);
     } catch (error) {
-      logger.error('Error fetching photos:', error);
+ logger.error('Error fetching photos:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -288,7 +288,7 @@ export default function PhotoGalleryScreen() {
       await deletePhoto(photo.id);
       fetchPhotos();
     } catch (error) {
-      logger.error('Error deleting photo:', error);
+ logger.error('Error deleting photo:', error);
     }
   };
 
@@ -614,4 +614,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
 });
-
+

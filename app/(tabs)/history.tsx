@@ -296,7 +296,7 @@ export default function HistoryScreen() {
         setTotalCount(result.totalCount);
         setPage(pageNum);
       } catch (err) {
-        logger.error('Failed to fetch workouts:', err);
+ logger.error('Failed to fetch workouts:', err);
         setError('Failed to load workout history');
       } finally {
         // Clear the timeout if fetch completed before 300ms
@@ -335,7 +335,7 @@ export default function HistoryScreen() {
 
         setMarkedDates(marked);
       } catch (err) {
-        logger.error('Failed to fetch workout dates:', err);
+ logger.error('Failed to fetch workout dates:', err);
       }
     },
     [user?.id]
@@ -351,7 +351,7 @@ export default function HistoryScreen() {
         const workouts = await getWorkoutsForDate(user.id, date);
         setDateWorkouts(workouts);
       } catch (err) {
-        logger.error('Failed to fetch workouts for date:', err);
+ logger.error('Failed to fetch workouts for date:', err);
         setDateWorkouts([]);
       } finally {
         setIsLoadingDateWorkouts(false);
@@ -1103,4 +1103,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
+

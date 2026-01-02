@@ -70,7 +70,7 @@ export default function BackupScreen() {
       setAutoBackupEnabled(autoSettings.enabled);
       setAutoBackupFrequency(autoSettings.frequency);
     } catch (error) {
-      logger.error('Error loading backup data:', error);
+ logger.error('Error loading backup data:', error);
       Alert.alert('Error', 'Failed to load backup data');
     }
   };
@@ -94,7 +94,7 @@ export default function BackupScreen() {
                 `Backup saved successfully!\nSize: ${formatBytes(backup.size)}`
               );
             } catch (error) {
-              logger.error('Error creating backup:', error);
+ logger.error('Error creating backup:', error);
               Alert.alert('Error', 'Failed to create backup: ' + (error as Error).message);
             } finally {
               setLoading(false);
@@ -123,7 +123,7 @@ export default function BackupScreen() {
         },
       ]);
     } catch (error) {
-      logger.error('Error downloading backup:', error);
+ logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
       setLoading(false);
@@ -141,7 +141,7 @@ export default function BackupScreen() {
       setSelectedBackupData(backupData);
       setShowRestoreConfirm(true);
     } catch (error) {
-      logger.error('Error downloading backup:', error);
+ logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
       setLoading(false);
@@ -179,7 +179,7 @@ export default function BackupScreen() {
       if (result.success) {
         Alert.alert(
           'Restore Complete!',
-          `�S& Restored ${result.itemsRestored} items\n�x` Tables: ${result.tablesRestored.join(', ')}`,
+          `Restored ${result.itemsRestored} items\nTables: ${result.tablesRestored.join(', ')}`,
           [
             {
               text: 'OK',
@@ -193,11 +193,11 @@ export default function BackupScreen() {
       } else {
         Alert.alert(
           'Restore Completed with Errors',
-          `�S& ${result.itemsRestored} items restored\n�R ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
+          `�S& ${result.itemsRestored} items restored\nR ${result.errors.length} errors\n\n${result.errors.join('\n')}`,
           [
             {
               text: 'View Details',
-              onPress: () => logger.log('Errors:', result.errors),
+ onPress: () => logger.log('Errors:', result.errors),
             },
             { text: 'OK' },
           ]
@@ -205,7 +205,7 @@ export default function BackupScreen() {
       }
     } catch (error) {
       setShowRestoreProgress(false);
-      logger.error('Error restoring backup:', error);
+ logger.error('Error restoring backup:', error);
       Alert.alert('Error', 'Failed to restore backup: ' + (error as Error).message);
     }
   };
@@ -225,7 +225,7 @@ export default function BackupScreen() {
               await loadData();
               Alert.alert('Deleted', 'Backup deleted successfully');
             } catch (error) {
-              logger.error('Error deleting backup:', error);
+ logger.error('Error deleting backup:', error);
               Alert.alert('Error', 'Failed to delete backup');
             }
           },
@@ -249,7 +249,7 @@ export default function BackupScreen() {
               await loadData();
               Alert.alert('Cleanup Complete', `Deleted ${count} old backup(s)`);
             } catch (error) {
-              logger.error('Error cleaning up backups:', error);
+ logger.error('Error cleaning up backups:', error);
               Alert.alert('Error', 'Failed to cleanup backups');
             } finally {
               setLoading(false);
@@ -774,4 +774,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

@@ -37,7 +37,7 @@ async function downloadGif(
   
   // Skip if already exists
   if (fs.existsSync(filepath)) {
-    console.log(`  �  Already exists: ${filename}`);
+    console.log(`    Already exists: ${filename}`);
     return true;
   }
   
@@ -60,7 +60,7 @@ async function downloadGif(
     
   } catch (error) {
     if (retries > 0) {
-      console.log(`  �  Retry ${MAX_RETRIES - retries + 1}/${MAX_RETRIES} for ${filename}`);
+      console.log(`    Retry ${MAX_RETRIES - retries + 1}/${MAX_RETRIES} for ${filename}`);
       await sleep(1000);
       return downloadGif(url, filename, retries - 1);
     }
@@ -89,7 +89,7 @@ async function downloadExerciseGifs(exerciseIds?: string[]) {
     throw new Error(`Failed to fetch exercises: ${error.message}`);
   }
   
-  console.log(`=� Found ${exercises?.length || 0} exercises with GIF URLs\n`);
+  console.log(`= Found ${exercises?.length || 0} exercises with GIF URLs\n`);
   
   let downloaded = 0;
   let skipped = 0;
@@ -128,12 +128,12 @@ async function downloadExerciseGifs(exerciseIds?: string[]) {
   }
   
   console.log('\n' + '='.repeat(50));
-  console.log('=� DOWNLOAD SUMMARY');
+  console.log('= DOWNLOAD SUMMARY');
   console.log('='.repeat(50));
   console.log(`✅ Successfully downloaded: ${downloaded}`);
-  console.log(`�  Already existed/skipped: ${skipped}`);
+  console.log(`  Already existed/skipped: ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`=� GIFs saved to: ${GIF_DIR}`);
+  console.log(`= GIFs saved to: ${GIF_DIR}`);
 }
 
 // Load priority exercises from analysis output
@@ -148,7 +148,7 @@ async function downloadPriorityGifs() {
   const exercises = JSON.parse(fs.readFileSync(priorityFile, 'utf-8')) as Exercise[];
   const exerciseIds = exercises.map(e => e.id);
   
-  console.log(`=� Downloading GIFs for ${exerciseIds.length} priority exercises\n`);
+  console.log(`= Downloading GIFs for ${exerciseIds.length} priority exercises\n`);
   
   await downloadExerciseGifs(exerciseIds);
 }
@@ -164,4 +164,4 @@ if (args.includes('--priority')) {
   console.log('  npx ts-node scripts/download-exercise-gifs.ts --priority  # Download priority exercises');
   console.log('  npx ts-node scripts/download-exercise-gifs.ts --all       # Download all exercises');
 }
-
+

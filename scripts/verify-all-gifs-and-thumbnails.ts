@@ -55,7 +55,7 @@ async function main() {
   console.log(`✅ Found ${exercises.length} exercises with GIF URLs\n`);
 
   // Step 2: Check Supabase storage for actual files
-  console.log('=� Step 2: Checking Supabase storage...');
+  console.log('= Step 2: Checking Supabase storage...');
   
   const { data: gifFiles } = await supabase.storage
     .from('exercise-gifs')
@@ -124,14 +124,14 @@ async function main() {
 
   // Step 4: Report results
   console.log('\n' + '═'.repeat(60));
-  console.log('=� VERIFICATION RESULTS');
+  console.log('= VERIFICATION RESULTS');
   console.log('═'.repeat(60));
   console.log(`✅ Perfectly verified: ${verified}/${exercises.length}`);
   console.log(`❌ Issues found: ${issues.length}`);
   console.log('');
 
   if (issues.length > 0) {
-    console.log('�  ISSUES DETECTED:\n');
+    console.log('  ISSUES DETECTED:\n');
     
     if (brokenGifs.length > 0) {
       console.log(`❌ Missing GIF files in storage: ${brokenGifs.length}`);
@@ -185,12 +185,12 @@ async function main() {
     return !exerciseIds.has(id);
   });
 
-  console.log(`=� Orphaned GIF files: ${orphanedGifs.length}`);
+  console.log(`= Orphaned GIF files: ${orphanedGifs.length}`);
   if (orphanedGifs.length > 0 && orphanedGifs.length <= 20) {
     orphanedGifs.forEach(f => console.log(`   - ${f}`));
   }
 
-  console.log(`=� Orphaned thumbnail files: ${orphanedThumbnails.length}`);
+  console.log(`= Orphaned thumbnail files: ${orphanedThumbnails.length}`);
   if (orphanedThumbnails.length > 0 && orphanedThumbnails.length <= 20) {
     orphanedThumbnails.forEach(f => console.log(`   - ${f}`));
   }
@@ -220,7 +220,7 @@ async function main() {
 
   // Final summary
   console.log('═'.repeat(60));
-  console.log('=� FINAL STATUS');
+  console.log('= FINAL STATUS');
   console.log('═'.repeat(60));
   console.log(`Total exercises checked: ${exercises.length}`);
   console.log(`Fully working: ${verified} (${((verified / exercises.length) * 100).toFixed(1)}%)`);
@@ -235,4 +235,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

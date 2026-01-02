@@ -33,7 +33,7 @@ export async function logMeasurementsAndSync(
     const measureDate = data.date || new Date();
     const dateStr = measureDate.toISOString().split('T')[0];
 
-    logger.log('�x� Logging body measurements...');
+ logger.log('x Logging body measurements...');
 
     // 1. Save to Supabase
     const { error } = await supabase.from('body_measurements').upsert(
@@ -65,7 +65,7 @@ export async function logMeasurementsAndSync(
 
     if (error) throw error;
 
-    logger.log('�S& Measurements saved to database');
+ logger.log('S& Measurements saved to database');
 
     // 2. Sync supported measurements to health platform
     const { healthSyncEnabled, syncBodyMeasurements } = useSettingsStore.getState();
@@ -83,8 +83,8 @@ export async function logMeasurementsAndSync(
       const hasSupportedMeasurements = false; // Currently none beyond weight/height
 
       if (!hasSupportedMeasurements) {
-        logger.log('����� No supported measurements to sync (waist/hip require react-native-health)');
-        logger.log('����� These measurements are stored in the app only');
+ logger.log(' No supported measurements to sync (waist/hip require react-native-health)');
+ logger.log(' These measurements are stored in the app only');
       } else {
         const synced = await healthService.saveBodyMeasurements(syncData);
 
@@ -99,16 +99,16 @@ export async function logMeasurementsAndSync(
             .eq('user_id', userId)
             .eq('measured_at', dateStr);
 
-          logger.log('�S& Measurements synced to health platform');
+ logger.log('S& Measurements synced to health platform');
         }
       }
     } else {
-      logger.log('����� Health sync disabled for body measurements');
+ logger.log(' Health sync disabled for body measurements');
     }
 
     return true;
   } catch (error) {
-    logger.error('�R Error logging measurements:', error);
+ logger.error('R Error logging measurements:', error);
     return false;
   }
 }
@@ -118,16 +118,16 @@ export async function logMeasurementsAndSync(
  */
 export async function importHeightFromHealth(userId: string): Promise<number | null> {
   try {
-    logger.log('�x� Importing height from health platform...');
+ logger.log('x Importing height from health platform...');
 
     const height = await healthService.getHeight();
 
     if (!height) {
-      logger.log('����� No height data found in health platform');
+ logger.log(' No height data found in health platform');
       return null;
     }
 
-    logger.log(`�S& Retrieved height: ${height} cm`);
+ logger.log(`S& Retrieved height: ${height} cm`);
 
     // Update user's profile with height
     const { error } = await supabase
@@ -136,14 +136,14 @@ export async function importHeightFromHealth(userId: string): Promise<number | n
       .eq('id', userId);
 
     if (error) {
-      logger.error('�R Failed to update profile with height:', error);
+ logger.error('R Failed to update profile with height:', error);
       return null;
     }
 
-    logger.log('�S& Profile updated with height from health');
+ logger.log('S& Profile updated with height from health');
     return height;
   } catch (error) {
-    logger.error('�R Error importing height from health:', error);
+ logger.error('R Error importing height from health:', error);
     return null;
   }
 }
@@ -174,7 +174,7 @@ export function shouldSyncMeasurements(): boolean {
  */
 export function getMeasurementSyncLimitations(): string {
   return `
-�a���� Health Platform Limitations:
+�a��� Health Platform Limitations:
 
 Measurements that sync:
 • Weight
@@ -191,4 +191,4 @@ do not support most body measurements beyond weight,
 body fat, and height.
   `.trim();
 }
-
+

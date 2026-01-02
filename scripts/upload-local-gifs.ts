@@ -62,9 +62,9 @@ async function uploadLocalGifs() {
   console.log('=< UPLOAD LOCAL GIFS TO SUPABASE');
   console.log('═'.repeat(80));
   console.log('');
-  console.log(`=� Local GIF folder: ${LOCAL_GIF_FOLDER}`);
-  console.log(`=� Supabase bucket: ${GIF_BUCKET}`);
-  console.log(`=� Exercises to process: ${brokenExercises.length}`);
+  console.log(`= Local GIF folder: ${LOCAL_GIF_FOLDER}`);
+  console.log(`= Supabase bucket: ${GIF_BUCKET}`);
+  console.log(`= Exercises to process: ${brokenExercises.length}`);
   console.log('');
   console.log('═'.repeat(80));
   console.log('');
@@ -106,7 +106,7 @@ async function uploadLocalGifs() {
         
         // Read file
         const gifBuffer = fs.readFileSync(uuidGifPath);
-        console.log(`      =� Size: ${(gifBuffer.length / 1024).toFixed(1)} KB`);
+        console.log(`      = Size: ${(gifBuffer.length / 1024).toFixed(1)} KB`);
 
         // Upload to Supabase
         const filename = `${exercise.exerciseId}.gif`;
@@ -174,7 +174,7 @@ async function uploadLocalGifs() {
 
   // Summary
   console.log('═'.repeat(80));
-  console.log('=� FINAL RESULTS');
+  console.log('= FINAL RESULTS');
   console.log('═'.repeat(80));
   console.log(`✅ Success: ${success}/${brokenExercises.length}`);
   console.log(`❌ Failed: ${failed}/${brokenExercises.length}`);
@@ -216,4 +216,4 @@ uploadLocalGifs().catch((error) => {
   
   process.exit(1);
 });
-
+

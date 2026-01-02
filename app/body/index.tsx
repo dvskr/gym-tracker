@@ -363,7 +363,7 @@ const GoalSection: React.FC<GoalSectionProps> = ({
 
       <View style={styles.goalFooter}>
         <Text style={styles.goalRemaining}>
-          {progress.remaining === 0 ? '�x}0 Goal reached!' : `${remaining} ${weightUnit} to go`}
+          {progress.remaining === 0 ? 'x}0 Goal reached!' : `${remaining} ${weightUnit} to go`}
         </Text>
         <Text style={styles.goalTarget}>Target: {targetWeight} {weightUnit}</Text>
       </View>
@@ -487,7 +487,7 @@ export default function BodyHubScreen() {
         // No goal set
       }
     } catch (error) {
-      logger.error('Error fetching body data:', error);
+ logger.error('Error fetching body data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -952,4 +952,4 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
-
+

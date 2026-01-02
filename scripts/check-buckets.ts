@@ -27,7 +27,7 @@ async function checkBuckets() {
   console.log('\n=� Detailed Bucket Analysis:\n');
   
   // Check exercise-gifs
-  console.log('1� exercise-gifs bucket:');
+  console.log('1 exercise-gifs bucket:');
   const { data: gifs, error: gifsError } = await supabase.storage
     .from('exercise-gifs')
     .list('', { limit: 1000 });
@@ -41,7 +41,7 @@ async function checkBuckets() {
   }
   
   // Check exercise-thumbnails
-  console.log('\n2� exercise-thumbnails bucket:');
+  console.log('\n2 exercise-thumbnails bucket:');
   const { data: thumbs, error: thumbsError } = await supabase.storage
     .from('exercise-thumbnails')
     .list('', { limit: 1000 });
@@ -74,4 +74,4 @@ async function checkBuckets() {
 }
 
 checkBuckets();
-
+

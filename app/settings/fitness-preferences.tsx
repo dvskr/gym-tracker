@@ -87,7 +87,7 @@ export default function FitnessPreferencesScreen() {
         if (data.training_split) setTrainingSplit(data.training_split);
       }
     } catch (error) {
-      logger.error('Error loading preferences:', error);
+ logger.error('Error loading preferences:', error);
     } finally {
       setLoading(false);
     }
@@ -116,7 +116,7 @@ export default function FitnessPreferencesScreen() {
       successHaptic();
       router.back();
     } catch (error) {
-      logger.error('Error saving preferences:', error);
+ logger.error('Error saving preferences:', error);
     } finally {
       setSaving(false);
     }
@@ -549,4 +549,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

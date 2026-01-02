@@ -44,4 +44,4 @@ export const MEASUREMENT_TYPE_CONFIG: Record<MeasurementType, {
     units: { duration: ['minutes'] },
   },
 };
-
+

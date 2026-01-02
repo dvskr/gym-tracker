@@ -19,11 +19,11 @@ class SyncQueue {
    */
   startAutoSync(intervalMs: number = 30000): void {
     if (this.syncInterval) {
-      logger.log('Auto-sync already running');
+ logger.log('Auto-sync already running');
       return;
     }
 
-    logger.log('�x Starting auto-sync...');
+ logger.log('x Starting auto-sync...');
     
     // Sync immediately
     this.syncAll();
@@ -41,7 +41,7 @@ class SyncQueue {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      logger.log('⏸��� Auto-sync stopped');
+ logger.log(' Auto-sync stopped');
     }
   }
 
@@ -50,7 +50,7 @@ class SyncQueue {
    */
   async syncAll(): Promise<SyncResult> {
     if (this.isSyncing) {
-      logger.log('Sync already in progress, skipping...');
+ logger.log('Sync already in progress, skipping...');
       return { success: false, synced: 0, failed: 0, errors: [] };
     }
 
@@ -66,11 +66,11 @@ class SyncQueue {
       const queue = await localDB.getSyncQueue();
       
       if (queue.length === 0) {
-        logger.log('�S& Sync queue is empty');
+ logger.log('S& Sync queue is empty');
         return result;
       }
 
-      logger.log(`�x Syncing ${queue.length} operation(s)...`);
+ logger.log(`x Syncing ${queue.length} operation(s)...`);
 
       // Process each operation
       for (const operation of queue) {
@@ -79,7 +79,7 @@ class SyncQueue {
           await localDB.removeFromSyncQueue(operation.id);
           result.synced++;
         } catch (error) {
-          logger.error(`Failed to sync operation ${operation.id}:`, error);
+ logger.error(`Failed to sync operation ${operation.id}:`, error);
           
           // Increment attempt counter
           operation.attempts++;
@@ -87,7 +87,7 @@ class SyncQueue {
 
           // Remove from queue if max attempts reached (5 attempts)
           if (operation.attempts >= 5) {
-            logger.error(`Max attempts reached for operation ${operation.id}, removing from queue`);
+ logger.error(`Max attempts reached for operation ${operation.id}, removing from queue`);
             await localDB.removeFromSyncQueue(operation.id);
           } else {
             await localDB.updateSyncOperation(operation.id, {
@@ -104,9 +104,9 @@ class SyncQueue {
         }
       }
 
-      logger.log(`�S& Sync complete: ${result.synced} synced, ${result.failed} failed`);
+ logger.log(`S& Sync complete: ${result.synced} synced, ${result.failed} failed`);
     } catch (error) {
-      logger.error('Error during sync:', error);
+ logger.error('Error during sync:', error);
       result.success = false;
     } finally {
       this.isSyncing = false;
@@ -121,7 +121,7 @@ class SyncQueue {
   private async syncOperation(operation: SyncOperation): Promise<void> {
     const { table, operation: op, data } = operation;
 
-    logger.log(`Syncing ${op} on ${table}...`);
+ logger.log(`Syncing ${op} on ${table}...`);
 
     switch (op) {
       case 'create':
@@ -151,7 +151,7 @@ class SyncQueue {
       throw new Error(`Failed to create in ${table}: ${error.message}`);
     }
 
-    logger.log(`�S& Created in ${table}: ${data.id}`);
+ logger.log(`S& Created in ${table}: ${data.id}`);
   }
 
   /**
@@ -169,7 +169,7 @@ class SyncQueue {
       throw new Error(`Failed to update in ${table}: ${error.message}`);
     }
 
-    logger.log(`�S& Updated in ${table}: ${id}`);
+ logger.log(`S& Updated in ${table}: ${id}`);
   }
 
   /**
@@ -182,7 +182,7 @@ class SyncQueue {
       throw new Error(`Failed to delete from ${table}: ${error.message}`);
     }
 
-    logger.log(`�S& Deleted from ${table}: ${id}`);
+ logger.log(`S& Deleted from ${table}: ${id}`);
   }
 
   /**
@@ -261,7 +261,7 @@ class SyncQueue {
       return { success: true, synced: 0, failed: 0, errors: [] };
     }
 
-    logger.log(`�x Retrying ${failed.length} failed operation(s)...`);
+ logger.log(`x Retrying ${failed.length} failed operation(s)...`);
 
     const result: SyncResult = {
       success: true,
@@ -291,4 +291,4 @@ class SyncQueue {
 // Singleton instance
 export const syncQueue = new SyncQueue();
 export default syncQueue;
-
+

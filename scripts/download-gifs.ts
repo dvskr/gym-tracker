@@ -81,7 +81,7 @@ function downloadGif(gifUrl: string, filename: string, exerciseName: string, hea
 
     // Skip if already exists
     if (fs.existsSync(filepath)) {
-      console.log(`�  Skip: ${filename} (already exists)`);
+      console.log(`  Skip: ${filename} (already exists)`);
       resolve();
       return;
     }
@@ -101,7 +101,7 @@ function downloadGif(gifUrl: string, filename: string, exerciseName: string, hea
 }
 
 async function downloadAllGifs() {
-  console.log('=� Downloading GIFs for 400 selected exercises...\n');
+  console.log('= Downloading GIFs for 400 selected exercises...\n');
 
   // Check for API key
   if (!EXERCISEDB_API_KEY) {
@@ -212,7 +212,7 @@ async function downloadAllGifs() {
     });
 
     // Progress
-    console.log(`\n=� Progress: ${completed + failed}/${exercisesWithGifs.length}\n`);
+    console.log(`\n= Progress: ${completed + failed}/${exercisesWithGifs.length}\n`);
 
     // Small delay between batches
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -224,7 +224,7 @@ async function downloadAllGifs() {
   console.log('='.repeat(60));
   console.log(`✅ Success: ${completed}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`=� Location: ${DOWNLOAD_DIR}\n`);
+  console.log(`= Location: ${DOWNLOAD_DIR}\n`);
 
   if (failed > 0) {
     fs.writeFileSync(
@@ -236,4 +236,4 @@ async function downloadAllGifs() {
 }
 
 downloadAllGifs();
-
+

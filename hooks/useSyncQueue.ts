@@ -115,7 +115,7 @@ export function useSyncQueue(): UseSyncQueueResult {
   const clearCompleted = useCallback(async (): Promise<void> => {
     // Note: Current implementation auto-removes completed operations
     // This is a placeholder if you want to implement batch clearing
-    logger.log('Completed operations are auto-removed');
+ logger.log('Completed operations are auto-removed');
   }, []);
 
   return {
@@ -201,4 +201,4 @@ export function useSyncTable(table: string) {
 }
 
 export default useSyncQueue;
-
+

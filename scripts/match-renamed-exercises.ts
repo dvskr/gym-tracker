@@ -121,7 +121,7 @@ async function matchRenamedExercises() {
   // STEP 4: Summary
   // ============================================
   console.log('═'.repeat(80));
-  console.log('=� MATCHING SUMMARY');
+  console.log('= MATCHING SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total broken exercises: ${brokenExercises?.length}`);
   console.log(`Exercises with possible matches: ${matches.length}`);
@@ -183,4 +183,4 @@ async function matchRenamedExercises() {
 }
 
 matchRenamedExercises();
-
+

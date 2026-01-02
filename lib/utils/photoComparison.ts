@@ -160,4 +160,4 @@ export async function deleteComparisonImage(uri: string): Promise<void> {
     await FileSystem.deleteAsync(uri);
   }
 }
-
+

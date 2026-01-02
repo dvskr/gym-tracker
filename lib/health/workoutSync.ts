@@ -13,19 +13,19 @@ export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
     const healthSyncEnabled = settings.healthSyncEnabled ?? false;
 
     if (!healthSyncEnabled) {
-      logger.log('�a���� Health sync disabled in settings');
+ logger.log('a Health sync disabled in settings');
       return false;
     }
 
     // Check if health permissions are granted
     if (!healthService.getHasPermissions()) {
-      logger.log('�a���� No health permissions granted');
+ logger.log('a No health permissions granted');
       return false;
     }
 
     // Check if already synced
     if (workout.health_synced) {
-      logger.log('����� Workout already synced to health');
+ logger.log(' Workout already synced to health');
       return true;
     }
 
@@ -54,12 +54,12 @@ export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
         })
         .eq('id', workout.id);
 
-      logger.log(`�S& Workout ${workout.id} synced to health platform`);
+ logger.log(`S& Workout ${workout.id} synced to health platform`);
     }
 
     return synced;
   } catch (error) {
-    logger.error('�R Error syncing workout to health:', error);
+ logger.error('R Error syncing workout to health:', error);
     return false;
   }
 }
@@ -72,7 +72,7 @@ export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
   failed: number;
   skipped: number;
 }> {
-  logger.log(`�x� Batch syncing ${workouts.length} workouts to health...`);
+ logger.log(`x Batch syncing ${workouts.length} workouts to health...`);
 
   let success = 0;
   let failed = 0;
@@ -92,8 +92,8 @@ export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
     }
   }
 
-  logger.log(
-    `�S& Batch sync complete: ${success} synced, ${failed} failed, ${skipped} skipped`
+ logger.log(
+    `S& Batch sync complete: ${success} synced, ${failed} failed, ${skipped} skipped`
   );
 
   return { success, failed, skipped };
@@ -117,7 +117,7 @@ export async function getUnsyncedWorkouts(userId: string): Promise<any[]> {
 
     return data || [];
   } catch (error) {
-    logger.error('�R Error fetching unsynced workouts:', error);
+ logger.error('R Error fetching unsynced workouts:', error);
     return [];
   }
 }
@@ -179,11 +179,11 @@ export async function updateWorkoutCalories(workoutId: string, calories: number)
 
     if (error) throw error;
 
-    logger.log(`�S& Updated workout ${workoutId} calories: ${calories}`);
+ logger.log(`S& Updated workout ${workoutId} calories: ${calories}`);
     return true;
   } catch (error) {
-    logger.error('�R Error updating workout calories:', error);
+ logger.error('R Error updating workout calories:', error);
     return false;
   }
 }
-
+

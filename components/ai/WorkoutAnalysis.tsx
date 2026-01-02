@@ -52,7 +52,7 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to analyze workout';
       setError(errorMessage);
-      logger.error('Failed to analyze workout:', err);
+ logger.error('Failed to analyze workout:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -146,7 +146,7 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
               ? '� '
               : analysis.volumeComparison === 'same'
               ? '='
-              : '��&'}
+              : '—'}
           </Text>
           <Text style={styles.statLabel}>volume</Text>
         </View>
@@ -481,4 +481,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
+

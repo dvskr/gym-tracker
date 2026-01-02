@@ -184,7 +184,7 @@ const SetRow: React.FC<SetRowProps> = ({ set, onUpdate, onDelete, onTypePress })
           value={set.target_weight}
           onChangeText={(text) => onUpdate({ target_weight: text.replace(/[^0-9.]/g, '') })}
           keyboardType="decimal-pad"
-          placeholder="�"
+          placeholder="0"
           placeholderTextColor="#64748b"
           selectTextOnFocus={true}
         />
@@ -382,7 +382,7 @@ export default function CreateTemplateScreen() {
         .single();
 
       if (error) {
-        logger.error('Error creating exercise:', error);
+ logger.error('Error creating exercise:', error);
         return;
       }
       exerciseId = newExercise.id;
@@ -552,7 +552,7 @@ export default function CreateTemplateScreen() {
       successHaptic();
       router.replace(`/template/${template.id}`);
     } catch (error) {
-      logger.error('Error creating template:', error);
+ logger.error('Error creating template:', error);
       Alert.alert('Error', 'Failed to create template');
     } finally {
       setIsSaving(false);
@@ -1137,4 +1137,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
-});
+});

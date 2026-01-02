@@ -88,7 +88,7 @@ export default function AdminReviewDashboard() {
         user_email: ex.users?.email
       })) || []);
     } catch (error) {
-      logger.error('Error loading exercises:', error);
+ logger.error('Error loading exercises:', error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ export default function AdminReviewDashboard() {
       await supabase.from('notifications').insert({
         user_id: exercise.user_id,
         type: 'exercise_approved',
-        title: '�x}0 Your Exercise Was Added!',
+        title: 'x}0 Your Exercise Was Added!',
         message: `Your custom exercise "${exercise.name}" has been approved and added to the exercise library. Thank you for contributing!`,
         data: {
           exercise_id: newExercise.id,
@@ -146,11 +146,11 @@ export default function AdminReviewDashboard() {
         is_read: false,
       });
 
-      alert(`�S& "${exercise.name}" has been added to the library!`);
+      alert(`S& "${exercise.name}" has been added to the library!`);
       setReviewNotes('');
       loadExercises();
     } catch (error: any) {
-      logger.error('Error approving exercise:', error);
+ logger.error('Error approving exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -197,7 +197,7 @@ export default function AdminReviewDashboard() {
       setSelectedExercise(null);
       loadExercises();
     } catch (error: any) {
-      logger.error('Error rejecting exercise:', error);
+ logger.error('Error rejecting exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -215,7 +215,7 @@ export default function AdminReviewDashboard() {
 
       loadExercises();
     } catch (error: any) {
-      logger.error('Error deleting exercise:', error);
+ logger.error('Error deleting exercise:', error);
       alert(`Error: ${error.message}`);
     }
   };
@@ -324,7 +324,7 @@ export default function AdminReviewDashboard() {
 
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-400">
                       <span className="capitalize">�x� {exercise.equipment}</span>
-                      <span className="capitalize">�x}� {exercise.category}</span>
+                      <span className="capitalize">🎯 {exercise.category}</span>
                       <span>�x� {exercise.primary_muscles.join(', ')}</span>
                       <span className="flex items-center gap-1">
                         <Users size={14} />
@@ -476,4 +476,4 @@ export default function AdminReviewDashboard() {
     </div>
   );
 }
-
+

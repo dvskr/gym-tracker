@@ -65,7 +65,7 @@ export function WeightSuggestion({
           setIsLoading(false);
         }
       } catch (error) {
-        logger.error('Failed to load weight suggestion:', error);
+ logger.error('Failed to load weight suggestion:', error);
         if (mounted) {
           setIsLoading(false);
         }
@@ -238,4 +238,4 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
-
+

@@ -79,7 +79,7 @@ export function WorkoutsScreen() {
 
   // �S& Auto-refresh when real-time update occurs
   useRealtimeWorkouts(() => {
-    logger.log('�x� Workouts updated - refreshing...');
+ logger.log('x Workouts updated - refreshing...');
     loadWorkouts();
   });
 
@@ -159,7 +159,7 @@ export function WorkoutsWithToast() {
     loadWorkouts();
   }, []);
 
-  // �S& Show toast when workout added/updated/deleted
+  // S& Show toast when workout added/updated/deleted
   useRealtimeWorkouts((payload) => {
     const { eventType, data } = payload;
     
@@ -237,15 +237,15 @@ export function CustomEventListener() {
   useEffect(() => {
     // �S& Listen to multiple events
     const unsubWorkouts = eventEmitter.on(Events.WORKOUTS_UPDATED, () => {
-      logger.log('Workouts updated');
+ logger.log('Workouts updated');
     });
 
     const unsubTemplates = eventEmitter.on(Events.TEMPLATES_UPDATED, () => {
-      logger.log('Templates updated');
+ logger.log('Templates updated');
     });
 
     const unsubSync = eventEmitter.on(Events.SYNC_COMPLETED, () => {
-      logger.log('Sync completed');
+ logger.log('Sync completed');
     });
 
     // Cleanup
@@ -423,4 +423,4 @@ export function WeightLogScreen() {
 // 7. �S& Event-driven architecture
 //
 // ============================================================================
-
+

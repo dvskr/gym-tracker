@@ -170,7 +170,7 @@ const LogWeightModal: React.FC<LogWeightModalProps> = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       onClose();
     } catch (error) {
-      logger.error('Error saving weight:', error);
+ logger.error('Error saving weight:', error);
       Alert.alert('Error', 'Failed to save weight');
     } finally {
       setIsSaving(false);
@@ -355,7 +355,7 @@ export default function BodyWeightScreen() {
       setTodayEntry(today);
       setRecentEntries(recent);
     } catch (error) {
-      logger.error('Error fetching weight data:', error);
+ logger.error('Error fetching weight data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -960,4 +960,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

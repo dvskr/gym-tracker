@@ -13,7 +13,7 @@ export function useNotifications() {
     // Listen for notifications received while app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (notification) => {
-        logger.log('Notification received:', notification);
+ logger.log('Notification received:', notification);
         // Handle notification received
       }
     );
@@ -21,7 +21,7 @@ export function useNotifications() {
     // Listen for user interactions with notifications
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        logger.log('Notification response:', response);
+ logger.log('Notification response:', response);
         handleNotificationResponse(response);
       }
     );
@@ -58,4 +58,4 @@ export function useNotifications() {
     // You can expose functions here if needed
   };
 }
-
+

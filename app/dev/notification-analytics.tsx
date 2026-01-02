@@ -125,7 +125,7 @@ export default function NotificationAnalyticsScreen() {
       const data = await notificationAnalyticsService.getSummary();
       setSummary(data);
     } catch (error) {
-      logger.error('Failed to load analytics:', error);
+ logger.error('Failed to load analytics:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -428,4 +428,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

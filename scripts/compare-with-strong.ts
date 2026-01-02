@@ -132,7 +132,7 @@ console.log('=� COMPARISON REPORT: Strong vs Our App');
 console.log('='.repeat(60));
 console.log(`\n✅ Found: ${results.found.length}/${strongExercises.length} exercises`);
 console.log(`❌ Missing: ${results.missing.length} exercises`);
-console.log(`=� Coverage: ${Math.round((results.found.length / strongExercises.length) * 100)}%`);
+console.log(`= Coverage: ${Math.round((results.found.length / strongExercises.length) * 100)}%`);
 
 console.log('\n' + '-'.repeat(60));
 console.log('❌ MISSING EXERCISES (High Priority):');
@@ -146,4 +146,4 @@ fs.writeFileSync(
 );
 
 console.log('\n=� Full report saved to: scripts/comparison-report.json\n');
-
+

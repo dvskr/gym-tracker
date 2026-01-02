@@ -60,7 +60,7 @@ async function cleanupStorage() {
   // ========================================
   // Step 2: List all files in exercise-gifs bucket
   // ========================================
-  console.log('=� Step 2: Listing files in exercise-gifs bucket...');
+  console.log('= Step 2: Listing files in exercise-gifs bucket...');
   
   const { data: gifFiles, error: gifListError } = await supabase.storage
     .from('exercise-gifs')
@@ -79,7 +79,7 @@ async function cleanupStorage() {
     .filter(f => !activeGifFilenames.has(f.name))
     .map(f => f.name);
 
-  console.log(`=�  GIFs to delete: ${gifsToDelete.length}`);
+  console.log(`=  GIFs to delete: ${gifsToDelete.length}`);
   console.log('');
 
   // ========================================
@@ -118,8 +118,8 @@ async function cleanupStorage() {
   // All JPGs should be deleted (old format)
   const jpgsToDelete = jpgFiles.map(f => f.name);
 
-  console.log(`=�  PNGs to delete: ${pngsToDelete.length}`);
-  console.log(`=�  JPGs to delete: ${jpgsToDelete.length} (all old format)`);
+  console.log(`=  PNGs to delete: ${pngsToDelete.length}`);
+  console.log(`=  JPGs to delete: ${jpgsToDelete.length} (all old format)`);
   console.log('');
 
   // ========================================
@@ -128,10 +128,10 @@ async function cleanupStorage() {
   console.log('═'.repeat(50));
   console.log('=� DELETION SUMMARY');
   console.log('═'.repeat(50));
-  console.log(`=�  GIFs to delete:     ${gifsToDelete.length}`);
-  console.log(`=�  PNGs to delete:     ${pngsToDelete.length}`);
-  console.log(`=�  JPGs to delete:     ${jpgsToDelete.length}`);
-  console.log(`=� Total to delete:    ${gifsToDelete.length + pngsToDelete.length + jpgsToDelete.length}`);
+  console.log(`=  GIFs to delete:     ${gifsToDelete.length}`);
+  console.log(`=  PNGs to delete:     ${pngsToDelete.length}`);
+  console.log(`=  JPGs to delete:     ${jpgsToDelete.length}`);
+  console.log(`= Total to delete:    ${gifsToDelete.length + pngsToDelete.length + jpgsToDelete.length}`);
   console.log('');
   console.log('=� Files to KEEP:');
   console.log(`   GIFs:      ${allGifFilenames.length - gifsToDelete.length}`);
@@ -159,7 +159,7 @@ async function cleanupStorage() {
   // Step 6: Perform deletion
   // ========================================
   
-  console.log('=� Starting deletion...\n');
+  console.log('= Starting deletion...\n');
 
   let deletedCount = 0;
   let errorCount = 0;
@@ -223,12 +223,12 @@ async function cleanupStorage() {
   // ========================================
   console.log('');
   console.log('═'.repeat(50));
-  console.log('=� FINAL RESULTS');
+  console.log('= FINAL RESULTS');
   console.log('═'.repeat(50));
   console.log(`✅ Deleted: ${deletedCount} files`);
   console.log(`❌ Errors:  ${errorCount} files`);
   console.log('');
-  console.log('=� Remaining in storage:');
+  console.log('= Remaining in storage:');
   console.log(`   exercise-gifs:       ${activeGifFilenames.size} GIFs`);
   console.log(`   exercise-thumbnails: ${activePngFilenames.size} PNGs`);
   console.log('═'.repeat(50));
@@ -238,4 +238,4 @@ async function cleanupStorage() {
 
 // Run
 cleanupStorage().catch(console.error);
-
+

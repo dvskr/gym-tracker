@@ -58,7 +58,7 @@ async function main() {
       : []
   );
 
-  console.log(`\n=� Local files:`);
+  console.log(`\n= Local files:`);
   console.log(`   GIFs: ${localGifs.size}`);
   console.log(`   Thumbnails: ${localThumbs.size}`);
 
@@ -73,7 +73,7 @@ async function main() {
     return;
   }
 
-  console.log(`\n=� Database:`);
+  console.log(`\n= Database:`);
   console.log(`   Total active: ${allExercises?.length || 0}`);
   console.log(`   With GIF URL: ${allExercises?.filter(e => e.gif_url).length || 0}`);
   console.log(`   With Thumbnail URL: ${allExercises?.filter(e => e.thumbnail_url).length || 0}`);
@@ -186,7 +186,7 @@ async function main() {
   // #endregion
 
   // Step 5: Update database URLs
-  console.log(`\n=� STEP 2: Updating database URLs...\n`);
+  console.log(`\n= STEP 2: Updating database URLs...\n`);
 
   let updated = 0;
 
@@ -234,10 +234,10 @@ async function main() {
   const total = finalExercises?.length || 0;
 
   console.log('\n' + '='.repeat(60));
-  console.log('=� FINAL SUMMARY');
+  console.log('= FINAL SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n  Uploaded: ${uploadedGifs} GIFs, ${uploadedThumbs} thumbnails`);
-  console.log(`=� Updated URLs: ${updated}`);
+  console.log(`= Updated URLs: ${updated}`);
   console.log(`\n COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
 
   // #region agent log
@@ -251,4 +251,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

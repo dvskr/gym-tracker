@@ -114,7 +114,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
         url: currentPhoto.local_uri,
       });
     } catch (error) {
-      logger.error('Error sharing photo:', error);
+ logger.error('Error sharing photo:', error);
     }
   };
 
@@ -370,4 +370,4 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoViewer;
-
+

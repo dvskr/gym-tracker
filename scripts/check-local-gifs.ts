@@ -67,7 +67,7 @@ async function checkLocalGifs() {
   const missing = results.filter(r => !r.found);
 
   console.log('\n═'.repeat(80));
-  console.log('=� SUMMARY');
+  console.log('= SUMMARY');
   console.log('═'.repeat(80));
   console.log(`Total checked: ${missingExternalIds.length}`);
   console.log(`✅ Found locally: ${found.length}`);
@@ -125,7 +125,7 @@ async function checkLocalGifs() {
   console.log('');
 
   // Recommendation
-  console.log('=� NEXT STEPS:');
+  console.log('= NEXT STEPS:');
   console.log('─'.repeat(80));
   
   if (found.length === missingExternalIds.length) {
@@ -151,4 +151,4 @@ async function checkLocalGifs() {
 }
 
 checkLocalGifs();
-
+

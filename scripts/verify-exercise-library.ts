@@ -58,7 +58,7 @@ async function verifyExerciseLibrary() {
     equipmentCounts[eq] = (equipmentCounts[eq] || 0) + 1;
   });
   
-  console.log('\n=� ACTIVE BY EQUIPMENT');
+  console.log('\n= ACTIVE BY EQUIPMENT');
   console.log('='.repeat(50));
   Object.entries(equipmentCounts)
     .sort((a, b) => b[1] - a[1])
@@ -68,7 +68,7 @@ async function verifyExerciseLibrary() {
     });
   
   // Check for issues
-  console.log('\n�  POTENTIAL ISSUES');
+  console.log('\n  POTENTIAL ISSUES');
   console.log('='.repeat(50));
   
   // Active without GIF
@@ -139,7 +139,7 @@ async function verifyExerciseLibrary() {
     if (data) {
       const status = data.is_active ? '✅' : '❌';
       const gif = data.gif_url ? '' : '⚪';
-      const mt = data.measurement_type ? '=�' : '⚪';
+      const mt = data.measurement_type ? '=' : '⚪';
       console.log(`${status} ${gif} ${mt} ${name}`);
     } else {
       console.log(`❓ ⚪ ⚪ ${name} (not found)`);
@@ -151,4 +151,4 @@ async function verifyExerciseLibrary() {
 }
 
 verifyExerciseLibrary().catch(console.error);
-
+

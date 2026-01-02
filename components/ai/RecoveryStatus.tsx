@@ -55,7 +55,7 @@ export function RecoveryStatus() {
       const errorMessage = err.message || 'Failed to fetch recovery status';
       setError(errorMessage);
       setHasFetched(true);
-      logger.error('Failed to fetch recovery status:', err);
+ logger.error('Failed to fetch recovery status:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -90,16 +90,16 @@ export function RecoveryStatus() {
   };
 
   const getStatusEmoji = () => {
-    if (!status) return '�x�';
+    if (!status) return '💪';
     switch (status.overall) {
       case 'recovered':
-        return '�x�';
+        return '💪';
       case 'moderate':
-        return '�x�';
+        return '💪';
       case 'fatigued':
-        return '�x�';
+        return '⚠️';
       case 'overtrained':
-        return '�xܴ';
+        return '😴';
     }
   };
 
@@ -517,4 +517,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
+

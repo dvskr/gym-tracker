@@ -79,7 +79,7 @@ export default function AddExerciseToTemplateScreen() {
         successHaptic();
         router.back();
       } catch (error) {
-        logger.error('Error adding exercise to template:', error);
+ logger.error('Error adding exercise to template:', error);
       }
     },
     [templateId]
@@ -111,4 +111,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
+

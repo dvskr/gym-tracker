@@ -36,7 +36,7 @@ async function generateExercisesReport() {
     downloadedGifs = new Set(gifFiles);
     console.log(`  Found ${gifFiles.length} downloaded GIF files locally\n`);
   } else {
-    console.log(`  �  GIF directory not found: ${GIF_DIR}\n`);
+    console.log(`    GIF directory not found: ${GIF_DIR}\n`);
   }
 
   // Fetch ALL exercises (no limit)
@@ -106,7 +106,7 @@ async function generateExercisesReport() {
   markdown += `**Note:** GIF availability is based on locally downloaded files in \`exercise-gifs/\` directory.\n\n`;
   markdown += `---\n\n`;
   
-  markdown += `## =� Statistics\n\n`;
+  markdown += `## = Statistics\n\n`;
   markdown += `| Metric | Count | Percentage |\n`;
   markdown += `|--------|-------|------------|\n`;
   markdown += `| **Total Exercises** | ${totalExercises} | 100% |\n`;
@@ -118,7 +118,7 @@ async function generateExercisesReport() {
   markdown += `\n`;
 
   markdown += `---\n\n`;
-  markdown += `## =� Exercises by Muscle Group\n\n`;
+  markdown += `## = Exercises by Muscle Group\n\n`;
   markdown += `### Legend\n`;
   markdown += `- ✅ = Active\n`;
   markdown += `- ❌ = Inactive\n`;
@@ -235,16 +235,16 @@ async function generateExercisesReport() {
   fs.writeFileSync(outputPath, markdown);
 
   console.log(`\n✅ Report generated successfully!`);
-  console.log(`=� File: ${outputPath}`);
-  console.log(`\n=� Summary:`);
+  console.log(`= File: ${outputPath}`);
+  console.log(`\n= Summary:`);
   console.log(`   - Total Exercises: ${totalExercises}`);
   console.log(`   - Active: ${activeExercises}`);
   console.log(`   - With Downloaded GIF: ${withGifs}`);
   console.log(`   - Active + Downloaded GIF: ${activeWithGifs}`);
   console.log(`   - Muscle Groups: ${sortedMuscles.length}`);
   console.log(`   - Equipment Types: ${sortedEquipment.length}`);
-  console.log(`\n=� Checking against ${downloadedGifs.size} locally downloaded GIF files`);
+  console.log(`\n= Checking against ${downloadedGifs.size} locally downloaded GIF files`);
 }
 
 generateExercisesReport().catch(console.error);
-
+

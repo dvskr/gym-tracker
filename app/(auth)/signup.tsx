@@ -144,7 +144,7 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
-                    placeholder=""""""""""
+                    placeholder="Password"
                     placeholderTextColor="#64748b"
                     value={value}
                     onChangeText={onChange}
@@ -180,7 +180,7 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
-                    placeholder=""""""""""
+                    placeholder="Confirm Password"
                     placeholderTextColor="#64748b"
                     value={value}
                     onChangeText={onChange}
@@ -343,4 +343,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
-});
+});

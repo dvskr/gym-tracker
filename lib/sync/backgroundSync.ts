@@ -34,7 +34,7 @@ class BackgroundSync {
 
       // Just came online - sync immediately
       if (wasOffline && this.isOnline) {
-        logger.log('�x� Network reconnected - syncing immediately...');
+ logger.log('x Network reconnected - syncing immediately...');
         this.sync();
       }
     });
@@ -46,11 +46,11 @@ class BackgroundSync {
    */
   start(): void {
     if (this.syncInterval) {
-      logger.log('�a���� Background sync already running');
+ logger.log('a Background sync already running');
       return;
     }
 
-    logger.log('�x Starting background sync...');
+ logger.log('x Starting background sync...');
 
     // Initial sync
     this.sync();
@@ -69,7 +69,7 @@ class BackgroundSync {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      logger.log('⏸��� Background sync stopped');
+ logger.log(' Background sync stopped');
     }
   }
 
@@ -82,12 +82,12 @@ class BackgroundSync {
   async sync(): Promise<SyncStats> {
     // Don't sync if already syncing or offline
     if (this.isSyncing) {
-      logger.log('⏭��� Sync already in progress, skipping...');
+ logger.log(' Sync already in progress, skipping...');
       return this.getEmptyStats();
     }
 
     if (!this.isOnline) {
-      logger.log('�x� Offline - skipping sync');
+ logger.log('x Offline - skipping sync');
       return this.getEmptyStats();
     }
 
@@ -100,36 +100,36 @@ class BackgroundSync {
     };
 
     try {
-      logger.log('�x Starting bidirectional sync...');
+ logger.log('x Starting bidirectional sync...');
 
       // STEP 1: Push local changes (via sync queue)
       try {
         const pushResult = await syncQueue.syncAll();
         stats.itemsSynced = pushResult.synced;
-        logger.log(`�S& Pushed ${pushResult.synced} local change(s)`);
+ logger.log(`S& Pushed ${pushResult.synced} local change(s)`);
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`Push failed: ${errorMsg}`);
-        logger.error('�R Push failed:', error);
+ logger.error('R Push failed:', error);
       }
 
       // STEP 2: Pull latest data from server
       try {
         const pullCount = await this.pullLatestData();
         stats.itemsPulled = pullCount;
-        logger.log(`�S& Pulled ${pullCount} update(s) from server`);
+ logger.log(`S& Pulled ${pullCount} update(s) from server`);
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`Pull failed: ${errorMsg}`);
-        logger.error('�R Pull failed:', error);
+ logger.error('R Pull failed:', error);
       }
 
       // STEP 3: Update last sync timestamp
       await this.updateLastSyncTime(stats.lastSyncTime);
 
-      logger.log('�S& Sync complete:', stats);
+ logger.log('S& Sync complete:', stats);
     } catch (error) {
-      logger.error('�R Sync error:', error);
+ logger.error('R Sync error:', error);
       stats.errors.push(error instanceof Error ? error.message : String(error));
     } finally {
       this.isSyncing = false;
@@ -154,7 +154,7 @@ class BackgroundSync {
       // Get current user ID from Supabase session
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        logger.log('No authenticated user, skipping pull');
+ logger.log('No authenticated user, skipping pull');
         return 0;
       }
 
@@ -177,7 +177,7 @@ class BackgroundSync {
       if (workouts && workouts.length > 0) {
         await mergeWorkouts(workouts);
         totalPulled += workouts.length;
-        logger.log(`�x� Pulled ${workouts.length} workout(s)`);
+ logger.log(`x Pulled ${workouts.length} workout(s)`);
       }
 
       // Pull templates updated since last sync
@@ -196,7 +196,7 @@ class BackgroundSync {
       if (templates && templates.length > 0) {
         await mergeTemplates(templates);
         totalPulled += templates.length;
-        logger.log(`�x� Pulled ${templates.length} template(s)`);
+ logger.log(`x Pulled ${templates.length} template(s)`);
       }
 
       // Pull weight log
@@ -212,7 +212,7 @@ class BackgroundSync {
       if (weightLog && weightLog.length > 0) {
         await mergeWeightLog(weightLog);
         totalPulled += weightLog.length;
-        logger.log(`�x� Pulled ${weightLog.length} weight log(s)`);
+ logger.log(`x Pulled ${weightLog.length} weight log(s)`);
       }
 
       // Pull measurements
@@ -228,7 +228,7 @@ class BackgroundSync {
       if (measurements && measurements.length > 0) {
         await mergeMeasurements(measurements);
         totalPulled += measurements.length;
-        logger.log(`�x� Pulled ${measurements.length} measurement(s)`);
+ logger.log(`x Pulled ${measurements.length} measurement(s)`);
       }
 
       // Pull personal records
@@ -244,11 +244,11 @@ class BackgroundSync {
       if (prs && prs.length > 0) {
         await mergePersonalRecords(prs);
         totalPulled += prs.length;
-        logger.log(`�x� Pulled ${prs.length} PR(s)`);
+ logger.log(`x Pulled ${prs.length} PR(s)`);
       }
 
     } catch (error) {
-      logger.error('Error pulling data:', error);
+ logger.error('Error pulling data:', error);
       throw error;
     }
 
@@ -270,7 +270,7 @@ class BackgroundSync {
       const lastSync = await AsyncStorage.getItem(this.LAST_SYNC_KEY);
       return lastSync ? parseInt(lastSync, 10) : null;
     } catch (error) {
-      logger.error('Error getting last sync time:', error);
+ logger.error('Error getting last sync time:', error);
       return null;
     }
   }
@@ -282,7 +282,7 @@ class BackgroundSync {
     try {
       await AsyncStorage.setItem(this.LAST_SYNC_KEY, timestamp.toString());
     } catch (error) {
-      logger.error('Error updating last sync time:', error);
+ logger.error('Error updating last sync time:', error);
     }
   }
 
@@ -326,4 +326,4 @@ class BackgroundSync {
 // Singleton instance
 export const backgroundSync = new BackgroundSync();
 export default backgroundSync;
-
+

@@ -110,7 +110,7 @@ export function SyncStatusPanel() {
 
         <View style={styles.statusItem}>
           <Text style={[styles.statusValue, isOnline ? styles.statusSuccess : styles.statusError]}>
-            {isOnline ? '=�' : '=4'}
+            {isOnline ? '=' : '=4'}
           </Text>
           <Text style={styles.statusLabel}>{isOnline ? 'Online' : 'Offline'}</Text>
         </View>
@@ -665,4 +665,4 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
-
+

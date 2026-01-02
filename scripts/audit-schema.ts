@@ -48,7 +48,7 @@ async function auditExerciseSchema() {
       }
     });
     
-    console.log('=�  IMAGE-RELATED COLUMNS:');
+    console.log('=  IMAGE-RELATED COLUMNS:');
     if (imageColumns.length === 0) {
       console.log('   (none found)');
     } else {
@@ -59,13 +59,13 @@ async function auditExerciseSchema() {
       });
     }
     
-    console.log('\n=� KEY METADATA COLUMNS:');
+    console.log('\n= KEY METADATA COLUMNS:');
     metadataColumns.forEach(col => {
       const value = sampleRows[0][col];
       console.log(`   • ${col}: ${value}`);
     });
     
-    console.log('\n=� OTHER COLUMNS:');
+    console.log('\n= OTHER COLUMNS:');
     console.log(`   ${otherColumns.join(', ')}`);
   }
 
@@ -74,7 +74,7 @@ async function auditExerciseSchema() {
   // ========================================
   console.log('\n');
   console.log('═'.repeat(60));
-  console.log('=� Step 2: Image Column Usage Statistics');
+  console.log('= Step 2: Image Column Usage Statistics');
   console.log('═'.repeat(60));
   console.log('');
 
@@ -108,7 +108,7 @@ async function auditExerciseSchema() {
   // ========================================
   console.log('\n');
   console.log('═'.repeat(60));
-  console.log('=� Step 3: Sample Exercise Data');
+  console.log('= Step 3: Sample Exercise Data');
   console.log('═'.repeat(60));
   console.log('');
 
@@ -132,7 +132,7 @@ async function auditExerciseSchema() {
   // Step 4: Check for exercises missing gif_url
   // ========================================
   console.log('═'.repeat(60));
-  console.log('�  Exercises Without GIF URLs (Active)');
+  console.log('  Exercises Without GIF URLs (Active)');
   console.log('═'.repeat(60));
   console.log('');
 
@@ -182,7 +182,7 @@ async function auditExerciseSchema() {
     console.log('      • Derive: thumbnail URL at runtime');
     console.log('      • Benefit: Never out of sync, one field to maintain');
   } else if (imageColumns.length > 1) {
-    console.log('�  Multiple image columns detected:');
+    console.log('  Multiple image columns detected:');
     imageColumns.forEach(col => console.log(`   • ${col}`));
     console.log('');
     console.log('   Consider consolidating to a single gif_url column.');
@@ -192,4 +192,4 @@ async function auditExerciseSchema() {
 }
 
 auditExerciseSchema().catch(console.error);
-
+

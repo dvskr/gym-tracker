@@ -201,14 +201,14 @@ async function generateReport() {
   console.log('EXERCISE LIBRARY ANALYSIS REPORT');
   console.log('='.repeat(60));
   
-  console.log(`\n=� SUMMARY`);
+  console.log(`\n= SUMMARY`);
   console.log(`   Total Inactive: ${analysis.totalInactive}`);
   console.log(`   With GIF URL: ${analysis.inactiveWithGifUrl.length}`);
   console.log(`   Without GIF URL: ${analysis.inactiveWithoutGifUrl.length}`);
   console.log(`   Missing Measurement Type: ${analysis.missingMeasurementType.length}`);
   console.log(`   Priority Exercises Found: ${analysis.priorityExercises.length}`);
   
-  console.log(`\n=� BY EQUIPMENT:`);
+  console.log(`\n= BY EQUIPMENT:`);
   Object.entries(analysis.byEquipment)
     .sort((a, b) => b[1].length - a[1].length)
     .forEach(([equipment, exercises]) => {
@@ -272,4 +272,4 @@ WHERE name IN (
 }
 
 generateReport().catch(console.error);
-
+

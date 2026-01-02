@@ -36,7 +36,7 @@ export function useNotificationPermissions(): NotificationPermissions {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       setStatus(existingStatus as NotificationPermissionStatus);
     } catch (error) {
-      logger.error('Failed to check notification permissions:', error);
+ logger.error('Failed to check notification permissions:', error);
       setStatus('undetermined');
     } finally {
       setIsLoading(false);
@@ -70,14 +70,14 @@ export function useNotificationPermissions(): NotificationPermissions {
       setStatus(newStatus as NotificationPermissionStatus);
       
       if (newStatus === 'granted') {
-        logger.log('�S& Notification permissions granted');
+ logger.log('S& Notification permissions granted');
         return true;
       } else {
-        logger.log('�R Notification permissions denied');
+ logger.log('R Notification permissions denied');
         return false;
       }
     } catch (error) {
-      logger.error('Failed to request notification permissions:', error);
+ logger.error('Failed to request notification permissions:', error);
       return false;
     }
   }
@@ -104,4 +104,4 @@ export function useNotificationPermissions(): NotificationPermissions {
     openSettings,
   };
 }
-
+

@@ -164,7 +164,7 @@ class AIUsageTracker {
     const stats = await this.getUsage();
 
     if (level === 'critical') {
-      return `�a���� You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
+      return `�a��� You've used ${stats.percentUsed}% of your monthly AI limit (${stats.requestsRemaining} requests left)`;
     } else if (level === 'warning') {
       return `You've used ${stats.percentUsed}% of your monthly AI limit`;
     }
@@ -193,7 +193,7 @@ class AIUsageTracker {
       lastReset.getMonth() !== now.getMonth() || lastReset.getFullYear() !== now.getFullYear();
 
     if (isDifferentMonth) {
-      logger.log('�x& New month detected, resetting AI usage stats');
+ logger.log('x& New month detected, resetting AI usage stats');
       await this.reset();
     }
   }
@@ -208,7 +208,7 @@ class AIUsageTracker {
         this.usage = JSON.parse(data);
       }
     } catch (error) {
-      logger.error('Failed to load AI usage data:', error);
+ logger.error('Failed to load AI usage data:', error);
       // Keep defaults
     }
   }
@@ -220,7 +220,7 @@ class AIUsageTracker {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.usage));
     } catch (error) {
-      logger.error('Failed to save AI usage data:', error);
+ logger.error('Failed to save AI usage data:', error);
     }
   }
 
@@ -236,4 +236,4 @@ class AIUsageTracker {
 }
 
 export const aiUsageTracker = new AIUsageTracker();
-
+

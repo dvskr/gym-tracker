@@ -48,7 +48,7 @@ class EngagementNotificationService {
     const { currentStreak, lastWorkoutDate } = streakData;
     
     if (currentStreak < 2) {
-      logger.log('⏸��� No streak to protect (streak < 2)');
+ logger.log(' No streak to protect (streak < 2)');
       return;
     }
     
@@ -61,7 +61,7 @@ class EngagementNotificationService {
       // Check if already sent today
       const alreadySent = await this.hasStreakReminderToday();
       if (alreadySent) {
-        logger.log('⏸��� Streak reminder already sent today');
+ logger.log(' Streak reminder already sent today');
         return;
       }
 
@@ -86,7 +86,7 @@ class EngagementNotificationService {
         .replace('{nextStreak}', (streak + 1).toString());
 
       await notificationService.scheduleNotification(
-        'Streak Alert! �x�',
+        'Streak Alert! �x',
         message,
         {
           type: 'date' as const,
@@ -102,9 +102,9 @@ class EngagementNotificationService {
         }
       );
 
-      logger.log(`�S& Scheduled streak reminder for ${time.toLocaleTimeString()}`);
+ logger.log(`S& Scheduled streak reminder for ${time.toLocaleTimeString()}`);
     } catch (error) {
-      logger.error('Failed to schedule streak reminder:', error);
+ logger.error('Failed to schedule streak reminder:', error);
     }
   }
 
@@ -140,7 +140,7 @@ class EngagementNotificationService {
         // Only schedule if in the future
         if (reminderDate > new Date()) {
           await notificationService.scheduleNotification(
-            days <= 7 ? 'Missing You! �x�' : 'Ready to Restart? �xRx',
+            days <= 7 ? 'Missing You! �x�' : 'Ready to Restart? xRx',
             message,
             {
               type: 'date' as const,
@@ -155,9 +155,9 @@ class EngagementNotificationService {
         }
       }
 
-      logger.log(`�S& Scheduled ${scheduled} inactivity reminder(s)`);
+ logger.log(`S& Scheduled ${scheduled} inactivity reminder(s)`);
     } catch (error) {
-      logger.error('Failed to schedule inactivity reminders:', error);
+ logger.error('Failed to schedule inactivity reminders:', error);
     }
   }
 
@@ -177,10 +177,10 @@ class EngagementNotificationService {
       }
 
       if (cancelled > 0) {
-        logger.log(`�S& Cancelled ${cancelled} inactivity reminder(s)`);
+ logger.log(`S& Cancelled ${cancelled} inactivity reminder(s)`);
       }
     } catch (error) {
-      logger.error('Failed to cancel inactivity reminders:', error);
+ logger.error('Failed to cancel inactivity reminders:', error);
     }
   }
 
@@ -218,9 +218,9 @@ class EngagementNotificationService {
         }
       );
 
-      logger.log(`�x}0 Sent streak celebration for ${streak} days`);
+ logger.log(`x}0 Sent streak celebration for ${streak} days`);
     } catch (error) {
-      logger.error('Failed to send streak celebration:', error);
+ logger.error('Failed to send streak celebration:', error);
     }
   }
 
@@ -251,9 +251,9 @@ class EngagementNotificationService {
       }
     }
 
-    logger.log('�S& Cancelled all engagement notifications');
+ logger.log('S& Cancelled all engagement notifications');
   }
 }
 
 export const engagementNotificationService = new EngagementNotificationService();
-
+

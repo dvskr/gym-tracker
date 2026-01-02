@@ -30,7 +30,7 @@ export const formatSetDisplay = (
   switch (measurementType) {
     case 'reps_weight':
       return set.weight && set.reps 
-        ? `${set.weight} lbs × ${set.reps} reps`
+        ? `${set.weight} lbs  ${set.reps} reps`
         : '—';
     
     case 'time':
@@ -47,7 +47,7 @@ export const formatSetDisplay = (
     
     case 'time_weight':
       return set.duration_seconds && set.weight
-        ? `${set.duration_seconds}s × ${set.weight} lbs`
+        ? `${set.duration_seconds}s  ${set.weight} lbs`
         : '—';
     
     case 'reps_only':
@@ -132,4 +132,4 @@ export const getEmptySet = (measurementType: string) => {
       return { ...base, reps: null, weight: null };
   }
 };
-
+

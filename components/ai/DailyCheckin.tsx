@@ -20,12 +20,10 @@ interface DailyCheckinProps {
   onComplete?: () => void;
 }
 
-const SLEEP_EMOJIS = ['=4', '=', '=', '=
-', '='];
-const STRESS_EMOJIS = ['=', '=B', '=', '=0', '=1'];
-const SORENESS_EMOJIS = ['=�', '=B', '=', '=#', '>'];
-const ENERGY_EMOJIS = ['=', '=4', '=', '=
-', '⚡'];
+const SLEEP_EMOJIS = ['😴', '😪', '🥱', '💤', '😌'];
+const STRESS_EMOJIS = ['😌', '😐', '😕', '😰', '😱'];
+const SORENESS_EMOJIS = ['✅', '😐', '😣', '😖', '🤕'];
+const ENERGY_EMOJIS = ['🔋', '😴', '😊', '💪', '⚡'];
 
 export function DailyCheckin({ visible, onClose, onComplete }: DailyCheckinProps) {
   const { saveCheckin, loading } = useCheckinStore();

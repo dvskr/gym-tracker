@@ -283,13 +283,13 @@ export const useWorkoutStore = create<WorkoutState>()(
           }
 
           // Clear active workout
-          logger.log('[WorkoutStore] endWorkout: clearing state...');
+ logger.log('[WorkoutStore] endWorkout: clearing state...');
           set({
             activeWorkout: null,
             isWorkoutActive: false,
             restTimer: { exerciseId: null, isRunning: false, remainingSeconds: 0, totalSeconds: 0 },
           });
-          logger.log('[WorkoutStore] State after endWorkout:', {
+ logger.log('[WorkoutStore] State after endWorkout:', {
             activeWorkout: get().activeWorkout,
             isWorkoutActive: get().isWorkoutActive,
           });
@@ -302,7 +302,7 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           return { success: true, workoutId: workout.id };
         } catch (error) {
-          logger.error('Failed to save workout:', error);
+ logger.error('Failed to save workout:', error);
           return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to save workout',
@@ -311,14 +311,14 @@ export const useWorkoutStore = create<WorkoutState>()(
       },
 
       discardWorkout: () => {
-        logger.log('[WorkoutStore] discardWorkout called');
+ logger.log('[WorkoutStore] discardWorkout called');
         // Clear state
         set({
           activeWorkout: null,
           isWorkoutActive: false,
           restTimer: { exerciseId: null, isRunning: false, remainingSeconds: 0, totalSeconds: 0 },
         });
-        logger.log('[WorkoutStore] State after discard:', {
+ logger.log('[WorkoutStore] State after discard:', {
           activeWorkout: get().activeWorkout,
           isWorkoutActive: get().isWorkoutActive,
         });
@@ -888,10 +888,10 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
         Math.floor((Date.now() - new Date(workoutStartedAt).getTime()) / 60000) // Duration in minutes
       );
       
-      logger.log('�S& Engagement notifications triggered');
+ logger.log('S& Engagement notifications triggered');
     } catch (error) {
-      logger.error('Failed to trigger engagement notifications:', error);
+ logger.error('Failed to trigger engagement notifications:', error);
     }
   }, 1000); // Small delay to let workout save settle
 }
-
+

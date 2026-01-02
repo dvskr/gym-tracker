@@ -195,7 +195,7 @@ export default function WorkoutDetailScreen() {
       // Validate UUID format before fetching
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(id)) {
-        logger.warn(`Invalid workout ID: ${id}`);
+ logger.warn(`Invalid workout ID: ${id}`);
         setIsLoading(false);
         setWorkout(null);
         return;
@@ -216,7 +216,7 @@ export default function WorkoutDetailScreen() {
         }
       }
     } catch (error) {
-      logger.error('Failed to fetch workout:', error);
+ logger.error('Failed to fetch workout:', error);
       Alert.alert('Error', 'Failed to load workout');
     } finally {
       setIsLoading(false);
@@ -258,7 +258,7 @@ export default function WorkoutDetailScreen() {
       setIsEditingName(false);
       successHaptic();
     } catch (error) {
-      logger.error('Failed to update name:', error);
+ logger.error('Failed to update name:', error);
       Alert.alert('Error', 'Failed to update workout name');
     }
   };
@@ -281,7 +281,7 @@ export default function WorkoutDetailScreen() {
               await deleteWorkout(id!);
               router.back();
             } catch (error) {
-              logger.error('Failed to delete workout:', error);
+ logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout');
             } finally {
               setIsDeleting(false);
@@ -339,7 +339,7 @@ export default function WorkoutDetailScreen() {
       const exportable = convertToExportable(workout);
       await shareWorkout(exportable, 'text');
     } catch (error) {
-      logger.error('Error sharing:', error);
+ logger.error('Error sharing:', error);
       Alert.alert('Error', 'Failed to share workout');
     }
   };
@@ -353,7 +353,7 @@ export default function WorkoutDetailScreen() {
       const exportable = convertToExportable(workout);
       await exportWorkout(exportable, 'csv');
     } catch (error) {
-      logger.error('Error exporting CSV:', error);
+ logger.error('Error exporting CSV:', error);
       Alert.alert('Error', 'Failed to export workout');
     }
   };
@@ -1103,4 +1103,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+});

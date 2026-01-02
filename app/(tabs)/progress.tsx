@@ -256,9 +256,9 @@ export default function ProgressScreen() {
         achievementStats: achStats,
       });
       
-      logger.log('[Progress] Data fetched successfully');
+ logger.log('[Progress] Data fetched successfully');
     } catch (error) {
-      logger.error('Failed to fetch progress stats:', error);
+ logger.error('Failed to fetch progress stats:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -347,7 +347,7 @@ export default function ProgressScreen() {
             </View>
             {weeklyStats.volumeChange !== 0 && (
               <Text style={styles.weeklyComparison}>
-                {weeklyStats.volumeChange > 0 ? '� ' : '� '} {Math.abs(weeklyStats.volumeChange)}% vs last week
+                {weeklyStats.volumeChange > 0 ? '� ' : ' '} {Math.abs(weeklyStats.volumeChange)}% vs last week
               </Text>
             )}
           </View>
@@ -396,7 +396,7 @@ export default function ProgressScreen() {
               label="Most Trained"
               value={allTimeStats.mostTrainedMuscle ? 
                 allTimeStats.mostTrainedMuscle.charAt(0).toUpperCase() + allTimeStats.mostTrainedMuscle.slice(1) 
-                : '�'}
+                : ''}
             />
           </View>
         ) : null}
@@ -902,4 +902,4 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: 40,
   },
-});
+});

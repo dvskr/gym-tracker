@@ -70,7 +70,7 @@ export default function CoachScreen() {
     if (user) {
       // Invalidate any potentially corrupted cache from before the fix
       invalidateCacheKey(user.id, 'coachContext');
-      logger.log('[Coach] Cache cleared on mount');
+ logger.log('[Coach] Cache cleared on mount');
     }
   }, []);  // Only on mount
 
@@ -97,7 +97,7 @@ export default function CoachScreen() {
         setMessages(loadedMessages);
       }
     } catch (error) {
-      logger.error('Failed to load chat history:', error);
+ logger.error('Failed to load chat history:', error);
     }
   };
 
@@ -118,7 +118,7 @@ export default function CoachScreen() {
       if (error) throw error;
       return data?.id;
     } catch (error) {
-      logger.error('Failed to save message:', error);
+ logger.error('Failed to save message:', error);
       return null;
     }
   };
@@ -134,7 +134,7 @@ export default function CoachScreen() {
       const cached = getCachedData<string>(user.id, 'coachContext', 5 * 60 * 1000);
       
       if (cached) {
-        logger.log('[Coach] Using cached context');
+ logger.log('[Coach] Using cached context');
         setUserContext(cached);
         setIsLoadingContext(false);
         
@@ -144,7 +144,7 @@ export default function CoachScreen() {
       }
 
       // Build fresh context if not cached
-      logger.log('[Coach] Building fresh context');
+ logger.log('[Coach] Building fresh context');
       const context = await buildCoachContext(user.id);
       
       // Extract .text from CoachContext object
@@ -158,7 +158,7 @@ export default function CoachScreen() {
       // Fetch contextual data for suggested questions
       await fetchContextData();
     } catch (error) {
-      logger.error('Failed to load user context:', error);
+ logger.error('Failed to load user context:', error);
     } finally {
       setIsLoadingContext(false);
     }
@@ -208,7 +208,7 @@ export default function CoachScreen() {
         lowEnergy: (checkin.data?.energy_level ?? 5) <= 2,
       });
     } catch (error) {
-      logger.error('Failed to fetch context data:', error);
+ logger.error('Failed to fetch context data:', error);
     }
   };
 
@@ -292,7 +292,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
     } catch (error: any) {
-      logger.error('Failed to send message:', error);
+ logger.error('Failed to send message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -343,7 +343,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       // Clear local state
       setMessages([]);
     } catch (error) {
-      logger.error('Failed to clear chat history:', error);
+ logger.error('Failed to clear chat history:', error);
       // Still clear local state even if DB delete fails
       setMessages([]);
     }
@@ -440,12 +440,12 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
             addExerciseWithSets(exercise, prefillSets);
             successCount++;
             
-            logger.log(`�S& Added exercise: ${exercise.name} (${exerciseData.sets} sets × ${repsNum} reps)`);
+ logger.log(`S& Added exercise: ${exercise.name} (${exerciseData.sets} sets ${repsNum} reps)`);
           } else {
-            logger.warn(`�a���� Exercise not found: ${exerciseData.name}`);
+ logger.warn(`a Exercise not found: ${exerciseData.name}`);
           }
         } catch (error) {
-          logger.error(`Failed to add exercise ${exerciseData.name}:`, error);
+ logger.error(`Failed to add exercise ${exerciseData.name}:`, error);
         }
       }
       
@@ -456,7 +456,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       // Navigate to active workout
       router.push('/workout/active');
     } catch (error) {
-      logger.error('Failed to start workout:', error);
+ logger.error('Failed to start workout:', error);
       Alert.alert('Error', 'Failed to start workout. Please try again.');
     }
   };
@@ -807,4 +807,4 @@ const styles = StyleSheet.create({
     borderColor: '#334155',
   },
 });
-
+

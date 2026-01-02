@@ -60,10 +60,10 @@ async function scanWebsite() {
   }
   
   console.log('\n═'.repeat(70));
-  console.log(`=� RESULTS`);
+  console.log(`= RESULTS`);
   console.log(`✅ Found on website: ${found}`);
   console.log(`❌ Not found: ${notFound}`);
 }
 
 scanWebsite();
-
+

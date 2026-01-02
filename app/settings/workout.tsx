@@ -486,4 +486,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

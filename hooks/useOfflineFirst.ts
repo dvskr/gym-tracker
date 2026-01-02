@@ -68,7 +68,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
       
       return localData;
     } catch (err) {
-      logger.error(`Error loading from local storage (${storageKey}):`, err);
+ logger.error(`Error loading from local storage (${storageKey}):`, err);
       setError(err as Error);
       return [];
     }
@@ -77,7 +77,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
   // Fetch from cloud and merge with local
   const refetchFromCloud = useCallback(async () => {
     if (!isOnline) {
-      logger.log('Offline - skipping cloud fetch');
+ logger.log('Offline - skipping cloud fetch');
       return;
     }
 
@@ -105,9 +105,9 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
       await localDB.setLastSyncTime(storageKey, now);
       setLastSyncTime(now);
       
-      logger.log(`�S& Synced ${storageKey}: ${cloudData.length} items from cloud`);
+ logger.log(`S& Synced ${storageKey}: ${cloudData.length} items from cloud`);
     } catch (err) {
-      logger.error(`Error fetching from cloud (${storageKey}):`, err);
+ logger.error(`Error fetching from cloud (${storageKey}):`, err);
       setError(err as Error);
       // Keep local data on error
     } finally {
@@ -159,7 +159,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
   // Handle reconnection
   useEffect(() => {
     if (isOnline && wasOffline && refetchOnReconnect) {
-      logger.log('�x� Reconnected - syncing data...');
+ logger.log('x Reconnected - syncing data...');
       refetchFromCloud();
     }
     setWasOffline(!isOnline);
@@ -187,7 +187,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
           });
         }
       } catch (err) {
-        logger.error('Error adding item:', err);
+ logger.error('Error adding item:', err);
         setError(err as Error);
       }
     },
@@ -218,7 +218,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
           }
         }
       } catch (err) {
-        logger.error('Error updating item:', err);
+ logger.error('Error updating item:', err);
         setError(err as Error);
       }
     },
@@ -245,7 +245,7 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
           });
         }
       } catch (err) {
-        logger.error('Error deleting item:', err);
+ logger.error('Error deleting item:', err);
         setError(err as Error);
       }
     },
@@ -269,4 +269,4 @@ export function useOfflineFirst<T extends { id: string; _synced?: boolean }>(
 }
 
 export default useOfflineFirst;
-
+

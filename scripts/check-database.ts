@@ -53,7 +53,7 @@ async function checkDatabase() {
     .eq('gif_url', '');
   
   if (emptyGifs && emptyGifs.length > 0) {
-    console.log('\n� Exercises with EMPTY gif_url:', emptyGifs.length);
+    console.log('\n Exercises with EMPTY gif_url:', emptyGifs.length);
     emptyGifs.slice(0, 5).forEach(ex => {
       console.log(`  - ${ex.name} (${ex.external_id})`);
     });
@@ -61,4 +61,4 @@ async function checkDatabase() {
 }
 
 checkDatabase();
-
+

@@ -90,7 +90,7 @@ class RecoveryService {
         workoutsThisWeek,
       };
     } catch (error) {
-      logger.error('Failed to get recovery status:', error);
+ logger.error('Failed to get recovery status:', error);
       return this.getDefaultStatus();
     }
   }
@@ -498,7 +498,7 @@ class RecoveryService {
     }).length;
     
     // Debug logging (can be removed after testing)
-    logger.log('Recovery Debug - Workouts This Week:', {
+ logger.log('Recovery Debug - Workouts This Week:', {
       startOfWeek: startOfWeek.toISOString(),
       now: now.toISOString(),
       dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek],
@@ -535,13 +535,13 @@ class RecoveryService {
         .order('created_at', { ascending: false });
 
       if (error) {
-        logger.error('Error fetching recent workouts:', error);
+ logger.error('Error fetching recent workouts:', error);
         return [];
       }
 
       return data || [];
     } catch (error) {
-      logger.error('Failed to fetch recent workouts:', error);
+ logger.error('Failed to fetch recent workouts:', error);
       return [];
     }
   }
@@ -581,7 +581,7 @@ class RecoveryService {
 
       return data;
     } catch (error) {
-      logger.error('Error fetching check-in:', error);
+ logger.error('Error fetching check-in:', error);
       return null;
     }
   }
@@ -598,17 +598,17 @@ class RecoveryService {
         .single();
 
       if (error) {
-        logger.warn('Error fetching fitness preferences:', error);
+ logger.warn('Error fetching fitness preferences:', error);
         return null;
       }
 
       return data || null;
     } catch (error) {
-      logger.error('Error fetching fitness preferences:', error);
+ logger.error('Error fetching fitness preferences:', error);
       return null;
     }
   }
 }
 
 export const recoveryService = new RecoveryService();
-
+

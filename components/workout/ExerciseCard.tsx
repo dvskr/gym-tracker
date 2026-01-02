@@ -181,7 +181,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           {showPreviousWorkout && previousWorkout && previousWorkout.sets.length > 0 && (
             <View style={styles.previousHintRow}>
               <Text style={styles.previousHintText}>
-                Last: {previousWorkout.sets[0].weight} {weightUnit} × {previousWorkout.sets[0].reps} reps
+                Last: {previousWorkout.sets[0].weight} {weightUnit}  {previousWorkout.sets[0].reps} reps
                 {daysAgo !== null && ` (${getDaysAgoText()})`}
               </Text>
             </View>
@@ -728,4 +728,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
   },
-});
+});

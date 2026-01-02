@@ -45,7 +45,7 @@ TONE:
 STRUCTURED ACTIONS:
 When suggesting a complete workout plan, you MUST provide a warm, friendly response in natural language FIRST, then include the technical workout block at the very end.
 
-� CRITICAL FORMAT RULE:
+ CRITICAL FORMAT RULE:
 - Write 2-4 sentences of friendly explanation and context
 - Then add the workout block in triple-backtick code fence with 'workout' language
 - NEVER return ONLY the workout block without explanation
@@ -183,4 +183,4 @@ export function formatUserQuestion(question: string, context?: Record<string, an
     .join('\n');
 
   return `${contextStr}\n\n${question}`;
-}
+}

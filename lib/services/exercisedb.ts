@@ -206,4 +206,4 @@ export const fetchTargetList = async (): Promise<string[]> => {
       `Failed to fetch target list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
-};
+};

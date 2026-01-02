@@ -170,7 +170,7 @@ async function main() {
   console.log(`ffmpeg available: ${hasFfmpeg ? '✅' : '❌'}`);
 
   if (!hasFfmpeg) {
-    console.log('�  ffmpeg not found. Upscaling/thumbnails will be skipped.');
+    console.log('  ffmpeg not found. Upscaling/thumbnails will be skipped.');
     console.log('   Install ffmpeg: https://ffmpeg.org/download.html');
   }
 
@@ -264,10 +264,10 @@ async function main() {
 
   console.log(`\nCategorization:`);
   console.log(`  ❌ No gif_url in DB: ${noUrl.length}`);
-  console.log(`  �  Has URL but no local file: ${hasUrlNoLocal.length}`);
+  console.log(`    Has URL but no local file: ${hasUrlNoLocal.length}`);
   console.log(`  ✅ Has local GIF: ${hasLocal.length}`);
-  console.log(`  =� Has 1080p version: ${has1080p.length}`);
-  console.log(`  =�  Has thumbnail: ${hasThumbnail.length}`);
+  console.log(`  = Has 1080p version: ${has1080p.length}`);
+  console.log(`  =  Has thumbnail: ${hasThumbnail.length}`);
 
   // Test URL validity for a sample of exercises missing local GIFs
   console.log(`\n= Testing URL validity (first 10 exercises missing local GIFs)...`);
@@ -311,7 +311,7 @@ async function main() {
     const inputPath = path.join(GIF_DIR, testGif);
     const outputPath = path.join(GIF_1080P_DIR, testGif);
     
-    console.log(`\n=� Testing upscaling on: ${testGif}`);
+    console.log(`\n= Testing upscaling on: ${testGif}`);
     const upscaleResult = await upscaleGif(inputPath, outputPath);
     console.log(`  Upscale: ${upscaleResult ? '✅' : '❌'}`);
 
@@ -324,7 +324,7 @@ async function main() {
 
     // Test thumbnail generation
     const thumbOutputPath = path.join(THUMBNAIL_DIR, testGif.replace('.gif', '.jpg'));
-    console.log(`\n=�  Testing thumbnail generation on: ${testGif}`);
+    console.log(`\n=  Testing thumbnail generation on: ${testGif}`);
     const thumbResult = await generateThumbnail(inputPath, thumbOutputPath);
     console.log(`  Thumbnail: ${thumbResult ? '✅' : '❌'}`);
 
@@ -341,12 +341,12 @@ async function main() {
   console.log('DIAGNOSTIC SUMMARY');
   console.log('='.repeat(60));
   console.log(`\nTotal Active Exercises: ${exercises?.length || 0}`);
-  console.log(`\n=� GIF Coverage:`);
+  console.log(`\n= GIF Coverage:`);
   console.log(`   ✅ Have local GIF: ${hasLocal.length} (${((hasLocal.length / (exercises?.length || 1)) * 100).toFixed(1)}%)`);
-  console.log(`   �  Need download (have URL): ${hasUrlNoLocal.length}`);
+  console.log(`     Need download (have URL): ${hasUrlNoLocal.length}`);
   console.log(`   ❌ No URL in database: ${noUrl.length}`);
-  console.log(`\n=� 1080p Upscaled: ${has1080p.length}`);
-  console.log(`=�  Thumbnails: ${hasThumbnail.length}`);
+  console.log(`\n= 1080p Upscaled: ${has1080p.length}`);
+  console.log(`=  Thumbnails: ${hasThumbnail.length}`);
   console.log(`\n=' ffmpeg: ${hasFfmpeg ? 'Available' : 'NOT FOUND'}`);
 
   // #region agent log
@@ -374,4 +374,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

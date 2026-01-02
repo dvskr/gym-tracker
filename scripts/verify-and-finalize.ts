@@ -95,7 +95,7 @@ async function verifyGIFQuality(): Promise<{ checked: number; lowQuality: number
 }
 
 async function verifyThumbnailQuality(): Promise<{ checked: number; wrongSize: number }> {
-  console.log('\n=�  STEP 2: Verifying thumbnail quality...');
+  console.log('\n=  STEP 2: Verifying thumbnail quality...');
   
   const thumbs = fs.existsSync(THUMBNAIL_DIR)
     ? fs.readdirSync(THUMBNAIL_DIR).filter(f => f.endsWith('.jpg'))
@@ -227,7 +227,7 @@ async function ensureAllUploaded(): Promise<{ uploaded: number; skipped: number 
 }
 
 async function updateAllDatabaseURLs(): Promise<{ updated: number; errors: number }> {
-  console.log('\n=� STEP 4: Updating ALL database URLs...');
+  console.log('\n= STEP 4: Updating ALL database URLs...');
   
   // #region agent log
   debugLog('verify.ts:dbupdate:start', 'Starting database update', {}, 'H3');
@@ -311,7 +311,7 @@ async function updateAllDatabaseURLs(): Promise<{ updated: number; errors: numbe
 }
 
 async function getFinalStatistics() {
-  console.log('\n=� STEP 5: Gathering final statistics...');
+  console.log('\n= STEP 5: Gathering final statistics...');
   
   const { data: allExercises } = await supabase
     .from('exercises')
@@ -338,7 +338,7 @@ async function getFinalStatistics() {
   console.log(`     GIFs: ${localGifs}`);
   console.log(`     Thumbnails: ${localThumbs}`);
   
-  console.log(`\n  =� Database (Active Exercises):`);
+  console.log(`\n  = Database (Active Exercises):`);
   console.log(`     Total: ${totalActive}`);
   console.log(`     With GIF URL: ${withGif}`);
   console.log(`     With Thumbnail URL: ${withThumb}`);
@@ -408,7 +408,7 @@ async function main() {
   console.log(`   Files verified/uploaded: ${uploadResults.uploaded}`);
   console.log(`   Errors: ${uploadResults.skipped}`);
   
-  console.log(`\n=� Database:`);
+  console.log(`\n= Database:`);
   console.log(`   URLs updated: ${dbResults.updated}`);
   console.log(`   Errors: ${dbResults.errors}`);
   
@@ -418,7 +418,7 @@ async function main() {
   console.log(`   ${finalStats.localThumbs} thumbnail files`);
 
   if (finalStats.withNeither > 0) {
-    console.log(`\n   �  ${finalStats.withNeither} exercises still without GIFs`);
+    console.log(`\n     ${finalStats.withNeither} exercises still without GIFs`);
   }
 
   // #region agent log
@@ -433,4 +433,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

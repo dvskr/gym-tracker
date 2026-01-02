@@ -121,7 +121,7 @@ function SetRowComponent({
     }
     if (measurementType === 'time_weight') {
       return durationSeconds && previousWeight
-        ? `${durationSeconds}s × ${previousWeight}`
+        ? `${durationSeconds}s  ${previousWeight}`
         : '—';
     }
     if (measurementType === 'assisted') {
@@ -134,7 +134,7 @@ function SetRowComponent({
     }
     // Default: reps_weight
     return previousWeight && previousReps
-      ? `${previousWeight}×${previousReps}`
+      ? `${previousWeight}${previousReps}`
       : '—';
   };
 
@@ -540,4 +540,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#22c55e',
     borderColor: '#22c55e',
   },
-});
+});

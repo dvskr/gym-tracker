@@ -20,11 +20,11 @@ export async function preloadRecentThumbnails(
   onProgress?: ProgressCallback
 ): Promise<void> {
   if (exerciseIds.length === 0) {
-    logger.log('[Image Preload] No exercise IDs provided');
+ logger.log('[Image Preload] No exercise IDs provided');
     return;
   }
 
-  logger.log('[Image Preload] Starting smart thumbnail preload...');
+ logger.log('[Image Preload] Starting smart thumbnail preload...');
   const startTime = Date.now();
 
   try {
@@ -38,7 +38,7 @@ export async function preloadRecentThumbnails(
       ?.map(ex => getThumbnailUrl(ex.gif_url))
       .filter((url): url is string => !!url) || [];
 
-    logger.log(`[Image Preload] Preloading ${thumbnailUrls.length} thumbnails...`);
+ logger.log(`[Image Preload] Preloading ${thumbnailUrls.length} thumbnails...`);
 
     let loaded = 0;
     const total = thumbnailUrls.length;
@@ -66,9 +66,9 @@ export async function preloadRecentThumbnails(
       );
     }
 
-    logger.log(`[Image Preload] Smart preload complete in ${Date.now() - startTime}ms`);
+ logger.log(`[Image Preload] Smart preload complete in ${Date.now() - startTime}ms`);
   } catch (error) {
-    logger.error('[Image Preload] Failed:', error);
+ logger.error('[Image Preload] Failed:', error);
   }
 }
 
@@ -81,7 +81,7 @@ export async function preloadVisibleThumbnails(
 ): Promise<void> {
   if (exerciseIds.length === 0) return;
 
-  logger.log(`[Image Preload] Preloading ${exerciseIds.length} visible thumbnails...`);
+ logger.log(`[Image Preload] Preloading ${exerciseIds.length} visible thumbnails...`);
 
   const { data: exercises } = await supabase
     .from('exercises')
@@ -117,7 +117,7 @@ export async function preloadExerciseImages(
     // Skip GIF for now - only load on demand
   ]).filter((url): url is string => !!url);
 
-  logger.log(`[Image Preload] Preloading ${urls.length} images for ${exerciseIds.length} exercises...`);
+ logger.log(`[Image Preload] Preloading ${urls.length} images for ${exerciseIds.length} exercises...`);
 
   await Promise.all(urls.map(url => Image.prefetch(url).catch(() => {})));
 }
@@ -129,8 +129,8 @@ export async function preloadExerciseImages(
 export async function preloadThumbnails(
   onProgress?: ProgressCallback
 ): Promise<void> {
-  logger.warn('[Image Preload] preloadThumbnails is deprecated - use preloadRecentThumbnails instead');
-  logger.log('[Image Preload] Skipping full thumbnail preload to improve app startup time');
+ logger.warn('[Image Preload] preloadThumbnails is deprecated - use preloadRecentThumbnails instead');
+ logger.log('[Image Preload] Skipping full thumbnail preload to improve app startup time');
 }
 
 /**
@@ -140,8 +140,8 @@ export async function preloadThumbnails(
 export async function preloadGifs(
   onProgress?: ProgressCallback
 ): Promise<void> {
-  logger.warn('[Image Preload] preloadGifs is deprecated - GIFs should load on demand');
-  logger.log('[Image Preload] Skipping GIF preload - they will load on demand');
+ logger.warn('[Image Preload] preloadGifs is deprecated - GIFs should load on demand');
+ logger.log('[Image Preload] Skipping GIF preload - they will load on demand');
 }
 
 /**
@@ -150,5 +150,5 @@ export async function preloadGifs(
 export async function preloadAllImages(
   onProgress?: ProgressCallback
 ): Promise<void> {
-  logger.warn('[Image Preload] preloadAllImages is deprecated - images load on demand with expo-image caching');
-}
+ logger.warn('[Image Preload] preloadAllImages is deprecated - images load on demand with expo-image caching');
+}

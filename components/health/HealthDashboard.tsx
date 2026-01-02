@@ -78,7 +78,7 @@ export function HealthDashboard() {
 
       setLastUpdated(new Date());
     } catch (error) {
-      logger.error('Error fetching health data:', error);
+ logger.error('Error fetching health data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -148,7 +148,7 @@ export function HealthDashboard() {
           <Text style={styles.label}>Steps</Text>
           {summary?.steps !== null && summary.steps >= 10000 && (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>Goal! �x}0</Text>
+              <Text style={styles.badgeText}>Goal! 🎯</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -303,14 +303,14 @@ export function HealthInsights() {
         return {
           backgroundColor: '#f59e0b20',
           borderColor: '#f59e0b',
-          icon: '�xa�',
+          icon: '⚡',
           color: '#f59e0b',
         };
       case 'rest':
         return {
           backgroundColor: '#ef444420',
           borderColor: '#ef4444',
-          icon: '�xܴ',
+          icon: '😴',
           color: '#ef4444',
         };
       default:
@@ -507,4 +507,4 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
-
+

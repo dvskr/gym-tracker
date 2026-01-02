@@ -97,7 +97,7 @@ export default function AboutScreen() {
         title: 'GymTracker',
       });
     } catch (error) {
-      logger.error('Error sharing:', error);
+ logger.error('Error sharing:', error);
     }
   };
 
@@ -425,4 +425,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

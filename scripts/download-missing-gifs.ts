@@ -188,7 +188,7 @@ async function updateDatabase(exerciseUuid: string, filename: string): Promise<b
 async function main() {
   console.log('== DOWNLOAD MISSING GIFS FROM EXERCISEDB');
   console.log('═'.repeat(50));
-  console.log(`=� Exercises to download: ${exercisesToDownload.length}`);
+  console.log(`= Exercises to download: ${exercisesToDownload.length}`);
   console.log('');
 
   // Check if UUIDs are filled in
@@ -218,7 +218,7 @@ async function main() {
 
     try {
       // Step 1: Download GIF directly from ExerciseDB image endpoint
-      console.log('    =� Downloading from ExerciseDB...');
+      console.log('    = Downloading from ExerciseDB...');
       const gifBuffer = await downloadGifFromExerciseDB(exercise.externalId);
       const sizeMB = (gifBuffer.length / 1024 / 1024).toFixed(2);
       console.log(`    =� Size: ${sizeMB} MB`);
@@ -230,7 +230,7 @@ async function main() {
       if (!uploaded) throw new Error('Upload failed');
 
       // Step 3: Update database gif_url
-      console.log('    =� Updating database...');
+      console.log('    = Updating database...');
       const updated = await updateDatabase(exercise.uuid, filename);
       if (!updated) throw new Error('DB update failed');
 
@@ -248,7 +248,7 @@ async function main() {
 
   // Summary
   console.log('═'.repeat(50));
-  console.log('=� RESULTS');
+  console.log('= RESULTS');
   console.log('═'.repeat(50));
   console.log(`✅ Success: ${success}`);
   console.log(`❌ Failed: ${failed}`);
@@ -263,4 +263,4 @@ async function main() {
   console.log('   npm run thumbnails:generate');
 }
 
-main().catch(console.error);
+main().catch(console.error);

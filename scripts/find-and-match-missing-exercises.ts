@@ -224,7 +224,7 @@ async function main() {
   // #endregion
 
   // Step 4: Update database with matches
-  console.log(`\n=� STEP 4: Updating database with ${matches.length} matches...\n`);
+  console.log(`\n= STEP 4: Updating database with ${matches.length} matches...\n`);
   
   let updated = 0;
   let failed = 0;
@@ -258,14 +258,14 @@ async function main() {
 
   // Summary
   console.log('\n' + '='.repeat(60));
-  console.log('=� SUMMARY');
+  console.log('= SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n✅ Matched and updated: ${updated}`);
   console.log(`❌ No match found: ${noMatches.length}`);
   console.log(`❌ Update failed: ${failed}`);
 
   if (noMatches.length > 0) {
-    console.log(`\n�  Exercises without matches (${noMatches.length}):`);
+    console.log(`\n  Exercises without matches (${noMatches.length}):`);
     noMatches.forEach(ex => {
       console.log(`   - ${ex.name} (${ex.equipment})`);
     });
@@ -286,4 +286,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

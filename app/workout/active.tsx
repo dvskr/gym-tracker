@@ -255,7 +255,7 @@ export default function ActiveWorkoutScreen() {
             }
           }
         } catch (error) {
-          logger.error('Error checking for PR:', error);
+ logger.error('Error checking for PR:', error);
           // Don't fail the set completion due to PR check error
         }
       }
@@ -496,7 +496,7 @@ export default function ActiveWorkoutScreen() {
               <Trophy size={24} color="#fbbf24" />
             </View>
             <View style={styles.prToastText}>
-              <Text style={styles.prToastTitle}>�x�  NEW PR!</Text>
+              <Text style={styles.prToastTitle}>�x  NEW PR!</Text>
               <Text style={styles.prToastExercise} numberOfLines={1}>
                 {prToast.exerciseName}
               </Text>
@@ -742,4 +742,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 2,
   },
-});
+});

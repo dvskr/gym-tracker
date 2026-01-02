@@ -67,7 +67,7 @@ async function verifyThumbnailSizes() {
         console.log('='.repeat(60));
         if (metadata.width === 224 && metadata.height === 224) {
           console.log('✅ VERIFIED: Thumbnails are 224x224px in Supabase!');
-          console.log('ULTRA-PREMIUM 4x retina quality confirmed. =�\n');
+          console.log('ULTRA-PREMIUM 4x retina quality confirmed. =\n');
         } else if (metadata.width === 168 && metadata.height === 168) {
           console.log('✅ VERIFIED: Thumbnails are 168x168px in Supabase!');
           console.log('Ultra-sharp 3x retina quality confirmed.\n');
@@ -91,4 +91,4 @@ async function verifyThumbnailSizes() {
 }
 
 verifyThumbnailSizes();
-
+

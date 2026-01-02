@@ -38,7 +38,7 @@ class DeviceManager {
     if (!id) {
       id = this.generateDeviceId();
       await AsyncStorage.setItem(this.DEVICE_ID_KEY, id);
-      logger.log('�x� New device ID created:', id);
+ logger.log('x New device ID created:', id);
     }
 
     this.deviceId = id;
@@ -49,11 +49,11 @@ class DeviceManager {
    * Register this device in the database
    */
   async registerDevice(): Promise<void> {
-    logger.log('�x� Registering device...');
+ logger.log('x Registering device...');
 
     const userId = useAuthStore.getState().user?.id;
     if (!userId) {
-      logger.log('�a���� No user ID, skipping device registration');
+ logger.log('a No user ID, skipping device registration');
       return;
     }
 
@@ -74,12 +74,12 @@ class DeviceManager {
       );
 
       if (error) {
-        logger.error('�R Error registering device:', error);
+ logger.error('R Error registering device:', error);
       } else {
-        logger.log('�S& Device registered successfully');
+ logger.log('S& Device registered successfully');
       }
     } catch (error) {
-      logger.error('�R Error in registerDevice:', error);
+ logger.error('R Error in registerDevice:', error);
     }
   }
 
@@ -99,7 +99,7 @@ class DeviceManager {
         .eq('id', deviceId)
         .eq('user_id', userId);
     } catch (error) {
-      logger.error('Error updating last active:', error);
+ logger.error('Error updating last active:', error);
     }
   }
 
@@ -117,7 +117,7 @@ class DeviceManager {
       this.updateLastActive();
     }, 5 * 60 * 1000);
 
-    logger.log('⏰ Started periodic device updates (every 5 min)');
+ logger.log(' Started periodic device updates (every 5 min)');
   }
 
   /**
@@ -127,7 +127,7 @@ class DeviceManager {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      logger.log('⏸��� Stopped periodic device updates');
+ logger.log(' Stopped periodic device updates');
     }
   }
 
@@ -148,7 +148,7 @@ class DeviceManager {
         .order('last_active', { ascending: false });
 
       if (error) {
-        logger.error('Error fetching devices:', error);
+ logger.error('Error fetching devices:', error);
         return [];
       }
 
@@ -162,7 +162,7 @@ class DeviceManager {
         createdAt: new Date(d.created_at),
       }));
     } catch (error) {
-      logger.error('Error getting devices:', error);
+ logger.error('Error getting devices:', error);
       return [];
     }
   }
@@ -171,19 +171,19 @@ class DeviceManager {
    * Remove a device (logout from device)
    */
   async removeDevice(deviceId: string): Promise<void> {
-    logger.log('�x️ Removing device:', deviceId);
+ logger.log('x Removing device:', deviceId);
 
     try {
       const { error } = await supabase.from('user_devices').delete().eq('id', deviceId);
 
       if (error) {
-        logger.error('Error removing device:', error);
+ logger.error('Error removing device:', error);
         throw error;
       }
 
-      logger.log('�S& Device removed successfully');
+ logger.log('S& Device removed successfully');
     } catch (error) {
-      logger.error('Error in removeDevice:', error);
+ logger.error('Error in removeDevice:', error);
       throw error;
     }
   }
@@ -192,7 +192,7 @@ class DeviceManager {
    * Remove all devices except current
    */
   async removeAllOtherDevices(): Promise<number> {
-    logger.log('�x️ Removing all other devices...');
+ logger.log('x Removing all other devices...');
 
     const userId = useAuthStore.getState().user?.id;
     const currentDeviceId = await this.getDeviceId();
@@ -210,10 +210,10 @@ class DeviceManager {
       if (error) throw error;
 
       const count = data?.length || 0;
-      logger.log(`�S& Removed ${count} device(s)`);
+ logger.log(`S& Removed ${count} device(s)`);
       return count;
     } catch (error) {
-      logger.error('Error removing other devices:', error);
+ logger.error('Error removing other devices:', error);
       throw error;
     }
   }
@@ -254,7 +254,7 @@ class DeviceManager {
         .single();
 
       if (deviceError) {
-        logger.error('Error fetching device info:', deviceError);
+ logger.error('Error fetching device info:', deviceError);
       }
 
       return {
@@ -264,7 +264,7 @@ class DeviceManager {
         startedAt: new Date(workout.started_at),
       };
     } catch (error) {
-      logger.error('Error checking active workout:', error);
+ logger.error('Error checking active workout:', error);
       return null;
     }
   }
@@ -273,7 +273,7 @@ class DeviceManager {
    * End workout on another device
    */
   async endWorkoutOnOtherDevice(workoutId: string): Promise<void> {
-    logger.log('⏹��� Ending workout on other device:', workoutId);
+ logger.log(' Ending workout on other device:', workoutId);
 
     try {
       const { error } = await supabase
@@ -286,9 +286,9 @@ class DeviceManager {
 
       if (error) throw error;
 
-      logger.log('�S& Workout ended on other device');
+ logger.log('S& Workout ended on other device');
     } catch (error) {
-      logger.error('Error ending workout on other device:', error);
+ logger.error('Error ending workout on other device:', error);
       throw error;
     }
   }
@@ -326,7 +326,7 @@ class DeviceManager {
         appVersion = Application.nativeApplicationVersion || '1.0.0';
       }
     } catch (error) {
-      logger.error('Error getting device info:', error);
+ logger.error('Error getting device info:', error);
     }
 
     return { name: deviceName, appVersion };
@@ -344,7 +344,7 @@ class DeviceManager {
       case 'web':
         return '�xR�';
       default:
-        return '�x�';
+        return '�x';
     }
   }
 
@@ -374,4 +374,4 @@ class DeviceManager {
 // Singleton instance
 export const deviceManager = new DeviceManager();
 export default deviceManager;
-
+

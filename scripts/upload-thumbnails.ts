@@ -84,7 +84,7 @@ async function uploadThumbnails() {
   console.log('='.repeat(60));
   console.log(`Uploaded: ${uploaded}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n=� Total in Supabase: ${uploaded} thumbnails`);
+  console.log(`\n= Total in Supabase: ${uploaded} thumbnails`);
   
   // Calculate actual size based on new thumbnail size
   const totalSize = thumbnailFiles.reduce((sum, file) => {
@@ -92,8 +92,8 @@ async function uploadThumbnails() {
     return sum + stats.size;
   }, 0);
   
-  console.log(`=� Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
-  console.log(`=� Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail\n`);
+  console.log(`= Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
+  console.log(`= Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail\n`);
   
   // Show sample URLs
   if (uploaded > 0) {
@@ -105,4 +105,4 @@ async function uploadThumbnails() {
 }
 
 uploadThumbnails();
-
+

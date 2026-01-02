@@ -242,4 +242,4 @@ debugGifDownload().catch((error) => {
   console.error('Debug error:', error);
   process.exit(1);
 });
-
+

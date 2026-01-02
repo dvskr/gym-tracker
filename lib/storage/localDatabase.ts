@@ -100,7 +100,7 @@ class LocalDatabase {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem(key, jsonValue);
     } catch (error) {
-      logger.error(`Error saving to ${key}:`, error);
+ logger.error(`Error saving to ${key}:`, error);
       throw error;
     }
   }
@@ -110,7 +110,7 @@ class LocalDatabase {
       const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : [];
     } catch (error) {
-      logger.error(`Error reading from ${key}:`, error);
+ logger.error(`Error reading from ${key}:`, error);
       return [];
     }
   }
@@ -119,7 +119,7 @@ class LocalDatabase {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      logger.error(`Error clearing ${key}:`, error);
+ logger.error(`Error clearing ${key}:`, error);
       throw error;
     }
   }
@@ -128,7 +128,7 @@ class LocalDatabase {
     try {
       await AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
     } catch (error) {
-      logger.error('Error clearing all data:', error);
+ logger.error('Error clearing all data:', error);
       throw error;
     }
   }
@@ -427,4 +427,4 @@ class LocalDatabase {
 // Singleton instance
 export const localDB = new LocalDatabase();
 export default localDB;
-
+

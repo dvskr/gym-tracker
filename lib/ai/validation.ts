@@ -92,7 +92,7 @@ export const initExerciseValidator = async () => {
       .select('name, equipment');
     
     if (error) {
-      logger.error('Failed to load exercises for validation:', error);
+ logger.error('Failed to load exercises for validation:', error);
       return;
     }
     
@@ -113,10 +113,10 @@ export const initExerciseValidator = async () => {
         keys: ['name'],
       });
       
-      logger.log(`�S& Exercise validator initialized with ${exerciseNames.length} exercises`);
+ logger.log(`S& Exercise validator initialized with ${exerciseNames.length} exercises`);
     }
   } catch (error) {
-    logger.error('Failed to initialize exercise validator:', error);
+ logger.error('Failed to initialize exercise validator:', error);
   }
 };
 
@@ -138,12 +138,12 @@ export const validateExerciseName = (name: string): string | null => {
   if (fuse) {
     const results = fuse.search(normalized);
     if (results.length > 0 && results[0].score !== undefined && results[0].score < 0.3) {
-      logger.log(`�S& Fuzzy matched "${normalized}" -> "${results[0].item}" (score: ${results[0].score})`);
+ logger.log(`S& Fuzzy matched "${normalized}" -> "${results[0].item}" (score: ${results[0].score})`);
       return results[0].item;
     }
   }
   
-  logger.warn(`�R No valid exercise match found for: "${normalized}"`);
+ logger.warn(`R No valid exercise match found for: "${normalized}"`);
   return null;
 };
 
@@ -168,7 +168,7 @@ export const validateWorkoutSuggestionAdvanced = (
       // 1. Validate exercise name exists
       const validName = validateExerciseName(ex.name);
       if (!validName) {
-        logger.warn(`Filtered out invalid exercise: "${ex.name}"`);
+ logger.warn(`Filtered out invalid exercise: "${ex.name}"`);
         return null;
       }
       
@@ -176,7 +176,7 @@ export const validateWorkoutSuggestionAdvanced = (
       if (userEquipment.length > 0) {
         const exerciseData = getExerciseByName(validName);
         if (exerciseData && !userEquipment.includes(exerciseData.equipment)) {
-          logger.warn(`Filtered out "${validName}" - requires ${exerciseData.equipment}`);
+ logger.warn(`Filtered out "${validName}" - requires ${exerciseData.equipment}`);
           return null;
         }
       }
@@ -187,7 +187,7 @@ export const validateWorkoutSuggestionAdvanced = (
           validName.toLowerCase().includes(avoid.toLowerCase())
         );
         if (isAvoided) {
-          logger.warn(`Filtered out "${validName}" - on injury avoid list`);
+ logger.warn(`Filtered out "${validName}" - on injury avoid list`);
           return null;
         }
       }
@@ -224,7 +224,7 @@ export const validateWorkoutSuggestionAdvanced = (
  */
 export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion {
   if (!data || typeof data !== 'object') {
-    logger.warn('Validation failed: data is not an object');
+ logger.warn('Validation failed: data is not an object');
     return false;
   }
   
@@ -234,23 +234,23 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
   const hasExercises = Array.isArray(data.exercises);
   
   if (!hasType) {
-    logger.warn('Validation failed: missing workout type');
+ logger.warn('Validation failed: missing workout type');
     return false;
   }
   
   if (!hasReason) {
-    logger.warn('Validation failed: missing reason');
+ logger.warn('Validation failed: missing reason');
     return false;
   }
   
   if (!hasExercises) {
-    logger.warn('Validation failed: exercises is not an array');
+ logger.warn('Validation failed: exercises is not an array');
     return false;
   }
   
   // Validate exercise count
   if (data.exercises.length < 2 || data.exercises.length > 8) {
-    logger.warn(`Validation failed: invalid exercise count (${data.exercises.length})`);
+ logger.warn(`Validation failed: invalid exercise count (${data.exercises.length})`);
     return false;
   }
   
@@ -266,7 +266,7 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
       (typeof ex.reps === 'string' || typeof ex.reps === 'number');
     
     if (!isValid) {
-      logger.warn(`Validation failed: exercise ${index} is invalid`, ex);
+ logger.warn(`Validation failed: exercise ${index} is invalid`, ex);
     }
     
     return isValid;
@@ -278,7 +278,7 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
   
   // Validate confidence if present
   if (data.confidence && !['high', 'medium', 'low'].includes(data.confidence)) {
-    logger.warn('Validation warning: invalid confidence value, will be normalized');
+ logger.warn('Validation warning: invalid confidence value, will be normalized');
   }
   
   return true;
@@ -289,28 +289,28 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
  */
 export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnalysis> {
   if (!data || typeof data !== 'object') {
-    logger.warn('Validation failed: data is not an object');
+ logger.warn('Validation failed: data is not an object');
     return false;
   }
   
   // Check summary
   if (typeof data.summary !== 'string' || data.summary.length === 0) {
-    logger.warn('Validation failed: invalid summary');
+ logger.warn('Validation failed: invalid summary');
     return false;
   }
   
   if (data.summary.length > 500) {
-    logger.warn('Validation warning: summary too long, will be truncated');
+ logger.warn('Validation warning: summary too long, will be truncated');
   }
   
   // Check highlights
   if (!Array.isArray(data.highlights)) {
-    logger.warn('Validation failed: highlights is not an array');
+ logger.warn('Validation failed: highlights is not an array');
     return false;
   }
   
   if (data.highlights.length === 0) {
-    logger.warn('Validation failed: no highlights provided');
+ logger.warn('Validation failed: no highlights provided');
     return false;
   }
   
@@ -320,13 +320,13 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
   );
   
   if (!validHighlights) {
-    logger.warn('Validation failed: invalid highlights');
+ logger.warn('Validation failed: invalid highlights');
     return false;
   }
   
   // Check improvements (can be empty array)
   if (!Array.isArray(data.improvements)) {
-    logger.warn('Validation failed: improvements is not an array');
+ logger.warn('Validation failed: improvements is not an array');
     return false;
   }
   
@@ -336,18 +336,18 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
   );
   
   if (!validImprovements && data.improvements.length > 0) {
-    logger.warn('Validation failed: invalid improvements');
+ logger.warn('Validation failed: invalid improvements');
     return false;
   }
   
   // Check next workout tip
   if (typeof data.nextWorkoutTip !== 'string' || data.nextWorkoutTip.length === 0) {
-    logger.warn('Validation failed: invalid nextWorkoutTip');
+ logger.warn('Validation failed: invalid nextWorkoutTip');
     return false;
   }
   
   if (data.nextWorkoutTip.length > 200) {
-    logger.warn('Validation warning: nextWorkoutTip too long, will be truncated');
+ logger.warn('Validation warning: nextWorkoutTip too long, will be truncated');
   }
   
   return true;
@@ -358,25 +358,25 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
  */
 export function validateFormTips(data: any): data is FormTips {
   if (!data || typeof data !== 'object') {
-    logger.warn('Validation failed: data is not an object');
+ logger.warn('Validation failed: data is not an object');
     return false;
   }
   
   // Check setup
   if (typeof data.setup !== 'string' || data.setup.length === 0) {
-    logger.warn('Validation failed: invalid setup');
+ logger.warn('Validation failed: invalid setup');
     return false;
   }
   
   // Check execution
   if (typeof data.execution !== 'string' || data.execution.length === 0) {
-    logger.warn('Validation failed: invalid execution');
+ logger.warn('Validation failed: invalid execution');
     return false;
   }
   
   // Check cues
   if (!Array.isArray(data.cues) || data.cues.length < 2) {
-    logger.warn('Validation failed: invalid cues array');
+ logger.warn('Validation failed: invalid cues array');
     return false;
   }
   
@@ -385,13 +385,13 @@ export function validateFormTips(data: any): data is FormTips {
   );
   
   if (!validCues) {
-    logger.warn('Validation failed: invalid cue strings');
+ logger.warn('Validation failed: invalid cue strings');
     return false;
   }
   
   // Check common mistakes
   if (!Array.isArray(data.commonMistakes) || data.commonMistakes.length === 0) {
-    logger.warn('Validation failed: invalid commonMistakes array');
+ logger.warn('Validation failed: invalid commonMistakes array');
     return false;
   }
   
@@ -400,13 +400,13 @@ export function validateFormTips(data: any): data is FormTips {
   );
   
   if (!validMistakes) {
-    logger.warn('Validation failed: invalid mistake strings');
+ logger.warn('Validation failed: invalid mistake strings');
     return false;
   }
   
   // Check breathing pattern
   if (typeof data.breathingPattern !== 'string' || data.breathingPattern.length === 0) {
-    logger.warn('Validation failed: invalid breathingPattern');
+ logger.warn('Validation failed: invalid breathingPattern');
     return false;
   }
   
@@ -418,7 +418,7 @@ export function validateFormTips(data: any): data is FormTips {
  */
 export function validateProgression(data: any): data is ProgressionRecommendation {
   if (!data || typeof data !== 'object') {
-    logger.warn('Validation failed: data is not an object');
+ logger.warn('Validation failed: data is not an object');
     return false;
   }
   
@@ -426,25 +426,25 @@ export function validateProgression(data: any): data is ProgressionRecommendatio
   
   // Check recommendation type
   if (!validRecommendations.includes(data.recommendation)) {
-    logger.warn('Validation failed: invalid recommendation type');
+ logger.warn('Validation failed: invalid recommendation type');
     return false;
   }
   
   // Check suggested weight
   if (typeof data.suggestedWeight !== 'number' || data.suggestedWeight <= 0) {
-    logger.warn('Validation failed: invalid suggestedWeight');
+ logger.warn('Validation failed: invalid suggestedWeight');
     return false;
   }
   
   // Check reason
   if (typeof data.reason !== 'string' || data.reason.length === 0) {
-    logger.warn('Validation failed: invalid reason');
+ logger.warn('Validation failed: invalid reason');
     return false;
   }
   
   // Check confidence if present
   if (data.confidence && !['high', 'medium', 'low'].includes(data.confidence)) {
-    logger.warn('Validation warning: invalid confidence value');
+ logger.warn('Validation warning: invalid confidence value');
   }
   
   return true;
@@ -466,11 +466,11 @@ export function validateAndFallback<T>(
   const contextStr = context ? `[${context}] ` : '';
   
   if (validator(data)) {
-    logger.log(`${contextStr}Validation passed`);
+ logger.log(`${contextStr}Validation passed`);
     return data;
   }
   
-  logger.warn(`${contextStr}AI response validation failed, using fallback`);
+ logger.warn(`${contextStr}AI response validation failed, using fallback`);
   return fallback;
 }
 
@@ -530,7 +530,7 @@ export const checkResponseSpecificity = (
   const weightPattern = /\d+\s*(lbs?|kg|pounds?|kilos?)/gi;
   const hasSpecificWeight = weightPattern.test(response);
   
-  const repsPattern = /\d+\s*(×|x|reps?|sets?)/gi;
+  const repsPattern = /\d+\s*(|x|reps?|sets?)/gi;
   const hasSpecificReps = repsPattern.test(response);
   
   if (hasSpecificWeight) {
@@ -697,4 +697,4 @@ export const validateResponseQuality = (
     feedback,
   };
 };
-
+

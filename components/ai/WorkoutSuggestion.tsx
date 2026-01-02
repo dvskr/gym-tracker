@@ -48,7 +48,7 @@ export function WorkoutSuggestion() {
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to get suggestion';
       setError(errorMessage);
-      logger.error('Error fetching suggestion:', err);
+ logger.error('Error fetching suggestion:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -272,4 +272,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
+

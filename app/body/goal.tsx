@@ -195,7 +195,7 @@ export default function WeightGoalScreen() {
         setWeeklyRate(rate);
       }
     } catch (error) {
-      logger.error('Error fetching goal data:', error);
+ logger.error('Error fetching goal data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -244,7 +244,7 @@ export default function WeightGoalScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert('Goal Set', 'Your weight goal has been saved!');
     } catch (error) {
-      logger.error('Error saving goal:', error);
+ logger.error('Error saving goal:', error);
       Alert.alert('Error', 'Failed to save goal');
     } finally {
       setIsSaving(false);
@@ -273,7 +273,7 @@ export default function WeightGoalScreen() {
               setTargetWeight(currentWeight?.toString() || '');
               setTargetDate('');
             } catch (error) {
-              logger.error('Error clearing goal:', error);
+ logger.error('Error clearing goal:', error);
               Alert.alert('Error', 'Failed to clear goal');
             }
           },
@@ -383,7 +383,7 @@ export default function WeightGoalScreen() {
             <View style={styles.remainingContainer}>
               <Text style={styles.remainingText}>
                 {progress.remaining === 0
-                  ? '�x}0 Goal reached!'
+                  ? 'x}0 Goal reached!'
                   : `${progress.remaining} ${bodyWeight.label} to go`}
               </Text>
             </View>
@@ -481,7 +481,7 @@ export default function WeightGoalScreen() {
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Progress</Text>
               <Text style={styles.detailValue}>
-                {progress ? formatWeightChange(progress.progressMade) : '�'}
+                {progress ? formatWeightChange(progress.progressMade) : ''}
               </Text>
             </View>
 
@@ -951,4 +951,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
+

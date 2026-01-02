@@ -154,7 +154,7 @@ export default function ProfileScreen() {
 
   const handleChangeAvatar = () => {
     // Open image picker
-    logger.log('Change avatar');
+ logger.log('Change avatar');
   };
 
   const handleUnitsSettings = () => {
@@ -186,7 +186,7 @@ export default function ProfileScreen() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => logger.log('Deleting account...'),
+ onPress: () => logger.log('Deleting account...'),
         },
       ]
     );
@@ -365,17 +365,17 @@ export default function ProfileScreen() {
           <SettingItem
             icon={<FileText size={24} color="#60a5fa" />}
             label="Terms of Service"
-            onPress={() => logger.log('Terms')}
+ onPress={() => logger.log('Terms')}
           />
           <SettingItem
             icon={<Shield size={24} color="#60a5fa" />}
             label="Privacy Policy"
-            onPress={() => logger.log('Privacy')}
+ onPress={() => logger.log('Privacy')}
           />
           <SettingItem
             icon={<Mail size={24} color="#60a5fa" />}
             label="Contact Support"
-            onPress={() => logger.log('Support')}
+ onPress={() => logger.log('Support')}
           />
           <SettingItem
             icon={<Star size={24} color="#60a5fa" />}
@@ -577,4 +577,4 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: 32,
   },
-});
+});

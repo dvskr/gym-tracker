@@ -42,14 +42,14 @@ class NotificationAnalyticsService {
       const trimmed = events.slice(-this.MAX_EVENTS);
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
       
-      logger.log(`�x` Tracked ${event.type} event for ${event.notificationType}`);
+ logger.log(`Tracked ${event.type} event for ${event.notificationType}`);
       
       // Sync to server (async, don't wait)
       this.syncToServer(event).catch(error => {
-        logger.warn('Failed to sync notification event:', error);
+ logger.warn('Failed to sync notification event:', error);
       });
     } catch (error) {
-      logger.error('Failed to track notification event:', error);
+ logger.error('Failed to track notification event:', error);
     }
   }
 
@@ -204,7 +204,7 @@ class NotificationAnalyticsService {
    */
   async clearAnalytics(): Promise<void> {
     await AsyncStorage.removeItem(this.STORAGE_KEY);
-    logger.log('�x️ Notification analytics cleared');
+ logger.log('Notification analytics cleared');
   }
 
   /**
@@ -215,7 +215,7 @@ class NotificationAnalyticsService {
       const data = await AsyncStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      logger.error('Failed to get notification events:', error);
+ logger.error('Failed to get notification events:', error);
       return [];
     }
   }
@@ -240,13 +240,13 @@ class NotificationAnalyticsService {
         created_at: event.timestamp,
       });
       
-      logger.log('�S& Synced notification event to server');
+ logger.log('Synced notification event to server');
     } catch (error) {
       // Silent fail - analytics shouldn't break the app
-      logger.warn('Failed to sync notification event to server:', error);
+ logger.warn('Failed to sync notification event to server:', error);
     }
   }
 }
 
 export const notificationAnalyticsService = new NotificationAnalyticsService();
-
+

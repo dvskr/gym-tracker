@@ -49,7 +49,7 @@ export async function getPhotoPrivacySettings(): Promise<PhotoPrivacySettings> {
     }
     return DEFAULT_PHOTO_PRIVACY;
   } catch (error) {
-    logger.error('Error reading photo privacy settings:', error);
+ logger.error('Error reading photo privacy settings:', error);
     return DEFAULT_PHOTO_PRIVACY;
   }
 }
@@ -70,7 +70,7 @@ export async function updatePhotoPrivacySettings(
     await AsyncStorage.setItem(PRIVACY_SETTINGS_KEY, JSON.stringify(updated));
     return updated;
   } catch (error) {
-    logger.error('Error updating photo privacy settings:', error);
+ logger.error('Error updating photo privacy settings:', error);
     throw error;
   }
 }
@@ -197,4 +197,4 @@ export async function getPrivacyStatusSummary(): Promise<{
     description: 'Photos stored on this device only',
   };
 }
-
+

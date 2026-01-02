@@ -447,4 +447,4 @@ export async function getExercisesByMuscle(
   if (error) throw error;
   return data || [];
 }
-
+

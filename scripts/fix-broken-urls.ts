@@ -26,7 +26,7 @@ async function fixBrokenGifUrls() {
     .not('gif_url', 'is', null)
     .not('gif_url', 'like', '%.gif');
 
-  console.log(`=� Found ${brokenExercises?.length || 0} exercises with broken gif_url`);
+  console.log(`= Found ${brokenExercises?.length || 0} exercises with broken gif_url`);
 
   // #region agent log
   fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'fix-broken-urls.ts:32',message:'Broken exercises fetched',data:{count:brokenExercises?.length,exercises:brokenExercises?.slice(0,5).map(e=>({name:e.name,gif_url:e.gif_url}))},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
@@ -39,7 +39,7 @@ async function fixBrokenGifUrls() {
 
   const storageFilenames = new Set(files?.filter(f => f.name.endsWith('.gif')).map(f => f.name) || []);
   
-  console.log(`=� Found ${storageFilenames.size} GIF files in storage`);
+  console.log(`= Found ${storageFilenames.size} GIF files in storage`);
   console.log('');
 
   // #region agent log
@@ -84,7 +84,7 @@ async function fixBrokenGifUrls() {
   }
 
   console.log('═'.repeat(70));
-  console.log('=� ANALYSIS RESULTS');
+  console.log('= ANALYSIS RESULTS');
   console.log('═'.repeat(70));
   console.log(`✅ Fixable (file exists with .gif):     ${fixable}`);
   console.log(`❌ Unfixable (file doesn't exist):       ${unfixable}`);
@@ -124,7 +124,7 @@ async function fixBrokenGifUrls() {
 
   // Check for --execute flag
   if (process.argv.includes('--execute')) {
-    console.log('=� APPLYING FIXES...');
+    console.log('= APPLYING FIXES...');
     console.log('');
 
     let updated = 0;
@@ -161,18 +161,18 @@ async function fixBrokenGifUrls() {
 
     console.log('');
     console.log('═'.repeat(70));
-    console.log('=� UPDATE RESULTS');
+    console.log('= UPDATE RESULTS');
     console.log('═'.repeat(70));
     console.log(`✅ Successfully updated: ${updated}`);
     console.log(`❌ Failed: ${failed}`);
     console.log('');
 
     if (unfixable > 0) {
-      console.log(`�  ${unfixable} exercises still need manual GIF sourcing`);
+      console.log(`  ${unfixable} exercises still need manual GIF sourcing`);
       console.log('   See MISSING_GIFS_GUIDE.md for instructions');
     }
   }
 }
 
 fixBrokenGifUrls();
-
+

@@ -32,7 +32,7 @@ async function findExercisesMissingGifs() {
       .forEach(f => downloadedGifs.add(f.toLowerCase()));
   }
   
-  console.log(`=� Found ${downloadedGifs.size} downloaded GIFs in ${GIF_DIR}\n`);
+  console.log(`= Found ${downloadedGifs.size} downloaded GIFs in ${GIF_DIR}\n`);
   
   // Fetch all active exercises
   const { data: exercises, error } = await supabase
@@ -84,12 +84,12 @@ async function findExercisesMissingGifs() {
   console.log('=' .repeat(60));
   console.log('ACTIVE EXERCISES MISSING GIFS');
   console.log('='.repeat(60));
-  console.log(`\n=� SUMMARY`);
+  console.log(`\n= SUMMARY`);
   console.log(`   Total Active: ${exercises?.length || 0}`);
   console.log(`   With Downloaded GIF: ${hasGifs.length}`);
-  console.log(`   �  Missing GIF: ${missingGifs.length}`);
+  console.log(`     Missing GIF: ${missingGifs.length}`);
   
-  console.log(`\n=� MISSING BY EQUIPMENT:`);
+  console.log(`\n= MISSING BY EQUIPMENT:`);
   Object.entries(byEquipment)
     .sort((a, b) => b[1].length - a[1].length)
     .forEach(([eq, exs]) => {
@@ -154,4 +154,4 @@ async function findExercisesMissingGifs() {
 }
 
 findExercisesMissingGifs().catch(console.error);
-
+

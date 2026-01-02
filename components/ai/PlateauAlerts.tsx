@@ -56,7 +56,7 @@ export function PlateauAlerts() {
         setDismissed(new Set(JSON.parse(data)));
       }
     } catch (error) {
-      logger.error('Failed to load dismissed plateaus:', error);
+ logger.error('Failed to load dismissed plateaus:', error);
     }
   };
 
@@ -64,7 +64,7 @@ export function PlateauAlerts() {
     try {
       await AsyncStorage.setItem(DISMISSED_KEY, JSON.stringify(Array.from(newDismissed)));
     } catch (error) {
-      logger.error('Failed to save dismissed plateaus:', error);
+ logger.error('Failed to save dismissed plateaus:', error);
     }
   };
 
@@ -83,7 +83,7 @@ export function PlateauAlerts() {
       // Cache the result
       setCacheData(user.id, 'plateaus', results);
     } catch (error) {
-      logger.error('Failed to check plateaus:', error);
+ logger.error('Failed to check plateaus:', error);
       setHasFetched(true);
     } finally {
       setIsLoading(false);
@@ -516,4 +516,4 @@ const styles = StyleSheet.create({
     color: '#cbd5e1',
   },
 });
-
+

@@ -168,4 +168,4 @@ export function formatChartLabels(
     return '';
   });
 }
-
+

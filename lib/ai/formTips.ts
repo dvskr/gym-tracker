@@ -166,7 +166,7 @@ class FormTipsService {
       await this.saveCache();
       return tips;
     } catch (error) {
-      logger.error('Failed to generate form tips:', error);
+ logger.error('Failed to generate form tips:', error);
       // Return generic tips on error
       return this.getGenericTips(exerciseName);
     }
@@ -213,7 +213,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
         };
       }
     } catch (parseError) {
-      logger.log('JSON parsing failed, extracting from text');
+ logger.log('JSON parsing failed, extracting from text');
     }
 
     // Fallback: extract from text response
@@ -312,10 +312,10 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       if (data) {
         const parsed = JSON.parse(data);
         this.cache = new Map(Object.entries(parsed));
-        logger.log(`�xa Loaded ${this.cache.size} cached form tips`);
+ logger.log(`xa Loaded ${this.cache.size} cached form tips`);
       }
     } catch (error) {
-      logger.error('Failed to load form tips cache:', error);
+ logger.error('Failed to load form tips cache:', error);
     }
   }
 
@@ -327,7 +327,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
       const obj = Object.fromEntries(this.cache);
       await AsyncStorage.setItem(this.CACHE_STORAGE_KEY, JSON.stringify(obj));
     } catch (error) {
-      logger.error('Failed to save form tips cache:', error);
+ logger.error('Failed to save form tips cache:', error);
     }
   }
 
@@ -337,7 +337,7 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
   async clearCache(): Promise<void> {
     this.cache.clear();
     await AsyncStorage.removeItem(this.CACHE_STORAGE_KEY);
-    logger.log('�x️ Form tips cache cleared');
+ logger.log('x Form tips cache cleared');
   }
 
   /**
@@ -353,4 +353,4 @@ Keep each cue under 12 words. Focus on the most critical technique points.`;
 }
 
 export const formTipsService = new FormTipsService();
-
+

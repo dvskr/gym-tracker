@@ -36,7 +36,7 @@ class ManualSync {
    * Combines queue processing and background sync
    */
   async syncNow(): Promise<SyncResult> {
-    logger.log('�x Manual sync initiated...');
+ logger.log('x Manual sync initiated...');
 
     const result: SyncResult = {
       success: false,
@@ -51,7 +51,7 @@ class ManualSync {
       const netInfo = await NetInfo.fetch();
       if (!netInfo.isConnected) {
         result.error = 'No internet connection';
-        logger.log('�R Sync failed: offline');
+ logger.log('R Sync failed: offline');
         return result;
       }
 
@@ -59,24 +59,24 @@ class ManualSync {
       const settings = await this.getSettings();
       if (settings.syncOnWifiOnly && netInfo.type !== 'wifi') {
         result.error = 'WiFi required for sync (check settings)';
-        logger.log('�R Sync failed: WiFi only enabled');
+ logger.log('R Sync failed: WiFi only enabled');
         return result;
       }
 
-      logger.log('�S& Network check passed');
+ logger.log('S& Network check passed');
 
       // 2. Process sync queue (push local changes)
       const queueResult = await syncQueue.syncAll();
       result.syncedCount = queueResult.synced;
       result.failedCount = queueResult.failed;
       
-      logger.log(`�x� Pushed ${queueResult.synced} changes, ${queueResult.failed} failed`);
+ logger.log(`x Pushed ${queueResult.synced} changes, ${queueResult.failed} failed`);
 
       // 3. Pull latest from server (background sync)
       const bgSyncResult = await backgroundSync.syncNow();
       result.pulledCount = bgSyncResult.itemsPulled;
       
-      logger.log(`�x� Pulled ${bgSyncResult.itemsPulled} updates`);
+ logger.log(`x Pulled ${bgSyncResult.itemsPulled} updates`);
 
       // 4. Update last sync time
       await this.updateLastSyncTime();
@@ -85,10 +85,10 @@ class ManualSync {
       await this.trackDataUsage(result);
 
       result.success = true;
-      logger.log('�S& Manual sync completed successfully');
+ logger.log('S& Manual sync completed successfully');
       
     } catch (error) {
-      logger.error('�R Manual sync error:', error);
+ logger.error('R Manual sync error:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
 
@@ -99,7 +99,7 @@ class ManualSync {
    * Retry all failed operations
    */
   async retryAllFailed(): Promise<SyncResult> {
-    logger.log('�x� Retrying all failed operations...');
+ logger.log('x Retrying all failed operations...');
 
     const result: SyncResult = {
       success: false,
@@ -120,10 +120,10 @@ class ManualSync {
       result.failedCount = retryResult.failed;
       result.success = true;
 
-      logger.log(`�S& Retry complete: ${retryResult.synced} synced, ${retryResult.failed} still failed`);
+ logger.log(`S& Retry complete: ${retryResult.synced} synced, ${retryResult.failed} still failed`);
       
     } catch (error) {
-      logger.error('�R Retry failed:', error);
+ logger.error('R Retry failed:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
 
@@ -135,14 +135,14 @@ class ManualSync {
    * Removes them from the queue without syncing
    */
   async discardAllFailed(): Promise<number> {
-    logger.log('�x️ Discarding all failed operations...');
+ logger.log('x Discarding all failed operations...');
 
     try {
       const count = await syncQueue.clearFailedOperations();
-      logger.log(`�S& Discarded ${count} failed operation(s)`);
+ logger.log(`S& Discarded ${count} failed operation(s)`);
       return count;
     } catch (error) {
-      logger.error('�R Discard failed:', error);
+ logger.error('R Discard failed:', error);
       return 0;
     }
   }
@@ -156,7 +156,7 @@ class ManualSync {
       const operation = queue.operations.find(op => op.id === operationId);
       
       if (!operation) {
-        logger.error('Operation not found:', operationId);
+ logger.error('Operation not found:', operationId);
         return false;
       }
 
@@ -169,7 +169,7 @@ class ManualSync {
       await syncQueue.syncAll();
       return true;
     } catch (error) {
-      logger.error('Retry operation failed:', error);
+ logger.error('Retry operation failed:', error);
       return false;
     }
   }
@@ -180,10 +180,10 @@ class ManualSync {
   async discardOperation(operationId: string): Promise<boolean> {
     try {
       await localDB.removeFromSyncQueue(operationId);
-      logger.log('�S& Operation discarded:', operationId);
+ logger.log('S& Operation discarded:', operationId);
       return true;
     } catch (error) {
-      logger.error('Discard operation failed:', error);
+ logger.error('Discard operation failed:', error);
       return false;
     }
   }
@@ -199,7 +199,7 @@ class ManualSync {
       }
       return this.defaultSettings;
     } catch (error) {
-      logger.error('Error loading sync settings:', error);
+ logger.error('Error loading sync settings:', error);
       return this.defaultSettings;
     }
   }
@@ -227,9 +227,9 @@ class ManualSync {
         backgroundSync.stop();
       }
 
-      logger.log('�S& Sync settings updated:', updated);
+ logger.log('S& Sync settings updated:', updated);
     } catch (error) {
-      logger.error('Error updating sync settings:', error);
+ logger.error('Error updating sync settings:', error);
     }
   }
 
@@ -241,7 +241,7 @@ class ManualSync {
       const time = await backgroundSync.getLastSyncTime();
       return time;
     } catch (error) {
-      logger.error('Error getting last sync time:', error);
+ logger.error('Error getting last sync time:', error);
       return null;
     }
   }
@@ -270,7 +270,7 @@ class ManualSync {
 
       return counts;
     } catch (error) {
-      logger.error('Error getting pending changes:', error);
+ logger.error('Error getting pending changes:', error);
       return { workouts: 0, templates: 0, weightLog: 0, measurements: 0, total: 0 };
     }
   }
@@ -302,7 +302,7 @@ class ManualSync {
         formatted: this.formatBytes(data.bytes || 0),
       };
     } catch (error) {
-      logger.error('Error getting data usage:', error);
+ logger.error('Error getting data usage:', error);
       return { bytes: 0, formatted: '0 B' };
     }
   }
@@ -331,7 +331,7 @@ class ManualSync {
     try {
       await AsyncStorage.setItem(LAST_SYNC_KEY, Date.now().toString());
     } catch (error) {
-      logger.error('Error updating last sync time:', error);
+ logger.error('Error updating last sync time:', error);
     }
   }
 
@@ -356,7 +356,7 @@ class ManualSync {
       
       await AsyncStorage.setItem(DATA_USAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      logger.error('Error tracking data usage:', error);
+ logger.error('Error tracking data usage:', error);
     }
   }
 
@@ -378,4 +378,4 @@ class ManualSync {
 // Singleton instance
 export const manualSync = new ManualSync();
 export default manualSync;
-
+

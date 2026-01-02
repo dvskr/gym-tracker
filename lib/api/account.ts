@@ -37,7 +37,7 @@ export async function changeEmail(
 
     return { success: true };
   } catch (error: any) {
-    logger.error('Error changing email:', error);
+ logger.error('Error changing email:', error);
     return { success: false, error: error.message || 'Failed to change email' };
   }
 }
@@ -78,7 +78,7 @@ export async function changePassword(
 
     return { success: true };
   } catch (error: any) {
-    logger.error('Error changing password:', error);
+ logger.error('Error changing password:', error);
     return { success: false, error: error.message || 'Failed to change password' };
   }
 }
@@ -100,7 +100,7 @@ export async function sendPasswordResetEmail(
 
     return { success: true };
   } catch (error: any) {
-    logger.error('Error sending reset email:', error);
+ logger.error('Error sending reset email:', error);
     return { success: false, error: error.message || 'Failed to send reset email' };
   }
 }
@@ -150,7 +150,7 @@ export async function deleteAccount(
       .eq('id', user.id);
 
     if (profileError) {
-      logger.error('Error deleting profile:', profileError);
+ logger.error('Error deleting profile:', profileError);
       return { success: false, error: 'Failed to delete user data' };
     }
 
@@ -160,7 +160,7 @@ export async function deleteAccount(
     const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
     
     if (authError) {
-      logger.log('Note: Auth deletion requires admin API. Profile deleted.');
+ logger.log('Note: Auth deletion requires admin API. Profile deleted.');
     }
 
     // Sign out
@@ -168,7 +168,7 @@ export async function deleteAccount(
 
     return { success: true };
   } catch (error: any) {
-    logger.error('Error deleting account:', error);
+ logger.error('Error deleting account:', error);
     return { success: false, error: error.message || 'Failed to delete account' };
   }
 }
@@ -197,4 +197,4 @@ export function validatePassword(password: string): { valid: boolean; errors: st
     errors,
   };
 }
-
+

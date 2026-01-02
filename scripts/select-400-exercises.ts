@@ -128,7 +128,7 @@ async function selectExercises() {
     return;
   }
 
-  console.log(`=� Total exercises in database: ${allExercises.length}\n`);
+  console.log(`= Total exercises in database: ${allExercises.length}\n`);
 
   // Score all exercises
   const scored = allExercises.map(ex => ({
@@ -197,4 +197,4 @@ async function selectExercises() {
 }
 
 selectExercises();
-
+

@@ -30,7 +30,7 @@ export function FormTips({ exerciseName, initiallyExpanded = false }: FormTipsPr
         const result = await formTipsService.getFormTips(exerciseName);
         setTips(result);
       } catch (error) {
-        logger.error('Failed to fetch form tips:', error);
+ logger.error('Failed to fetch form tips:', error);
       } finally {
         setIsLoading(false);
       }
@@ -267,4 +267,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
+

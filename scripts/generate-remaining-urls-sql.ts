@@ -18,5 +18,5 @@ fs.writeFileSync(
 );
 
 console.log(`✅ Generated SQL for ${last37.length} remaining URLs`);
-console.log(`=� File: scripts/update-remaining-37-urls.sql`);
-
+console.log(`= File: scripts/update-remaining-37-urls.sql`);
+

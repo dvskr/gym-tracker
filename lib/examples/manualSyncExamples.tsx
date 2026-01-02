@@ -169,7 +169,7 @@ export function ManualSyncWithProgress() {
         setProgress('Complete!');
         Alert.alert(
           'Sync Complete',
-          `�S& ${result.syncedCount} synced\n�x� ${result.pulledCount} pulled`
+          `�S& ${result.syncedCount} synced\n�x ${result.pulledCount} pulled`
         );
       } else {
         Alert.alert('Sync Failed', result.error);
@@ -415,7 +415,7 @@ export function SyncOnAppForeground() {
     const subscription = AppState.addEventListener('change', async (nextAppState) => {
       if (nextAppState === 'active') {
         // �S& App came to foreground - sync
-        logger.log('App active - syncing...');
+ logger.log('App active - syncing...');
         await manualSync.syncNow();
       }
     });
@@ -519,4 +519,4 @@ const styles = StyleSheet.create({
 // 8. �S& WiFi-only option
 //
 // ============================================================================
-
+

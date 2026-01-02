@@ -40,7 +40,7 @@ export async function requestPermissions(): Promise<boolean> {
 
     return true;
   } catch (error) {
-    logger.error('Error requesting notification permissions:', error);
+ logger.error('Error requesting notification permissions:', error);
     return false;
   }
 }
@@ -84,7 +84,7 @@ export async function scheduleWorkoutReminders(
       });
     }
   } catch (error) {
-    logger.error('Error scheduling workout reminders:', error);
+ logger.error('Error scheduling workout reminders:', error);
     throw error;
   }
 }
@@ -103,7 +103,7 @@ export async function cancelWorkoutReminders(): Promise<void> {
       }
     }
   } catch (error) {
-    logger.error('Error canceling workout reminders:', error);
+ logger.error('Error canceling workout reminders:', error);
   }
 }
 
@@ -126,7 +126,7 @@ export async function sendLocalNotification(
       trigger: null, // Send immediately
     });
   } catch (error) {
-    logger.error('Error sending local notification:', error);
+ logger.error('Error sending local notification:', error);
   }
 }
 
@@ -144,14 +144,14 @@ export async function scheduleStreakReminder(
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: `Don't Break Your ${daysStreak}-Day Streak! �x�`,
+        title: `Don't Break Your ${daysStreak}-Day Streak! �x`,
         body: "You're doing amazing! One more workout to keep it going.",
         sound: true,
       },
       trigger: tomorrow,
     });
   } catch (error) {
-    logger.error('Error scheduling streak reminder:', error);
+ logger.error('Error scheduling streak reminder:', error);
   }
 }
 
@@ -165,12 +165,12 @@ export async function sendPRNotification(
 ): Promise<void> {
   try {
     await sendLocalNotification(
-      `New PR! �x}0`,
+      `New PR! x}0`,
       `You just hit a ${recordType} record on ${exerciseName}: ${value}!`,
       { type: 'pr', exerciseName, recordType, value }
     );
   } catch (error) {
-    logger.error('Error sending PR notification:', error);
+ logger.error('Error sending PR notification:', error);
   }
 }
 
@@ -182,12 +182,12 @@ export async function sendMilestoneNotification(
 ): Promise<void> {
   try {
     await sendLocalNotification(
-      `Milestone Reached! �x� `,
+      `Milestone Reached! �x `,
       `Congratulations on completing ${milestone} workouts!`,
       { type: 'milestone', count: milestone }
     );
   } catch (error) {
-    logger.error('Error sending milestone notification:', error);
+ logger.error('Error sending milestone notification:', error);
   }
 }
 
@@ -199,7 +199,7 @@ export async function scheduleWeeklySummary(): Promise<void> {
     // Schedule for Sunday evening at 6 PM
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Your Weekly Summary �x`",
+        title: "Your Weekly Summary x`",
         body: "Check out your progress this week!",
         sound: true,
       },
@@ -211,7 +211,7 @@ export async function scheduleWeeklySummary(): Promise<void> {
       },
     });
   } catch (error) {
-    logger.error('Error scheduling weekly summary:', error);
+ logger.error('Error scheduling weekly summary:', error);
   }
 }
 
@@ -222,7 +222,7 @@ export async function cancelAllNotifications(): Promise<void> {
   try {
     await Notifications.cancelAllScheduledNotificationsAsync();
   } catch (error) {
-    logger.error('Error canceling all notifications:', error);
+ logger.error('Error canceling all notifications:', error);
   }
 }
 
@@ -234,8 +234,8 @@ export async function getScheduledNotificationCount(): Promise<number> {
     const notifications = await Notifications.getAllScheduledNotificationsAsync();
     return notifications.length;
   } catch (error) {
-    logger.error('Error getting notification count:', error);
+ logger.error('Error getting notification count:', error);
     return 0;
   }
 }
-
+

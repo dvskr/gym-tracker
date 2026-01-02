@@ -18,7 +18,7 @@ async function uploadGif(exerciseId: string): Promise<string | null> {
   const filepath = path.join(DOWNLOAD_DIR, filename);
 
   if (!fs.existsSync(filepath)) {
-    console.log(`�  Skip: ${filename} (not downloaded yet)`);
+    console.log(`  Skip: ${filename} (not downloaded yet)`);
     return null;
   }
 
@@ -57,7 +57,7 @@ async function uploadAll() {
     fs.readFileSync('scripts/selected-400-exercises.json', 'utf-8')
   );
 
-  console.log(`=� Uploading ${selected.exercises.length} GIFs...\n`);
+  console.log(`= Uploading ${selected.exercises.length} GIFs...\n`);
 
   let completed = 0;
   let skipped = 0;
@@ -81,7 +81,7 @@ async function uploadAll() {
     }
 
     if ((completed + skipped + failed) % 20 === 0) {
-      console.log(`\n=� Progress: ${completed + skipped + failed}/${selected.exercises.length}\n`);
+      console.log(`\n= Progress: ${completed + skipped + failed}/${selected.exercises.length}\n`);
     }
 
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -96,10 +96,10 @@ async function uploadAll() {
   console.log('=� UPLOAD COMPLETE');
   console.log('='.repeat(60));
   console.log(`✅ Uploaded: ${completed}`);
-  console.log(`�  Skipped (not downloaded): ${skipped}`);
+  console.log(`  Skipped (not downloaded): ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`\n=� URL mappings saved to: scripts/supabase-urls.json\n`);
+  console.log(`\n= URL mappings saved to: scripts/supabase-urls.json\n`);
 }
 
 uploadAll();
-
+

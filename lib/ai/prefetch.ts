@@ -27,7 +27,7 @@ export const CACHE_DURATIONS = {
  * Call this once after user authenticates
  */
 export async function prefetchAIData(userId: string): Promise<void> {
-  logger.log('[AI Prefetch] Starting for user:', userId.substring(0, 8) + '...');
+ logger.log('[AI Prefetch] Starting for user:', userId.substring(0, 8) + '...');
   const startTime = Date.now();
   
   // Fetch all in parallel for speed
@@ -56,15 +56,15 @@ export async function prefetchAIData(userId: string): Promise<void> {
       }
       
       setCacheData(userId, keys[index], dataToCache);
-      logger.log(`[AI Prefetch] �S ${keys[index]} cached`);
+ logger.log(`[AI Prefetch] S ${keys[index]} cached`);
       successCount++;
     } else {
-      logger.warn(`[AI Prefetch] �S ${keys[index]} failed:`, result.reason?.message || result.reason);
+ logger.warn(`[AI Prefetch] S ${keys[index]} failed:`, result.reason?.message || result.reason);
     }
   });
   
   const duration = Date.now() - startTime;
-  logger.log(`[AI Prefetch] Complete: ${successCount}/${keys.length} succeeded in ${duration}ms`);
+ logger.log(`[AI Prefetch] Complete: ${successCount}/${keys.length} succeeded in ${duration}ms`);
 }
 
 /**
@@ -87,11 +87,11 @@ export function getCachedData<T>(
   
   if (age > maxAgeMs) {
     prefetchCache.delete(cacheKey);
-    logger.log(`[AI Cache] ${key} expired (age: ${Math.round(age / 1000)}s)`);
+ logger.log(`[AI Cache] ${key} expired (age: ${Math.round(age / 1000)}s)`);
     return null;
   }
   
-  logger.log(`[AI Cache] �S ${key} hit (age: ${Math.round(age / 1000)}s)`);
+ logger.log(`[AI Cache] S ${key} hit (age: ${Math.round(age / 1000)}s)`);
   return cached.data as T;
 }
 
@@ -104,7 +104,7 @@ export function setCacheData<T>(userId: string, key: string, data: T): void {
     data,
     timestamp: Date.now(),
   });
-  logger.log(`[AI Cache] ${key} stored`);
+ logger.log(`[AI Cache] ${key} stored`);
 }
 
 /**
@@ -124,7 +124,7 @@ export function invalidateCache(userId: string): void {
   
   keysToDelete.forEach(key => prefetchCache.delete(key));
   
-  logger.log(`[AI Cache] Invalidated ${count} entries for user`);
+ logger.log(`[AI Cache] Invalidated ${count} entries for user`);
 }
 
 /**
@@ -133,7 +133,7 @@ export function invalidateCache(userId: string): void {
 export function invalidateCacheKey(userId: string, key: string): void {
   const cacheKey = `${userId}:${key}`;
   prefetchCache.delete(cacheKey);
-  logger.log(`[AI Cache] Invalidated: ${key}`);
+ logger.log(`[AI Cache] Invalidated: ${key}`);
 }
 
 /**
@@ -171,6 +171,6 @@ export function getCacheStats(): {
 export function clearAllCache(): void {
   const count = prefetchCache.size;
   prefetchCache.clear();
-  logger.log(`[AI Cache] Cleared all ${count} entries`);
+ logger.log(`[AI Cache] Cleared all ${count} entries`);
 }
-
+

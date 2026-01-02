@@ -143,7 +143,7 @@ export const logAIQuality = async (quality: AIResponseQuality): Promise<void> =>
       });
     
     if (error) {
-      logger.error('Error logging AI quality:', error);
+ logger.error('Error logging AI quality:', error);
       return;
     }
     
@@ -152,7 +152,7 @@ export const logAIQuality = async (quality: AIResponseQuality): Promise<void> =>
     
     // Log to console for development
     if (process.env.NODE_ENV === 'development') {
-      logger.log('�x` AI Quality:', {
+ logger.log('x` AI Quality:', {
         feature: quality.feature,
         specificityScore: quality.specificityScore,
         exercisesFiltered: quality.exercisesFiltered,
@@ -162,7 +162,7 @@ export const logAIQuality = async (quality: AIResponseQuality): Promise<void> =>
       });
     }
   } catch (error) {
-    logger.error('Failed to log AI quality:', error);
+ logger.error('Failed to log AI quality:', error);
   }
 };
 
@@ -237,7 +237,7 @@ async function checkQualityAlerts(quality: AIResponseQuality): Promise<void> {
   
   // Log alerts
   if (alerts.length > 0) {
-    logger.warn('�a���� AI Quality Alerts:', alerts);
+ logger.warn('a AI Quality Alerts:', alerts);
     
     // Insert alerts into database
     await supabase.from('ai_quality_alerts').insert(
@@ -294,7 +294,7 @@ export const getAIQualityStats = async (
     const { data, error } = await query;
     
     if (error || !data) {
-      logger.error('Error fetching quality stats:', error);
+ logger.error('Error fetching quality stats:', error);
       return null;
     }
     
@@ -358,7 +358,7 @@ export const getAIQualityStats = async (
       topWarnings,
     };
   } catch (error) {
-    logger.error('Error calculating quality stats:', error);
+ logger.error('Error calculating quality stats:', error);
     return null;
   }
 };
@@ -519,4 +519,4 @@ async function getRecentAlerts(limit: number = 20): Promise<AIQualityAlert[]> {
     timestamp: new Date(d.timestamp),
   }));
 }
-
+

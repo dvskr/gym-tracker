@@ -12,18 +12,17 @@ export async function saveWorkoutHeartRate(
   endTime: Date
 ): Promise<boolean> {
   try {
-    logger.log(`❤��� Fetching heart rate data for workout ${workoutId}...`);
+ logger.log(` Fetching heart rate data for workout ${workoutId}...`);
 
     // Fetch heart rate data from health platform
     const stats = await healthService.getHeartRate(startTime, endTime);
 
     if (!stats) {
-      logger.log('����� No heart rate data found for this workout');
+ logger.log(' No heart rate data found for this workout');
       return false;
     }
 
-    logger.log(
-      `�x` Heart rate stats: Avg ${stats.average}, Max ${stats.max}, Min ${stats.min}`
+ logger.log(` Heart rate stats: Avg ${stats.average}, Max ${stats.max}, Min ${stats.min}`
     );
 
     // Save to database
@@ -39,10 +38,10 @@ export async function saveWorkoutHeartRate(
 
     if (error) throw error;
 
-    logger.log(`�S& Heart rate data saved for workout ${workoutId}`);
+ logger.log(`S& Heart rate data saved for workout ${workoutId}`);
     return true;
   } catch (error) {
-    logger.error('�R Error saving workout heart rate:', error);
+ logger.error('R Error saving workout heart rate:', error);
     return false;
   }
 }
@@ -53,7 +52,7 @@ export async function saveWorkoutHeartRate(
 export async function batchUpdateWorkoutHeartRate(
   workouts: Array<{ id: string; started_at: string; ended_at: string }>
 ): Promise<{ success: number; failed: number; skipped: number }> {
-  logger.log(`�x� Batch updating heart rate for ${workouts.length} workouts...`);
+ logger.log(`x Batch updating heart rate for ${workouts.length} workouts...`);
 
   let success = 0;
   let failed = 0;
@@ -88,8 +87,8 @@ export async function batchUpdateWorkoutHeartRate(
     }
   }
 
-  logger.log(
-    `�S& Batch update complete: ${success} updated, ${failed} failed, ${skipped} skipped`
+ logger.log(
+    `S& Batch update complete: ${success} updated, ${failed} failed, ${skipped} skipped`
   );
 
   return { success, failed, skipped };
@@ -116,7 +115,7 @@ export async function getWorkoutsWithoutHeartRate(
 
     return data || [];
   } catch (error) {
-    logger.error('�R Error fetching workouts without heart rate:', error);
+ logger.error('R Error fetching workouts without heart rate:', error);
     return [];
   }
 }
@@ -152,7 +151,7 @@ export async function calculateHeartRateRecovery(
       recoveryHR: recoveryStats.min,
     };
   } catch (error) {
-    logger.error('�R Error calculating heart rate recovery:', error);
+ logger.error('R Error calculating heart rate recovery:', error);
     return null;
   }
 }
@@ -189,4 +188,4 @@ export async function hasHeartRateData(startTime: Date, endTime: Date): Promise<
     return false;
   }
 }
-
+

@@ -171,7 +171,7 @@ export async function deletePhoto(photoId: string): Promise<void> {
     try {
       await deletePhotoLocally(photo.local_uri);
     } catch (error) {
-      logger.warn('Failed to delete local photo file:', error);
+ logger.warn('Failed to delete local photo file:', error);
     }
 
     // Delete database record
@@ -232,4 +232,4 @@ export async function getPhotoDates(userId: string): Promise<string[]> {
 
   return Array.from(dates).sort().reverse();
 }
-
+

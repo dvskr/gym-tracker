@@ -119,7 +119,7 @@ async function main() {
     );
 
     if (!duplicate) {
-      console.log(`  �  ${mapping.name.padEnd(40)} - Not found or already has external_id`);
+      console.log(`    ${mapping.name.padEnd(40)} - Not found or already has external_id`);
       skipped++;
       continue;
     }
@@ -258,7 +258,7 @@ async function main() {
     // #endregion
 
     // Step 3: Update database URLs
-    console.log(`\n=� Updating database URLs...\n`);
+    console.log(`\n= Updating database URLs...\n`);
 
     let updated = 0;
     for (const mapping of duplicateMappings) {
@@ -307,10 +307,10 @@ async function main() {
   const total = finalExercises?.length || 0;
 
   console.log('\n' + '='.repeat(60));
-  console.log('=� FINAL SUMMARY');
+  console.log('= FINAL SUMMARY');
   console.log('='.repeat(60));
   console.log(`\n✅ Copied: ${copied}`);
-  console.log(`�  Skipped: ${skipped}`);
+  console.log(`  Skipped: ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
   console.log(`\n COMPLETION: ${withBoth}/${total} exercises (${((withBoth / total) * 100).toFixed(1)}%)`);
 
@@ -325,4 +325,4 @@ async function main() {
 }
 
 main().catch(console.error);
-
+

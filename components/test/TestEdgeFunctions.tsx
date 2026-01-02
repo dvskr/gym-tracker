@@ -22,7 +22,7 @@ export default function TestEdgeFunctions() {
 
   const runTest = async (testFn: () => Promise<boolean>, testName: string) => {
     setLoading(true);
-    setResults(prev => [...prev, `>� Running: ${testName}...`]);
+    setResults(prev => [...prev, `> Running: ${testName}...`]);
     
     try {
       const success = await testFn();
@@ -90,7 +90,7 @@ export default function TestEdgeFunctions() {
       {/* Results */}
       <View style={styles.resultsSection}>
         <View style={styles.resultsHeader}>
-          <Text style={styles.sectionTitle}>=� Results</Text>
+          <Text style={styles.sectionTitle}>📋 Results</Text>
           <Pressable onPress={clearResults}>
             <Text style={styles.clearButton}>Clear</Text>
           </Pressable>
@@ -247,4 +247,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
+

@@ -44,7 +44,7 @@ export function useImagePreload(options?: {
           });
         }
       } catch (error) {
-        logger.error('[useImagePreload] Error:', error);
+ logger.error('[useImagePreload] Error:', error);
       }
 
       setState({ isLoading: false, progress: 100, phase: 'complete' });
@@ -55,4 +55,4 @@ export function useImagePreload(options?: {
 
   return state;
 }
-
+

@@ -243,7 +243,7 @@ export default function ComparePhotosScreen() {
         setAfterPhoto(sortedByDate[sortedByDate.length - 1]);
       }
     } catch (error) {
-      logger.error('Error fetching photos:', error);
+ logger.error('Error fetching photos:', error);
     } finally {
       setIsLoading(false);
     }
@@ -263,11 +263,11 @@ export default function ComparePhotosScreen() {
       const timeDiff = calculateTimeDifference(beforePhoto.taken_at, afterPhoto.taken_at);
       
       await Share.share({
-        message: `Check out my progress! �x� ${timeDiff}`,
+        message: `Check out my progress! �x ${timeDiff}`,
         // In a full implementation, we'd create a combined image and share its URI
       });
     } catch (error) {
-      logger.error('Error sharing:', error);
+ logger.error('Error sharing:', error);
     }
   };
 
@@ -282,7 +282,7 @@ export default function ComparePhotosScreen() {
       await saveComparisonImage(afterPhoto.local_uri);
       Alert.alert('Saved', 'Comparison saved to your device');
     } catch (error) {
-      logger.error('Error saving comparison:', error);
+ logger.error('Error saving comparison:', error);
       Alert.alert('Error', 'Failed to save comparison');
     } finally {
       setIsSaving(false);
@@ -837,4 +837,4 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
-
+

@@ -112,4 +112,4 @@ export function getVersionString(): string {
   const { version, buildNumber } = getAppVersion();
   return `${version} (${buildNumber})`;
 }
-
+

@@ -17,7 +17,7 @@ export function useDefaultTemplates() {
         if (dbTemplates.length > 0 && dbTemplates.every(t => t.exercises.length >= 3)) {
           setTemplates(dbTemplates);
         } else {
-          logger.log('Using enriched fallback templates - DB templates incomplete');
+ logger.log('Using enriched fallback templates - DB templates incomplete');
           // Use enriched fallback templates that match exercise names to database
           const enrichedFallbacks = await getEnrichedFallbackTemplates();
           if (enrichedFallbacks.length > 0) {
@@ -28,7 +28,7 @@ export function useDefaultTemplates() {
           }
         }
       } catch (err) {
-        logger.error('Error loading default templates:', err);
+ logger.error('Error loading default templates:', err);
         setError('Failed to load templates');
         // Try to use enriched fallbacks even on error
         try {
@@ -51,4 +51,4 @@ export function useDefaultTemplates() {
 
   return { templates, isLoading, error };
 }
-
+

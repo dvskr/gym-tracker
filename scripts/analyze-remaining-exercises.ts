@@ -82,7 +82,7 @@ async function main() {
     }
   }
 
-  console.log('=� MISSING BY EQUIPMENT:\n');
+  console.log('= MISSING BY EQUIPMENT:\n');
   const sortedEquipment = Object.entries(byEquipment).sort((a, b) => b[1].length - a[1].length);
   
   for (const [equipment, exercises] of sortedEquipment) {
@@ -95,7 +95,7 @@ async function main() {
   }
 
   console.log('\n' + '='.repeat(60));
-  console.log('=� FULL LIST OF MISSING EXERCISES:\n');
+  console.log('= FULL LIST OF MISSING EXERCISES:\n');
 
   const withExternalId = missing.filter(ex => ex.hasExternalId);
   const withoutExternalId = missing.filter(ex => !ex.hasExternalId);
@@ -106,7 +106,7 @@ async function main() {
     console.log(`   - ${ex.name.padEnd(40)} (${ex.equipment})`);
   });
 
-  console.log(`\n�  WITHOUT external_id (${withoutExternalId.length}):`);
+  console.log(`\n  WITHOUT external_id (${withoutExternalId.length}):`);
   console.log('   (These need alternative sourcing or should be marked inactive)\n');
   
   // Common vs niche
@@ -150,7 +150,7 @@ async function main() {
 
   // Recommendations
   console.log('\n' + '='.repeat(60));
-  console.log('=� RECOMMENDATIONS:\n');
+  console.log('= RECOMMENDATIONS:\n');
   
   if (withExternalId.length > 0) {
     console.log(`1. ✅ Run complete-missing-gifs.ts again to download ${withExternalId.length} exercises with external_id`);
@@ -171,10 +171,10 @@ async function main() {
   const currentCompletion = ((existingGifs.size / (allExercises?.length || 1)) * 100).toFixed(1);
   const potentialCompletion = (((existingGifs.size + withExternalId.length) / (allExercises?.length || 1)) * 100).toFixed(1);
 
-  console.log(`\n=� Current completion: ${currentCompletion}%`);
-  console.log(`=� Potential with external_id downloads: ${potentialCompletion}%`);
-  console.log(`=� To reach 100%: Need ${missing.length} more exercises`);
+  console.log(`\n= Current completion: ${currentCompletion}%`);
+  console.log(`= Potential with external_id downloads: ${potentialCompletion}%`);
+  console.log(`= To reach 100%: Need ${missing.length} more exercises`);
 }
 
 main().catch(console.error);
-
+

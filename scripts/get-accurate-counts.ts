@@ -62,7 +62,7 @@ async function getAccurateCounts() {
   // ============================================
   // STEP 2: Count Database Exercises
   // ============================================
-  console.log('=� STEP 2: Database Exercise Counts');
+  console.log('= STEP 2: Database Exercise Counts');
   console.log('─'.repeat(80));
 
   // Total exercises
@@ -102,7 +102,7 @@ async function getAccurateCounts() {
   // ============================================
   // STEP 3: Sample gif_url Format
   // ============================================
-  console.log('=� STEP 3: Sample gif_url Format (10 examples)');
+  console.log('= STEP 3: Sample gif_url Format (10 examples)');
   console.log('─'.repeat(80));
 
   const { data: sampleExercises } = await supabase
@@ -169,7 +169,7 @@ async function getAccurateCounts() {
   // SUMMARY TABLE
   // ============================================
   console.log('═'.repeat(80));
-  console.log('=� SUMMARY TABLE');
+  console.log('= SUMMARY TABLE');
   console.log('═'.repeat(80));
   console.log('');
   console.log('STORAGE:');
@@ -199,4 +199,4 @@ async function getAccurateCounts() {
 }
 
 getAccurateCounts();
-
+

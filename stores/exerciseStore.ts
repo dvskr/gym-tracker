@@ -155,7 +155,7 @@ export const useExerciseStore = create<ExerciseState>()(
 
         // Prevent concurrent fetches
         if (isLoading) {
-          logger.log('[ExerciseStore] Already loading, skipping');
+ logger.log('[ExerciseStore] Already loading, skipping');
           return;
         }
 
@@ -167,7 +167,7 @@ export const useExerciseStore = create<ExerciseState>()(
 
         if (isCacheValid && !force) {
           const cacheAge = Math.round((Date.now() - (lastFetched || 0)) / 1000);
-          logger.log(`[ExerciseStore] Using cached data (age: ${cacheAge} seconds, count: ${exercises.length})`);
+ logger.log(`[ExerciseStore] Using cached data (age: ${cacheAge} seconds, count: ${exercises.length})`);
           return;
         }
 
@@ -218,9 +218,9 @@ export const useExerciseStore = create<ExerciseState>()(
           // Initialize fuzzy search with loaded exercises
           initializeFuseSearch(transformedExercises);
           
-          logger.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
+ logger.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
         } catch (error) {
-          logger.error('[ExerciseStore] Error fetching exercises:', error);
+ logger.error('[ExerciseStore] Error fetching exercises:', error);
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to fetch exercises',
@@ -414,7 +414,7 @@ export const useExerciseStore = create<ExerciseState>()(
           const favoriteIds = data?.map(f => f.exercise_id) || [];
           set({ favoriteIds });
         } catch (error) {
-          logger.error('Failed to load favorites:', error);
+ logger.error('Failed to load favorites:', error);
         }
       },
       
@@ -449,7 +449,7 @@ export const useExerciseStore = create<ExerciseState>()(
             if (error) throw error;
           }
         } catch (error) {
-          logger.error('Failed to toggle favorite:', error);
+ logger.error('Failed to toggle favorite:', error);
           // Revert optimistic update on error
           set({ favoriteIds });
         }
@@ -509,4 +509,4 @@ export const useExercises = () => useExerciseStore((state) => state.exercises);
 export const useExerciseLoading = () => useExerciseStore((state) => state.isLoading);
 export const useExerciseError = () => useExerciseStore((state) => state.error);
 export const useSearchQuery = () => useExerciseStore((state) => state.searchQuery);
-export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);
+export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);

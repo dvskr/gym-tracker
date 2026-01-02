@@ -501,7 +501,7 @@ const HistoryEntryRow: React.FC<HistoryEntryProps> = ({
             {value}{selectedMeasurement === 'body_fat_percentage' ? '%' : ` ${unit}`}
           </Text>
         ) : (
-          <Text style={styles.historyNoValue}>�</Text>
+          <Text style={styles.historyNoValue}></Text>
         )}
       </View>
 
@@ -753,7 +753,7 @@ export default function MeasurementsHistoryScreen() {
       }
       setMultiChartData(multiData);
     } catch (error) {
-      logger.error('Error fetching measurement history:', error);
+ logger.error('Error fetching measurement history:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -774,7 +774,7 @@ export default function MeasurementsHistoryScreen() {
       await deleteMeasurementById(id);
       fetchData();
     } catch (error) {
-      logger.error('Error deleting measurement:', error);
+ logger.error('Error deleting measurement:', error);
       Alert.alert('Error', 'Failed to delete measurement');
     }
   };
@@ -1703,4 +1703,4 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-});
+});

@@ -46,7 +46,7 @@ async function verifySupabaseQuality() {
   console.log(`Found ${thumbnailFiles?.length || 0} thumbnails in Supabase\n`);
   
   // Check sample GIFs
-  console.log('=� Checking GIF Quality (sample of 10)...\n');
+  console.log('= Checking GIF Quality (sample of 10)...\n');
   const sampleGifs = gifFiles?.slice(0, 10) || [];
   
   const gifResults = {
@@ -86,7 +86,7 @@ async function verifySupabaseQuality() {
     }
   }
   
-  console.log('\n=� Checking Thumbnail Quality (sample of 10)...\n');
+  console.log('\n= Checking Thumbnail Quality (sample of 10)...\n');
   const sampleThumbs = thumbnailFiles?.slice(0, 10) || [];
   
   const thumbResults = {
@@ -111,7 +111,7 @@ async function verifySupabaseQuality() {
       if (width >= 200) quality = '4x retina ✨';
       else if (width >= 150) quality = '3x retina ✨';
       else if (width >= 100) quality = '2x retina ✅';
-      else quality = 'Standard �';
+      else quality = 'Standard ';
       
       console.log(`  ${file.name.substring(0, 30)}... → ${width}x${width}px | ${sizeKB.toFixed(2)} KB | ${quality}`);
       
@@ -124,7 +124,7 @@ async function verifySupabaseQuality() {
   
   // Summary
   console.log('\n' + '='.repeat(70));
-  console.log('=� VERIFICATION SUMMARY');
+  console.log('= VERIFICATION SUMMARY');
   console.log('='.repeat(70));
   
   console.log('\n GIF Quality:');
@@ -137,7 +137,7 @@ async function verifySupabaseQuality() {
   if (gifResults.hd === sampleGifs.length) {
     console.log('  ✅ ALL SAMPLED GIFS ARE HD QUALITY!');
   } else {
-    console.log(`  �  ${gifResults.sd} GIFs are not HD quality`);
+    console.log(`    ${gifResults.sd} GIFs are not HD quality`);
   }
   
   console.log('\n=�  Thumbnail Quality:');
@@ -164,7 +164,7 @@ async function verifySupabaseQuality() {
     }
   }
   
-  console.log('\n=� Storage Usage:');
+  console.log('\n= Storage Usage:');
   const gifStorage = (gifFiles?.length || 0) * (gifResults.totalSize / sampleGifs.length);
   const thumbStorage = (thumbnailFiles?.length || 0) * (thumbResults.totalSize / sampleThumbs.length / 1024);
   console.log(`  GIFs: ~${gifStorage.toFixed(0)} MB (${gifFiles?.length || 0} files)`);
@@ -173,4 +173,4 @@ async function verifySupabaseQuality() {
 }
 
 verifySupabaseQuality();
-
+

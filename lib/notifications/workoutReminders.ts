@@ -37,7 +37,7 @@ class WorkoutReminderService {
       const data = await AsyncStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      logger.error('Failed to get reminders:', error);
+ logger.error('Failed to get reminders:', error);
       return [];
     }
   }
@@ -48,9 +48,9 @@ class WorkoutReminderService {
   async saveReminders(reminders: WorkoutReminder[]): Promise<void> {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(reminders));
-      logger.log('�S& Reminders saved');
+ logger.log('S& Reminders saved');
     } catch (error) {
-      logger.error('Failed to save reminders:', error);
+ logger.error('Failed to save reminders:', error);
     }
   }
 
@@ -62,7 +62,7 @@ class WorkoutReminderService {
     await this.cancelReminder(reminder.id);
 
     if (!reminder.enabled) {
-      logger.log(`⏸��� Reminder ${reminder.id} is disabled, skipping schedule`);
+ logger.log(` Reminder ${reminder.id} is disabled, skipping schedule`);
       return null;
     }
 
@@ -94,10 +94,10 @@ class WorkoutReminderService {
         }
       );
 
-      logger.log(`�S& Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
+ logger.log(`S& Scheduled reminder for ${this.getDayName(reminder.dayOfWeek)} at ${this.formatTime(reminder.hour, reminder.minute)}`);
       return notificationId;
     } catch (error) {
-      logger.error('Failed to schedule reminder:', error);
+ logger.error('Failed to schedule reminder:', error);
       return null;
     }
   }
@@ -117,10 +117,10 @@ class WorkoutReminderService {
       }
 
       if (matching.length > 0) {
-        logger.log(`�S& Cancelled ${matching.length} notification(s) for reminder ${id}`);
+ logger.log(`S& Cancelled ${matching.length} notification(s) for reminder ${id}`);
       }
     } catch (error) {
-      logger.error('Failed to cancel reminder:', error);
+ logger.error('Failed to cancel reminder:', error);
     }
   }
 
@@ -140,7 +140,7 @@ class WorkoutReminderService {
       }
     }
 
-    logger.log(`�S& Scheduled ${scheduled} workout reminder(s)`);
+ logger.log(`S& Scheduled ${scheduled} workout reminder(s)`);
   }
 
   /**
@@ -153,7 +153,7 @@ class WorkoutReminderService {
       await this.cancelReminder(reminder.id);
     }
 
-    logger.log('�S& Cancelled all workout reminders');
+ logger.log('S& Cancelled all workout reminders');
   }
 
   /**
@@ -274,7 +274,7 @@ class WorkoutReminderService {
     await this.cancelAllReminders();
     await this.scheduleAllReminders();
 
-    logger.log(`�S& Applied ${preset} preset`);
+ logger.log(`S& Applied ${preset} preset`);
   }
 
   /**
@@ -312,4 +312,4 @@ class WorkoutReminderService {
 }
 
 export const workoutReminderService = new WorkoutReminderService();
-
+

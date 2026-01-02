@@ -71,7 +71,7 @@ async function generateActiveExercisesList() {
   markdown += '---\n\n';
 
   // Table of contents
-  markdown += '## =� Table of Contents\n\n';
+  markdown += '## = Table of Contents\n\n';
   sortedCategories.forEach((category) => {
     const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1);
     const count = byCategory[category].length;
@@ -144,8 +144,8 @@ async function generateActiveExercisesList() {
   fs.writeFileSync(outputPath, markdown);
 
   console.log(`\n✅ Active exercises list generated successfully!`);
-  console.log(`=� File: ${outputPath}`);
-  console.log(`\n=� Summary:`);
+  console.log(`= File: ${outputPath}`);
+  console.log(`\n= Summary:`);
   console.log(`   - Total Active Exercises: ${exercises.length}`);
   console.log(`   - Categories: ${sortedCategories.length}`);
   console.log(`   - Equipment Types: ${sortedEquipment.length}`);
@@ -153,4 +153,4 @@ async function generateActiveExercisesList() {
 }
 
 generateActiveExercisesList().catch(console.error);
-
+

@@ -33,17 +33,17 @@ export default function TabsLayout() {
   useEffect(() => {
     // Reset preload flag if user changed
     if (user?.id && user.id !== currentUserId) {
-      logger.log('[TabsLayout] User changed, resetting preload flag');
+ logger.log('[TabsLayout] User changed, resetting preload flag');
       preloadCompleted = false;
       currentUserId = user.id;
     }
 
     // Only run preload once per user session
     if (user && !isAuthLoading && !preloadCompleted) {
-      logger.log('[TabsLayout] Starting app data preload...');
+ logger.log('[TabsLayout] Starting app data preload...');
       preloadAllAppData(user.id, setPreloadProgress)
         .finally(() => {
-          logger.log('[TabsLayout] Preload complete');
+ logger.log('[TabsLayout] Preload complete');
           setIsPreloading(false);
           preloadCompleted = true;
         });
@@ -54,7 +54,7 @@ export default function TabsLayout() {
       currentUserId = null;
     } else if (preloadCompleted) {
       // Already preloaded, skip loading screen
-      logger.log('[TabsLayout] Skipping preload - already completed');
+ logger.log('[TabsLayout] Skipping preload - already completed');
       setIsPreloading(false);
     }
   }, [user, isAuthLoading]);
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   tabLabelActive: {
     color: '#3b82f6',
   },
-});
+});

@@ -12,13 +12,13 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { isOnline } = useNetworkStatus();
 
   useEffect(() => {
-    logger.log('�xa� Starting offline-first sync system...');
+ logger.log('xa Starting offline-first sync system...');
     
     // Start auto-sync when app loads
     syncQueue.startAutoSync(30000); // Sync every 30 seconds
 
     return () => {
-      logger.log('⏸��� Stopping sync system...');
+ logger.log(' Stopping sync system...');
       syncQueue.stopAutoSync();
     };
   }, []);
@@ -26,7 +26,7 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
   // Trigger sync when coming back online
   useEffect(() => {
     if (isOnline) {
-      logger.log('�x� Back online - triggering sync...');
+ logger.log('x Back online - triggering sync...');
       syncQueue.syncAll();
     }
   }, [isOnline]);
@@ -63,7 +63,7 @@ export function OfflineStatusBanner() {
     <View style={[styles.banner, isOnline ? styles.bannerSyncing : styles.bannerOffline]}>
       <Text style={styles.bannerText}>
         {isOnline ? (
-          pendingCount > 0 ? `⏳ Syncing ${pendingCount} item(s)...` : '�S& All synced'
+          pendingCount > 0 ? `⏳ Syncing ${pendingCount} item(s)...` : 'S& All synced'
         ) : (
           `�x� Offline${pendingCount > 0 ? ` • ${pendingCount} pending` : ''}`
         )}
@@ -163,12 +163,12 @@ export function DebugSyncPanel() {
 
   const handleClearFailed = async () => {
     const cleared = await syncQueue.clearFailedOperations();
-    logger.log(`Cleared ${cleared} failed operations`);
+ logger.log(`Cleared ${cleared} failed operations`);
   };
 
   const handleRetryFailed = async () => {
     const result = await syncQueue.retryFailedOperations();
-    logger.log(`Retry result:`, result);
+ logger.log(`Retry result:`, result);
   };
 
   const handleSyncNow = async () => {
@@ -352,4 +352,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
+

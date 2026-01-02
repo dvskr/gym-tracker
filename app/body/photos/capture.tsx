@@ -130,7 +130,7 @@ export default function CapturePhotoScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (error) {
-      logger.error('Error taking photo:', error);
+ logger.error('Error taking photo:', error);
       Alert.alert(
         'Camera Error',
         'Unable to access camera. Please check your permissions in Settings.'
@@ -151,7 +151,7 @@ export default function CapturePhotoScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (error) {
-      logger.error('Error picking photo:', error);
+ logger.error('Error picking photo:', error);
       Alert.alert(
         'Gallery Error',
         'Unable to access photo gallery. Please check your permissions in Settings.'
@@ -199,7 +199,7 @@ export default function CapturePhotoScreen() {
         [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
-      logger.error('Error saving photo:', error);
+ logger.error('Error saving photo:', error);
       Alert.alert('Error', 'Failed to save photo. Please try again.');
     } finally {
       setIsSaving(false);
@@ -676,4 +676,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

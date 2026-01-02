@@ -123,7 +123,7 @@ const HistoryEntry: React.FC<HistoryEntryProps> = ({
             {format(new Date(entry.date), 'MMM d, yyyy')}
           </Text>
           <Text style={styles.historySummary}>
-            {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • Best: {convertWeight(entry.bestSet.weight, entry.bestSet.weight_unit).toFixed(1)} × {entry.bestSet.reps}
+            {entry.totalSets} set{entry.totalSets !== 1 ? 's' : ''} • Best: {convertWeight(entry.bestSet.weight, entry.bestSet.weight_unit).toFixed(1)}  {entry.bestSet.reps}
           </Text>
           <Text style={styles.historyVolume}>
             Volume: {entry.sets.reduce((sum, s) => sum + (convertWeight(s.weight, s.weight_unit) * s.reps), 0).toLocaleString()} {weightUnit}
@@ -536,7 +536,7 @@ export default function ExerciseHistoryScreen() {
       setHistory(historyData);
       setStats(statsData);
     } catch (error) {
-      logger.error('Failed to fetch exercise history:', error);
+ logger.error('Failed to fetch exercise history:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -1142,4 +1142,4 @@ const styles = StyleSheet.create({
   listFooter: {
     height: 40,
   },
-});
+});

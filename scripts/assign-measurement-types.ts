@@ -150,12 +150,12 @@ async function assignMeasurementTypes() {
   console.log('='.repeat(70));
   console.log(`\n✅ Updated: ${updated}/${exercises.length} exercises\n`);
   
-  console.log('=� Breakdown by Type:\n');
+  console.log('= Breakdown by Type:\n');
   console.log(`    Reps + Weight: ${stats.reps_weight.length} exercises`);
-  console.log(`  �  Time Only: ${stats.time.length} exercises`);
+  console.log(`    Time Only: ${stats.time.length} exercises`);
   console.log(`    Time + Distance: ${stats.time_distance.length} exercises`);
-  console.log(`  =�  Time + Weight: ${stats.time_weight.length} exercises`);
-  console.log(`  =�  Reps Only: ${stats.reps_only.length} exercises`);
+  console.log(`  =  Time + Weight: ${stats.time_weight.length} exercises`);
+  console.log(`  =  Reps Only: ${stats.reps_only.length} exercises`);
   console.log(`  >  Assisted: ${stats.assisted.length} exercises`);
   
   console.log('\n=� Examples:\n');
@@ -172,4 +172,4 @@ async function assignMeasurementTypes() {
 }
 
 assignMeasurementTypes();
-
+

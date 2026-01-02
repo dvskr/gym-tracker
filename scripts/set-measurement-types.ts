@@ -172,7 +172,7 @@ async function setMeasurementTypes() {
   }
   
   console.log(`\n✅ Updated ${updated} exercises`);
-  console.log(`�  Skipped ${skipped} (already had measurement type)`);
+  console.log(`  Skipped ${skipped} (already had measurement type)`);
   
   console.log('\n=� Type Breakdown:');
   Object.entries(typeBreakdown).forEach(([type, count]) => {
@@ -187,4 +187,4 @@ async function setMeasurementTypes() {
 }
 
 setMeasurementTypes().catch(console.error);
-
+

@@ -45,7 +45,7 @@ async function analyzeGifMismatch() {
   });
 
   // Step 2: Get all files in storage
-  console.log('\n=� STEP 2: Listing Files in Storage');
+  console.log('\n= STEP 2: Listing Files in Storage');
   console.log('═'.repeat(80));
   
   const { data: allFiles } = await supabase.storage
@@ -87,7 +87,7 @@ async function analyzeGifMismatch() {
   });
 
   // Step 4: Sample of actual storage filenames
-  console.log('\n\n=� STEP 4: Sample of Actual Storage Filenames (first 30)');
+  console.log('\n\n= STEP 4: Sample of Actual Storage Filenames (first 30)');
   console.log('═'.repeat(80));
   
   gifFiles.slice(0, 30).forEach((f, i) => {
@@ -115,7 +115,7 @@ async function analyzeGifMismatch() {
   }
 
   // Step 6: Check what database expects vs what exists
-  console.log('\n\n=� STEP 6: Summary');
+  console.log('\n\n= STEP 6: Summary');
   console.log('═'.repeat(80));
   
   const { data: allActiveExercises } = await supabase
@@ -153,4 +153,4 @@ async function analyzeGifMismatch() {
 }
 
 analyzeGifMismatch();
-
+

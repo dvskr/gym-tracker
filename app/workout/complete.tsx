@@ -174,7 +174,7 @@ export default function WorkoutCompleteScreen() {
         detectPersonalRecords(data as WorkoutDetail);
       }
     } catch (error) {
-      logger.error('Failed to fetch workout:', error);
+ logger.error('Failed to fetch workout:', error);
     }
   };
 
@@ -254,19 +254,19 @@ export default function WorkoutCompleteScreen() {
 
       // Invalidate AI cache since workout data changed
       if (user?.id) {
-        logger.log('[WorkoutComplete] Invalidating AI cache');
+ logger.log('[WorkoutComplete] Invalidating AI cache');
         invalidateCache(user.id);
         
         // Pre-fetch fresh data in background (optional)
         prefetchAIData(user.id).catch(err => 
-          logger.warn('[WorkoutComplete] Prefetch failed:', err)
+ logger.warn('[WorkoutComplete] Prefetch failed:', err)
         );
       }
 
       successHaptic();
       router.replace('/(tabs)');
     } catch (error) {
-      logger.error('Failed to save workout:', error);
+ logger.error('Failed to save workout:', error);
       Alert.alert('Error', 'Failed to save workout details. Please try again.');
     } finally {
       setIsSaving(false);
@@ -320,7 +320,7 @@ export default function WorkoutCompleteScreen() {
         ]
       );
     } catch (error) {
-      logger.error('Failed to create template:', error);
+ logger.error('Failed to create template:', error);
       Alert.alert('Error', 'Failed to create template. Please try again.');
     } finally {
       setIsSaving(false);
@@ -344,7 +344,7 @@ export default function WorkoutCompleteScreen() {
               }
               router.replace('/(tabs)');
             } catch (error) {
-              logger.error('Failed to delete workout:', error);
+ logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout.');
             }
           },
@@ -368,7 +368,7 @@ export default function WorkoutCompleteScreen() {
       return volume > maxVolume ? set : max;
     });
 
-    return `${best.weight || 0} × ${best.reps || 0}`;
+    return `${best.weight || 0}  ${best.reps || 0}`;
   };
 
   const getRatingText = (value: number): string => {
@@ -414,7 +414,7 @@ export default function WorkoutCompleteScreen() {
         {/* Congratulations Text */}
         <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Workout Complete!</Text>
-          <Text style={styles.subtitle}>Amazing work! You crushed it �x�</Text>
+          <Text style={styles.subtitle}>Amazing work! You crushed it �x</Text>
         </Animated.View>
 
         {/* PR Callout */}
@@ -1061,4 +1061,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+});

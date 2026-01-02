@@ -50,7 +50,7 @@ async function analyzeGifIssues() {
   console.log(`Total active exercises:                 ${exercises?.length}`);
   console.log(`  ✅ With working GIF:                  ${withWorkingGif.length}`);
   console.log(`  ❌ With broken gif_url:                ${withBrokenGif.length}`);
-  console.log(`  �  With NULL gif_url:                 ${withNull.length}`);
+  console.log(`    With NULL gif_url:                 ${withNull.length}`);
   console.log('');
 
   if (withNull.length > 0) {
@@ -83,4 +83,4 @@ async function analyzeGifIssues() {
 }
 
 analyzeGifIssues();
-
+

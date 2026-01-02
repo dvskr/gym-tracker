@@ -64,7 +64,7 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setWeights(sorted);
     } catch (error) {
-      logger.error('Error fetching weight history:', error);
+ logger.error('Error fetching weight history:', error);
     } finally {
       setIsLoading(false);
     }
@@ -285,4 +285,4 @@ const styles = StyleSheet.create({
 });
 
 export default WeightSparkline;
-
+

@@ -1,4 +1,4 @@
-import { Share, Platform } from 'react-native';
+﻿import { Share, Platform } from 'react-native';
 import { logger } from '@/lib/utils/logger';
 import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
@@ -46,30 +46,30 @@ export interface ExportableWorkout {
 /**
  * Generate a plain text summary of a workout
  * Format:
- * �x�9️ Morning Workout
- * December 27, 2024 • 45 min
+ * 🏋️ Morning Workout
+ * December 27, 2024 â€¢ 45 min
  * 
  * BENCH PRESS
- *   1. 135 lbs × 10
- *   2. 185 lbs × 8
- *   3. 205 lbs × 6 �x� 
+ *   1. 135 lbs Ã— 10
+ *   2. 185 lbs Ã— 8
+ *   3. 205 lbs Ã— 6 —x— 
  * 
  * SQUATS
- *   1. 225 lbs × 8
+ *   1. 225 lbs Ã— 8
  *   ...
  * 
  * Total Volume: 12,500 lbs
- * Rating: ⭐�����⭐⭐
+ * Rating: â­—————â­â­
  */
 export function generateWorkoutText(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
   // Header
-  lines.push(`�x�9️ ${workout.name}`);
+  lines.push(`🏋️ ${workout.name}`);
   
   const dateStr = format(new Date(workout.startedAt), 'MMMM d, yyyy');
   const durationStr = workout.duration ? `${workout.duration} min` : '';
-  lines.push(`${dateStr}${durationStr ? ` • ${durationStr}` : ''}`);
+  lines.push(`${dateStr}${durationStr ? ` â€¢ ${durationStr}` : ''}`);
   lines.push('');
 
   // Exercises
@@ -77,35 +77,35 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
     lines.push(exercise.name.toUpperCase());
     
     exercise.sets.forEach((set) => {
-      const weightStr = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '�';
-      const repsStr = set.reps !== null ? `${set.reps}` : '�';
+      const weightStr = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '';
+      const repsStr = set.reps !== null ? `${set.reps}` : '';
       const setTypeStr = set.setType && set.setType !== 'normal' ? ` (${set.setType})` : '';
       
-      lines.push(`  ${set.setNumber}. ${weightStr} × ${repsStr}${setTypeStr}`);
+      lines.push(`  ${set.setNumber}. ${weightStr}  ${repsStr}${setTypeStr}`);
     });
     
     if (exercise.notes) {
-      lines.push(`  �x� ${exercise.notes}`);
+      lines.push(`  —x ${exercise.notes}`);
     }
     lines.push('');
   });
 
   // Summary
   if (workout.totalVolume) {
-    lines.push(`Total Volume: ${workout.totalVolume.toLocaleString()} lbs`);
+    lines.push(`${workout.totalVolume.toLocaleString()} lbs`);
   }
   if (workout.totalSets) {
     lines.push(`Total Sets: ${workout.totalSets}`);
   }
   if (workout.rating) {
-    lines.push(`Rating: ${'⭐'.repeat(workout.rating)}`);
+    lines.push(`Rating: ${'â­'.repeat(workout.rating)}`);
   }
   if (workout.notes) {
     lines.push(`Notes: ${workout.notes}`);
   }
 
   lines.push('');
-  lines.push('� Tracked with GymTracker �x�');
+  lines.push('— Tracked with GymTracker —x');
 
   return lines.join('\n');
 }
@@ -116,7 +116,7 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
 export function generateCompactWorkoutText(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
-  lines.push(`�x�9️ ${workout.name}`);
+  lines.push(`🏋️ ${workout.name}`);
   
   const dateStr = format(new Date(workout.startedAt), 'MMM d');
   lines.push(dateStr);
@@ -130,13 +130,13 @@ export function generateCompactWorkoutText(workout: ExportableWorkout): string {
       const bestSet = completedSets.reduce((best, current) => 
         (current.weight || 0) > (best.weight || 0) ? current : best
       );
-      lines.push(`• ${exercise.name}: ${bestSet.weight} × ${bestSet.reps}`);
+      lines.push(`â€¢ ${exercise.name}: ${bestSet.weight}  ${bestSet.reps}`);
     }
   });
 
   if (workout.totalVolume) {
     lines.push('');
-    lines.push(`�x` ${workout.totalVolume.toLocaleString()} lbs total`);
+    lines.push(`${workout.totalVolume.toLocaleString()} lbs total`);
   }
 
   return lines.join('\n');
@@ -290,7 +290,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
   // Header
-  lines.push(`# �x�9️ ${workout.name}`);
+  lines.push(`# 🏋️ ${workout.name}`);
   lines.push('');
   
   const dateStr = format(new Date(workout.startedAt), 'MMMM d, yyyy');
@@ -299,10 +299,10 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     lines.push(`**Duration:** ${workout.duration} minutes`);
   }
   if (workout.totalVolume) {
-    lines.push(`**Total Volume:** ${workout.totalVolume.toLocaleString()} lbs`);
+    lines.push(`${workout.totalVolume.toLocaleString()} lbs`);
   }
   if (workout.rating) {
-    lines.push(`**Rating:** ${'⭐'.repeat(workout.rating)}`);
+    lines.push(`**Rating:** ${'â­'.repeat(workout.rating)}`);
   }
   lines.push('');
 
@@ -320,8 +320,8 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     lines.push('|-----|--------|------|------|');
     
     exercise.sets.forEach((set) => {
-      const weight = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '�';
-      const reps = set.reps !== null ? set.reps.toString() : '�';
+      const weight = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '—';
+      const reps = set.reps !== null ? set.reps.toString() : '';
       const type = set.setType || 'normal';
       
       lines.push(`| ${set.setNumber} | ${weight} | ${reps} | ${type} |`);
@@ -329,7 +329,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     
     if (exercise.notes) {
       lines.push('');
-      lines.push(`> �x� ${exercise.notes}`);
+      lines.push(`> —x ${exercise.notes}`);
     }
     lines.push('');
   });
@@ -397,7 +397,7 @@ export async function shareWorkout(
       title: `GymTracker: ${workout.name}`,
     });
   } catch (error: any) {
-    logger.error('Error sharing workout:', error.message);
+ logger.error('Error sharing workout:', error.message);
     throw error;
   }
 }
@@ -421,7 +421,7 @@ export async function shareWorkoutData(
       title: `GymTracker Export: ${workout.name}`,
     });
   } catch (error: any) {
-    logger.error('Error sharing workout data:', error.message);
+ logger.error('Error sharing workout data:', error.message);
     throw error;
   }
 }

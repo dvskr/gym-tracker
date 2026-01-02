@@ -135,7 +135,7 @@ async function findMatchingGifs() {
   // ========================================
   // Step 2: List all files in storage
   // ========================================
-  console.log('=� Step 2: Listing all GIF files in storage...');
+  console.log('= Step 2: Listing all GIF files in storage...');
   
   const { data: storageFiles, error: storageError } = await supabase.storage
     .from(GIF_BUCKET)
@@ -167,7 +167,7 @@ async function findMatchingGifs() {
   let noMatches = 0;
 
   for (const exercise of brokenExercises || []) {
-    console.log(`\n=� ${exercise.name}`);
+    console.log(`\n= ${exercise.name}`);
     console.log(`   External ID: ${exercise.external_id || 'N/A'}`);
     console.log(`   Current gif_url: ${exercise.gif_url || 'NULL'}`);
     
@@ -202,7 +202,7 @@ async function findMatchingGifs() {
       console.log(`    Potential matches:`);
       matches.forEach((match, idx) => {
         const confidence = match.similarity >= 0.8 ? '=� HIGH' : 
-                          match.similarity >= 0.6 ? '=� MEDIUM' : '=4 LOW';
+                          match.similarity >= 0.6 ? '= MEDIUM' : '=4 LOW';
         console.log(`      ${idx + 1}. ${match.filename} (${(match.similarity * 100).toFixed(0)}% ${confidence})`);
       });
       foundMatches++;
@@ -226,7 +226,7 @@ async function findMatchingGifs() {
   // ========================================
   console.log('\n');
   console.log('═'.repeat(70));
-  console.log('=� SUMMARY');
+  console.log('= SUMMARY');
   console.log('═'.repeat(70));
   console.log(`Total broken exercises: ${brokenExercises?.length || 0}`);
   console.log(`Exercises with potential matches: ${foundMatches}`);
@@ -239,7 +239,7 @@ async function findMatchingGifs() {
   // High confidence matches
   const highConfidence = results.filter(r => r.matches.length > 0 && r.matches[0].similarity >= 0.8);
   if (highConfidence.length > 0) {
-    console.log(`\n=� HIGH CONFIDENCE MATCHES (${highConfidence.length}):`);
+    console.log(`\n= HIGH CONFIDENCE MATCHES (${highConfidence.length}):`);
     highConfidence.forEach(r => {
       console.log(`   • ${r.exercise.name} → ${r.matches[0].filename}`);
     });
@@ -248,7 +248,7 @@ async function findMatchingGifs() {
   // Medium confidence matches
   const mediumConfidence = results.filter(r => r.matches.length > 0 && r.matches[0].similarity >= 0.6 && r.matches[0].similarity < 0.8);
   if (mediumConfidence.length > 0) {
-    console.log(`\n=� MEDIUM CONFIDENCE MATCHES (${mediumConfidence.length}):`);
+    console.log(`\n= MEDIUM CONFIDENCE MATCHES (${mediumConfidence.length}):`);
     mediumConfidence.forEach(r => {
       console.log(`   • ${r.exercise.name} → ${r.matches[0].filename}`);
     });
@@ -268,4 +268,4 @@ async function findMatchingGifs() {
 
 // Run
 findMatchingGifs().catch(console.error);
-
+

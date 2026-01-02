@@ -153,7 +153,7 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
                 )}
               </View>
               <Text style={styles.setDetailText}>
-                {set.target_weight ? `${set.target_weight} ${weightUnit}` : '—'} × {set.target_reps} reps
+                {set.target_weight ? `${set.target_weight} ${weightUnit}` : '—'}  {set.target_reps} reps
               </Text>
               {set.set_type !== 'normal' && (
                 <Text style={[styles.setTypeLabel, { color: setTypeColors[set.set_type] }]}>
@@ -413,7 +413,7 @@ export default function TemplateDetailScreen() {
       setTempName(data.name);
       setTempDescription(data.description || '');
     } catch (error) {
-      logger.error('Error fetching template:', error);
+ logger.error('Error fetching template:', error);
       Alert.alert('Error', 'Failed to load template');
       router.back();
     } finally {
@@ -434,7 +434,7 @@ export default function TemplateDetailScreen() {
       await updateTemplate(id, updates);
       setTemplate((prev) => prev ? { ...prev, ...updates } : prev);
     } catch (error) {
-      logger.error('Error saving template:', error);
+ logger.error('Error saving template:', error);
       Alert.alert('Error', 'Failed to save changes');
     } finally {
       setIsSaving(false);
@@ -472,7 +472,7 @@ export default function TemplateDetailScreen() {
               await deleteTemplate(id!);
               router.back();
             } catch (error) {
-              logger.error('Error deleting template:', error);
+ logger.error('Error deleting template:', error);
               Alert.alert('Error', 'Failed to delete template');
             }
           },
@@ -491,7 +491,7 @@ export default function TemplateDetailScreen() {
       // Navigate to the new template
       router.replace(`/template/${copy.id}`);
     } catch (error) {
-      logger.error('Error duplicating template:', error);
+ logger.error('Error duplicating template:', error);
       Alert.alert('Error', 'Failed to duplicate template');
     }
   };
@@ -551,7 +551,7 @@ export default function TemplateDetailScreen() {
           .eq('id', ex.id);
       }
     } catch (error) {
-      logger.error('Error saving order:', error);
+ logger.error('Error saving order:', error);
     }
   };
 
@@ -583,7 +583,7 @@ export default function TemplateDetailScreen() {
                   : prev
               );
             } catch (error) {
-              logger.error('Error deleting exercise:', error);
+ logger.error('Error deleting exercise:', error);
             }
           },
         },
@@ -618,7 +618,7 @@ export default function TemplateDetailScreen() {
           : prev
       );
     } catch (error) {
-      logger.error('Error saving exercise:', error);
+ logger.error('Error saving exercise:', error);
     }
   };
 
@@ -712,7 +712,7 @@ export default function TemplateDetailScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      logger.error('Error starting workout:', error);
+ logger.error('Error starting workout:', error);
     }
   };
 
@@ -1632,4 +1632,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
+

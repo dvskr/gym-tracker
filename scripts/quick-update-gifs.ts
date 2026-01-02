@@ -95,9 +95,9 @@ async function updateDatabase() {
   console.log('='.repeat(60));
   console.log(`Updated: ${updated}`);
   console.log(`Failed: ${failed}`);
-  console.log(`\n=� Total exercises with GIFs in DB: ${count}`);
+  console.log(`\n= Total exercises with GIFs in DB: ${count}`);
   console.log(`Expected: 344 + 29 = 373\n`);
 }
 
 updateDatabase();
-
+

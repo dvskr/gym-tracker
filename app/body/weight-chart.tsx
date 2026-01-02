@@ -171,7 +171,7 @@ export default function WeightChartScreen() {
 
       setChartData(weights);
     } catch (error) {
-      logger.error('Error fetching weight data:', error);
+ logger.error('Error fetching weight data:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -445,10 +445,10 @@ export default function WeightChartScreen() {
               <View style={styles.insightContainer}>
                 <Text style={styles.insightText}>
                   {stats.weeklyRate === 0
-                    ? "�x` Your weight has been stable"
+                    ? "x` Your weight has been stable"
                     : stats.weeklyRate > 0
-                    ? `�x� You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
-                    : `�x0 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
+                    ? `�x You're gaining about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`
+                    : `x0 You're losing about ${Math.abs(Math.round(convertWeight(stats.weeklyRate, stats.unit) * 10) / 10)} ${bodyWeight.label} per week`}
                 </Text>
               </View>
             </View>
@@ -845,4 +845,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

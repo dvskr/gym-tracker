@@ -159,7 +159,7 @@ async function addTrulyMissing() {
   console.log('='.repeat(60));
   console.log(`Added: ${added} exercises`);
   console.log(`Failed: ${failed} exercises`);
-  console.log(`\n=� NEW TOTAL ACTIVE: ${count}`);
+  console.log(`\n= NEW TOTAL ACTIVE: ${count}`);
   console.log(`Expected: ${344 + added} (344 existing + ${added} new)`);
   console.log(`\n Coverage: 100% of Strong's exercise list!\n`);
   
@@ -170,4 +170,4 @@ async function addTrulyMissing() {
 }
 
 addTrulyMissing();
-
+

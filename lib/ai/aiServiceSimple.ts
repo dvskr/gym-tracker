@@ -33,7 +33,7 @@ class AIService {
     });
 
     if (error) {
-      logger.error('AI request failed:', error);
+ logger.error('AI request failed:', error);
       
       // Check if rate limited
       if (error.message?.includes('rate_limit') || error.status === 429) {
@@ -71,4 +71,4 @@ class AIService {
 }
 
 export const aiService = new AIService();
-
+

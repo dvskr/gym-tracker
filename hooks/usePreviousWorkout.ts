@@ -139,7 +139,7 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
           sets,
         });
       } catch (err) {
-        logger.error('Error fetching previous workout:', err);
+ logger.error('Error fetching previous workout:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch previous data');
         setData(null);
       } finally {
@@ -255,7 +255,7 @@ export async function fetchPreviousWorkoutData(
       sets,
     };
   } catch (err) {
-    logger.error('Error fetching previous workout:', err);
+ logger.error('Error fetching previous workout:', err);
     return null;
   }
 }
@@ -297,4 +297,4 @@ export function usePreviousWorkoutLegacy(exerciseExternalId: string): LegacyPrev
     lastDate: lastDateStr,
     lastSets: data.sets.length,
   };
-}
+}

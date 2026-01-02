@@ -86,14 +86,14 @@ async function uploadDirectory(
   const result = { uploaded: 0, failed: 0, totalSize: 0, urlMap: new Map<string, string>() };
   
   if (!fs.existsSync(sourceDir)) {
-    console.log(`�  Directory not found: ${sourceDir}`);
+    console.log(`  Directory not found: ${sourceDir}`);
     return result;
   }
   
   const files = fs.readdirSync(sourceDir)
     .filter(f => f.toLowerCase().endsWith(extension));
   
-  console.log(`=� Uploading ${files.length} ${extension} files to ${bucketName}...\n`);
+  console.log(`= Uploading ${files.length} ${extension} files to ${bucketName}...\n`);
   
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
@@ -119,7 +119,7 @@ async function uploadDirectory(
 }
 
 async function updateDatabaseUrls(gifUrlMap: Map<string, string>, thumbnailUrlMap: Map<string, string>) {
-  console.log('\n=� Updating database URLs...\n');
+  console.log('\n= Updating database URLs...\n');
   
   let gifUpdated = 0;
   let thumbnailUpdated = 0;
@@ -167,7 +167,7 @@ async function main() {
   console.log('  Uploading to Supabase Storage...\n');
   
   const gifDir = getGifDirectory();
-  console.log(`=� Thumbnail Source: ${THUMBNAIL_DIR}\n`);
+  console.log(`= Thumbnail Source: ${THUMBNAIL_DIR}\n`);
   
   // Ensure buckets exist
   await ensureBucketExists(GIF_BUCKET);
@@ -198,4 +198,4 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch(console.error);

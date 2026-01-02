@@ -282,9 +282,9 @@ export default function HomeScreen() {
       });
       
       setHasCheckedCache(true); // Mark cache as checked
-      logger.log('[Home] Data fetched successfully');
+ logger.log('[Home] Data fetched successfully');
     } catch (error) {
-      logger.error('Error fetching home data:', error);
+ logger.error('Error fetching home data:', error);
       setHasCheckedCache(true);
     } finally {
       setIsLoading(false);
@@ -369,7 +369,7 @@ export default function HomeScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      logger.error('Error starting template:', error);
+ logger.error('Error starting template:', error);
     }
   };
 
@@ -416,7 +416,7 @@ export default function HomeScreen() {
 
       router.push('/workout/active');
     } catch (error) {
-      logger.error('Error starting default template:', error);
+ logger.error('Error starting default template:', error);
     }
   };
 
@@ -486,7 +486,7 @@ export default function HomeScreen() {
         <View style={styles.greetingSection}>
           <View>
             <Text style={styles.greeting}>
-              {getGreeting()}{userName ? `, ${userName}` : ''}! �x9
+              {getGreeting()}{userName ? `, ${userName}` : ''}! 💪
             </Text>
             <Text style={styles.greetingSubtext}>
               {isWorkoutActive ? "You have a workout in progress" : "Ready to crush your workout?"}
@@ -1009,4 +1009,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748b',
   },
-});
+});

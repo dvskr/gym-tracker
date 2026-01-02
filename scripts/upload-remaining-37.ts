@@ -59,7 +59,7 @@ async function uploadGif(exerciseId: string): Promise<string | null> {
   const filepath = path.join(DOWNLOAD_DIR, filename);
 
   if (!fs.existsSync(filepath)) {
-    console.log(`�  Skip: ${filename} (file not found)`);
+    console.log(`  Skip: ${filename} (file not found)`);
     return null;
   }
 
@@ -140,11 +140,11 @@ async function uploadRemaining() {
   );
 
   console.log('\n' + '='.repeat(60));
-  console.log('=� UPLOAD COMPLETE');
+  console.log('= UPLOAD COMPLETE');
   console.log('='.repeat(60));
   console.log(`✅ Success: ${completed}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`\n=� Updated URL mappings: scripts/supabase-urls.json\n`);
+  console.log(`\n= Updated URL mappings: scripts/supabase-urls.json\n`);
 
   if (completed > 0) {
     console.log('= Next: Update database URLs');
@@ -153,4 +153,4 @@ async function uploadRemaining() {
 }
 
 uploadRemaining();
-
+

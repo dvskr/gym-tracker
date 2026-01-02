@@ -37,7 +37,7 @@ export function initializeFuseSearch(exercises: DisplayExercise[]): void {
     useExtendedSearch: false,    // Keep it simple
   });
   
-  logger.log(`[Fuzzy Search] Initialized with ${exercises.length} exercises`);
+ logger.log(`[Fuzzy Search] Initialized with ${exercises.length} exercises`);
 }
 
 /**
@@ -46,7 +46,7 @@ export function initializeFuseSearch(exercises: DisplayExercise[]): void {
  */
 export function fuzzySearchExercises(query: string): DisplayExercise[] {
   if (!fuseInstance) {
-    logger.warn('[Fuzzy Search] Not initialized, call initializeFuseSearch() first');
+ logger.warn('[Fuzzy Search] Not initialized, call initializeFuseSearch() first');
     return [];
   }
   
@@ -65,7 +65,7 @@ export function fuzzySearchExercises(query: string): DisplayExercise[] {
  */
 export function clearFuseInstance(): void {
   fuseInstance = null;
-  logger.log('[Fuzzy Search] Instance cleared');
+ logger.log('[Fuzzy Search] Instance cleared');
 }
 
 /**
@@ -74,4 +74,4 @@ export function clearFuseInstance(): void {
 export function isFuseInitialized(): boolean {
   return fuseInstance !== null;
 }
-
+

@@ -154,7 +154,7 @@ async function enrichTemplateExercises(template: DefaultTemplate): Promise<Defau
     .not('gif_url', 'eq', '');
 
   if (error || !dbExercises) {
-    logger.error('Error fetching exercises for enrichment:', error);
+ logger.error('Error fetching exercises for enrichment:', error);
     return template;
   }
 
@@ -175,7 +175,7 @@ async function enrichTemplateExercises(template: DefaultTemplate): Promise<Defau
     }
 
     // If not found in DB, return original (may not have valid ID/GIF)
-    logger.warn(`Exercise not found in database: ${templateEx.name}`);
+ logger.warn(`Exercise not found in database: ${templateEx.name}`);
     return templateEx;
   }).filter(ex => ex.id !== 'fallback-1' && !ex.id.startsWith('fallback')); // Remove exercises without real IDs
 
@@ -208,7 +208,7 @@ export async function fetchDefaultTemplates(): Promise<DefaultTemplate[]> {
       .order('name');
 
     if (error || !allExercises) {
-      logger.error(`Error fetching exercises for ${templateId}:`, error);
+ logger.error(`Error fetching exercises for ${templateId}:`, error);
       continue;
     }
 
@@ -389,4 +389,4 @@ export const FALLBACK_TEMPLATES: DefaultTemplate[] = [
     ],
   },
 ];
-
+

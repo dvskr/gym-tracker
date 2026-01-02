@@ -84,7 +84,7 @@ function AIUsageStats() {
         setStats(JSON.parse(data));
       }
     } catch (error) {
-      logger.error('Failed to load AI usage stats:', error);
+ logger.error('Failed to load AI usage stats:', error);
     }
   };
 
@@ -99,7 +99,7 @@ function AIUsageStats() {
       setStats(newStats);
       Alert.alert('Reset', 'Usage statistics have been reset');
     } catch (error) {
-      logger.error('Failed to reset stats:', error);
+ logger.error('Failed to reset stats:', error);
     }
   };
 
@@ -666,4 +666,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

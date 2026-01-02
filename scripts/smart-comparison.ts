@@ -210,7 +210,7 @@ for (const [core, exercises] of coreMovements.entries()) {
 
 // GENERATE REPORT
 console.log('='.repeat(70));
-console.log('=� SMART COMPARISON RESULTS');
+console.log('= SMART COMPARISON RESULTS');
 console.log('='.repeat(70));
 
 console.log(`\n✅ DEFINITE MATCHES (${results.definiteMatches.length}):`);
@@ -223,7 +223,7 @@ if (results.definiteMatches.length > 20) {
   console.log(`  ... and ${results.definiteMatches.length - 20} more`);
 }
 
-console.log(`\n�  LIKELY MATCHES (${results.likelyMatches.length}):`);
+console.log(`\n  LIKELY MATCHES (${results.likelyMatches.length}):`);
 console.log('These might be the same exercise - needs review.\n');
 results.likelyMatches.slice(0, 15).forEach(m => {
   console.log(`  ${m.strong}`);
@@ -251,7 +251,7 @@ results.duplicatesFound.slice(0, 10).forEach(d => {
 });
 
 console.log('\n' + '='.repeat(70));
-console.log('=� SUMMARY:');
+console.log('= SUMMARY:');
 console.log('='.repeat(70));
 console.log(`Definite Matches: ${results.definiteMatches.length}`);
 console.log(`Likely Matches: ${results.likelyMatches.length}`);
@@ -266,4 +266,4 @@ fs.writeFileSync(
 );
 
 console.log('=� Full report saved to: scripts/smart-comparison-report.json\n');
-
+

@@ -41,7 +41,7 @@ export function WeightRecommendation({
       );
       setRecommendation(rec);
     } catch (error) {
-      logger.error('Failed to get recommendation:', error);
+ logger.error('Failed to get recommendation:', error);
     } finally {
       setIsLoading(false);
     }
@@ -124,7 +124,7 @@ export function WeightRecommendation({
         <View style={styles.reasoningBox}>
           <Text style={styles.reasoningText}>{recommendation.reasoning}</Text>
           <Pressable style={styles.applyButton} onPress={handleApply}>
-            <Text style={styles.applyButtonText}>Apply �S</Text>
+            <Text style={styles.applyButtonText}>Apply ✅</Text>
           </Pressable>
         </View>
       )}
@@ -159,7 +159,7 @@ export function WeightRecommendationBadge({
         );
         setRecommendation(rec);
       } catch (error) {
-        logger.error('Failed to get recommendation:', error);
+ logger.error('Failed to get recommendation:', error);
       } finally {
         setIsLoading(false);
       }
@@ -278,4 +278,4 @@ const styles = StyleSheet.create({
     color: '#f59e0b',
   },
 });
-
+

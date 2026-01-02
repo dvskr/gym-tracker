@@ -19,7 +19,7 @@ class RestTimerNotificationService {
     await this.cancelRestNotification();
     
     // No longer scheduling notifications - using haptics only
-    logger.log(`�S& Rest timer set for ${seconds}s (haptics only, no notification)`);
+ logger.log(`S& Rest timer set for ${seconds}s (haptics only, no notification)`);
   }
 
   /**
@@ -29,9 +29,9 @@ class RestTimerNotificationService {
     if (this.currentNotificationId) {
       try {
         await notificationService.cancelNotification(this.currentNotificationId);
-        logger.log('�S& Cancelled rest timer notification');
+ logger.log('S& Cancelled rest timer notification');
       } catch (error) {
-        logger.error('Failed to cancel rest notification:', error);
+ logger.error('Failed to cancel rest notification:', error);
       }
       this.currentNotificationId = null;
     }
@@ -56,12 +56,12 @@ class RestTimerNotificationService {
         // Additional vibration pattern for attention
         this.startVibrationPattern();
 
-        logger.log('�S& Triggered rest complete haptics');
+ logger.log('S& Triggered rest complete haptics');
       } catch (error) {
-        logger.error('Failed to trigger rest complete haptics:', error);
+ logger.error('Failed to trigger rest complete haptics:', error);
       }
     } else {
-      logger.log('⏭��� Skipping rest complete haptics (disabled in settings)');
+ logger.log(' Skipping rest complete haptics (disabled in settings)');
     }
   }
 
@@ -78,9 +78,9 @@ class RestTimerNotificationService {
 
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      logger.log('�a���� Triggered rest timer warning haptic');
+ logger.log('a Triggered rest timer warning haptic');
     } catch (error) {
-      logger.error('Failed to trigger warning haptic:', error);
+ logger.error('Failed to trigger warning haptic:', error);
     }
   }
 
@@ -110,7 +110,7 @@ class RestTimerNotificationService {
           this.stopVibration();
         }
       } catch (error) {
-        logger.error('Vibration pattern error:', error);
+ logger.error('Vibration pattern error:', error);
         this.stopVibration();
       }
     }, 300);
@@ -142,4 +142,4 @@ class RestTimerNotificationService {
 }
 
 export const restTimerNotificationService = new RestTimerNotificationService();
-
+

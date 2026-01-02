@@ -7,7 +7,7 @@ const THUMBNAIL_DIR = 'exercise-thumbnails';
 const THUMBNAIL_SIZE = 224; // 4x retina (56px display × 4 = 224px) - ULTRA PREMIUM
 
 async function regenerateThumbnails() {
-  console.log(`=�  Regenerating thumbnails at ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px for ultra-sharp display...\n`);
+  console.log(`=  Regenerating thumbnails at ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px for ultra-sharp display...\n`);
   
   // Delete old thumbnails
   if (fs.existsSync(THUMBNAIL_DIR)) {
@@ -66,10 +66,10 @@ async function regenerateThumbnails() {
     return sum + stats.size;
   }, 0);
   
-  console.log(`\n=� Total thumbnail size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
-  console.log(`=� Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail`);
-  console.log(`=� Size: ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (${THUMBNAIL_SIZE/56}x retina quality)`);
+  console.log(`\n= Total thumbnail size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
+  console.log(`= Average size: ${(totalSize / thumbnailFiles.length / 1024).toFixed(2)} KB per thumbnail`);
+  console.log(`= Size: ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (${THUMBNAIL_SIZE/56}x retina quality)`);
   console.log(`✨ Display: 56x56px with ultra-sharp clarity!\n`);
 }
 
-regenerateThumbnails();
+regenerateThumbnails();

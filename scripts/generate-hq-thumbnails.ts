@@ -47,7 +47,7 @@ function generateThumbnailPNG(gifPath: string, outputPath: string): boolean {
 }
 
 async function generateAllThumbnails() {
-  console.log('=�  Generating 216px HIGHEST QUALITY thumbnails...\n');
+  console.log('=  Generating 216px HIGHEST QUALITY thumbnails...\n');
   console.log('=' .repeat(50));
   console.log('THUMBNAIL SETTINGS');
   console.log('='.repeat(50));
@@ -73,13 +73,13 @@ async function generateAllThumbnails() {
     ? GIF_1080P_DIR 
     : GIF_DIR;
   
-  console.log(`=� Source GIFs: ${sourceDir}`);
-  console.log(`=� Output Thumbnails: ${THUMBNAIL_DIR}\n`);
+  console.log(`= Source GIFs: ${sourceDir}`);
+  console.log(`= Output Thumbnails: ${THUMBNAIL_DIR}\n`);
   
   const gifFiles = fs.readdirSync(sourceDir)
     .filter(f => f.toLowerCase().endsWith('.gif'));
   
-  console.log(`=� Found ${gifFiles.length} GIF files to process\n`);
+  console.log(`= Found ${gifFiles.length} GIF files to process\n`);
   
   let generated = 0;
   let skipped = 0;
@@ -110,15 +110,15 @@ async function generateAllThumbnails() {
   }
   
   console.log('\n\n' + '='.repeat(50));
-  console.log('=� THUMBNAIL GENERATION COMPLETE');
+  console.log('= THUMBNAIL GENERATION COMPLETE');
   console.log('='.repeat(50));
   console.log(`✅ Generated: ${generated}`);
-  console.log(`�  Skipped (already exist): ${skipped}`);
+  console.log(`  Skipped (already exist): ${skipped}`);
   console.log(`❌ Failed: ${failed}`);
-  console.log(`=� Size: ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (216px)`);
+  console.log(`= Size: ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}px (216px)`);
   console.log(` Quality: MAXIMUM (-q:v 1)`);
-  console.log(`=� Saved to: ${THUMBNAIL_DIR}`);
+  console.log(`= Saved to: ${THUMBNAIL_DIR}`);
 }
 
 generateAllThumbnails().catch(console.error);
-
+

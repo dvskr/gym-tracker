@@ -288,4 +288,4 @@ export async function getWeightStats(userId: string): Promise<WeightStats | null
     firstEntryDate: weights[0].logged_at,
   };
 }
-
+

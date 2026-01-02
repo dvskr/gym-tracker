@@ -34,7 +34,7 @@ async function updateExerciseUrls() {
       .forEach(f => uploadedThumbnails.add(f.toLowerCase()));
   }
   
-  console.log(`=� Found ${uploadedGifs.size} GIFs and ${uploadedThumbnails.size} thumbnails locally\n`);
+  console.log(`= Found ${uploadedGifs.size} GIFs and ${uploadedThumbnails.size} thumbnails locally\n`);
   
   // Fetch all exercises
   const { data: exercises, error } = await supabase
@@ -46,7 +46,7 @@ async function updateExerciseUrls() {
     throw new Error(`Failed to fetch exercises: ${error.message}`);
   }
   
-  console.log(`=� Processing ${exercises?.length || 0} active exercises...\n`);
+  console.log(`= Processing ${exercises?.length || 0} active exercises...\n`);
   
   let updated = 0;
   let skipped = 0;
@@ -115,10 +115,10 @@ async function updateExerciseUrls() {
   }
   
   console.log('\n\n' + '='.repeat(60));
-  console.log('=� URL UPDATE SUMMARY');
+  console.log('= URL UPDATE SUMMARY');
   console.log('='.repeat(60));
   console.log(`✅ Updated: ${updated} exercises`);
-  console.log(`�  Skipped (no local GIF): ${skipped} exercises`);
+  console.log(`  Skipped (no local GIF): ${skipped} exercises`);
   console.log(`❌ Errors: ${errors} exercises`);
   console.log('='.repeat(60));
   
@@ -130,4 +130,4 @@ async function updateExerciseUrls() {
 }
 
 updateExerciseUrls().catch(console.error);
-
+

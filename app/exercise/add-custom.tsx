@@ -169,7 +169,7 @@ export default function AddCustomExerciseScreen() {
         ]
       );
     } catch (error: any) {
-      logger.error('Error adding custom exercise:', error);
+ logger.error('Error adding custom exercise:', error);
       
       if (error.code === '23505') {
         Alert.alert('Duplicate', 'You already have an exercise with this name');
@@ -646,4 +646,4 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
-
+

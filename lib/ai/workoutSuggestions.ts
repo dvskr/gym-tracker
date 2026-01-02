@@ -44,7 +44,7 @@ class WorkoutSuggestionService {
       if (!forceRefresh) {
         const cached = await this.getCachedSuggestion(userId);
         if (cached) {
-          logger.log('�S& Using cached workout suggestion');
+ logger.log('S& Using cached workout suggestion');
           return cached;
         }
       }
@@ -58,7 +58,7 @@ class WorkoutSuggestionService {
 
       // If not enough data, return rule-based default
       if (recentWorkouts.length < 2) {
-        logger.log('Not enough workout history, using default');
+ logger.log('Not enough workout history, using default');
         return this.getDefaultSuggestion(recentWorkouts);
       }
 
@@ -71,7 +71,7 @@ class WorkoutSuggestionService {
         });
         
         // " STRICT VALIDATION with equipment and injury filtering
-        logger.log('�x� Validating AI suggestion...');
+ logger.log('x Validating AI suggestion...');
         const validated = validateWorkoutSuggestionAdvanced(
           aiSuggestion,
           profile.available_equipment || [],
@@ -81,12 +81,12 @@ class WorkoutSuggestionService {
         // Log validation results
         if (validated.wasFiltered) {
           const removed = aiSuggestion.exercises.length - validated.exercises.length;
-          logger.warn(`�a���� Filtered ${removed} exercises (equipment/injury restrictions)`);
+ logger.warn(`a Filtered ${removed} exercises (equipment/injury restrictions)`);
         }
         
         // " CHECK: If too many exercises filtered, use fallback
         if (validated.exercises.length < 3) {
-          logger.warn('�R Too few valid exercises after filtering, using rule-based fallback');
+ logger.warn('R Too few valid exercises after filtering, using rule-based fallback');
           const fallback = this.getRuleBasedSuggestion(recentWorkouts);
           
           // Validate fallback too (should pass since rule-based uses valid exercises)
@@ -102,7 +102,7 @@ class WorkoutSuggestionService {
         
         // Validate structure (existing validation)
         if (!validateWorkoutSuggestion(validated)) {
-          logger.warn('AI response structure invalid, using fallback');
+ logger.warn('AI response structure invalid, using fallback');
           const fallback = this.getRuleBasedSuggestion(recentWorkouts);
           const validatedFallback = validateWorkoutSuggestionAdvanced(
             fallback,
@@ -113,14 +113,14 @@ class WorkoutSuggestionService {
           return validatedFallback;
         }
         
-        logger.log('�S& AI suggestion validated successfully');
+ logger.log('S& AI suggestion validated successfully');
         
         // Cache the result
         await this.cacheSuggestion(userId, validated);
         
         return validated;
       } catch (aiError) {
-        logger.warn('AI suggestion failed, falling back to rule-based:', aiError);
+ logger.warn('AI suggestion failed, falling back to rule-based:', aiError);
         const fallback = this.getRuleBasedSuggestion(recentWorkouts);
         const validatedFallback = validateWorkoutSuggestionAdvanced(
           fallback,
@@ -131,7 +131,7 @@ class WorkoutSuggestionService {
         return validatedFallback;
       }
     } catch (error) {
-      logger.error('Failed to get workout suggestion:', error);
+ logger.error('Failed to get workout suggestion:', error);
       return this.getDefaultSuggestion([]);
     }
   }
@@ -155,7 +155,7 @@ class WorkoutSuggestionService {
       
       return parsed.suggestion;
     } catch (error) {
-      logger.error('Error reading cache:', error);
+ logger.error('Error reading cache:', error);
       return null;
     }
   }
@@ -172,7 +172,7 @@ class WorkoutSuggestionService {
       };
       await AsyncStorage.setItem(SUGGESTION_CACHE_KEY, JSON.stringify(cacheData));
     } catch (error) {
-      logger.error('Error caching suggestion:', error);
+ logger.error('Error caching suggestion:', error);
     }
   }
 
@@ -223,7 +223,7 @@ class WorkoutSuggestionService {
       // Get AI suggestion with detailed error logging
       const prompt = `${userContext}\n\n${equipmentContext}\n\n${injuryContext}\n\n${WORKOUT_SUGGESTION_PROMPT}`;
       
-      logger.log('�x� Calling AI service for workout suggestion...');
+ logger.log('x Calling AI service for workout suggestion...');
       
       const response = await aiService.askWithContext(
         FITNESS_COACH_SYSTEM_PROMPT,
@@ -235,11 +235,11 @@ class WorkoutSuggestionService {
         }
       );
 
-      logger.log('�S& AI service responded successfully');
+ logger.log('S& AI service responded successfully');
       return this.parseAISuggestion(response);
 
     } catch (error: any) {
-      logger.error('�R AI service failed:', {
+ logger.error('R AI service failed:', {
         message: error.message,
         status: error.status,
         details: error.details || error,
@@ -251,7 +251,7 @@ class WorkoutSuggestionService {
       }
       
       // For other errors, fall back to rule-based
-      logger.log('�a���� Falling back to rule-based suggestion');
+ logger.log('a Falling back to rule-based suggestion');
       throw new Error('AI service unavailable, using fallback');
     }
   }
@@ -436,8 +436,8 @@ class WorkoutSuggestionService {
       // Fallback: parse text response (legacy format)
       return this.parseTextResponse(response);
     } catch (error) {
-      logger.error('Failed to parse AI suggestion:', error);
-      logger.error('Response was:', response);
+ logger.error('Failed to parse AI suggestion:', error);
+ logger.error('Response was:', response);
       return this.getDefaultSuggestion([]);
     }
   }
@@ -539,7 +539,7 @@ class WorkoutSuggestionService {
       // 1. Bench Press - 4 x 6-8
       // - Squats - 3 x 8-10
       // • Deadlifts: 4 sets of 6-8 reps
-      const match = line.match(/[-•*\d.]\s*(.+?)[-:�]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-�~]\d+|\d+)/i);
+      const match = line.match(/[-•*\d.]\s*(.+?)[-:�]\s*(\d+)\s*(?:sets?\s*)?(?:x|×|of)\s*(\d+[-~]\d+|\d+)/i);
       
       if (match && exercises.length < 5) {
         exercises.push({
@@ -588,7 +588,7 @@ class WorkoutSuggestionService {
       .order('created_at', { ascending: false });
     
     if (error) {
-      logger.error('Error fetching workouts:', error);
+ logger.error('Error fetching workouts:', error);
       return [];
     }
     
@@ -607,7 +607,7 @@ class WorkoutSuggestionService {
       .limit(20);
     
     if (error) {
-      logger.error('Error fetching PRs:', error);
+ logger.error('Error fetching PRs:', error);
       return [];
     }
     
@@ -625,7 +625,7 @@ class WorkoutSuggestionService {
       .single();
     
     if (error) {
-      logger.error('Error fetching profile:', error);
+ logger.error('Error fetching profile:', error);
       return {};
     }
     
@@ -634,4 +634,4 @@ class WorkoutSuggestionService {
 }
 
 export const workoutSuggestionService = new WorkoutSuggestionService();
-
+

@@ -74,7 +74,7 @@ async function updateUrls() {
       'scripts/failed-url-updates.json',
       JSON.stringify(failedUpdates, null, 2)
     );
-    console.log('�  Failed updates saved to: scripts/failed-url-updates.json\n');
+    console.log('  Failed updates saved to: scripts/failed-url-updates.json\n');
   }
 
   // Verify
@@ -89,4 +89,4 @@ async function updateUrls() {
 }
 
 updateUrls();
-
+
