@@ -25,11 +25,10 @@ interface SettingsState {
   showPreviousWorkout: boolean;
   autoFillSets: boolean;
 
-  // Plate Calculator
+  // Plate Calculator (kept for backward compatibility with PlateCalculator component)
   barbellWeight: number;
   defaultPlates: string; // 'standard' or 'custom'
   availablePlates: number[];
-  showPlateCalculator: boolean;
 
   // PRs
   prCelebrations: boolean;
@@ -93,7 +92,6 @@ interface SettingsState {
   setBarbellWeight: (weight: number) => void;
   setDefaultPlates: (plates: string) => void;
   setAvailablePlates: (plates: number[]) => void;
-  setShowPlateCalculator: (enabled: boolean) => void;
   setPrCelebrations: (enabled: boolean) => void;
   setPrSound: (enabled: boolean) => void;
   setPrConfetti: (enabled: boolean) => void;
@@ -118,7 +116,7 @@ interface SettingsState {
   syncToProfile: (userId: string) => Promise<void>;
 }
 
-const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setShowPlateCalculator' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated'> = {
+const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'setAutoStartTimer' | 'setSoundEnabled' | 'setHapticEnabled' | 'setShowPreviousWorkout' | 'setAutoFillSets' | 'setBarbellWeight' | 'setDefaultPlates' | 'setAvailablePlates' | 'setPrCelebrations' | 'setPrSound' | 'setPrConfetti' | 'setNotificationsEnabled' | 'setWorkoutReminders' | 'setReminderDays' | 'setReminderTime' | 'setStreakReminders' | 'setWeeklySummary' | 'setPrNotifications' | 'setMilestoneAlerts' | 'setQuietHoursEnabled' | 'setQuietHoursStart' | 'setQuietHoursEnd' | 'setWeightUnit' | 'setMeasurementUnit' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated'> = {
   // Units
   unitSystem: 'imperial',
   weightUnit: 'lbs',
@@ -135,11 +133,10 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   showPreviousWorkout: true,
   autoFillSets: true,
 
-  // Plate Calculator
+  // Plate Calculator (kept for backward compatibility)
   barbellWeight: 45,
   defaultPlates: 'standard',
   availablePlates: [45, 35, 25, 10, 5, 2.5],
-  showPlateCalculator: true,
 
   // PRs
   prCelebrations: true,
@@ -271,11 +268,6 @@ export const useSettingsStore = create<SettingsState>()(
 
       setAvailablePlates: (plates) => {
         set({ availablePlates: plates });
-        debounceSyncToProfile();
-      },
-
-      setShowPlateCalculator: (enabled) => {
-        set({ showPlateCalculator: enabled });
         debounceSyncToProfile();
       },
 
@@ -465,7 +457,9 @@ export const useSettingsStore = create<SettingsState>()(
         console.log('[Settings] Hydration finished, current state:', {
           unitSystem: state?.unitSystem,
           weightUnit: state?.weightUnit,
-          theme: state?.theme
+          theme: state?.theme,
+          hapticEnabled: state?.hapticEnabled,
+          autoStartTimer: state?.autoStartTimer,
         });
       },
     }

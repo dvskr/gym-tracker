@@ -90,6 +90,17 @@ export default function ActiveWorkoutScreen() {
   // which happened after endWorkout/discardWorkout, immediately restarting the workout.
   // Workouts should only be started explicitly via buttons/templates.
 
+  // Redirect if no active workout
+  useEffect(() => {
+    if (!activeWorkout && !isWorkoutActive) {
+      // No active workout, redirect back to workout tab
+      const timer = setTimeout(() => {
+        router.replace('/(tabs)/workout');
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [activeWorkout, isWorkoutActive]);
+
   // Elapsed time counter
   useEffect(() => {
     const interval = setInterval(() => {
@@ -336,7 +347,7 @@ export default function ActiveWorkoutScreen() {
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" />
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Starting workout...</Text>
+          <Text style={styles.loadingText}>Redirecting...</Text>
         </View>
       </SafeAreaView>
     );

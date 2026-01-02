@@ -9,6 +9,7 @@ class RestTimerNotificationService {
 
   /**
    * Schedule a rest timer completion notification
+   * (Deprecated - now only using haptics, kept for compatibility)
    * @param seconds - Duration in seconds until rest is complete
    * @param nextExercise - Optional name of next exercise
    */
@@ -16,32 +17,8 @@ class RestTimerNotificationService {
     // Cancel any existing rest notification
     await this.cancelRestNotification();
     
-    const body = nextExercise 
-      ? `Time for ${nextExercise}!` 
-      : 'Time for your next set!';
-
-    try {
-      // Schedule notification (shows when app is backgrounded) - no sound
-      this.currentNotificationId = await notificationService.scheduleNotification(
-        'Rest Complete! 💪',
-        body,
-        {
-          seconds,
-        } as any,
-        {
-          channelId: 'rest-timer',
-          data: { 
-            type: 'rest_complete',
-            nextExercise,
-          },
-          sound: false, // No sound - vibration only
-        }
-      );
-
-      console.log(`✅ Scheduled rest timer notification for ${seconds}s (vibration only)`);
-    } catch (error) {
-      console.error('Failed to schedule rest notification:', error);
-    }
+    // No longer scheduling notifications - using haptics only
+    console.log(`✅ Rest timer set for ${seconds}s (haptics only, no notification)`);
   }
 
   /**

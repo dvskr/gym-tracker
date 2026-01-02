@@ -20,7 +20,6 @@ import {
   Volume2,
   Vibrate,
   Eye,
-  Calculator,
   Bell,
   Target,
   Trophy,
@@ -116,10 +115,20 @@ export default function ProfileScreen() {
     () => useSettingsStore.getState().restTimerDefault,
     () => useSettingsStore.getState().restTimerDefault
   );
-  const defaultPlates = useSyncExternalStore(
+  const hapticEnabled = useSyncExternalStore(
     useSettingsStore.subscribe,
-    () => useSettingsStore.getState().defaultPlates,
-    () => useSettingsStore.getState().defaultPlates
+    () => useSettingsStore.getState().hapticEnabled,
+    () => useSettingsStore.getState().hapticEnabled
+  );
+  const showPreviousWorkout = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().showPreviousWorkout,
+    () => useSettingsStore.getState().showPreviousWorkout
+  );
+  const prCelebrations = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().prCelebrations,
+    () => useSettingsStore.getState().prCelebrations
   );
   
   
@@ -128,12 +137,9 @@ export default function ProfileScreen() {
   // Settings state (these would come from profile/settings store in real app)
   const [autoStartTimer, setAutoStartTimer] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [hapticEnabled, setHapticEnabled] = useState(true);
-  const [showPreviousWorkout, setShowPreviousWorkout] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [workoutReminders, setWorkoutReminders] = useState(true);
   const [streakReminders, setStreakReminders] = useState(true);
-  const [prCelebrations, setPrCelebrations] = useState(true);
   
   // #region agent log - Hypothesis D: Local state shadowing check
   React.useEffect(() => {
@@ -155,10 +161,6 @@ export default function ProfileScreen() {
   };
 
   const handleRestTimerSettings = () => {
-    router.push('/settings/workout');
-  };
-
-  const handlePlateCalculatorSettings = () => {
     router.push('/settings/workout');
   };
 
@@ -296,20 +298,14 @@ export default function ProfileScreen() {
             label="Haptic Feedback"
             toggle
             toggleValue={hapticEnabled}
-            onToggleChange={setHapticEnabled}
+            onToggleChange={useSettingsStore.getState().setHapticEnabled}
           />
           <SettingItem
             icon={<Eye size={24} color="#60a5fa" />}
             label="Show Previous Workout"
             toggle
             toggleValue={showPreviousWorkout}
-            onToggleChange={setShowPreviousWorkout}
-          />
-          <SettingItem
-            icon={<Calculator size={24} color="#60a5fa" />}
-            label="Plate Calculator Settings"
-            value={defaultPlates === 'standard' ? 'Standard' : 'Custom'}
-            onPress={handlePlateCalculatorSettings}
+            onToggleChange={useSettingsStore.getState().setShowPreviousWorkout}
           />
         </View>
 
@@ -333,7 +329,7 @@ export default function ProfileScreen() {
             label="PR Celebrations"
             toggle
             toggleValue={prCelebrations}
-            onToggleChange={setPrCelebrations}
+            onToggleChange={useSettingsStore.getState().setPrCelebrations}
           />
         </View>
 

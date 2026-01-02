@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { lightHaptic, successHaptic } from '@/lib/utils/haptics';
 import { useSettingsStore } from '@/stores/settingsStore';
 
 // ============================================
@@ -144,14 +144,14 @@ function SetRowComponent({
   // Handle previous tap
   const handlePreviousTap = useCallback(() => {
     if (hasPrevious) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      lightHaptic();
       onPreviousTap();
     }
   }, [hasPrevious, onPreviousTap]);
 
   // Handle complete
   const handleComplete = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    successHaptic();
     onComplete();
   }, [onComplete]);
 
@@ -412,15 +412,15 @@ function SetRowComponent({
 
       {/* PREVIOUS - Only show if setting is enabled */}
       {showPreviousWorkout && (
-        <Pressable
-          style={styles.previousColumn}
-          onPress={handlePreviousTap}
-          disabled={!hasPrevious}
-        >
-          <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
-            {previousText}
-          </Text>
-        </Pressable>
+      <Pressable
+        style={styles.previousColumn}
+        onPress={handlePreviousTap}
+        disabled={!hasPrevious}
+      >
+        <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
+          {previousText}
+        </Text>
+      </Pressable>
       )}
 
       {/* DYNAMIC INPUTS */}

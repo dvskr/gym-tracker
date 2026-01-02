@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Scale, Minus, Plus, Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { selectionHaptic, mediumHaptic, successHaptic } from '@/lib/utils/haptics';
 import { getTodayWeight, logWeight, getLatestWeight } from '@/lib/api/bodyWeight';
 import { useUnits } from '@/hooks/useUnits';
 
@@ -52,7 +52,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
 
   // Increment/decrement weight
   const adjustWeight = (delta: number) => {
-    Haptics.selectionAsync();
+    selectionHaptic();
     const current = parseFloat(weight) || 0;
     const newWeight = Math.max(0, current + delta);
     setWeight(newWeight.toFixed(1));
@@ -64,14 +64,14 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
     if (isNaN(weightNum) || weightNum <= 0) return;
 
     setIsSaving(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumHaptic();
 
     try {
       await logWeight(userId, weightNum);
       setTodayWeight(weightNum);
       setShowSuccess(true);
       
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      successHaptic();
       
       setTimeout(() => setShowSuccess(false), 2000);
       onWeightLogged?.();

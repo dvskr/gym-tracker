@@ -1,9 +1,10 @@
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 /**
  * Haptic feedback utilities
- * All functions are safe to call - they check platform and fail silently
+ * All functions are safe to call - they check platform, settings, and fail silently
  */
 
 /**
@@ -11,6 +12,9 @@ import { Platform } from 'react-native';
  */
 export function successHaptic() {
   if (Platform.OS === 'web') return;
+  
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
   
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -25,6 +29,9 @@ export function successHaptic() {
 export function warningHaptic() {
   if (Platform.OS === 'web') return;
   
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
+  
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
   } catch (error) {
@@ -37,6 +44,9 @@ export function warningHaptic() {
  */
 export function errorHaptic() {
   if (Platform.OS === 'web') return;
+  
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
   
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -51,6 +61,9 @@ export function errorHaptic() {
 export function lightHaptic() {
   if (Platform.OS === 'web') return;
   
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
+  
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   } catch (error) {
@@ -63,6 +76,9 @@ export function lightHaptic() {
  */
 export function mediumHaptic() {
   if (Platform.OS === 'web') return;
+  
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
   
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -77,6 +93,9 @@ export function mediumHaptic() {
 export function heavyHaptic() {
   if (Platform.OS === 'web') return;
   
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
+  
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
   } catch (error) {
@@ -89,6 +108,9 @@ export function heavyHaptic() {
  */
 export function selectionHaptic() {
   if (Platform.OS === 'web') return;
+  
+  const { hapticEnabled } = useSettingsStore.getState();
+  if (!hapticEnabled) return;
   
   try {
     Haptics.selectionAsync();

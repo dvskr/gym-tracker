@@ -9,7 +9,7 @@ import {
 import { TrendingUp, TrendingDown, Minus, ChevronRight } from 'lucide-react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { router } from 'expo-router';
-import * as Haptics from 'expo-haptics';
+import { lightHaptic } from '@/lib/utils/haptics';
 import { getWeightHistory } from '@/lib/api/bodyWeight';
 import { useUnits } from '@/hooks/useUnits';
 
@@ -74,7 +74,7 @@ export const WeightSparkline: React.FC<WeightSparklineProps> = ({
   }, [fetchWeights, refreshTrigger]);
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightHaptic();
     router.push('/body/weight-chart');
   };
 

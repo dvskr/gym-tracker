@@ -254,6 +254,19 @@ class ProgressiveOverloadService {
     exerciseId: string,
     exerciseName: string
   ): Promise<ExerciseHistory> {
+    // Validate exerciseId is a UUID (8-4-4-4-12 format)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(exerciseId)) {
+      console.log(`[ProgressiveOverload] Skipping invalid exercise ID: "${exerciseId}" for ${exerciseName}`);
+      return {
+        exerciseId,
+        exerciseName,
+        lastSets: [],
+        personalRecord: null,
+        recentSessions: 0,
+      };
+    }
+
     // Get last 30 days of sets for this exercise
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
