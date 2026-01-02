@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-01-02T16:57:52.551Z",
+  "localFolder": "C:\\Users\\daggu\\OneDrive\\Desktop\\Gym Workout Tracking App\\gym-tracker\\exercise-gifs",
+  "totalChecked": 23,
+  "foundCount": 0,
+  "missingCount": 23,
+  "found": [],
+  "missing": [
+    {
+      "externalId": "0056",
+      "filename": "0056.gif"
+    },
+    {
+      "externalId": "0107",
+      "filename": "0107.gif"
+    },
+    {
+      "externalId": "0154",
+      "filename": "0154.gif"
+    },
+    {
+      "externalId": "0175",
+      "filename": "0175.gif"
+    },
+    {
+      "externalId": "0443",
+      "filename": "0443.gif"
+    },
+    {
+      "externalId": "0471",
+      "filename": "0471.gif"
+    },
+    {
+      "externalId": "0544",
+      "filename": "0544.gif"
+    },
+    {
+      "externalId": "0570",
+      "filename": "0570.gif"
+    },
+    {
+      "externalId": "0577",
+      "filename": "0577.gif"
+    },
+    {
+      "externalId": "0583",
+      "filename": "0583.gif"
+    },
+    {
+      "externalId": "0593",
+      "filename": "0593.gif"
+    },
+    {
+      "externalId": "0596",
+      "filename": "0596.gif"
+    },
+    {
+      "externalId": "0601",
+      "filename": "0601.gif"
+    },
+    {
+      "externalId": "0602",
+      "filename": "0602.gif"
+    },
+    {
+      "externalId": "0603",
+      "filename": "0603.gif"
+    },
+    {
+      "externalId": "0631",
+      "filename": "0631.gif"
+    },
+    {
+      "externalId": "0668",
+      "filename": "0668.gif"
+    },
+    {
+      "externalId": "0697",
+      "filename": "0697.gif"
+    },
+    {
+      "externalId": "0803",
+      "filename": "0803.gif"
+    },
+    {
+      "externalId": "1349",
+      "filename": "1349.gif"
+    },
+    {
+      "externalId": "1350",
+      "filename": "1350.gif"
+    },
+    {
+      "externalId": "1495",
+      "filename": "1495.gif"
+    },
+    {
+      "externalId": "3236",
+      "filename": "3236.gif"
+    }
+  ]
+}

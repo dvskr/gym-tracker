@@ -1,0 +1,210 @@
+[
+  {
+    "id": "45fd4997-1cea-48d2-aab5-90e6ab24602c",
+    "name": "air bike",
+    "external_id": null,
+    "gif_url": null,
+    "equipment": "leverage machine",
+    "category": "cardio"
+  },
+  {
+    "id": "784203d7-39aa-49a6-9ecb-7dfb807556e5",
+    "name": "barbell lying close-grip triceps extension",
+    "external_id": "0056",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0056",
+    "equipment": "barbell",
+    "category": "upper arms"
+  },
+  {
+    "id": "b15e8c0a-e46d-4390-8473-680da25348fc",
+    "name": "barbell standing front raise over head",
+    "external_id": "0107",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0107",
+    "equipment": "barbell",
+    "category": "shoulders"
+  },
+  {
+    "id": "84328146-9983-4fe8-b6c9-55567fd53d28",
+    "name": "belt squat",
+    "external_id": null,
+    "gif_url": null,
+    "equipment": "leverage machine",
+    "category": "upper legs"
+  },
+  {
+    "id": "ed048afd-e7de-4b97-afb9-af64cd1703ad",
+    "name": "cable cross-over reverse fly",
+    "external_id": "0154",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0154",
+    "equipment": "cable",
+    "category": "shoulders"
+  },
+  {
+    "id": "a0846abc-cc96-44f1-8398-086766dc5236",
+    "name": "cable kneeling crunch",
+    "external_id": "0175",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0175",
+    "equipment": "cable",
+    "category": "waist"
+  },
+  {
+    "id": "b57ff319-a22d-47aa-b851-46eab7bb6df3",
+    "name": "chest press machine",
+    "external_id": "0577",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0577",
+    "equipment": "leverage machine",
+    "category": "chest"
+  },
+  {
+    "id": "5199d2cf-e5bb-4080-9919-5a97e66bf0c3",
+    "name": "elbow-to-knee",
+    "external_id": "0443",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0443",
+    "equipment": "body weight",
+    "category": "waist"
+  },
+  {
+    "id": "c187352d-a24f-434d-be1e-45840ef4ea0e",
+    "name": "handstand push-up",
+    "external_id": "0471",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0471",
+    "equipment": "body weight",
+    "category": "upper arms"
+  },
+  {
+    "id": "dd8da03a-ae4a-48b3-8200-a75d54818e3c",
+    "name": "kettlebell pistol squat",
+    "external_id": "0544",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0544",
+    "equipment": "kettlebell",
+    "category": "upper legs"
+  },
+  {
+    "id": "f661eaa7-9a80-466c-8a84-96b84674c846",
+    "name": "leg pull in flat bench",
+    "external_id": "0570",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0570",
+    "equipment": "body weight",
+    "category": "waist"
+  },
+  {
+    "id": "d214a875-97d4-454f-a05c-785766afaf48",
+    "name": "lever kneeling twist",
+    "external_id": "0583",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0583",
+    "equipment": "leverage machine",
+    "category": "waist"
+  },
+  {
+    "id": "b1f1ef30-ced6-4593-a5b9-18560c0a6932",
+    "name": "lever seated reverse fly (parallel grip)",
+    "external_id": "0601",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0601",
+    "equipment": "leverage machine",
+    "category": "shoulders"
+  },
+  {
+    "id": "d1ef1788-53f5-4588-9911-a5c1c3185cf7",
+    "name": "muscle up",
+    "external_id": "0631",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0631",
+    "equipment": "body weight",
+    "category": "back"
+  },
+  {
+    "id": "269bce14-4bc2-4174-9273-f327303d1bd3",
+    "name": "oblique crunch",
+    "external_id": "1495",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1495",
+    "equipment": "body weight",
+    "category": "waist"
+  },
+  {
+    "id": "81039cde-72d7-4d3e-a769-66bde1517a77",
+    "name": "pec deck machine",
+    "external_id": "0596",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0596",
+    "equipment": "leverage machine",
+    "category": "chest"
+  },
+  {
+    "id": "b3507db3-5ca4-4304-b8ab-2795e7192b45",
+    "name": "rear decline bridge",
+    "external_id": "0668",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0668",
+    "equipment": "body weight",
+    "category": "upper legs"
+  },
+  {
+    "id": "d3780f65-24bf-4155-8c17-421f7be05115",
+    "name": "resistance band hip thrusts on knees",
+    "external_id": "3236",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3236",
+    "equipment": "resistance band",
+    "category": "upper legs"
+  },
+  {
+    "id": "a90954ce-b4d3-479b-bcc3-3d6db3db080f",
+    "name": "reverse fly machine",
+    "external_id": "0602",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0602",
+    "equipment": "leverage machine",
+    "category": "shoulders"
+  },
+  {
+    "id": "cf2516d4-fa2b-4e81-a602-7faf787a1a66",
+    "name": "reverse hyperextension machine",
+    "external_id": "0593",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0593",
+    "equipment": "leverage machine",
+    "category": "waist"
+  },
+  {
+    "id": "a73f0c66-8638-4a12-a0cc-a653623765d8",
+    "name": "rowing machine",
+    "external_id": null,
+    "gif_url": null,
+    "equipment": "leverage machine",
+    "category": "cardio"
+  },
+  {
+    "id": "bbd45ce1-df7b-4cab-8242-0d375f298de7",
+    "name": "seated row machine",
+    "external_id": "1350",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1350",
+    "equipment": "leverage machine",
+    "category": "back"
+  },
+  {
+    "id": "7660dce3-d4ea-4964-a811-b4d27e706974",
+    "name": "self assisted inverse leg curl",
+    "external_id": "0697",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0697",
+    "equipment": "body weight",
+    "category": "upper legs"
+  },
+  {
+    "id": "ae958d76-ed0d-44fa-b345-401880ebcd3a",
+    "name": "shoulder press machine",
+    "external_id": "0603",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0603",
+    "equipment": "leverage machine",
+    "category": "shoulders"
+  },
+  {
+    "id": "551825b9-a0b6-4b23-8eba-3003f7a1dee2",
+    "name": "superman push-up",
+    "external_id": "0803",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0803",
+    "equipment": "body weight",
+    "category": "chest"
+  },
+  {
+    "id": "96aa6645-52f5-4e01-80b5-a7df71031119",
+    "name": "t-bar row machine",
+    "external_id": "1349",
+    "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1349",
+    "equipment": "leverage machine",
+    "category": "back"
+  }
+]

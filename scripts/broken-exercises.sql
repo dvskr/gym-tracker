@@ -1,0 +1,31 @@
+-- SQL to mark these as inactive (if no GIFs can be found)
+/*
+UPDATE exercises SET is_active = false WHERE id IN (
+  '45fd4997-1cea-48d2-aab5-90e6ab24602c',
+  '784203d7-39aa-49a6-9ecb-7dfb807556e5',
+  'b15e8c0a-e46d-4390-8473-680da25348fc',
+  '84328146-9983-4fe8-b6c9-55567fd53d28',
+  'ed048afd-e7de-4b97-afb9-af64cd1703ad',
+  'a0846abc-cc96-44f1-8398-086766dc5236',
+  'b57ff319-a22d-47aa-b851-46eab7bb6df3',
+  '5199d2cf-e5bb-4080-9919-5a97e66bf0c3',
+  'c187352d-a24f-434d-be1e-45840ef4ea0e',
+  'dd8da03a-ae4a-48b3-8200-a75d54818e3c',
+  'f661eaa7-9a80-466c-8a84-96b84674c846',
+  'd214a875-97d4-454f-a05c-785766afaf48',
+  'b1f1ef30-ced6-4593-a5b9-18560c0a6932',
+  'd1ef1788-53f5-4588-9911-a5c1c3185cf7',
+  '269bce14-4bc2-4174-9273-f327303d1bd3',
+  '81039cde-72d7-4d3e-a769-66bde1517a77',
+  'b3507db3-5ca4-4304-b8ab-2795e7192b45',
+  'd3780f65-24bf-4155-8c17-421f7be05115',
+  'a90954ce-b4d3-479b-bcc3-3d6db3db080f',
+  'cf2516d4-fa2b-4e81-a602-7faf787a1a66',
+  'a73f0c66-8638-4a12-a0cc-a653623765d8',
+  'bbd45ce1-df7b-4cab-8242-0d375f298de7',
+  '7660dce3-d4ea-4964-a811-b4d27e706974',
+  'ae958d76-ed0d-44fa-b345-401880ebcd3a',
+  '551825b9-a0b6-4b23-8eba-3003f7a1dee2',
+  '96aa6645-52f5-4e01-80b5-a7df71031119'
+);
+*/

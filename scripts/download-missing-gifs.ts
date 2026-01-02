@@ -1,377 +1,266 @@
 import { createClient } from '@supabase/supabase-js';
-import * as fs from 'fs';
-import * as path from 'path';
-import fetch from 'node-fetch';
-import { execSync } from 'child_process';
+import * as https from 'https';
+import * as http from 'http';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
-dotenv.config();
-
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const GIF_DIR = path.join(process.cwd(), 'exercise-gifs');
-const GIF_1080P_DIR = path.join(process.cwd(), 'exercise-gifs-1080p');
-const DOWNLOAD_DELAY_MS = 300;
-const MAX_RETRIES = 3;
-const CONCURRENT_DOWNLOADS = 5;
+dotenv.config({ path: '.env' });
 
 // ============================================
-// GIF QUALITY SETTINGS
+// CONFIGURATION (using YOUR variable names)
 // ============================================
-const TARGET_RESOLUTION = 1080;       // 1080p MANDATORY
-const MIN_FILE_SIZE = 100 * 1024;     // 100KB minimum
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB maximum
+const EXERCISEDB_API_KEY = process.env.EXPO_PUBLIC_EXERCISEDB_API_KEY!;
+const RAPIDAPI_HOST = 'exercisedb.p.rapidapi.com';
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_SERVICE_KEY = process.env.EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!;
+
+const GIF_BUCKET = 'exercise-gifs';
+
+// ============================================
+// VALIDATION
+// ============================================
+console.log('🔍 Checking environment variables...');
+
+if (!EXERCISEDB_API_KEY) {
+  console.error('❌ Missing EXPO_PUBLIC_EXERCISEDB_API_KEY');
+  process.exit(1);
+}
+console.log('✅ EXPO_PUBLIC_EXERCISEDB_API_KEY found');
+
+if (!SUPABASE_URL) {
+  console.error('❌ Missing EXPO_PUBLIC_SUPABASE_URL');
+  process.exit(1);
+}
+console.log('✅ EXPO_PUBLIC_SUPABASE_URL found');
+
+if (!SUPABASE_SERVICE_KEY) {
+  console.error('❌ Missing EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY');
+  process.exit(1);
+}
+console.log('✅ EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY found');
+console.log('');
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+// ============================================
+// 23 EXERCISES TO DOWNLOAD
+// UUIDs filled in from database query
+// ============================================
+const exercisesToDownload = [
+  { uuid: '784203d7-39aa-49a6-9ecb-7dfb807556e5', externalId: '0056', name: 'barbell lying close-grip triceps extension' },
+  { uuid: 'b15e8c0a-e46d-4390-8473-680da25348fc', externalId: '0107', name: 'barbell standing front raise over head' },
+  { uuid: 'ed048afd-e7de-4b97-afb9-af64cd1703ad', externalId: '0154', name: 'cable cross-over reverse fly' },
+  { uuid: 'a0846abc-cc96-44f1-8398-086766dc5236', externalId: '0175', name: 'cable kneeling crunch' },
+  { uuid: '5199d2cf-e5bb-4080-9919-5a97e66bf0c3', externalId: '0443', name: 'elbow-to-knee' },
+  { uuid: 'c187352d-a24f-434d-be1e-45840ef4ea0e', externalId: '0471', name: 'handstand push-up' },
+  { uuid: 'dd8da03a-ae4a-48b3-8200-a75d54818e3c', externalId: '0544', name: 'kettlebell pistol squat' },
+  { uuid: 'f661eaa7-9a80-466c-8a84-96b84674c846', externalId: '0570', name: 'leg pull in flat bench' },
+  { uuid: 'b57ff319-a22d-47aa-b851-46eab7bb6df3', externalId: '0577', name: 'chest press machine' },
+  { uuid: 'd214a875-97d4-454f-a05c-785766afaf48', externalId: '0583', name: 'lever kneeling twist' },
+  { uuid: 'cf2516d4-fa2b-4e81-a602-7faf787a1a66', externalId: '0593', name: 'reverse hyperextension machine' },
+  { uuid: '81039cde-72d7-4d3e-a769-66bde1517a77', externalId: '0596', name: 'pec deck machine' },
+  { uuid: 'b1f1ef30-ced6-4593-a5b9-18560c0a6932', externalId: '0601', name: 'lever seated reverse fly (parallel grip)' },
+  { uuid: 'a90954ce-b4d3-479b-bcc3-3d6db3db080f', externalId: '0602', name: 'reverse fly machine' },
+  { uuid: 'ae958d76-ed0d-44fa-b345-401880ebcd3a', externalId: '0603', name: 'shoulder press machine' },
+  { uuid: 'd1ef1788-53f5-4588-9911-a5c1c3185cf7', externalId: '0631', name: 'muscle up' },
+  { uuid: 'b3507db3-5ca4-4304-b8ab-2795e7192b45', externalId: '0668', name: 'rear decline bridge' },
+  { uuid: '7660dce3-d4ea-4964-a811-b4d27e706974', externalId: '0697', name: 'self assisted inverse leg curl' },
+  { uuid: '551825b9-a0b6-4b23-8eba-3003f7a1dee2', externalId: '0803', name: 'superman push-up' },
+  { uuid: '96aa6645-52f5-4e01-80b5-a7df71031119', externalId: '1349', name: 't-bar row machine' },
+  { uuid: 'bbd45ce1-df7b-4cab-8242-0d375f298de7', externalId: '1350', name: 'seated row machine' },
+  { uuid: '269bce14-4bc2-4174-9273-f327303d1bd3', externalId: '1495', name: 'oblique crunch' },
+  { uuid: 'd3780f65-24bf-4155-8c17-421f7be05115', externalId: '3236', name: 'resistance band hip thrusts on knees' },
+];
+
+// ============================================
+// HELPER FUNCTIONS
 // ============================================
 
-// Priority order for equipment (most common gym equipment first)
-const EQUIPMENT_PRIORITY: Record<string, number> = {
-  'barbell': 1,
-  'dumbbell': 2,
-  'body weight': 3,
-  'cable': 4,
-  'smith machine': 5,
-  'sled machine': 6,
-  'leverage machine': 7,
-  'machine': 8,
-  'kettlebell': 9,
-  'ez barbell': 10,
-  'resistance band': 11,
-  'band': 12,
-  'stability ball': 13,
-  'medicine ball': 14,
-};
+async function downloadGifFromExerciseDB(externalId: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    // Use the image endpoint directly
+    const options = {
+      method: 'GET',
+      hostname: RAPIDAPI_HOST,
+      path: `/image?exerciseId=${externalId}&resolution=1080`,
+      headers: {
+        'X-RapidAPI-Key': EXERCISEDB_API_KEY,
+        'X-RapidAPI-Host': RAPIDAPI_HOST,
+      },
+    };
 
-interface Exercise {
-  id: string;
-  name: string;
-  equipment: string;
-  category: string;
-  gif_url: string | null;
-}
-
-interface DownloadResult {
-  success: Exercise[];
-  failed: Exercise[];
-  skipped: Exercise[];
-}
-
-// Ensure directories exist
-[GIF_DIR, GIF_1080P_DIR].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
-
-async function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
- * Get GIF dimensions using ffprobe
- */
-function getGifInfo(filepath: string): { width: number; height: number } | null {
-  try {
-    const result = execSync(
-      `ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "${filepath}"`,
-      { encoding: 'utf-8' }
-    ).trim();
-    
-    const [width, height] = result.split(',').map(Number);
-    return { width, height };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Upscale GIF to 1080p using ffmpeg with HIGHEST quality settings
- * Uses lanczos scaling for best quality upscale
- */
-function upscaleGifTo1080p(inputPath: string, outputPath: string): boolean {
-  try {
-    console.log(`   ↳ Upscaling to ${TARGET_RESOLUTION}x${TARGET_RESOLUTION}p...`);
-    
-    // HIGHEST QUALITY upscale command:
-    // - lanczos: best scaling algorithm
-    // - palettegen/paletteuse: preserve GIF colors
-    // - max_colors=256: full color palette
-    const cmd = `ffmpeg -y -i "${inputPath}" -vf "scale=${TARGET_RESOLUTION}:${TARGET_RESOLUTION}:force_original_aspect_ratio=decrease:flags=lanczos,pad=${TARGET_RESOLUTION}:${TARGET_RESOLUTION}:(ow-iw)/2:(oh-ih)/2:white,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=single[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5" "${outputPath}" 2>/dev/null`;
-    
-    execSync(cmd, { stdio: 'pipe', timeout: 120000 }); // 2 minute timeout
-    return true;
-  } catch (error) {
-    console.error(`   ↳ Upscale failed: ${error}`);
-    return false;
-  }
-}
-
-/**
- * Verify GIF is 1080p
- */
-function verify1080p(filepath: string): boolean {
-  const info = getGifInfo(filepath);
-  if (!info) return false;
-  
-  return info.width === TARGET_RESOLUTION || info.height === TARGET_RESOLUTION;
-}
-
-/**
- * Download a single GIF with retry logic
- */
-async function downloadGif(
-  exercise: Exercise,
-  shouldUpscale: boolean,
-  retries = 0
-): Promise<boolean> {
-  if (!exercise.gif_url) {
-    console.log(`⚠️  ${exercise.name}: No GIF URL`);
-    return false;
-  }
-
-  const gifPath = path.join(GIF_DIR, `${exercise.id}.gif`);
-  const gif1080pPath = path.join(GIF_1080P_DIR, `${exercise.id}.gif`);
-
-  try {
-    console.log(`\n📥 Downloading: ${exercise.name}`);
-    console.log(`   Equipment: ${exercise.equipment}`);
-    console.log(`   URL: ${exercise.gif_url}`);
-
-    const response = await fetch(exercise.gif_url);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const buffer = await response.buffer();
-    const fileSize = buffer.length;
-
-    // Validate file size
-    if (fileSize < MIN_FILE_SIZE) {
-      throw new Error(`File too small: ${(fileSize / 1024).toFixed(2)}KB`);
-    }
-
-    if (fileSize > MAX_FILE_SIZE) {
-      throw new Error(`File too large: ${(fileSize / 1024 / 1024).toFixed(2)}MB`);
-    }
-
-    // Save original GIF
-    fs.writeFileSync(gifPath, buffer);
-    console.log(`   ✅ Downloaded: ${(fileSize / 1024).toFixed(2)}KB`);
-
-    // Upscale if requested
-    if (shouldUpscale) {
-      const info = getGifInfo(gifPath);
-      if (info) {
-        console.log(`   📐 Original: ${info.width}x${info.height}`);
-        
-        if (info.width < TARGET_RESOLUTION && info.height < TARGET_RESOLUTION) {
-          const upscaled = upscaleGifTo1080p(gifPath, gif1080pPath);
-          
-          if (upscaled && verify1080p(gif1080pPath)) {
-            const upscaledSize = fs.statSync(gif1080pPath).size;
-            console.log(`   ✅ Upscaled: ${TARGET_RESOLUTION}x${TARGET_RESOLUTION} (${(upscaledSize / 1024).toFixed(2)}KB)`);
-          } else {
-            console.log(`   ⚠️  Upscale failed, keeping original`);
-          }
-        } else {
-          console.log(`   ℹ️  Already high resolution, no upscale needed`);
-          // Copy to 1080p folder
-          fs.copyFileSync(gifPath, gif1080pPath);
+    const req = https.request(options, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        const redirectUrl = res.headers.location;
+        if (redirectUrl) {
+          downloadFile(redirectUrl).then(resolve).catch(reject);
+          return;
         }
       }
-    }
 
-    return true;
-  } catch (error: any) {
-    console.error(`   ❌ Error: ${error.message}`);
-
-    // Retry logic
-    if (retries < MAX_RETRIES) {
-      console.log(`   🔄 Retry ${retries + 1}/${MAX_RETRIES}...`);
-      await sleep(DOWNLOAD_DELAY_MS * (retries + 1));
-      return downloadGif(exercise, shouldUpscale, retries + 1);
-    }
-
-    return false;
-  }
-}
-
-/**
- * Download exercises in batches
- */
-async function downloadBatch(
-  exercises: Exercise[],
-  shouldUpscale: boolean
-): Promise<DownloadResult> {
-  const result: DownloadResult = {
-    success: [],
-    failed: [],
-    skipped: [],
-  };
-
-  for (let i = 0; i < exercises.length; i += CONCURRENT_DOWNLOADS) {
-    const batch = exercises.slice(i, i + CONCURRENT_DOWNLOADS);
-    
-    const promises = batch.map(async (exercise) => {
-      const gifPath = path.join(GIF_DIR, `${exercise.id}.gif`);
-      
-      // Skip if already exists
-      if (fs.existsSync(gifPath)) {
-        console.log(`⏭️  Skipping: ${exercise.name} (already exists)`);
-        result.skipped.push(exercise);
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
         return;
       }
 
-      const success = await downloadGif(exercise, shouldUpscale);
-      
-      if (success) {
-        result.success.push(exercise);
-      } else {
-        result.failed.push(exercise);
-      }
-
-      // Rate limiting
-      await sleep(DOWNLOAD_DELAY_MS);
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk) => chunks.push(chunk));
+      res.on('end', () => resolve(Buffer.concat(chunks)));
+      res.on('error', reject);
     });
 
-    await Promise.all(promises);
-  }
-
-  return result;
+    req.on('error', reject);
+    req.setTimeout(60000, () => {
+      req.destroy();
+      reject(new Error('Timeout'));
+    });
+    req.end();
+  });
 }
 
-async function main() {
-  console.log('🔍 Finding active exercises missing GIFs...\n');
+async function downloadFile(url: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const protocol = url.startsWith('https') ? https : http;
 
-  const args = process.argv.slice(2);
-  const shouldUpscale = !args.includes('--no-upscale');
-  const isPriority = args.includes('--priority');
-  const equipmentFilter = args.find(arg => arg.startsWith('--equipment'))?.split('=')[1];
+    const request = protocol.get(url, (response) => {
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        const redirectUrl = response.headers.location;
+        if (redirectUrl) {
+          downloadFile(redirectUrl).then(resolve).catch(reject);
+          return;
+        }
+      }
 
-  // Get list of downloaded GIF filenames
-  const downloadedGifs = new Set<string>();
-  if (fs.existsSync(GIF_DIR)) {
-    fs.readdirSync(GIF_DIR)
-      .filter(f => f.endsWith('.gif'))
-      .forEach(f => {
-        const id = f.replace('.gif', '');
-        downloadedGifs.add(id);
-      });
-  }
+      if (response.statusCode !== 200) {
+        reject(new Error(`HTTP ${response.statusCode}`));
+        return;
+      }
 
-  console.log(`📁 Found ${downloadedGifs.size} downloaded GIFs\n`);
+      const chunks: Buffer[] = [];
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () => resolve(Buffer.concat(chunks)));
+      response.on('error', reject);
+    });
 
-  // Fetch all active exercises
-  const { data: exercises, error } = await supabase
-    .from('exercises')
-    .select('id, name, equipment, category, gif_url')
-    .eq('is_active', true)
-    .not('gif_url', 'is', null)
-    .order('equipment', { ascending: true });
+    request.on('error', reject);
+    request.setTimeout(60000, () => {
+      request.destroy();
+      reject(new Error('Download timeout'));
+    });
+  });
+}
+
+async function uploadToSupabase(filename: string, buffer: Buffer): Promise<boolean> {
+  const { error } = await supabase.storage
+    .from(GIF_BUCKET)
+    .upload(filename, buffer, {
+      contentType: 'image/gif',
+      upsert: true,
+    });
 
   if (error) {
-    throw new Error(`Failed to fetch exercises: ${error.message}`);
+    console.error(`    ❌ Upload error: ${error.message}`);
+    return false;
+  }
+  return true;
+}
+
+async function updateDatabase(exerciseUuid: string, filename: string): Promise<boolean> {
+  const gifUrl = `${SUPABASE_URL}/storage/v1/object/public/${GIF_BUCKET}/${filename}`;
+
+  const { error } = await supabase
+    .from('exercises')
+    .update({ gif_url: gifUrl })
+    .eq('id', exerciseUuid);
+
+  if (error) {
+    console.error(`    ❌ DB error: ${error.message}`);
+    return false;
+  }
+  return true;
+}
+
+// ============================================
+// MAIN
+// ============================================
+
+async function main() {
+  console.log('🔽 DOWNLOAD MISSING GIFS FROM EXERCISEDB');
+  console.log('═'.repeat(50));
+  console.log(`📋 Exercises to download: ${exercisesToDownload.length}`);
+  console.log('');
+
+  // Check if UUIDs are filled in
+  const missingUuids = exercisesToDownload.filter((e) => !e.uuid);
+  if (missingUuids.length > 0) {
+    console.error('❌ Missing UUIDs in exercisesToDownload array!');
+    console.error('');
+    console.error('Run this SQL and add the UUIDs to the script:');
+    console.error('');
+    console.error(`SELECT id, name, external_id FROM exercises`);
+    console.error(`WHERE external_id IN ('0056', '0107', '0154', ...)`);
+    console.error('');
+    console.error('Then update the uuid field for each exercise in the script.');
+    process.exit(1);
   }
 
-  // Filter exercises missing GIFs
-  let missingGifs = (exercises || []).filter(ex => !downloadedGifs.has(ex.id));
+  let success = 0;
+  let failed = 0;
+  const failures: string[] = [];
 
-  // Apply equipment filter if specified
-  if (equipmentFilter) {
-    const filterLower = equipmentFilter.toLowerCase();
-    missingGifs = missingGifs.filter(ex => 
-      ex.equipment?.toLowerCase().includes(filterLower)
-    );
-    console.log(`🎯 Filtering by equipment: "${equipmentFilter}"`);
-  }
+  for (let i = 0; i < exercisesToDownload.length; i++) {
+    const exercise = exercisesToDownload[i];
+    const progress = `[${String(i + 1).padStart(2)}/${exercisesToDownload.length}]`;
 
-  // Sort by priority if requested
-  if (isPriority) {
-    missingGifs.sort((a, b) => {
-      const aPriority = EQUIPMENT_PRIORITY[a.equipment?.toLowerCase()] || 999;
-      const bPriority = EQUIPMENT_PRIORITY[b.equipment?.toLowerCase()] || 999;
-      return aPriority - bPriority;
-    });
-    console.log(`📊 Sorting by equipment priority\n`);
+    console.log(`${progress} ${exercise.name}`);
+    console.log(`    External ID: ${exercise.externalId}`);
+
+    try {
+      // Step 1: Download GIF directly from ExerciseDB image endpoint
+      console.log('    📡 Downloading from ExerciseDB...');
+      const gifBuffer = await downloadGifFromExerciseDB(exercise.externalId);
+      const sizeMB = (gifBuffer.length / 1024 / 1024).toFixed(2);
+      console.log(`    📦 Size: ${sizeMB} MB`);
+
+      // Step 2: Upload to Supabase with UUID filename
+      const filename = `${exercise.uuid}.gif`;
+      console.log(`    ☁️  Uploading: ${filename}`);
+      const uploaded = await uploadToSupabase(filename, gifBuffer);
+      if (!uploaded) throw new Error('Upload failed');
+
+      // Step 3: Update database gif_url
+      console.log('    💾 Updating database...');
+      const updated = await updateDatabase(exercise.uuid, filename);
+      if (!updated) throw new Error('DB update failed');
+
+      console.log('    ✅ SUCCESS\n');
+      success++;
+
+      // Rate limit: wait between requests
+      await new Promise((r) => setTimeout(r, 1000));
+    } catch (error: any) {
+      console.log(`    ❌ FAILED: ${error.message}\n`);
+      failed++;
+      failures.push(`${exercise.name}: ${error.message}`);
+    }
   }
 
   // Summary
-  console.log('=' .repeat(60));
-  console.log('DOWNLOAD SUMMARY');
-  console.log('='.repeat(60));
-  console.log(`Total Active Exercises: ${exercises?.length || 0}`);
-  console.log(`Already Downloaded: ${downloadedGifs.size}`);
-  console.log(`Missing GIFs: ${missingGifs.length}`);
-  console.log(`Upscaling: ${shouldUpscale ? 'ENABLED' : 'DISABLED'}`);
-  console.log(`Equipment Filter: ${equipmentFilter || 'None'}`);
-  console.log('='.repeat(60));
+  console.log('═'.repeat(50));
+  console.log('📊 RESULTS');
+  console.log('═'.repeat(50));
+  console.log(`✅ Success: ${success}`);
+  console.log(`❌ Failed: ${failed}`);
 
-  if (missingGifs.length === 0) {
-    console.log('\n✅ All GIFs already downloaded!');
-    return;
+  if (failures.length > 0) {
+    console.log('\n❌ Failed exercises:');
+    failures.forEach((f) => console.log(`   - ${f}`));
   }
 
-  // Group by equipment for display
-  const byEquipment: Record<string, Exercise[]> = {};
-  missingGifs.forEach(ex => {
-    const eq = ex.equipment || 'unknown';
-    if (!byEquipment[eq]) byEquipment[eq] = [];
-    byEquipment[eq].push(ex);
-  });
-
-  console.log(`\n📦 Missing by Equipment:`);
-  Object.entries(byEquipment)
-    .sort((a, b) => b[1].length - a[1].length)
-    .slice(0, 10)
-    .forEach(([eq, exs]) => {
-      const withUrl = exs.filter(e => e.gif_url).length;
-      console.log(`   ${eq}: ${exs.length} (${withUrl} have URLs)`);
-    });
-
-  console.log(`\n🚀 Starting download of ${missingGifs.length} exercises...\n`);
-
-  const result = await downloadBatch(missingGifs, shouldUpscale);
-
-  // Final Summary
-  console.log('\n' + '='.repeat(60));
-  console.log('DOWNLOAD COMPLETE');
-  console.log('='.repeat(60));
-  console.log(`✅ Success: ${result.success.length}`);
-  console.log(`⏭️  Skipped: ${result.skipped.length}`);
-  console.log(`❌ Failed: ${result.failed.length}`);
-  console.log('='.repeat(60));
-
-  if (result.failed.length > 0) {
-    console.log(`\n⚠️  Failed Exercises:`);
-    result.failed.forEach(ex => {
-      console.log(`   - ${ex.name} (${ex.equipment})`);
-    });
-  }
-
-  // Save failed list for retry
-  if (result.failed.length > 0) {
-    const outputDir = path.join(process.cwd(), 'scripts', 'output');
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
-    }
-    
-    const failedPath = path.join(outputDir, 'failed-downloads.json');
-    fs.writeFileSync(failedPath, JSON.stringify(result.failed, null, 2));
-    console.log(`\n📄 Failed downloads saved to: ${failedPath}`);
-  }
-
-  console.log(`\n✅ Done!`);
-  
-  if (shouldUpscale) {
-    console.log(`\n📁 Original GIFs: ${GIF_DIR}`);
-    console.log(`📁 1080p GIFs: ${GIF_1080P_DIR}`);
-  } else {
-    console.log(`\n📁 GIFs saved to: ${GIF_DIR}`);
-  }
+  console.log('\n🎉 Done!');
+  console.log('\n📌 Next step: Generate thumbnails');
+  console.log('   npm run thumbnails:generate');
 }
 
 main().catch(console.error);
-

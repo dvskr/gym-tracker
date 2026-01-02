@@ -34,7 +34,12 @@
     "verify:supabase": "npx tsx scripts/verify-supabase-quality.ts",
     "assign:measurements": "npx tsx scripts/assign-measurement-types.ts",
     "verify:measurements": "npx tsx scripts/verify-measurement-types.ts",
-    "thumbnails:generate": "npx tsx scripts/generate-all-thumbnails.ts"
+    "thumbnails:generate": "npx tsx scripts/generate-all-thumbnails.ts",
+    "storage:cleanup": "npx tsx scripts/cleanup-storage.ts",
+    "gifs:download-missing": "npx tsx scripts/download-missing-gifs.ts",
+    "gifs:upload-local": "npx tsx scripts/upload-local-gifs.ts",
+    "gifs:find-matches": "npx tsx scripts/find-matching-gifs.ts",
+    "verify:all": "npx tsx scripts/verify-all-gifs-and-thumbnails.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

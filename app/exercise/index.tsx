@@ -20,29 +20,12 @@ import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight,
 import { useDebouncedCallback } from 'use-debounce';
 import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
+import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-
-// Helper function to get thumbnail URL from GIF URL
-const getThumbnailUrl = (gifUrl: string | null): string | null => {
-  if (!gifUrl) return null;
-  
-  // Extract filename from GIF URL
-  const filename = gifUrl.split('/').pop();
-  if (!filename) return null;
-  
-  // Convert GIF filename to PNG thumbnail filename
-  const thumbnailFilename = filename.replace('.gif', '.png');
-  
-  // Build thumbnail URL
-  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-  const fullThumbnailUrl = `${supabaseUrl}/storage/v1/object/public/exercise-thumbnails/${thumbnailFilename}?v=224`;
-  
-  return fullThumbnailUrl;
-};
 
 // Icon map for filter presets
 const iconMap: Record<string, any> = {

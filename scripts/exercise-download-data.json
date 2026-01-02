@@ -1,0 +1,133 @@
+{
+  "withExternalId": [
+    {
+      "exerciseId": "784203d7-39aa-49a6-9ecb-7dfb807556e5",
+      "externalId": "0056",
+      "name": "barbell lying close-grip triceps extension"
+    },
+    {
+      "exerciseId": "b15e8c0a-e46d-4390-8473-680da25348fc",
+      "externalId": "0107",
+      "name": "barbell standing front raise over head"
+    },
+    {
+      "exerciseId": "ed048afd-e7de-4b97-afb9-af64cd1703ad",
+      "externalId": "0154",
+      "name": "cable cross-over reverse fly"
+    },
+    {
+      "exerciseId": "a0846abc-cc96-44f1-8398-086766dc5236",
+      "externalId": "0175",
+      "name": "cable kneeling crunch"
+    },
+    {
+      "exerciseId": "b57ff319-a22d-47aa-b851-46eab7bb6df3",
+      "externalId": "0577",
+      "name": "chest press machine"
+    },
+    {
+      "exerciseId": "5199d2cf-e5bb-4080-9919-5a97e66bf0c3",
+      "externalId": "0443",
+      "name": "elbow-to-knee"
+    },
+    {
+      "exerciseId": "c187352d-a24f-434d-be1e-45840ef4ea0e",
+      "externalId": "0471",
+      "name": "handstand push-up"
+    },
+    {
+      "exerciseId": "dd8da03a-ae4a-48b3-8200-a75d54818e3c",
+      "externalId": "0544",
+      "name": "kettlebell pistol squat"
+    },
+    {
+      "exerciseId": "f661eaa7-9a80-466c-8a84-96b84674c846",
+      "externalId": "0570",
+      "name": "leg pull in flat bench"
+    },
+    {
+      "exerciseId": "d214a875-97d4-454f-a05c-785766afaf48",
+      "externalId": "0583",
+      "name": "lever kneeling twist"
+    },
+    {
+      "exerciseId": "b1f1ef30-ced6-4593-a5b9-18560c0a6932",
+      "externalId": "0601",
+      "name": "lever seated reverse fly (parallel grip)"
+    },
+    {
+      "exerciseId": "d1ef1788-53f5-4588-9911-a5c1c3185cf7",
+      "externalId": "0631",
+      "name": "muscle up"
+    },
+    {
+      "exerciseId": "269bce14-4bc2-4174-9273-f327303d1bd3",
+      "externalId": "1495",
+      "name": "oblique crunch"
+    },
+    {
+      "exerciseId": "81039cde-72d7-4d3e-a769-66bde1517a77",
+      "externalId": "0596",
+      "name": "pec deck machine"
+    },
+    {
+      "exerciseId": "b3507db3-5ca4-4304-b8ab-2795e7192b45",
+      "externalId": "0668",
+      "name": "rear decline bridge"
+    },
+    {
+      "exerciseId": "d3780f65-24bf-4155-8c17-421f7be05115",
+      "externalId": "3236",
+      "name": "resistance band hip thrusts on knees"
+    },
+    {
+      "exerciseId": "a90954ce-b4d3-479b-bcc3-3d6db3db080f",
+      "externalId": "0602",
+      "name": "reverse fly machine"
+    },
+    {
+      "exerciseId": "cf2516d4-fa2b-4e81-a602-7faf787a1a66",
+      "externalId": "0593",
+      "name": "reverse hyperextension machine"
+    },
+    {
+      "exerciseId": "bbd45ce1-df7b-4cab-8242-0d375f298de7",
+      "externalId": "1350",
+      "name": "seated row machine"
+    },
+    {
+      "exerciseId": "7660dce3-d4ea-4964-a811-b4d27e706974",
+      "externalId": "0697",
+      "name": "self assisted inverse leg curl"
+    },
+    {
+      "exerciseId": "ae958d76-ed0d-44fa-b345-401880ebcd3a",
+      "externalId": "0603",
+      "name": "shoulder press machine"
+    },
+    {
+      "exerciseId": "551825b9-a0b6-4b23-8eba-3003f7a1dee2",
+      "externalId": "0803",
+      "name": "superman push-up"
+    },
+    {
+      "exerciseId": "96aa6645-52f5-4e01-80b5-a7df71031119",
+      "externalId": "1349",
+      "name": "t-bar row machine"
+    }
+  ],
+  "withoutExternalId": [
+    {
+      "exerciseId": "45fd4997-1cea-48d2-aab5-90e6ab24602c",
+      "name": "air bike"
+    },
+    {
+      "exerciseId": "84328146-9983-4fe8-b6c9-55567fd53d28",
+      "name": "belt squat"
+    },
+    {
+      "exerciseId": "a73f0c66-8638-4a12-a0cc-a653623765d8",
+      "name": "rowing machine"
+    }
+  ]
+}

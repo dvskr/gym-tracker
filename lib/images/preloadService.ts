@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
+import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 
 interface PreloadProgress {
   total: number;
@@ -27,14 +28,14 @@ export async function preloadRecentThumbnails(
   const startTime = Date.now();
 
   try {
-    // Fetch thumbnails for these exercises
+    // Fetch GIF URLs for these exercises
     const { data: exercises } = await supabase
       .from('exercises')
-      .select('id, thumbnail_url')
+      .select('id, gif_url')
       .in('id', exerciseIds);
 
     const thumbnailUrls = exercises
-      ?.map(ex => ex.thumbnail_url)
+      ?.map(ex => getThumbnailUrl(ex.gif_url))
       .filter((url): url is string => !!url) || [];
 
     logger.log(`[Image Preload] Preloading ${thumbnailUrls.length} thumbnails...`);
@@ -84,11 +85,11 @@ export async function preloadVisibleThumbnails(
 
   const { data: exercises } = await supabase
     .from('exercises')
-    .select('id, thumbnail_url')
+    .select('id, gif_url')
     .in('id', exerciseIds.slice(0, 20)); // Only first 20 visible
 
   const thumbnailUrls = exercises
-    ?.map(ex => ex.thumbnail_url)
+    ?.map(ex => getThumbnailUrl(ex.gif_url))
     .filter((url): url is string => !!url) || [];
 
   await Promise.all(
@@ -106,13 +107,13 @@ export async function preloadExerciseImages(
 
   const { data: exercises, error } = await supabase
     .from('exercises')
-    .select('gif_url, thumbnail_url')
+    .select('gif_url')
     .in('id', exerciseIds);
 
   if (error || !exercises) return;
 
   const urls = exercises.flatMap(ex => [
-    ex.thumbnail_url, // Thumbnail first (smaller)
+    getThumbnailUrl(ex.gif_url), // Thumbnail first (smaller)
     // Skip GIF for now - only load on demand
   ]).filter((url): url is string => !!url);
 

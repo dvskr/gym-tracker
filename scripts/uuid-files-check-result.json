@@ -1,0 +1,166 @@
+{
+  "existingFiles": [],
+  "missingFiles": [
+    {
+      "id": "784203d7-39aa-49a6-9ecb-7dfb807556e5",
+      "name": "barbell lying close-grip triceps extension",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0056",
+      "external_id": "0056",
+      "expectedFilename": "784203d7-39aa-49a6-9ecb-7dfb807556e5.gif"
+    },
+    {
+      "id": "b15e8c0a-e46d-4390-8473-680da25348fc",
+      "name": "barbell standing front raise over head",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0107",
+      "external_id": "0107",
+      "expectedFilename": "b15e8c0a-e46d-4390-8473-680da25348fc.gif"
+    },
+    {
+      "id": "ed048afd-e7de-4b97-afb9-af64cd1703ad",
+      "name": "cable cross-over reverse fly",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0154",
+      "external_id": "0154",
+      "expectedFilename": "ed048afd-e7de-4b97-afb9-af64cd1703ad.gif"
+    },
+    {
+      "id": "a0846abc-cc96-44f1-8398-086766dc5236",
+      "name": "cable kneeling crunch",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0175",
+      "external_id": "0175",
+      "expectedFilename": "a0846abc-cc96-44f1-8398-086766dc5236.gif"
+    },
+    {
+      "id": "b57ff319-a22d-47aa-b851-46eab7bb6df3",
+      "name": "chest press machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0577",
+      "external_id": "0577",
+      "expectedFilename": "b57ff319-a22d-47aa-b851-46eab7bb6df3.gif"
+    },
+    {
+      "id": "5199d2cf-e5bb-4080-9919-5a97e66bf0c3",
+      "name": "elbow-to-knee",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0443",
+      "external_id": "0443",
+      "expectedFilename": "5199d2cf-e5bb-4080-9919-5a97e66bf0c3.gif"
+    },
+    {
+      "id": "c187352d-a24f-434d-be1e-45840ef4ea0e",
+      "name": "handstand push-up",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0471",
+      "external_id": "0471",
+      "expectedFilename": "c187352d-a24f-434d-be1e-45840ef4ea0e.gif"
+    },
+    {
+      "id": "dd8da03a-ae4a-48b3-8200-a75d54818e3c",
+      "name": "kettlebell pistol squat",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0544",
+      "external_id": "0544",
+      "expectedFilename": "dd8da03a-ae4a-48b3-8200-a75d54818e3c.gif"
+    },
+    {
+      "id": "f661eaa7-9a80-466c-8a84-96b84674c846",
+      "name": "leg pull in flat bench",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0570",
+      "external_id": "0570",
+      "expectedFilename": "f661eaa7-9a80-466c-8a84-96b84674c846.gif"
+    },
+    {
+      "id": "d214a875-97d4-454f-a05c-785766afaf48",
+      "name": "lever kneeling twist",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0583",
+      "external_id": "0583",
+      "expectedFilename": "d214a875-97d4-454f-a05c-785766afaf48.gif"
+    },
+    {
+      "id": "b1f1ef30-ced6-4593-a5b9-18560c0a6932",
+      "name": "lever seated reverse fly (parallel grip)",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0601",
+      "external_id": "0601",
+      "expectedFilename": "b1f1ef30-ced6-4593-a5b9-18560c0a6932.gif"
+    },
+    {
+      "id": "d1ef1788-53f5-4588-9911-a5c1c3185cf7",
+      "name": "muscle up",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0631",
+      "external_id": "0631",
+      "expectedFilename": "d1ef1788-53f5-4588-9911-a5c1c3185cf7.gif"
+    },
+    {
+      "id": "269bce14-4bc2-4174-9273-f327303d1bd3",
+      "name": "oblique crunch",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1495",
+      "external_id": "1495",
+      "expectedFilename": "269bce14-4bc2-4174-9273-f327303d1bd3.gif"
+    },
+    {
+      "id": "81039cde-72d7-4d3e-a769-66bde1517a77",
+      "name": "pec deck machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0596",
+      "external_id": "0596",
+      "expectedFilename": "81039cde-72d7-4d3e-a769-66bde1517a77.gif"
+    },
+    {
+      "id": "b3507db3-5ca4-4304-b8ab-2795e7192b45",
+      "name": "rear decline bridge",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0668",
+      "external_id": "0668",
+      "expectedFilename": "b3507db3-5ca4-4304-b8ab-2795e7192b45.gif"
+    },
+    {
+      "id": "d3780f65-24bf-4155-8c17-421f7be05115",
+      "name": "resistance band hip thrusts on knees",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/3236",
+      "external_id": "3236",
+      "expectedFilename": "d3780f65-24bf-4155-8c17-421f7be05115.gif"
+    },
+    {
+      "id": "a90954ce-b4d3-479b-bcc3-3d6db3db080f",
+      "name": "reverse fly machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0602",
+      "external_id": "0602",
+      "expectedFilename": "a90954ce-b4d3-479b-bcc3-3d6db3db080f.gif"
+    },
+    {
+      "id": "cf2516d4-fa2b-4e81-a602-7faf787a1a66",
+      "name": "reverse hyperextension machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0593",
+      "external_id": "0593",
+      "expectedFilename": "cf2516d4-fa2b-4e81-a602-7faf787a1a66.gif"
+    },
+    {
+      "id": "bbd45ce1-df7b-4cab-8242-0d375f298de7",
+      "name": "seated row machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1350",
+      "external_id": "1350",
+      "expectedFilename": "bbd45ce1-df7b-4cab-8242-0d375f298de7.gif"
+    },
+    {
+      "id": "7660dce3-d4ea-4964-a811-b4d27e706974",
+      "name": "self assisted inverse leg curl",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0697",
+      "external_id": "0697",
+      "expectedFilename": "7660dce3-d4ea-4964-a811-b4d27e706974.gif"
+    },
+    {
+      "id": "ae958d76-ed0d-44fa-b345-401880ebcd3a",
+      "name": "shoulder press machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0603",
+      "external_id": "0603",
+      "expectedFilename": "ae958d76-ed0d-44fa-b345-401880ebcd3a.gif"
+    },
+    {
+      "id": "551825b9-a0b6-4b23-8eba-3003f7a1dee2",
+      "name": "superman push-up",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/0803",
+      "external_id": "0803",
+      "expectedFilename": "551825b9-a0b6-4b23-8eba-3003f7a1dee2.gif"
+    },
+    {
+      "id": "96aa6645-52f5-4e01-80b5-a7df71031119",
+      "name": "t-bar row machine",
+      "gif_url": "https://zhsmmqaworfqffsadjsm.supabase.co/storage/v1/object/public/exercise-gifs/1349",
+      "external_id": "1349",
+      "expectedFilename": "96aa6645-52f5-4e01-80b5-a7df71031119.gif"
+    }
+  ]
+}
