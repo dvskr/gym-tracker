@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useMemo, memo } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,11 @@ import {
   RefreshControl,
   StyleSheet,
   ScrollView,
-  Image,
   LayoutAnimation,
   Platform,
   UIManager,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
@@ -139,13 +139,13 @@ interface ExerciseItemProps {
   showFavoriteIcon?: boolean;
 }
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ 
+const ExerciseItem = memo(function ExerciseItem({ 
   exercise, 
   onPress, 
   isFavorite = false,
   onToggleFavorite,
   showFavoriteIcon = true 
-}) => {
+}: ExerciseItemProps) {
   // Use direct thumbnail URL from database instead of deriving it
   const thumbnailUrl = exercise.thumbnailUrl || null;
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
@@ -181,7 +181,11 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
           <Image
             source={{ uri: thumbnailUrl }}
             style={styles.thumbnail}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
+            transition={150}
+            recyclingKey={exercise.id}
           />
         ) : (
           <View style={[styles.iconPlaceholder, { backgroundColor: iconColor + '20' }]}>
@@ -237,7 +241,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({
       )}
     </TouchableOpacity>
   );
-};
+});
 
 export default function ExerciseLibraryScreen() {
   const {
@@ -1216,4 +1220,4 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
 });
-
+

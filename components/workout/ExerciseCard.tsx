@@ -2,12 +2,12 @@ import React, { memo, useCallback, useState } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Modal,
   Pressable,
 } from 'react-native';
+import { Image } from 'expo-image';
 import {
   Plus,
   X,
@@ -27,6 +27,7 @@ import { FormTips } from '@/components/ai';
 import { WeightSuggestion } from '@/components/ai/WeightSuggestion';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 
 // ============================================
 // Types
@@ -157,12 +158,15 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           <GripVertical size={20} color="#6b7280" />
         </TouchableOpacity>
 
-        {/* Exercise GIF */}
+        {/* Exercise Thumbnail (PNG, not GIF) */}
         {exercise.gifUrl && (
           <Image
-            source={{ uri: exercise.gifUrl }}
+            source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
             style={styles.gif}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
+            transition={150}
           />
         )}
 
@@ -728,4 +732,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
   },
-});
+});

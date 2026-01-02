@@ -509,4 +509,4 @@ export const useExercises = () => useExerciseStore((state) => state.exercises);
 export const useExerciseLoading = () => useExerciseStore((state) => state.isLoading);
 export const useExerciseError = () => useExerciseStore((state) => state.error);
 export const useSearchQuery = () => useExerciseStore((state) => state.searchQuery);
-export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);
+export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);

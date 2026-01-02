@@ -5,16 +5,17 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
-  Image,
   StyleSheet,
   ScrollView,
   Keyboard,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Search, X, Dumbbell } from 'lucide-react-native';
 import { useDebouncedCallback } from 'use-debounce';
 import { ExerciseDBExercise, BodyPart } from '@/types/database';
 import { useExerciseStore } from '@/stores/exerciseStore';
 import { ExerciseItemSkeleton } from '@/components/ui';
+import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 
 interface ExerciseSearchProps {
   onSelectExercise: (exercise: ExerciseDBExercise) => void;
@@ -50,9 +51,12 @@ const ExerciseItem = memo<ExerciseItemProps>(({ exercise, onSelect }) => (
     {/* Thumbnail */}
     {exercise.gifUrl ? (
       <Image
-        source={{ uri: exercise.gifUrl }}
+        source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
         style={styles.thumbnail}
-        resizeMode="cover"
+        contentFit="cover"
+        cachePolicy="memory-disk"
+        placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
+        transition={150}
       />
     ) : (
       <View style={[styles.thumbnail, styles.thumbnailPlaceholder]}>
@@ -566,4 +570,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
+
