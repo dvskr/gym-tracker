@@ -38,6 +38,7 @@ import {
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import {
   getTemplateById,
   updateTemplate,
@@ -660,6 +661,9 @@ export default function TemplateDetailScreen() {
 
       // Add exercises with auto-fill
       if (template.exercises && template.exercises.length > 0) {
+        // Check if auto-fill is enabled
+        const { autoFillSets } = useSettingsStore.getState();
+        
         for (const templateExercise of template.exercises) {
           if (templateExercise.exercise) {
             // Fetch previous workout data for this exercise
@@ -670,30 +674,33 @@ export default function TemplateDetailScreen() {
 
             let prefillSets: Array<{ weight?: number; reps?: number }> = [];
 
-            // Priority: 1) Template sets, 2) Previous workout, 3) Legacy target_weight
-            if (templateExercise.sets && templateExercise.sets.length > 0) {
-              // Use individual template set targets
-              prefillSets = templateExercise.sets.map((templateSet, idx) => {
-                // Check if previous workout has data for this set number
-                const prevSet = previousData?.sets[idx];
-                return {
-                  // Previous workout takes priority over template targets
-                  weight: prevSet?.weight ?? templateSet.target_weight,
-                  reps: prevSet?.reps ?? templateSet.target_reps,
-                };
-              });
-            } else if (previousData && previousData.sets.length > 0) {
-              // Fallback to previous workout data
-              prefillSets = previousData.sets.map((s) => ({
-                weight: s.weight,
-                reps: s.reps,
-              }));
-            } else if (templateExercise.target_weight) {
-              // Fallback to legacy target_weight/reps
-              prefillSets = [{
-                weight: templateExercise.target_weight,
-                reps: templateExercise.target_reps_min || templateExercise.target_reps_max || undefined,
-              }];
+            // Only auto-fill if setting is enabled
+            if (autoFillSets) {
+              // Priority: 1) Template sets, 2) Previous workout, 3) Legacy target_weight
+              if (templateExercise.sets && templateExercise.sets.length > 0) {
+                // Use individual template set targets
+                prefillSets = templateExercise.sets.map((templateSet, idx) => {
+                  // Check if previous workout has data for this set number
+                  const prevSet = previousData?.sets[idx];
+                  return {
+                    // Previous workout takes priority over template targets
+                    weight: prevSet?.weight ?? templateSet.target_weight,
+                    reps: prevSet?.reps ?? templateSet.target_reps,
+                  };
+                });
+              } else if (previousData && previousData.sets.length > 0) {
+                // Fallback to previous workout data
+                prefillSets = previousData.sets.map((s) => ({
+                  weight: s.weight,
+                  reps: s.reps,
+                }));
+              } else if (templateExercise.target_weight) {
+                // Fallback to legacy target_weight/reps
+                prefillSets = [{
+                  weight: templateExercise.target_weight,
+                  reps: templateExercise.target_reps_min || templateExercise.target_reps_max || undefined,
+                }];
+              }
             }
 
             const targetSets = templateExercise.sets?.length || templateExercise.target_sets || 3;
@@ -1636,4 +1643,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
+

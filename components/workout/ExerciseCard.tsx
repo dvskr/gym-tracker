@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -68,10 +68,11 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   const { user } = useAuthStore();
   const { showFormTips: showFormTipsEnabled, showProgressiveOverload } = useSettingsStore();
   const weightUnit = useSettingsStore((state) => state.weightUnit);
+  const autoStartTimer = useSettingsStore((state) => state.autoStartTimer);
+  const showPreviousWorkout = useSettingsStore((state) => state.showPreviousWorkout);
   
   // Get rest timer state and actions
   const { restTimer, startRestTimer } = useWorkoutStore();
-  const { autoStartTimer } = useSettingsStore();
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
@@ -84,9 +85,6 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 
   // Fetch previous workout data for this exercise
   const { data: previousWorkout, getPreviousSet, daysAgo } = usePreviousWorkout(exercise.id);
-  
-  // Get settings
-  const { showPreviousWorkout } = useSettingsStore();
 
   // Get completed sets count
   const completedSets = sets.filter((s) => s.isCompleted).length;
@@ -267,7 +265,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
       {/* Column Headers */}
       <View style={styles.columnHeader}>
         <Text style={[styles.columnHeaderText, styles.colSet]}>SET</Text>
-        <Text style={[styles.columnHeaderText, styles.colPrevious]}>PREVIOUS</Text>
+        {showPreviousWorkout && (
+          <Text style={[styles.columnHeaderText, styles.colPrevious]}>PREVIOUS</Text>
+        )}
         {/* Dynamic column headers based on measurement type */}
         {(() => {
           const measurementType = exercise.measurementType || 'reps_weight';
@@ -544,37 +544,8 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 // Memoization
 // ============================================
 
-export const ExerciseCard = memo(ExerciseCardComponent, (prevProps, nextProps) => {
-  if (
-    prevProps.index !== nextProps.index ||
-    prevProps.totalExercises !== nextProps.totalExercises
-  ) {
-    return false;
-  }
-
-  if (prevProps.workoutExercise.sets.length !== nextProps.workoutExercise.sets.length) {
-    return false;
-  }
-
-  for (let i = 0; i < prevProps.workoutExercise.sets.length; i++) {
-    const prevSet = prevProps.workoutExercise.sets[i];
-    const nextSet = nextProps.workoutExercise.sets[i];
-
-    if (
-      prevSet.id !== nextSet.id ||
-      prevSet.weight !== nextSet.weight ||
-      prevSet.reps !== nextSet.reps ||
-      prevSet.isCompleted !== nextSet.isCompleted
-    ) {
-      return false;
-    }
-  }
-
-  return (
-    prevProps.workoutExercise.id === nextProps.workoutExercise.id &&
-    prevProps.workoutExercise.exercise.id === nextProps.workoutExercise.exercise.id
-  );
-});
+// Remove memoization to allow re-renders when settings change
+export const ExerciseCard = ExerciseCardComponent;
 
 export default ExerciseCard;
 
