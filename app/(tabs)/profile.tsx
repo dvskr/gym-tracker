@@ -105,7 +105,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, session, signOut } = useAuthStore();
   
-  // Force subscription using useSyncExternalStore for guaranteed reactivity
+  // Get all settings from settingsStore using useSyncExternalStore for guaranteed reactivity
   const unitSystem = useSyncExternalStore(
     useSettingsStore.subscribe,
     () => useSettingsStore.getState().unitSystem,
@@ -132,21 +132,24 @@ export default function ProfileScreen() {
     () => useSettingsStore.getState().prCelebrations
   );
   
+  // ✅ FIXED: Use settingsStore for these values too (no more local state shadowing)
+  const autoStartTimer = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().autoStartTimer,
+    () => useSettingsStore.getState().autoStartTimer
+  );
+  const soundEnabled = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().soundEnabled,
+    () => useSettingsStore.getState().soundEnabled
+  );
+  const notificationsEnabled = useSyncExternalStore(
+    useSettingsStore.subscribe,
+    () => useSettingsStore.getState().notificationsEnabled,
+    () => useSettingsStore.getState().notificationsEnabled
+  );
   
   const isLoggedIn = !!session;
-
-  // Settings state (these would come from profile/settings store in real app)
-  const [autoStartTimer, setAutoStartTimer] = useState(true);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [workoutReminders, setWorkoutReminders] = useState(true);
-  const [streakReminders, setStreakReminders] = useState(true);
-  
-  // #region agent log - Hypothesis D: Local state shadowing check
-  React.useEffect(() => {
-    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'profile.tsx:local-state',message:'Local state values',data:{localAutoStartTimer:autoStartTimer,localSoundEnabled:soundEnabled,note:'These are LOCAL state, not store'},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D'})}).catch(()=>{});
-  }, [autoStartTimer, soundEnabled]);
-  // #endregion
 
   const handleEditProfile = () => {
     // #region agent log
@@ -294,14 +297,14 @@ export default function ProfileScreen() {
             label="Auto-start Timer"
             toggle
             toggleValue={autoStartTimer}
-            onToggleChange={setAutoStartTimer}
+            onToggleChange={useSettingsStore.getState().setAutoStartTimer}
           />
           <SettingItem
             icon={<Volume2 size={24} color="#60a5fa" />}
             label="Sound Effects"
             toggle
             toggleValue={soundEnabled}
-            onToggleChange={setSoundEnabled}
+            onToggleChange={useSettingsStore.getState().setSoundEnabled}
           />
           <SettingItem
             icon={<Vibrate size={24} color="#60a5fa" />}
