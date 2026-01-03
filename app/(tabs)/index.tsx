@@ -353,6 +353,7 @@ export default function HomeScreen() {
             addExerciseWithSets(
               {
                 id: templateExercise.exercise.external_id,
+                dbId: templateExercise.exercise.id, // Add database UUID for form tips
                 name: templateExercise.exercise.name,
                 bodyPart: templateExercise.exercise.primary_muscles?.[0] || '',
                 equipment: templateExercise.exercise.equipment || '',

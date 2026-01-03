@@ -35,7 +35,6 @@ import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
 import { createTemplateFromWorkout } from '@/lib/api/templates';
 import { invalidateCache, prefetchAIData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
-import { WorkoutAnalysis } from '@/components/ai';
 import { useUnits } from '@/hooks/useUnits';
 
 // ============================================
@@ -550,13 +549,6 @@ export default function WorkoutCompleteScreen() {
                 })}
               </View>
             )}
-          </Animated.View>
-        )}
-
-        {/* AI Workout Analysis */}
-        {workout && (
-          <Animated.View style={{ opacity: fadeAnim }}>
-            <WorkoutAnalysis workout={workout} />
           </Animated.View>
         )}
 

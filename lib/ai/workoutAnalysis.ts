@@ -545,23 +545,51 @@ EXERCISES:`;
    */
   private async getUserStats(userId: string): Promise<WorkoutStats> {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('total_workouts, current_streak')
-        .eq('id', userId)
-        .single();
+      // Calculate stats from workouts table instead of profiles
+      // (profiles.total_workouts column doesn't exist)
+      const { data: workouts, error } = await supabase
+        .from('workouts')
+        .select('id, completed_at, status')
+        .eq('user_id', userId)
+        .eq('status', 'completed')
+        .order('completed_at', { ascending: false });
 
       if (error) {
- logger.error('Error fetching user stats:', error);
+        logger.error('Error fetching user workouts for stats:', error);
         return { totalWorkouts: 0, streak: 0 };
       }
 
+      const totalWorkouts = workouts?.length || 0;
+      
+      // Calculate current streak
+      let streak = 0;
+      if (workouts && workouts.length > 0) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        let currentDate = new Date(today);
+        
+        for (const workout of workouts) {
+          const workoutDate = new Date(workout.completed_at);
+          workoutDate.setHours(0, 0, 0, 0);
+          
+          const dayDiff = Math.floor((currentDate.getTime() - workoutDate.getTime()) / (1000 * 60 * 60 * 24));
+          
+          if (dayDiff === 0 || dayDiff === 1) {
+            streak++;
+            currentDate = new Date(workoutDate);
+          } else {
+            break;
+          }
+        }
+      }
+
       return {
-        totalWorkouts: data?.total_workouts || 0,
-        streak: data?.current_streak || 0,
+        totalWorkouts,
+        streak,
       };
     } catch (error) {
- logger.error('Failed to get user stats:', error);
+      logger.error('Failed to get user stats:', error);
       return { totalWorkouts: 0, streak: 0 };
     }
   }
@@ -595,4 +623,4 @@ EXERCISES:`;
 }
 
 export const workoutAnalysisService = new WorkoutAnalysisService();
-
+

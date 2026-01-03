@@ -8,33 +8,62 @@ import {
   StyleSheet,
   ScrollView,
   Keyboard,
+  LayoutAnimation,
+  Platform,
+  UIManager,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Search, X, Dumbbell } from 'lucide-react-native';
+import { Search, X, Dumbbell, Home, User, Footprints, Circle, ChevronDown, ChevronUp } from 'lucide-react-native';
 import { useDebouncedCallback } from 'use-debounce';
 import { ExerciseDBExercise, BodyPart } from '@/types/database';
-import { useExerciseStore } from '@/stores/exerciseStore';
+import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
 import { ExerciseItemSkeleton } from '@/components/ui';
 import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 interface ExerciseSearchProps {
   onSelectExercise: (exercise: ExerciseDBExercise) => void;
   onClose: () => void;
 }
 
-const BODY_PARTS: BodyPart[] = [
-  'back',
-  'cardio',
-  'chest',
-  'full body',
-  'lower arms',
-  'lower legs',
-  'neck',
-  'shoulders',
-  'upper arms',
-  'upper legs',
-  'waist',
-];
+// Icon map for filter presets
+const iconMap: Record<string, any> = {
+  Home,
+  Dumbbell,
+  User,
+  Footprints,
+  Circle,
+};
+
+// Body part mapping for simpler chip names
+const BODY_PART_FILTERS = [
+  { label: 'All', value: null },
+  { label: 'Chest', value: 'chest' },
+  { label: 'Back', value: 'back' },
+  { label: 'Shoulders', value: 'shoulders' },
+  { label: 'Arms', value: 'arms' },
+  { label: 'Legs', value: 'legs' },
+  { label: 'Core', value: 'waist' },
+  { label: 'Full Body', value: 'full body' },
+  { label: 'Cardio', value: 'cardio' },
+] as const;
+
+// Equipment filter options
+const EQUIPMENT_FILTERS = [
+  { label: 'All', value: null },
+  { label: 'Barbell', value: 'barbell' },
+  { label: 'Dumbbell', value: 'dumbbell' },
+  { label: 'Bodyweight', value: 'body weight' },
+  { label: 'Cable', value: 'cable' },
+  { label: 'Machine', value: 'leverage machine' },
+  { label: 'Smith', value: 'smith machine' },
+  { label: 'Kettlebell', value: 'kettlebell' },
+  { label: 'Band', value: 'band' },
+] as const;
 
 // Exercise List Item Component
 interface ExerciseItemProps {
@@ -86,27 +115,6 @@ const ExerciseItem = memo<ExerciseItemProps>(({ exercise, onSelect }) => (
 
 ExerciseItem.displayName = 'ExerciseItem';
 
-// Body Part Chip Component
-interface BodyPartChipProps {
-  bodyPart: BodyPart;
-  isSelected: boolean;
-  onPress: () => void;
-}
-
-const BodyPartChip = memo<BodyPartChipProps>(({ bodyPart, isSelected, onPress }) => (
-  <TouchableOpacity
-    style={[styles.chip, isSelected && styles.chipSelected]}
-    onPress={onPress}
-    activeOpacity={0.7}
-  >
-    <Text style={[styles.chipText, isSelected && styles.chipTextSelected]}>
-      {bodyPart}
-    </Text>
-  </TouchableOpacity>
-));
-
-BodyPartChip.displayName = 'BodyPartChip';
-
 export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
   onSelectExercise,
   onClose,
@@ -115,17 +123,33 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     isLoading,
     searchQuery,
     selectedBodyPart,
+    selectedEquipment,
+    activePreset,
     error,
     fetchExercises,
     searchExercises,
     filterByBodyPart,
+    filterByEquipment,
+    applyFilterPreset,
+    clearPreset,
     getFilteredExercises,
     clearFilters,
+    clearAllFilters,
     clearError,
   } = useExerciseStore();
 
   // Local state for immediate UI feedback
   const [localSearchText, setLocalSearchText] = useState(searchQuery);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+
+  // Calculate active filter count (excluding search)
+  const activeFilterCount = React.useMemo(() => {
+    let count = 0;
+    if (selectedBodyPart) count++;
+    if (selectedEquipment) count++;
+    if (activePreset) count++;
+    return count;
+  }, [selectedBodyPart, selectedEquipment, activePreset]);
 
   // Sync local state with store when store changes (e.g., when cleared)
   useEffect(() => {
@@ -162,31 +186,50 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     debouncedSearch.cancel(); // Cancel any pending debounced calls
   }, [searchExercises, debouncedSearch]);
 
+  // Toggle filter panel
+  const toggleFilterPanel = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsFilterExpanded((prev) => !prev);
+  }, []);
+
   // Handle body part filter
   const handleBodyPartPress = useCallback(
-    (bodyPart: BodyPart) => {
-      if (selectedBodyPart === bodyPart) {
-        filterByBodyPart(null);
-      } else {
-        filterByBodyPart(bodyPart);
-      }
+    (bodyPart: string | null) => {
+      filterByBodyPart(bodyPart as BodyPart | null);
     },
-    [selectedBodyPart, filterByBodyPart]
+    [filterByBodyPart]
   );
 
-  // Handle exercise selection
+  // Handle exercise selection - convert DisplayExercise to ExerciseDBExercise with dbId
   const handleSelectExercise = useCallback(
-    (exercise: ExerciseDBExercise) => {
+    (exercise: any) => { // Using 'any' because exercises are actually DisplayExercise but typed as ExerciseDBExercise
       Keyboard.dismiss();
-      onSelectExercise(exercise);
+      
+      // Convert to ExerciseDBExercise with dbId
+      const exerciseForWorkout: ExerciseDBExercise = {
+        id: exercise.externalId || exercise.id, // Use externalId if available
+        dbId: exercise.id, // Store the database UUID
+        name: exercise.name,
+        bodyPart: exercise.bodyPart,
+        target: exercise.target,
+        equipment: exercise.equipment,
+        gifUrl: exercise.gifUrl,
+        secondaryMuscles: exercise.secondaryMuscles || [],
+        instructions: exercise.instructions || [],
+        measurementType: exercise.measurementType,
+      };
+      
+      onSelectExercise(exerciseForWorkout);
     },
     [onSelectExercise]
   );
 
   // Clear all filters
   const handleClearAll = useCallback(() => {
-    clearFilters();
-  }, [clearFilters]);
+    setLocalSearchText('');
+    clearAllFilters();
+    debouncedSearch.cancel();
+  }, [clearAllFilters, debouncedSearch]);
 
   // Render exercise item
   const renderExerciseItem = useCallback(
@@ -264,56 +307,166 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
 
       {/* Search Input */}
       <View style={styles.searchContainer}>
-        <Search size={20} color="#64748b" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          value={localSearchText}
-          onChangeText={handleSearchChange}
-          placeholder="Search exercises..."
-          placeholderTextColor="#64748b"
-          autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="search"
-        />
-        {localSearchText.length > 0 && (
-          <TouchableOpacity
-            onPress={handleClearSearch}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <X size={18} color="#64748b" />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Body Part Filter Chips */}
-      <View style={styles.filtersContainer}>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipsContent}
-        >
-          {/* Clear All Chip */}
-          {(searchQuery || selectedBodyPart) && (
+        <View style={styles.searchInputWrapper}>
+          <Search size={20} color="#64748b" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            value={localSearchText}
+            onChangeText={handleSearchChange}
+            placeholder="Search exercises..."
+            placeholderTextColor="#64748b"
+            autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="search"
+          />
+          {localSearchText.length > 0 && (
             <TouchableOpacity
-              style={[styles.chip, styles.chipClear]}
-              onPress={handleClearAll}
+              onPress={handleClearSearch}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <X size={14} color="#ef4444" />
-              <Text style={styles.chipClearText}>Clear</Text>
+              <X size={18} color="#64748b" />
             </TouchableOpacity>
           )}
+        </View>
 
-          {/* Body Part Chips */}
-          {BODY_PARTS.map((bodyPart) => (
-            <BodyPartChip
-              key={bodyPart}
-              bodyPart={bodyPart}
-              isSelected={selectedBodyPart === bodyPart}
-              onPress={() => handleBodyPartPress(bodyPart)}
-            />
-          ))}
-        </ScrollView>
+        {/* Filter Toggle Button */}
+        <TouchableOpacity
+          style={[
+            styles.filterToggleButton,
+            (isFilterExpanded || activeFilterCount > 0) && styles.filterToggleButtonActive,
+          ]}
+          onPress={toggleFilterPanel}
+          activeOpacity={0.7}
+        >
+          {isFilterExpanded ? (
+            <ChevronUp size={18} color={activeFilterCount > 0 ? '#ffffff' : '#64748b'} />
+          ) : (
+            <ChevronDown size={18} color={activeFilterCount > 0 ? '#ffffff' : '#64748b'} />
+          )}
+          {activeFilterCount > 0 && (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{activeFilterCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
+
+      {/* Expandable Filter Panel */}
+      {isFilterExpanded && (
+        <View style={styles.filterPanel}>
+          {/* Body Part Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>BODY PART</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {BODY_PART_FILTERS.map((filter) => {
+                const isSelected = selectedBodyPart === filter.value;
+                return (
+                  <TouchableOpacity
+                    key={filter.label}
+                    style={[styles.chip, isSelected && styles.chipSelected]}
+                    onPress={() => handleBodyPartPress(filter.value)}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Equipment Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>EQUIPMENT</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {EQUIPMENT_FILTERS.map((filter) => {
+                const isSelected = selectedEquipment === filter.value;
+                return (
+                  <TouchableOpacity
+                    key={filter.label}
+                    style={[styles.chip, isSelected && styles.chipSelected]}
+                    onPress={() => filterByEquipment(isSelected ? null : filter.value)}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Quick Filters Section */}
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionLabel}>QUICK FILTERS</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {Object.entries(FILTER_PRESETS).map(([key, preset]) => {
+                const Icon = iconMap[preset.icon];
+                const isActive = activePreset === key;
+                
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    style={[styles.chip, styles.presetChip, isActive && styles.chipSelected]}
+                    onPress={() => {
+                      isActive ? clearPreset() : applyFilterPreset(key as FilterPresetKey);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    {Icon && <Icon size={14} color={isActive ? '#ffffff' : '#9ca3af'} />}
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isActive && styles.chipTextSelected,
+                      ]}
+                    >
+                      {preset.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          {/* Bottom Row: Clear All */}
+          <View style={styles.filterBottomRow}>
+            {activeFilterCount > 0 && (
+              <TouchableOpacity
+                style={styles.clearAllButton}
+                onPress={handleClearAll}
+                activeOpacity={0.7}
+              >
+                <X size={14} color="#ef4444" />
+                <Text style={styles.clearAllText}>Clear All</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      )}
 
       {/* Results Count */}
       <View style={styles.resultsRow}>
@@ -377,9 +530,16 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1e293b',
     marginHorizontal: 20,
     marginTop: 16,
+    gap: 12,
+  },
+
+  searchInputWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
     borderRadius: 12,
     paddingHorizontal: 16,
     minHeight: 48,
@@ -396,13 +556,89 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
 
-  filtersContainer: {
-    marginTop: 16,
+  filterToggleButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: '#1e293b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
   },
 
-  chipsContent: {
+  filterToggleButtonActive: {
+    backgroundColor: '#3b82f6',
+    borderColor: '#3b82f6',
+  },
+
+  filterBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#ef4444',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+  },
+
+  filterBadgeText: {
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+
+  filterPanel: {
+    marginTop: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
+  },
+
+  filterSection: {
+    marginBottom: 16,
+  },
+
+  filterSectionLabel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#64748b',
+    letterSpacing: 0.5,
+    marginBottom: 8,
+    paddingHorizontal: 20,
+  },
+
+  chipsRow: {
     paddingHorizontal: 20,
     gap: 8,
+  },
+
+  filterBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    marginTop: 8,
+  },
+
+  clearAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderWidth: 1,
+    borderColor: '#ef4444',
+  },
+
+  clearAllText: {
+    color: '#ef4444',
+    fontSize: 13,
+    fontWeight: '600',
   },
 
   chip: {
@@ -434,14 +670,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#450a0a',
-    borderColor: '#7f1d1d',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderColor: '#ef4444',
   },
 
   chipClearText: {
     color: '#ef4444',
     fontSize: 13,
     fontWeight: 'normal',
+  },
+
+  presetChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
 
   resultsRow: {

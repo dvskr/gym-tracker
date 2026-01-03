@@ -107,15 +107,9 @@ export async function getWorkoutSuggestion(userData: any): Promise<string> {
 }
 
 /**
- * Get exercise form tips
+ * NOTE: getFormTips removed - now using database queries via hooks/useFormTips
+ * Form tips for all 423 exercises are stored in the form_tips table
  */
-export async function getFormTips(exerciseName: string): Promise<string> {
-  return await aiService.askWithContext(
-    FITNESS_COACH_SYSTEM_PROMPT,
-    `${FORM_CHECK_PROMPT}\n\nExercise: ${exerciseName}`,
-    { temperature: 0.3, maxTokens: 300 }
-  );
-}
 
 /**
  * Get progression advice for an exercise
@@ -276,4 +270,4 @@ Include:
     { temperature: 0.5, maxTokens: 600 }
   );
 }
-
+

@@ -105,8 +105,7 @@ export {
 export { workoutSuggestionService } from './workoutSuggestions';
 export type { WorkoutSuggestion } from './workoutSuggestions';
 
-export { formTipsService } from './formTips';
-export type { FormTip } from './formTips';
+// NOTE: formTipsService removed - now using database queries via hooks/useFormTips
 
 export { progressiveOverloadService } from './progressiveOverload';
 export type { SetRecommendation } from './progressiveOverload';
@@ -140,7 +139,7 @@ export {
 // ==========================================
 export {
   getWorkoutSuggestion,
-  getFormTips,
+  // getFormTips removed - now using database via hooks/useFormTips
   getProgressionAdvice,
   critiqueWorkout,
   getMotivation,
@@ -171,4 +170,4 @@ export type {
   AIResponseQuality,
   AIQualityStats,
   AIQualityAlert,
-} from './analytics';
+} from './analytics';

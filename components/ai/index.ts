@@ -1,6 +1,6 @@
 export { WorkoutSuggestion } from './WorkoutSuggestion';
 export { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
-export { FormTips } from './FormTips';
+// NOTE: FormTips removed - now using database-backed version in components/workout/FormTips.tsx
 export { WeightRecommendation, WeightRecommendationBadge } from './WeightRecommendation';
 export { WeightSuggestion } from './WeightSuggestion';
 export { WorkoutAnalysis } from './WorkoutAnalysis';
@@ -13,4 +13,4 @@ export { AILimitModal } from './AILimitModal';
 export { AIFeedback } from './AIFeedback';
 export { DailyCheckin } from './DailyCheckin';
 export { CheckinPrompt } from './CheckinPrompt';
-export { SuggestedQuestions } from './SuggestedQuestions';
+export { SuggestedQuestions } from './SuggestedQuestions';

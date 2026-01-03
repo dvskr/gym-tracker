@@ -8,6 +8,7 @@ import { Play, Trash2, Dumbbell, Zap, ChevronRight, Calendar, TrendingUp } from 
 import { formatDistanceToNow } from 'date-fns';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useExerciseStore } from '@/stores/exerciseStore';
 import { Button, Card } from '@/components/ui';
 import { getWorkoutHistory } from '@/lib/api/workouts';
 import { lightHaptic } from '@/lib/utils/haptics';
@@ -74,6 +75,10 @@ export default function WorkoutScreen() {
   const discardWorkout = useWorkoutStore((state) => state.discardWorkout);
   const getTotalSets = useWorkoutStore((state) => state.getTotalSets);
   const { user, session } = useAuthStore();
+  
+  // Get exercise count from exercise store
+  const exercises = useExerciseStore((state) => state.exercises);
+  const exerciseCount = exercises.length;
   
   // Auth guard
   const { requireAuth, showAuthModal, authMessage, closeAuthModal } = useAuthGuard();
@@ -281,7 +286,9 @@ export default function WorkoutScreen() {
                   </View>
                   <View style={styles.libraryInfo}>
                     <Text style={styles.libraryName}>Exercise Library</Text>
-                    <Text style={styles.libraryMeta}>344 exercises</Text>
+                    <Text style={styles.libraryMeta}>
+                      {exerciseCount > 0 ? `${exerciseCount} exercises` : 'Loading...'}
+                    </Text>
                   </View>
                   <ChevronRight size={18} color="#475569" />
                 </TouchableOpacity>
@@ -649,4 +656,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
   },
-});
+});

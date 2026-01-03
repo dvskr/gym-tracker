@@ -23,7 +23,7 @@ import { InlineRestTimer } from './InlineRestTimer';
 import { Card } from '@/components/ui';
 import { usePreviousWorkout } from '@/hooks/usePreviousWorkout';
 import { lightHaptic, mediumHaptic } from '@/lib/utils/haptics';
-import { FormTips } from '@/components/ai';
+import { FormTips, FormTipsContent } from './FormTips';
 import { WeightSuggestion } from '@/components/ai/WeightSuggestion';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
@@ -69,7 +69,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
-  
+
   // State for form tips collapse
   const [formTipsExpanded, setFormTipsExpanded] = useState(false);
 
@@ -242,11 +242,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         </View>
       </View>
 
-      {/* Form Tips - Collapsible */}
+      {/* Form Tips Dropdown - Expands inline */}
       {showFormTipsEnabled && formTipsExpanded && (
-        <View style={styles.formTipsSection}>
-          <FormTips exerciseName={exercise.name} />
-        </View>
+        <FormTipsContent exerciseId={exercise.dbId || exercise.id} />
       )}
 
       {/* Column Headers */}
@@ -629,6 +627,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  formTipsButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   removeButton: {
     width: 32,
     height: 32,
@@ -641,21 +648,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
-  },
-
-  formTipsButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#1e293b',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  // Form Tips Section
-  formTipsSection: {
-    marginHorizontal: 16,
-    marginBottom: 12,
   },
 
   // Column Header

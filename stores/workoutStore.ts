@@ -210,37 +210,43 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           // Insert workout exercises
           for (const exercise of activeWorkout.exercises) {
-            // First, check if exercise exists in DB or create it
+            // Use dbId if available (already exists in DB), otherwise look up by external_id
             let exerciseId: string;
             
-            const { data: existingExercise } = await supabase
-              .from('exercises')
-              .select('id')
-              .eq('external_id', exercise.exercise.id)
-              .single();
-
-            if (existingExercise) {
-              exerciseId = existingExercise.id;
+            if (exercise.exercise.dbId) {
+              // Exercise already has database UUID - use it directly
+              exerciseId = exercise.exercise.dbId;
             } else {
-              // Create exercise in DB
-              const { data: newExercise, error: exerciseError } = await supabase
+              // Legacy path: look up by external_id
+              const { data: existingExercise } = await supabase
                 .from('exercises')
-                .insert({
-                  external_id: exercise.exercise.id,
-                  name: exercise.exercise.name,
-                  primary_muscles: [exercise.exercise.target],
-                  secondary_muscles: exercise.exercise.secondaryMuscles,
-                  equipment: exercise.exercise.equipment,
-                  category: exercise.exercise.bodyPart,
-                  gif_url: exercise.exercise.gifUrl,
-                  instructions: exercise.exercise.instructions,
-                  is_custom: false,
-                })
-                .select()
+                .select('id')
+                .eq('external_id', exercise.exercise.id)
                 .single();
 
-              if (exerciseError) throw exerciseError;
-              exerciseId = newExercise.id;
+              if (existingExercise) {
+                exerciseId = existingExercise.id;
+              } else {
+                // Create exercise in DB (only for custom exercises)
+                const { data: newExercise, error: exerciseError } = await supabase
+                  .from('exercises')
+                  .insert({
+                    external_id: exercise.exercise.id,
+                    name: exercise.exercise.name,
+                    primary_muscles: [exercise.exercise.target],
+                    secondary_muscles: exercise.exercise.secondaryMuscles,
+                    equipment: exercise.exercise.equipment,
+                    category: exercise.exercise.bodyPart,
+                    gif_url: exercise.exercise.gifUrl,
+                    instructions: exercise.exercise.instructions,
+                    is_custom: true, // Mark as custom since it wasn't found
+                  })
+                  .select()
+                  .single();
+
+                if (exerciseError) throw exerciseError;
+                exerciseId = newExercise.id;
+              }
             }
 
             // Insert workout exercise
@@ -894,4 +900,4 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
     }
   }, 1000); // Small delay to let workout save settle
 }
-
+
