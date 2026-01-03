@@ -21,6 +21,7 @@ import { NotificationPermissionBanner } from '../../components/notifications';
 import { smartTimingService, SmartSchedule } from '@/lib/notifications/smartTiming';
 import { Button } from '@/components/ui';
 import { SettingsHeader } from '../../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DAY_ABBREV = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -105,6 +106,8 @@ const PresetButton: React.FC<PresetButtonProps> = ({ title, description, isActiv
 };
 
 export default function RemindersScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { isGranted } = useNotificationPermissions();
   

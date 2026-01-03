@@ -30,6 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { Button } from '@/components/ui';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface AIUsage {
   requests: number;
@@ -130,6 +131,8 @@ function AIUsageStats() {
 }
 
 export default function AISettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const settings = useSettingsStore();
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [tempApiKey, setTempApiKey] = useState(settings.aiApiKey || '');

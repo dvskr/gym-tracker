@@ -17,6 +17,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { lightHaptic } from '@/lib/utils/haptics';
 import type { MeasurementType } from '@/types/exercise-measurements';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 const CATEGORIES = [
   'chest',
@@ -52,6 +53,8 @@ const MEASUREMENT_TYPES: { value: MeasurementType; label: string }[] = [
 ];
 
 export default function AddCustomExerciseScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 

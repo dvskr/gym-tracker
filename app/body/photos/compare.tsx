@@ -35,6 +35,7 @@ import { PhotoType, PHOTO_TYPE_LABELS } from '@/lib/services/photoService';
 import { ComparisonSlider } from '@/components/body/ComparisonSlider';
 import { calculateTimeDifference, saveComparisonImage } from '@/lib/utils/photoComparison';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -217,6 +218,8 @@ const PhotoSelectionModal: React.FC<PhotoSelectionModalProps> = ({
 // ============================================
 
 export default function ComparePhotosScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
 
   const [photos, setPhotos] = useState<ProgressPhoto[]>([]);

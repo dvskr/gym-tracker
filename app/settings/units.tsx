@@ -21,6 +21,7 @@ import {
   cmToInches,
 } from '../../lib/utils/unitConversion';
 import { getCurrentTab } from '../../lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface RadioOptionProps {
   label: string;
@@ -58,6 +59,8 @@ const RadioOption: React.FC<RadioOptionProps> = ({
 };
 
 export default function UnitsSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const params = useLocalSearchParams();
   const { unitSystem, setUnitSystem } = useSettingsStore();

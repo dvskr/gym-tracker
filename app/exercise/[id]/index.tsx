@@ -52,6 +52,7 @@ import {
 } from '@/lib/api/exercises';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -548,6 +549,8 @@ const RecordsTab: React.FC<{
 // ============================================
 
 export default function ExerciseDetailScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { id, returnTo } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { user } = useAuthStore();
   const { isFavorite, toggleFavorite, loadFavorites } = useExerciseStore();

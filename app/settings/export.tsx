@@ -21,6 +21,7 @@ import {
   ExportProgress,
 } from '../../lib/services/dataExport';
 import { SettingsHeader } from '../../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface CheckboxItemProps {
   label: string;
@@ -58,6 +59,8 @@ const CheckboxItem: React.FC<CheckboxItemProps> = ({
 };
 
 export default function ExportDataScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { user } = useAuthStore();
 

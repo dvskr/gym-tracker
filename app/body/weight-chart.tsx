@@ -41,6 +41,7 @@ import {
 } from '@/lib/utils/weightTrends';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -108,6 +109,8 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ selected, onSelec
 // ============================================
 
 export default function WeightChartScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { bodyWeight, unitSystem } = useUnits();
 

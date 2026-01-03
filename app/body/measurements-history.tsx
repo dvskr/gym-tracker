@@ -52,6 +52,7 @@ import {
   MeasurementData,
 } from '@/lib/api/measurements';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 import {
   calculateAllRatios,
   calculateBodyComposition,
@@ -657,6 +658,8 @@ const MultiMeasurementChart: React.FC<MultiChartProps> = ({
 // ============================================
 
 export default function MeasurementsHistoryScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { bodyWeight } = useUnits();
 

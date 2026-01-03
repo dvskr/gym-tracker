@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { ChevronRight, Check } from 'lucide-react-native';
 import { conflictResolver, ConflictStrategy } from '@/lib/sync/conflictResolver';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 const STRATEGY_OPTIONS: Array<{
   value: ConflictStrategy;
@@ -46,6 +47,8 @@ const STRATEGY_OPTIONS: Array<{
 ];
 
 export default function SyncConflictSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const [currentStrategy, setCurrentStrategy] = useState<ConflictStrategy>('latest_wins');
   const [pendingConflicts, setPendingConflicts] = useState(0);

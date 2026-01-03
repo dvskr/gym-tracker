@@ -38,6 +38,7 @@ import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -102,6 +103,8 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 // ============================================
 
 export default function MeasurementsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { measurementUnit, weightUnit } = useUnits();
   

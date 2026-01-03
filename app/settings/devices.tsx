@@ -13,8 +13,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Smartphone, Monitor, Trash2, CheckCircle, Clock } from 'lucide-react-native';
 import { deviceManager, DeviceInfo } from '@/lib/sync/deviceManager';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function DevicesScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<string | null>(null);

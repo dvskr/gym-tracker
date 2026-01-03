@@ -23,6 +23,7 @@ import { lightHaptic } from '@/lib/utils/haptics';
 import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
 import { Card, LoadingSpinner, Skeleton } from '@/components/ui';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -247,6 +248,8 @@ const ExerciseItem = memo(function ExerciseItem({
 });
 
 export default function ExerciseLibraryScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const {
     isLoading,
     searchQuery,

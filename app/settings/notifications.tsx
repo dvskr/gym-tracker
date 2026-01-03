@@ -31,6 +31,7 @@ import { NotificationPermissionBanner } from '../../components/notifications';
 import { SettingsHeader } from '../../components/SettingsHeader';
 import { Button } from '../../components/ui';
 import { notificationService } from '@/lib/notifications/notificationService';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -105,6 +106,8 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => (
 const Divider: React.FC = () => <View style={styles.divider} />;
 
 export default function NotificationSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const settings = useSettingsStore();
   const {

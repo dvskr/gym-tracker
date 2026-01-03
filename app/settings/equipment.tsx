@@ -16,6 +16,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 type GymType = 'commercial_gym' | 'home_gym' | 'minimal' | 'bodyweight_only';
 
@@ -61,6 +62,8 @@ const EQUIPMENT_PRESETS: Record<GymType, string[]> = {
 };
 
 export default function EquipmentSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   
   const [gymType, setGymType] = useState<GymType>('commercial_gym');

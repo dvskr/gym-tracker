@@ -40,6 +40,7 @@ import {
   getVersionString,
 } from '../../lib/utils/deviceInfo';
 import { SettingsHeader } from '../../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface LinkRowProps {
   icon: React.ReactNode;
@@ -77,6 +78,8 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
 };
 
 export default function AboutScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const [copiedUserId, setCopiedUserId] = useState(false);
 

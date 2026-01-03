@@ -23,8 +23,11 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNotificationStore } from '../stores/notificationStore';
 import { AppNotification } from '../types/notifications';
 import { SettingsHeader } from '../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function NotificationsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { 
     notifications, 

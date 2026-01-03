@@ -28,6 +28,7 @@ import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface Message {
   id: string;
@@ -37,6 +38,8 @@ interface Message {
 }
 
 export default function CoachScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -808,4 +811,4 @@ const styles = StyleSheet.create({
     borderColor: '#334155',
   },
 });
-
+

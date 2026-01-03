@@ -57,6 +57,7 @@ import {
 } from '@/lib/utils/templateShare';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Exercise Row Component
@@ -388,6 +389,8 @@ const EditExerciseModal: React.FC<EditExerciseModalProps> = ({
 // ============================================
 
 export default function TemplateDetailScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { user } = useAuthStore();
   const { startWorkout, addExerciseWithSets, isWorkoutActive } = useWorkoutStore();

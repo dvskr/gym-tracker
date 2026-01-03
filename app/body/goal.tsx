@@ -50,6 +50,7 @@ import {
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -140,6 +141,8 @@ const GoalTypeSelector: React.FC<GoalTypeSelectorProps> = ({ selected, onSelect 
 // ============================================
 
 export default function WeightGoalScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { bodyWeight } = useUnits();
   

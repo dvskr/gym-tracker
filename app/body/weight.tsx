@@ -43,6 +43,7 @@ import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -330,6 +331,8 @@ const LogWeightModal: React.FC<LogWeightModalProps> = ({
 // ============================================
 
 export default function BodyWeightScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { weightUnit } = useUnits();
   

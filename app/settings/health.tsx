@@ -30,8 +30,11 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { SettingsHeader } from '@/components/SettingsHeader';
 import { healthSyncService } from '@/lib/health/healthSync';
 import type { SyncResult } from '@/lib/health/healthSync';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function HealthSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { isAvailable, hasPermissions, isLoading, permissions, requestPermissions, openSettings } =
     useHealthConnect();
   const {

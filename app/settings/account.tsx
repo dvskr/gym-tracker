@@ -14,6 +14,7 @@ import { useAuthStore } from '../../stores/authStore';
 import DeleteAccountModal from '../../components/modals/DeleteAccountModal';
 import { sendPasswordResetEmail } from '../../lib/api/account';
 import { SettingsHeader } from '../../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -53,6 +54,8 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
 };
 
 export default function AccountSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { user } = useAuthStore();
   const [showDeleteModal, setShowDeleteModal] = useState(false);

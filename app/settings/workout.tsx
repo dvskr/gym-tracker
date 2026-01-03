@@ -15,6 +15,7 @@ import { Clock, Volume2, Vibrate, Eye, Calculator, Trophy, ChevronRight } from '
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useUnits } from '@/hooks/useUnits';
 import { SettingsHeader } from '../../components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -181,6 +182,8 @@ const DurationPickerModal: React.FC<DurationPickerModalProps> = ({
 };
 
 export default function WorkoutSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const {
     restTimerDefault,

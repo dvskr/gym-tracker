@@ -39,6 +39,7 @@ import {
 } from '@/lib/services/photoService';
 import { savePhotoRecord } from '@/lib/api/photos';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Constants
@@ -111,6 +112,8 @@ const PhotoTypeCard: React.FC<PhotoTypeCardProps> = ({
 // ============================================
 
 export default function CapturePhotoScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
 
   const [selectedType, setSelectedType] = useState<PhotoType>('front');

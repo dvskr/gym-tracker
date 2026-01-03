@@ -17,8 +17,11 @@ import { manualSync, SyncSettings } from '@/lib/sync/manualSync';
 import { useSyncQueue } from '@/hooks/useSyncQueue';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function SyncSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { isOnline, connectionType } = useNetworkStatus();
   const { pendingCount, failedCount, failedOperations } = useSyncQueue();
   

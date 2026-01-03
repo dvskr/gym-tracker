@@ -27,6 +27,7 @@ import {
 } from '../../lib/api/profile';
 import { SettingsHeader } from '../../components/SettingsHeader';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface FormData {
   full_name: string;
@@ -60,6 +61,8 @@ const EXPERIENCE_LEVELS = [
 ];
 
 export default function EditProfileScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { user } = useAuthStore();
 

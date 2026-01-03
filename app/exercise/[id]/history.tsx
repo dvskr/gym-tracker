@@ -46,6 +46,7 @@ import {
 } from '@/lib/api/exercises';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -499,6 +500,8 @@ const StatsSkeleton = () => (
 // ============================================
 
 export default function ExerciseHistoryScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { user } = useAuthStore();
   const { weightUnit, unitSystem } = useUnits();

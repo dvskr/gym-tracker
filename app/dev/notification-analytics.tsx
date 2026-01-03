@@ -13,6 +13,7 @@ import { BarChart3, TrendingUp, Eye, XCircle } from 'lucide-react-native';
 import { notificationAnalyticsService, NotificationSummary } from '@/lib/notifications/notificationAnalytics';
 import { Button } from '@/components/ui';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -111,6 +112,8 @@ const TypeRow: React.FC<TypeRowProps> = ({ type, stats }) => {
 };
 
 export default function NotificationAnalyticsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const [summary, setSummary] = useState<NotificationSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);

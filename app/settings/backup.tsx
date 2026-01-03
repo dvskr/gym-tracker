@@ -26,8 +26,11 @@ import { backupService, Backup, BackupData, RestoreProgress } from '@/lib/backup
 import { RestoreConfirmModal } from '@/components/modals/RestoreConfirmModal';
 import { RestoreProgressModal } from '@/components/modals/RestoreProgressModal';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function BackupScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { isOnline, connectionType } = useNetworkStatus();
   const { pendingCount, failedCount, failedOperations } = useSyncQueue();
   

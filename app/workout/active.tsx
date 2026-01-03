@@ -31,8 +31,11 @@ import { ExerciseDBExercise } from '@/types/database';
 import { successHaptic } from '@/lib/utils/haptics';
 import { useUnits } from '@/hooks/useUnits';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function ActiveWorkoutScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const activeWorkout = useActiveWorkout();
   const isWorkoutActive = useIsWorkoutActive();
   const { autoStartTimer } = useSettingsStore();

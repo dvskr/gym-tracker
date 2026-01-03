@@ -14,6 +14,7 @@ import { Check, Plus, X } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { SettingsHeader } from '../../components/SettingsHeader';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 interface PlateItemProps {
   weight: number;
@@ -45,6 +46,8 @@ const STANDARD_PLATES_LBS = [45, 35, 25, 10, 5, 2.5];
 const METRIC_PLATES_KG = [20, 15, 10, 5, 2.5, 1.25];
 
 export default function PlatesSettingsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const { unitSystem, setDefaultPlates } = useSettingsStore();
 

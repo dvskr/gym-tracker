@@ -23,6 +23,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 type FitnessGoal = 'build_muscle' | 'lose_fat' | 'maintain' | 'strength' | 'endurance' | 'general_fitness';
 type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
@@ -54,6 +55,8 @@ const TRAINING_SPLITS: { value: TrainingSplit; label: string; description: strin
 ];
 
 export default function FitnessPreferencesScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   
   const [fitnessGoal, setFitnessGoal] = useState<FitnessGoal>('general_fitness');

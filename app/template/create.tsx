@@ -34,6 +34,7 @@ import { supabase } from '@/lib/supabase';
 import { lightHaptic, successHaptic, mediumHaptic } from '@/lib/utils/haptics';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -322,6 +323,8 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
 // ============================================
 
 export default function CreateTemplateScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   const { weightUnit } = useUnits();
 

@@ -49,6 +49,7 @@ import {
 } from '@/lib/utils/export';
 import { useUnits } from '@/hooks/useUnits';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -179,6 +180,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 // ============================================
 
 export default function WorkoutDetailScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { startWorkout, addExerciseWithSets } = useWorkoutStore();
   const { weightUnit } = useUnits();

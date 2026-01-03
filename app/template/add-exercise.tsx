@@ -9,8 +9,11 @@ import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { successHaptic } from '@/lib/utils/haptics';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function AddExerciseToTemplateScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { templateId } = useLocalSearchParams<{ templateId: string; returnTo?: string }>();
 
   const handleSelectExercise = useCallback(

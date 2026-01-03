@@ -38,6 +38,7 @@ import { PhotoViewer } from '@/components/body/PhotoViewer';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Types
@@ -228,6 +229,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onTakePhoto }) => (
 // ============================================
 
 export default function PhotoGalleryScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user } = useAuthStore();
   
   // Auth guard

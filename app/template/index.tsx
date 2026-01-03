@@ -57,6 +57,7 @@ import { fetchPreviousWorkoutData } from '@/hooks/usePreviousWorkout';
 import { Card } from '@/components/ui';
 import { lightHaptic, mediumHaptic, successHaptic } from '@/lib/utils/haptics';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 // ============================================
 // Template Card Component
@@ -472,6 +473,8 @@ const EmptyState: React.FC<{ onCreatePress: () => void }> = ({ onCreatePress }) 
 // ============================================
 
 export default function TemplatesScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const { user, session } = useAuthStore();
   const { startWorkout, addExerciseWithSets, isWorkoutActive } = useWorkoutStore();
 

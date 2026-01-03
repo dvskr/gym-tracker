@@ -11,8 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { conflictResolver, Conflict } from '@/lib/sync/conflictResolver';
 import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function ConflictsScreen() {
+  useBackNavigation(); // Enable Android back gesture support
+
   const router = useRouter();
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
 
