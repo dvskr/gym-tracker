@@ -16,6 +16,7 @@ import { useSettingsStore } from '../../stores/settingsStore';
 import { useUnits } from '@/hooks/useUnits';
 import { SettingsHeader } from '../../components/SettingsHeader';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { lightHaptic } from '@/lib/utils/haptics';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -60,9 +61,15 @@ const SettingRow: React.FC<SettingRowProps> = ({
         {toggle ? (
           <Switch
             value={toggleValue}
-            onValueChange={onToggleChange}
+            onValueChange={(value) => {
+              if (!disabled) {
+                lightHaptic();
+              }
+              onToggleChange?.(value);
+            }}
             trackColor={{ false: '#374151', true: '#22c55e' }}
             thumbColor={toggleValue ? '#fff' : '#9ca3af'}
+            disabled={disabled}
           />
         ) : value ? (
           <>
@@ -404,7 +411,7 @@ const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     justifyContent: 'flex-end',
   },
   modalContent: {

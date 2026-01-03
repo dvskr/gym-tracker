@@ -25,6 +25,7 @@ import {
   WorkoutSet,
 } from '@/stores/workoutStore';
 import { ExerciseCard } from '@/components/workout';
+import { PRConfetti } from '@/components/workout/PRConfetti';
 import { ExerciseSearch } from '@/components/exercise';
 import { Button } from '@/components/ui';
 import { ExerciseDBExercise } from '@/types/database';
@@ -404,6 +405,9 @@ export default function ActiveWorkoutScreen() {
           onClose={() => setShowExerciseSearch(false)}
         />
       </Modal>
+
+      {/* PR Confetti (rendered above everything when triggered) */}
+      <PRConfetti />
     </SafeAreaView>
   );
 }

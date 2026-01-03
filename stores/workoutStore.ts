@@ -12,6 +12,7 @@ import { calculateStreak } from '@/lib/utils/streakCalculation';
 import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
 import { useSettingsStore } from './settingsStore';
+import { celebratePR } from '@/lib/utils/celebrations';
 
 /*
 =============================================================================
@@ -702,6 +703,10 @@ export const useWorkoutStore = create<WorkoutState>()(
             },
           };
         });
+
+        // Trigger PR celebration (sound + confetti + haptic)
+        // Respects user settings for each celebration type
+        celebratePR();
       },
 
       getWorkoutPRs: () => {

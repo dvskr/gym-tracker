@@ -32,6 +32,7 @@ import { SettingsHeader } from '../../components/SettingsHeader';
 import { Button } from '../../components/ui';
 import { notificationService } from '@/lib/notifications/notificationService';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { lightHaptic } from '@/lib/utils/haptics';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -70,7 +71,12 @@ const SettingRow: React.FC<SettingRowProps> = ({
       {onValueChange !== undefined && (
         <Switch
           value={value}
-          onValueChange={onValueChange}
+          onValueChange={(newValue) => {
+            if (!disabled) {
+              lightHaptic();
+            }
+            onValueChange(newValue);
+          }}
           disabled={disabled}
           trackColor={{ false: '#374151', true: '#22c55e' }}
           thumbColor={value ? '#fff' : '#9ca3af'}
@@ -282,17 +288,6 @@ export default function NotificationSettingsScreen() {
         {/* Celebrations */}
         <SectionHeader title="CELEBRATIONS" />
         <View style={styles.section}>
-          <SettingRow
-            icon={<Trophy size={20} color="#f59e0b" />}
-            title="Personal Records"
-            subtitle="Celebrate new PRs"
-            value={settings.prNotifications}
-            onValueChange={(v) => settings.updateSettings({ prNotifications: v })}
-            disabled={isDisabled}
-          />
-          
-          <Divider />
-          
           <SettingRow
             icon={<Award size={20} color="#8b5cf6" />}
             title="Achievements"
