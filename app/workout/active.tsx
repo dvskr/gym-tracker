@@ -220,7 +220,7 @@ export default function ActiveWorkoutScreen() {
           style: 'destructive',
           onPress: () => {
             discardWorkout();
-            router.back();
+            router.push('/(tabs)/workout'); // Always return to Workout tab after discarding
           },
         },
       ]

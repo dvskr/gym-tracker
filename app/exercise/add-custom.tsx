@@ -16,6 +16,7 @@ import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { lightHaptic } from '@/lib/utils/haptics';
 import type { MeasurementType } from '@/types/exercise-measurements';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 const CATEGORIES = [
   'chest',
@@ -164,7 +165,7 @@ export default function AddCustomExerciseScreen() {
         [
           {
             text: 'OK',
-            onPress: () => router.back(),
+            onPress: () => router.push(getCurrentTab() || '/(tabs)'),
           },
         ]
       );
@@ -185,7 +186,7 @@ export default function AddCustomExerciseScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </Pressable>
         <Text style={styles.headerTitle}>Add Custom Exercise</Text>

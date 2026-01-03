@@ -56,6 +56,7 @@ import {
   shareTemplateAsJSON,
 } from '@/lib/utils/templateShare';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Exercise Row Component
@@ -387,7 +388,7 @@ const EditExerciseModal: React.FC<EditExerciseModalProps> = ({
 // ============================================
 
 export default function TemplateDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { user } = useAuthStore();
   const { startWorkout, addExerciseWithSets, isWorkoutActive } = useWorkoutStore();
   const { weightUnit } = useUnits();
@@ -415,7 +416,7 @@ export default function TemplateDetailScreen() {
     } catch (error) {
  logger.error('Error fetching template:', error);
       Alert.alert('Error', 'Failed to load template');
-      router.back();
+      router.push(getCurrentTab() || '/(tabs)');
     } finally {
       setIsLoading(false);
     }
@@ -470,7 +471,7 @@ export default function TemplateDetailScreen() {
           onPress: async () => {
             try {
               await deleteTemplate(id!);
-              router.back();
+              router.push(getCurrentTab() || '/(tabs)');
             } catch (error) {
  logger.error('Error deleting template:', error);
               Alert.alert('Error', 'Failed to delete template');
@@ -747,7 +748,7 @@ export default function TemplateDetailScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => router.push(getCurrentTab() || '/(tabs)')}
         >
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>

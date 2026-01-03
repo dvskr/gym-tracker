@@ -34,6 +34,7 @@ import { getPhotos, ProgressPhoto } from '@/lib/api/photos';
 import { PhotoType, PHOTO_TYPE_LABELS } from '@/lib/services/photoService';
 import { ComparisonSlider } from '@/components/body/ComparisonSlider';
 import { calculateTimeDifference, saveComparisonImage } from '@/lib/utils/photoComparison';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -324,7 +325,7 @@ export default function ComparePhotosScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Compare Photos</Text>

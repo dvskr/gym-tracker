@@ -32,6 +32,7 @@ import {
   ChevronDown,
   ChevronRight,
   FolderInput,
+  ArrowLeft,
 } from 'lucide-react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
@@ -55,6 +56,7 @@ import {
 import { fetchPreviousWorkoutData } from '@/hooks/usePreviousWorkout';
 import { Card } from '@/components/ui';
 import { lightHaptic, mediumHaptic, successHaptic } from '@/lib/utils/haptics';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Template Card Component
@@ -848,6 +850,13 @@ export default function TemplatesScreen() {
 
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.push(getCurrentTab() || '/(tabs)/workout')}
+          activeOpacity={0.7}
+        >
+          <ArrowLeft size={24} color="#ffffff" />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Templates</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity
@@ -1132,10 +1141,23 @@ const styles = StyleSheet.create({
     borderBottomColor: '#1e293b',
   },
 
+  backButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#1e293b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10, // Ensure button is on top
+  },
+
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#ffffff',
+    flex: 1,
+    textAlign: 'center',
+    marginLeft: -44, // Center the title by offsetting the back button
   },
 
   headerActions: {

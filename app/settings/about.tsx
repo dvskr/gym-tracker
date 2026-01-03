@@ -12,7 +12,6 @@ import {
   Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
 import * as Clipboard from 'expo-clipboard';
 import {
   Star,
@@ -40,6 +39,7 @@ import {
   getLegalUrls,
   getVersionString,
 } from '../../lib/utils/deviceInfo';
+import { SettingsHeader } from '../../components/SettingsHeader';
 
 interface LinkRowProps {
   icon: React.ReactNode;
@@ -138,15 +138,7 @@ export default function AboutScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'About',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="About" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* App Info */}
@@ -425,4 +417,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

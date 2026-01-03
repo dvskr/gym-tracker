@@ -438,7 +438,14 @@ export default function ProgressScreen() {
                 onPress={() => {
                   requireAuth(() => {
                     lightHaptic();
-                    router.push(`/exercise/${pr.exerciseId}`);
+                    // #region agent log
+                    console.log('[DEBUG_NAV] PR item clicked from Progress tab:', JSON.stringify({exerciseId:pr.exerciseId,returnTo:'/(tabs)/progress',timestamp:Date.now()}));
+                    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/(tabs)/progress.tsx:441',message:'Navigating to exercise detail from Progress',data:{exerciseId:pr.exerciseId,returnTo:'/(tabs)/progress'},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+                    // #endregion
+                    router.push({
+                      pathname: `/exercise/${pr.exerciseId}`,
+                      params: { returnTo: '/(tabs)/progress' }
+                    });
                   }, 'Sign in to view your personal records and exercise details.');
                 }}
               />

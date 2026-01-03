@@ -16,10 +16,13 @@ import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc, PlusCircle, Home, Footprints, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { Search, Dumbbell, X, Star, Heart, Zap, Target, Flame, Activity, Weight, Cog, User, Circle, Disc, PlusCircle, Home, Footprints, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react-native';
 import { useDebouncedCallback } from 'use-debounce';
 import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
 import { lightHaptic } from '@/lib/utils/haptics';
+import { getThumbnailUrl } from '@/lib/utils/exerciseImages';
+import { Card, LoadingSpinner, Skeleton } from '@/components/ui';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -451,6 +454,14 @@ export default function ExerciseLibraryScreen() {
 
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => router.push(getCurrentTab() || '/(tabs)/workout')}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <ArrowLeft size={24} color="#ffffff" />
+        </TouchableOpacity>
+        
         <Text style={styles.title}>Exercise Library</Text>
         
         {/* Add Custom Exercise Button */}
@@ -784,10 +795,21 @@ const styles = StyleSheet.create({
     borderBottomColor: '#1e293b',
   },
 
+  backButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#1e293b',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   title: {
     color: '#ffffff',
     fontSize: 28,
     fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
   },
 
   addButton: {

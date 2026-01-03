@@ -8,8 +8,8 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
-import { Check } from 'lucide-react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { ArrowLeft, Check } from 'lucide-react-native';
 import { useSettingsStore, UnitSystem } from '../../stores/settingsStore';
 import {
   formatWeight,
@@ -20,6 +20,7 @@ import {
   inchesToCm,
   cmToInches,
 } from '../../lib/utils/unitConversion';
+import { getCurrentTab } from '../../lib/navigation/navigationState';
 
 interface RadioOptionProps {
   label: string;
@@ -58,6 +59,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
 
 export default function UnitsSettingsScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const { unitSystem, setUnitSystem } = useSettingsStore();
   const [tempUnitSystem, setTempUnitSystem] = useState<UnitSystem>(unitSystem);
 
@@ -65,6 +67,15 @@ export default function UnitsSettingsScreen() {
   useEffect(() => {
     setTempUnitSystem(unitSystem);
   }, [unitSystem]);
+
+  const handleBack = () => {
+    // #region agent log
+    const parentTab = params.returnTo as string || getCurrentTab();
+    console.log('[DEBUG_NAV] Settings back button:', JSON.stringify({from:'/settings/units',to:parentTab,timestamp:Date.now()}));
+    // #endregion
+    const returnPath = params.returnTo as string || getCurrentTab();
+    router.push(returnPath);
+  };
 
   const handleSave = () => {
     if (tempUnitSystem !== unitSystem) {
@@ -85,20 +96,16 @@ export default function UnitsSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Units',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-          headerRight: () => (
-            <TouchableOpacity onPress={handleSave} style={{ marginRight: 16 }}>
-              <Text style={{ color: '#3b82f6', fontSize: 16, fontWeight: '600' }}>Save</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
+      {/* Custom Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <ArrowLeft size={24} color="#ffffff" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Units</Text>
+        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Unit System Section */}
@@ -283,6 +290,45 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
   },
+
+  // Custom Header
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    backgroundColor: '#1e293b',
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
+  },
+
+  backButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#f1f5f9',
+  },
+
+  saveButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+
+  saveButtonText: {
+    color: '#3b82f6',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
   scrollView: {
     flex: 1,
   },
@@ -451,4 +497,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

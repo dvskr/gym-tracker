@@ -33,6 +33,7 @@ import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { lightHaptic, successHaptic, mediumHaptic } from '@/lib/utils/haptics';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -600,7 +601,7 @@ export default function CreateTemplateScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => router.push(getCurrentTab() || '/(tabs)')}
         >
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>

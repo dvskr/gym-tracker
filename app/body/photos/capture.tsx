@@ -38,6 +38,7 @@ import {
   PhotoResult,
 } from '@/lib/services/photoService';
 import { savePhotoRecord } from '@/lib/api/photos';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Constants
@@ -196,7 +197,7 @@ export default function CapturePhotoScreen() {
       Alert.alert(
         'Photo Saved',
         'Your progress photo has been saved successfully.',
-        [{ text: 'OK', onPress: () => router.back() }]
+        [{ text: 'OK', onPress: () => router.push(getCurrentTab() || '/(tabs)') }]
       );
     } catch (error) {
  logger.error('Error saving photo:', error);
@@ -212,7 +213,7 @@ export default function CapturePhotoScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Take Progress Photo</Text>

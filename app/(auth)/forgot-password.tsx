@@ -30,7 +30,7 @@ export default function ForgotPasswordScreen() {
       Alert.alert(
         'Email Sent',
         'Check your inbox for password reset instructions.',
-        [{ text: 'OK', onPress: () => router.back() }]
+        [{ text: 'OK', onPress: () => router.push('/(auth)/login') }] // Return to login
       );
     }
   };
@@ -39,7 +39,7 @@ export default function ForgotPasswordScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push('/(auth)/login')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
 
@@ -184,4 +184,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
+

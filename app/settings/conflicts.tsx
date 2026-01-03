@@ -8,8 +8,9 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { conflictResolver, Conflict } from '@/lib/sync/conflictResolver';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 export default function ConflictsScreen() {
   const router = useRouter();
@@ -81,14 +82,7 @@ export default function ConflictsScreen() {
   if (conflicts.length === 0) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Conflicts',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-          }}
-        />
+      <SettingsHeader title="Conflicts" />
         <View style={styles.emptyState}>
           <Text style={styles.emptyIcon}>✅</Text>
           <Text style={styles.emptyTitle}>No Conflicts</Text>
@@ -102,19 +96,7 @@ export default function ConflictsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: `${conflicts.length} Conflict${conflicts.length > 1 ? 's' : ''}`,
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerRight: () => (
-            <TouchableOpacity onPress={handleClearAll}>
-              <Text style={styles.headerButton}>Clear All</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
+      <SettingsHeader title="Conflicts" />
 
       <ScrollView style={styles.scrollView}>
         {conflicts.map((conflict) => (
@@ -290,4 +272,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
-
+

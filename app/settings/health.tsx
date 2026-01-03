@@ -12,7 +12,6 @@ import {
   Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
 import {
   Heart,
   Activity,
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react-native';
 import { useHealthConnect } from '@/hooks/useHealthConnect';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { SettingsHeader } from '@/components/SettingsHeader';
 import { healthSyncService } from '@/lib/health/healthSync';
 import type { SyncResult } from '@/lib/health/healthSync';
 
@@ -123,14 +123,7 @@ export default function HealthSettingsScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Health Settings',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-          }}
-        />
+      <SettingsHeader title="Health Settings" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
           <Text style={styles.loadingText}>Checking health features...</Text>
@@ -142,14 +135,7 @@ export default function HealthSettingsScreen() {
   if (!isAvailable) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Health Settings',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-          }}
-        />
+      <SettingsHeader title="Health Settings" />
         <View style={styles.unavailableContainer}>
           <AlertCircle size={48} color="#f59e0b" />
           <Text style={styles.unavailableTitle}>Health Connect Not Available</Text>
@@ -175,14 +161,7 @@ export default function HealthSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Health Settings',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-        }}
-      />
+      <SettingsHeader title="Health Settings" />
 
       <ScrollView style={styles.scrollView}>
         {/* Connection Status */}
@@ -646,4 +625,4 @@ const styles = StyleSheet.create({
   syncButtonTextDisabled: {
     color: '#64748b',
   },
-});
+});

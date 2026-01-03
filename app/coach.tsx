@@ -27,6 +27,7 @@ import { supabase } from '@/lib/supabase';
 import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 interface Message {
   id: string;
@@ -514,7 +515,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
 
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => router.push(getCurrentTab() || '/(tabs)')} style={styles.backButton}>
           <ArrowLeft size={24} color="#f1f5f9" />
         </Pressable>
         <View style={styles.headerCenter}>

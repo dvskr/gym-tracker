@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Download, FileText, Table, Check, AlertTriangle } from 'lucide-react-native';
 import { useAuthStore } from '../../stores/authStore';
 import {
@@ -20,6 +20,7 @@ import {
   ExportOptions,
   ExportProgress,
 } from '../../lib/services/dataExport';
+import { SettingsHeader } from '../../components/SettingsHeader';
 
 interface CheckboxItemProps {
   label: string;
@@ -144,15 +145,7 @@ export default function ExportDataScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Export Data',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Export Data" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Description */}
@@ -570,4 +563,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

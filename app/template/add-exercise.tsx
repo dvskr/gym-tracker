@@ -8,9 +8,10 @@ import { ExerciseSearch } from '@/components/exercise/ExerciseSearch';
 import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { successHaptic } from '@/lib/utils/haptics';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 export default function AddExerciseToTemplateScreen() {
-  const { templateId } = useLocalSearchParams<{ templateId: string }>();
+  const { templateId } = useLocalSearchParams<{ templateId: string; returnTo?: string }>();
 
   const handleSelectExercise = useCallback(
     async (exercise: ExerciseDBExercise) => {
@@ -77,7 +78,7 @@ export default function AddExerciseToTemplateScreen() {
         if (insertError) throw insertError;
 
         successHaptic();
-        router.back();
+        router.push(getCurrentTab() || '/(tabs)');
       } catch (error) {
  logger.error('Error adding exercise to template:', error);
       }
@@ -86,7 +87,7 @@ export default function AddExerciseToTemplateScreen() {
   );
 
   const handleClose = useCallback(() => {
-    router.back();
+    router.push(getCurrentTab() || '/(tabs)');
   }, []);
 
   return (

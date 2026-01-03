@@ -12,7 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Bell, Clock, Calendar, ChevronRight, Check, Sparkles } from 'lucide-react-native';
 import { workoutReminderService, WorkoutReminder } from '../../lib/notifications/workoutReminders';
@@ -20,6 +20,7 @@ import { useNotificationPermissions } from '../../hooks/useNotificationPermissio
 import { NotificationPermissionBanner } from '../../components/notifications';
 import { smartTimingService, SmartSchedule } from '@/lib/notifications/smartTiming';
 import { Button } from '@/components/ui';
+import { SettingsHeader } from '../../components/SettingsHeader';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const DAY_ABBREV = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -309,15 +310,7 @@ export default function RemindersScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Workout Reminders',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-            headerTitleStyle: { fontWeight: '600' },
-          }}
-        />
+      <SettingsHeader title="Workout Reminders" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
         </View>
@@ -327,15 +320,7 @@ export default function RemindersScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Workout Reminders',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Workout Reminders" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Permission Banner */}
@@ -735,4 +720,4 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
   },
 });
-
+

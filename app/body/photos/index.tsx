@@ -37,6 +37,7 @@ import { PhotoGrid } from '@/components/body/PhotoGrid';
 import { PhotoViewer } from '@/components/body/PhotoViewer';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -324,7 +325,7 @@ export default function PhotoGalleryScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Progress Photos</Text>

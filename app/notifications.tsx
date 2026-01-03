@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { 
   Trophy, 
   Award, 
@@ -22,6 +22,7 @@ import {
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNotificationStore } from '../stores/notificationStore';
 import { AppNotification } from '../types/notifications';
+import { SettingsHeader } from '../components/SettingsHeader';
 
 export default function NotificationsScreen() {
   const router = useRouter();
@@ -142,15 +143,7 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Notifications',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Notifications" />
 
       <View style={styles.header}>
         <Text style={styles.title}>
@@ -328,4 +321,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
+

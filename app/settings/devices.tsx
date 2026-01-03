@@ -10,9 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
 import { Smartphone, Monitor, Trash2, CheckCircle, Clock } from 'lucide-react-native';
 import { deviceManager, DeviceInfo } from '@/lib/sync/deviceManager';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 export default function DevicesScreen() {
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
@@ -113,14 +113,7 @@ export default function DevicesScreen() {
   if (loading && devices.length === 0) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Your Devices',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-          }}
-        />
+      <SettingsHeader title="Your Devices" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
           <Text style={styles.loadingText}>Loading devices...</Text>
@@ -131,14 +124,7 @@ export default function DevicesScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Your Devices',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-        }}
-      />
+      <SettingsHeader title="Your Devices" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Header Info */}
@@ -419,4 +405,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

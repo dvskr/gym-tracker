@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Camera, User, X } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -25,6 +25,8 @@ import {
   validateProfileData,
   UpdateProfileData,
 } from '../../lib/api/profile';
+import { SettingsHeader } from '../../components/SettingsHeader';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 interface FormData {
   full_name: string;
@@ -231,7 +233,7 @@ export default function EditProfileScreen() {
       await loadProfile(); // Reload profile after update
       
       Alert.alert('Success', 'Profile updated successfully', [
-        { text: 'OK', onPress: () => router.back() },
+        { text: 'OK', onPress: () => router.push(getCurrentTab() || '/(tabs)') },
       ]);
     } catch (error) {
       Alert.alert('Error', 'Failed to update profile');
@@ -243,7 +245,7 @@ export default function EditProfileScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <Stack.Screen options={{ title: 'Edit Profile', headerShown: false }} />
+        <SettingsHeader title="Edit Profile" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
         </View>
@@ -251,26 +253,19 @@ export default function EditProfileScreen() {
     );
   }
 
+  const SaveButton = () => (
+    <TouchableOpacity onPress={handleSave} disabled={saving} style={{ marginRight: 4 }}>
+      {saving ? (
+        <ActivityIndicator size="small" color="#3b82f6" />
+      ) : (
+        <Text style={styles.saveButtonHeader}>Save</Text>
+      )}
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Edit Profile',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-          headerRight: () => (
-            <TouchableOpacity onPress={handleSave} disabled={saving} style={{ marginRight: 16 }}>
-              {saving ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text style={styles.saveButtonHeader}>Save</Text>
-              )}
-            </TouchableOpacity>
-          ),
-        }}
-      />
+      <SettingsHeader title="Edit Profile" rightButton={<SaveButton />} />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Avatar Section */}
@@ -658,4 +653,4 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
-
+

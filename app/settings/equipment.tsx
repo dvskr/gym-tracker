@@ -15,6 +15,7 @@ import { ArrowLeft, Building2, Home, Minimize2, User, Check } from 'lucide-react
 import { useAuthStore } from '@/stores/authStore';
 import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 type GymType = 'commercial_gym' | 'home_gym' | 'minimal' | 'bodyweight_only';
 
@@ -112,7 +113,7 @@ export default function EquipmentSettingsScreen() {
       if (error) throw error;
 
       successHaptic();
-      router.back();
+      router.push(getCurrentTab() || '/(tabs)');
     } catch (error) {
  logger.error('Error saving equipment:', error);
     } finally {
@@ -153,7 +154,7 @@ export default function EquipmentSettingsScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => router.push(getCurrentTab() || '/(tabs)')} style={styles.backButton}>
           <ArrowLeft size={24} color="#f1f5f9" />
         </Pressable>
         <Text style={styles.headerTitle}>Equipment Setup</Text>

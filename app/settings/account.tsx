@@ -8,11 +8,12 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Mail, Lock, AlertTriangle, ChevronRight } from 'lucide-react-native';
 import { useAuthStore } from '../../stores/authStore';
 import DeleteAccountModal from '../../components/modals/DeleteAccountModal';
 import { sendPasswordResetEmail } from '../../lib/api/account';
+import { SettingsHeader } from '../../components/SettingsHeader';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -98,15 +99,7 @@ export default function AccountSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Account',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Account" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Email Section */}
@@ -345,4 +338,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

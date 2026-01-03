@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import {
   Bell,
   BellOff,
@@ -28,6 +28,7 @@ import {
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useNotificationPermissions } from '../../hooks/useNotificationPermissions';
 import { NotificationPermissionBanner } from '../../components/notifications';
+import { SettingsHeader } from '../../components/SettingsHeader';
 import { Button } from '../../components/ui';
 import { notificationService } from '@/lib/notifications/notificationService';
 
@@ -143,15 +144,7 @@ export default function NotificationSettingsScreen() {
   if (!isGranted) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Notifications',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-            headerTitleStyle: { fontWeight: '600' },
-          }}
-        />
+      <SettingsHeader title="Notifications" />
         
         <View style={styles.permissionContainer}>
           <View style={styles.permissionCard}>
@@ -178,15 +171,7 @@ export default function NotificationSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Notifications',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Notifications" />
 
       <ScrollView 
         style={styles.scrollView}
@@ -471,4 +456,4 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: 32,
   },
-});
+});

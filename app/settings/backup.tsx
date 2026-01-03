@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, router } from 'expo-router';
+import { router } from 'expo-router';
 import {
   Download,
   Upload,
@@ -25,6 +25,7 @@ import * as Sharing from 'expo-sharing';
 import { backupService, Backup, BackupData, RestoreProgress } from '@/lib/backup/backupService';
 import { RestoreConfirmModal } from '@/components/modals/RestoreConfirmModal';
 import { RestoreProgressModal } from '@/components/modals/RestoreProgressModal';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 export default function BackupScreen() {
   const { isOnline, connectionType } = useNetworkStatus();
@@ -338,14 +339,7 @@ export default function BackupScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Backup & Restore',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-        }}
-      />
+      <SettingsHeader title="Backup & Restore" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Status Section */}
@@ -774,4 +768,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

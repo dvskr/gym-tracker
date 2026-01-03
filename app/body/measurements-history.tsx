@@ -51,6 +51,7 @@ import {
   CHARTABLE_FIELDS,
   MeasurementData,
 } from '@/lib/api/measurements';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 import {
   calculateAllRatios,
   calculateBodyComposition,
@@ -836,7 +837,7 @@ export default function MeasurementsHistoryScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Measurement History</Text>
@@ -1703,4 +1704,4 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-});
+});

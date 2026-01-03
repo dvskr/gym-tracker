@@ -9,9 +9,11 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Check, Plus, X } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { SettingsHeader } from '../../components/SettingsHeader';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 interface PlateItemProps {
   weight: number;
@@ -98,26 +100,13 @@ export default function PlatesSettingsScreen() {
     
     setDefaultPlates(customPlates.length > 0 ? 'custom' : 'standard');
     Alert.alert('Success', 'Plate configuration saved', [
-      { text: 'OK', onPress: () => router.back() },
+      { text: 'OK', onPress: () => router.push(getCurrentTab() || '/(tabs)') },
     ]);
   };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Available Plates',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-          headerRight: () => (
-            <TouchableOpacity onPress={handleSave}>
-              <Text style={styles.saveButton}>Save</Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
+      <SettingsHeader title="Available Plates" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Info Card */}
@@ -443,4 +432,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

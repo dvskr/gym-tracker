@@ -10,10 +10,11 @@ import {
   Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Clock, Volume2, Vibrate, Eye, Calculator, Trophy, ChevronRight } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useUnits } from '@/hooks/useUnits';
+import { SettingsHeader } from '../../components/SettingsHeader';
 
 interface SettingRowProps {
   icon: React.ReactNode;
@@ -204,15 +205,7 @@ export default function WorkoutSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Workout Settings',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Workout Settings" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Rest Timer Section */}
@@ -486,4 +479,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+

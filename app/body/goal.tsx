@@ -49,6 +49,7 @@ import {
 } from '@/lib/utils/goalCalculations';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -322,7 +323,7 @@ export default function WeightGoalScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Weight Goal</Text>

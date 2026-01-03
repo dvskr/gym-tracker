@@ -8,9 +8,10 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ChevronRight, Check } from 'lucide-react-native';
 import { conflictResolver, ConflictStrategy } from '@/lib/sync/conflictResolver';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 const STRATEGY_OPTIONS: Array<{
   value: ConflictStrategy;
@@ -93,15 +94,7 @@ export default function SyncConflictSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Sync Conflicts',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Sync Conflicts" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Info Section */}
@@ -395,4 +388,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

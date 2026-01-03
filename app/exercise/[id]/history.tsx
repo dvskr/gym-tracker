@@ -45,6 +45,7 @@ import {
   ExerciseStats,
 } from '@/lib/api/exercises';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -498,7 +499,7 @@ const StatsSkeleton = () => (
 // ============================================
 
 export default function ExerciseHistoryScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { user } = useAuthStore();
   const { weightUnit, unitSystem } = useUnits();
   
@@ -589,7 +590,7 @@ export default function ExerciseHistoryScreen() {
         <StatusBar style="light" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Exercise not found</Text>
-          <TouchableOpacity style={styles.backButtonError} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButtonError} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
             <Text style={styles.backButtonText}>Go Back</Text>
           </TouchableOpacity>
         </View>
@@ -603,7 +604,7 @@ export default function ExerciseHistoryScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>

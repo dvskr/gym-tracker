@@ -22,6 +22,7 @@ import {
 import { useAuthStore } from '@/stores/authStore';
 import { supabase } from '@/lib/supabase';
 import { successHaptic, lightHaptic } from '@/lib/utils/haptics';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 type FitnessGoal = 'build_muscle' | 'lose_fat' | 'maintain' | 'strength' | 'endurance' | 'general_fitness';
 type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
@@ -114,7 +115,7 @@ export default function FitnessPreferencesScreen() {
       if (error) throw error;
 
       successHaptic();
-      router.back();
+      router.push(getCurrentTab() || '/(tabs)');
     } catch (error) {
  logger.error('Error saving preferences:', error);
     } finally {
@@ -148,7 +149,7 @@ export default function FitnessPreferencesScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => router.push(getCurrentTab() || '/(tabs)')} style={styles.backButton}>
           <ArrowLeft size={24} color="#f1f5f9" />
         </Pressable>
         <Text style={styles.headerTitle}>Fitness Preferences</Text>

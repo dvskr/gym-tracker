@@ -29,6 +29,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { Button } from '@/components/ui';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 interface AIUsage {
   requests: number;
@@ -169,7 +170,7 @@ export default function AISettingsScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => router.push(getCurrentTab() || '/(tabs)')} style={styles.backButton}>
           <ArrowLeft size={24} color="#f1f5f9" />
         </Pressable>
         <Text style={styles.headerTitle}>AI Settings</Text>

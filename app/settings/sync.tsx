@@ -11,12 +11,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
 import { RefreshCw, CheckCircle, AlertTriangle, Trash2, WifiOff } from 'lucide-react-native';
 import { SyncStatusIndicator } from '@/components/sync/SyncStatusIndicator';
 import { manualSync, SyncSettings } from '@/lib/sync/manualSync';
 import { useSyncQueue } from '@/hooks/useSyncQueue';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 export default function SyncSettingsScreen() {
   const { isOnline, connectionType } = useNetworkStatus();
@@ -184,14 +184,7 @@ export default function SyncSettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Sync & Backup',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-        }}
-      />
+      <SettingsHeader title="Sync & Backup" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Sync Status Section */}
@@ -661,4 +654,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

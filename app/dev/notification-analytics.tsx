@@ -9,10 +9,10 @@ import {
   RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
 import { BarChart3, TrendingUp, Eye, XCircle } from 'lucide-react-native';
 import { notificationAnalyticsService, NotificationSummary } from '@/lib/notifications/notificationAnalytics';
 import { Button } from '@/components/ui';
+import { SettingsHeader } from '@/components/SettingsHeader';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -145,15 +145,7 @@ export default function NotificationAnalyticsScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Notification Analytics',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-            headerTitleStyle: { fontWeight: '600' },
-          }}
-        />
+        <SettingsHeader title="Notification Analytics" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
           <Text style={styles.loadingText}>Loading analytics...</Text>
@@ -165,15 +157,7 @@ export default function NotificationAnalyticsScreen() {
   if (!summary || summary.totalSent === 0) {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
-        <Stack.Screen
-          options={{
-            title: 'Notification Analytics',
-            headerShown: true,
-            headerStyle: { backgroundColor: '#1e293b' },
-            headerTintColor: '#f1f5f9',
-            headerTitleStyle: { fontWeight: '600' },
-          }}
-        />
+        <SettingsHeader title="Notification Analytics" />
         <View style={styles.emptyContainer}>
           <BarChart3 size={64} color="#64748b" />
           <Text style={styles.emptyTitle}>No Data Yet</Text>
@@ -187,15 +171,7 @@ export default function NotificationAnalyticsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <Stack.Screen
-        options={{
-          title: 'Notification Analytics',
-          headerShown: true,
-          headerStyle: { backgroundColor: '#1e293b' },
-          headerTintColor: '#f1f5f9',
-          headerTitleStyle: { fontWeight: '600' },
-        }}
-      />
+      <SettingsHeader title="Notification Analytics" />
 
       <ScrollView
         style={styles.scrollView}
@@ -428,4 +404,4 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-
+

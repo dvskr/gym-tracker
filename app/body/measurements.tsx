@@ -37,6 +37,7 @@ import { getTodayWeight } from '@/lib/api/bodyWeight';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -260,7 +261,7 @@ export default function MeasurementsScreen() {
       
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert('Saved', 'Measurements saved successfully', [
-        { text: 'OK', onPress: () => router.back() }
+        { text: 'OK', onPress: () => router.push(getCurrentTab() || '/(tabs)') }
       ]);
     } catch (error) {
  logger.error('Error saving measurements:', error);
@@ -301,7 +302,7 @@ export default function MeasurementsScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Body Measurements</Text>

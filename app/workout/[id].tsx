@@ -48,6 +48,7 @@ import {
   convertToExportable,
 } from '@/lib/utils/export';
 import { useUnits } from '@/hooks/useUnits';
+import { getCurrentTab } from '@/lib/navigation/navigationState';
 
 // ============================================
 // Types
@@ -178,7 +179,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 // ============================================
 
 export default function WorkoutDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id: string; returnTo?: string }>();
   const { startWorkout, addExerciseWithSets } = useWorkoutStore();
   const { weightUnit } = useUnits();
 
@@ -281,7 +282,7 @@ export default function WorkoutDetailScreen() {
             mediumHaptic();
             try {
               await deleteWorkout(id!);
-              router.back();
+              router.push(getCurrentTab() || '/(tabs)');
             } catch (error) {
  logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout');
@@ -377,7 +378,7 @@ export default function WorkoutDetailScreen() {
         <StatusBar style="light" />
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Workout not found</Text>
-          <TouchableOpacity style={styles.backButtonLarge} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButtonLarge} onPress={() => router.push(getCurrentTab() || '/(tabs)')}>
             <Text style={styles.backButtonText}>Go Back</Text>
           </TouchableOpacity>
         </View>
@@ -393,7 +394,7 @@ export default function WorkoutDetailScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.headerButton}
-          onPress={() => router.back()}
+          onPress={() => router.push(getCurrentTab() || '/(tabs)')}
         >
           <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
