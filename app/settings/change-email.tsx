@@ -16,7 +16,7 @@ import { Stack, router } from 'expo-router';
 import { Mail, Lock, ChevronLeft, Eye, EyeOff, AlertTriangle, Info } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
-import * as Haptics from 'expo-haptics';
+import { errorHaptic, successHaptic } from '@/lib/utils/haptics';
 
 export default function ChangeEmailScreen() {
   const { user } = useAuthStore();
@@ -66,7 +66,7 @@ export default function ChangeEmailScreen() {
 
   const handleChangeEmail = async () => {
     if (!validate()) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      errorHaptic();
       return;
     }
 
@@ -81,7 +81,7 @@ export default function ChangeEmailScreen() {
 
       if (signInError) {
         setErrors({ password: 'Incorrect password' });
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        errorHaptic();
         setIsLoading(false);
         return;
       }
@@ -95,14 +95,14 @@ export default function ChangeEmailScreen() {
         // Handle specific errors
         if (updateError.message.includes('already registered')) {
           setErrors({ newEmail: 'This email is already in use' });
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          errorHaptic();
           setIsLoading(false);
           return;
         }
         throw updateError;
       }
 
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      successHaptic();
       setEmailSent(true);
 
     } catch (error) {
@@ -111,7 +111,7 @@ export default function ChangeEmailScreen() {
         'Error',
         error instanceof Error ? error.message : 'Failed to change email. Please try again.'
       );
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      errorHaptic();
     } finally {
       setIsLoading(false);
     }

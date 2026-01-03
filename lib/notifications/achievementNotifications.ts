@@ -1,10 +1,11 @@
 import { notificationService } from './notificationService';
 import { logger } from '@/lib/utils/logger';
-import * as Haptics from 'expo-haptics';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { eventEmitter } from '../utils/eventEmitter';
 import { useNotificationStore } from '@/stores/notificationStore';
+import { successHaptic } from '@/lib/utils/haptics';
 
 export interface PRNotification {
   exerciseName: string;
@@ -56,8 +57,8 @@ class AchievementNotificationService {
         .replace('{value}', pr.newValue.toString())
         .replace('{unit}', pr.unit || '');
 
-      // Haptic celebration
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // Haptic celebration (checks settings internally)
+      successHaptic();
 
       // In-app notification (toast)
       this.showPRToast(pr);
@@ -85,9 +86,9 @@ class AchievementNotificationService {
         }
       );
 
- logger.log(`x PR notification sent: ${pr.exerciseName} ${pr.type}`);
+logger.log(`x PR notification sent: ${pr.exerciseName} ${pr.type}`);
     } catch (error) {
- logger.error('Failed to notify PR:', error);
+logger.error('Failed to notify PR:', error);
     }
   }
 
@@ -103,8 +104,8 @@ class AchievementNotificationService {
    */
   async notifyAchievement(achievement: Achievement): Promise<void> {
     try {
-      // Haptic celebration
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // Haptic celebration (checks settings internally)
+      successHaptic();
 
       // In-app celebration
       eventEmitter.emit('achievement_unlocked', achievement);
@@ -335,4 +336,4 @@ class AchievementNotificationService {
 }
 
 export const achievementNotificationService = new AchievementNotificationService();
-
+

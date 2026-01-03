@@ -229,13 +229,28 @@ export default function WorkoutSettingsScreen() {
             toggleValue={autoStartTimer}
             onToggleChange={setAutoStartTimer}
           />
-          <View style={styles.divider} />
+        </View>
+
+        {/* Feedback Section */}
+        <SectionHeader title="FEEDBACK" />
+        <View style={styles.section}>
           <SettingRow
             icon={<Vibrate size={24} color="#3b82f6" />}
-            label="Timer Vibration"
+            label="Haptic Feedback"
+            description="Vibration feedback for all app interactions"
             toggle
             toggleValue={hapticEnabled}
             onToggleChange={setHapticEnabled}
+          />
+          <View style={styles.divider} />
+          <SettingRow
+            icon={<Volume2 size={24} color="#3b82f6" />}
+            label="Sound Effects"
+            description="Audio feedback for actions"
+            toggle
+            toggleValue={false}
+            onToggleChange={() => {}}
+            disabled
           />
         </View>
 

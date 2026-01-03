@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import { Eye, EyeOff, Lock, ChevronLeft, Check, X } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
-import * as Haptics from 'expo-haptics';
+import { errorHaptic, successHaptic } from '@/lib/utils/haptics';
 
 export default function ChangePasswordScreen() {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -67,7 +67,7 @@ export default function ChangePasswordScreen() {
 
   const handleChangePassword = async () => {
     if (!validate()) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      errorHaptic();
       return;
     }
 
@@ -89,7 +89,7 @@ export default function ChangePasswordScreen() {
 
       if (signInError) {
         setErrors({ currentPassword: 'Current password is incorrect' });
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        errorHaptic();
         setIsLoading(false);
         return;
       }
@@ -103,7 +103,7 @@ export default function ChangePasswordScreen() {
         throw updateError;
       }
 
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      successHaptic();
       
       Alert.alert(
         'Password Changed',
@@ -116,7 +116,7 @@ export default function ChangePasswordScreen() {
         'Error',
         error instanceof Error ? error.message : 'Failed to change password. Please try again.'
       );
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      errorHaptic();
     } finally {
       setIsLoading(false);
     }
