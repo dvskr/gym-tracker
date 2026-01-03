@@ -13,6 +13,66 @@ import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
 import { useSettingsStore } from './settingsStore';
 
+/*
+=============================================================================
+REST TIMER INVESTIGATION REPORT
+=============================================================================
+
+✅ REST TIMER STATE EXISTS:
+   - Interface: RestTimer (lines 53-58)
+   - Fields: exerciseId, isRunning, remainingSeconds, totalSeconds
+   - Initial state: lines 144-149
+   - Per-exercise custom rest times: exerciseRestTimes object
+
+✅ REST TIMER ACTIONS EXIST (all implemented):
+   - startRestTimer(exerciseId, seconds?) - line 680
+   - skipRestTimer() - line 706
+   - tickRestTimer() - line 720
+   - resetRestTimer() - line 754
+   - extendRestTimer(seconds) - line 762
+   - setExerciseRestTime(exerciseId, seconds) - line 769
+   - getExerciseRestTime(exerciseId) - line 773
+
+✅ REST TIMER UI COMPONENT EXISTS:
+   - Location: components/workout/InlineRestTimer.tsx
+   - Features: Countdown display, progress bar, extend/skip buttons, custom time selector
+   - Rendered in: ExerciseCard.tsx (line 366)
+   - Renders inline below exercise sets for active timer
+
+✅ AUTO-START LOGIC EXISTS:
+   - Location: app/workout/active.tsx (lines 143-147)
+   - Triggered by: handleCompleteSet function
+   - Condition: if (autoStartTimer) startRestTimer(exerciseId)
+   - Only starts when completing a set (not when uncompleting)
+
+✅ SETTINGS INTEGRATION EXISTS:
+   - Store: settingsStore.ts
+   - Field: autoStartTimer (boolean, default: true)
+   - Field: restTimerDefault (number, default: 90 seconds)
+   - Syncs to database profile table
+   - Can be toggled in Profile tab
+
+✅ NOTIFICATION INTEGRATION EXISTS:
+   - Service: restTimerNotificationService
+   - Schedules notification for rest completion
+   - Provides haptic feedback at 10 seconds warning
+   - Triggers completion haptics/vibration
+
+CURRENT SET COMPLETION BEHAVIOR:
+1. User taps checkmark on set
+2. handleCompleteSet() called in active.tsx
+3. Checks if completing (not uncompleting)
+4. Calls workoutStore.completeSet(exerciseId, setId)
+5. If autoStartTimer is enabled, calls startRestTimer(exerciseId)
+6. InlineRestTimer renders below sets for that exercise
+7. Timer counts down with progress bar
+8. User can extend (+30s) or skip
+9. On completion: haptic feedback + notification
+
+CONCLUSION: AUTO-START REST TIMER IS FULLY IMPLEMENTED AND WORKING!
+=============================================================================
+*/
+
 // ============================================
 // Types
 // ============================================

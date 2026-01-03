@@ -16,8 +16,10 @@ import {
   ChevronDown,
   Trash2,
   Lightbulb,
+  Timer,
 } from 'lucide-react-native';
 import { WorkoutExercise, WorkoutSet } from '@/stores/workoutStore';
+import { useWorkoutStore } from '@/stores/workoutStore';
 import { SetRow } from './SetRow';
 import { InlineRestTimer } from './InlineRestTimer';
 import { Card } from '@/components/ui';
@@ -66,6 +68,10 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   const { user } = useAuthStore();
   const { showFormTips: showFormTipsEnabled, showProgressiveOverload } = useSettingsStore();
   const weightUnit = useSettingsStore((state) => state.weightUnit);
+  
+  // Get rest timer state and actions
+  const { restTimer, startRestTimer } = useWorkoutStore();
+  const { autoStartTimer } = useSettingsStore();
 
   // State for reorder menu
   const [showReorderMenu, setShowReorderMenu] = useState(false);
@@ -85,6 +91,11 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
   // Get completed sets count
   const completedSets = sets.filter((s) => s.isCompleted).length;
   const totalSets = sets.length;
+  
+  // Check if there are any completed sets and timer is not running
+  const hasCompletedSets = completedSets > 0;
+  const isTimerActive = restTimer.exerciseId === workoutExercise.id && restTimer.isRunning;
+  const showManualStartButton = !autoStartTimer && hasCompletedSets && !isTimerActive;
 
   // Can move up/down
   const canMoveUp = index > 0;
@@ -132,6 +143,12 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
     lightHaptic();
     onAddSet();
   }, [onAddSet]);
+  
+  // Handle manual rest timer start
+  const handleStartRestTimer = useCallback(() => {
+    lightHaptic();
+    startRestTimer(workoutExercise.id);
+  }, [startRestTimer, workoutExercise.id]);
 
   // Handle copying previous values
   const handleCopyPrevious = useCallback((setId: string, setNumber: number) => {
@@ -361,6 +378,18 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         <Plus size={16} color="#3b82f6" />
         <Text style={styles.addSetText}>Add Set</Text>
       </TouchableOpacity>
+
+      {/* Manual Start Rest Timer Button - Shows only when auto-start is OFF */}
+      {showManualStartButton && (
+        <TouchableOpacity
+          style={styles.startRestButton}
+          onPress={handleStartRestTimer}
+          activeOpacity={0.7}
+        >
+          <Timer size={16} color="#22c55e" />
+          <Text style={styles.startRestText}>Start Rest Timer</Text>
+        </TouchableOpacity>
+      )}
 
       {/* Inline Rest Timer */}
       <InlineRestTimer exerciseId={workoutExercise.id} />
@@ -714,6 +743,24 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  
+  // Start Rest Timer Button (Manual)
+  startRestButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+    borderTopWidth: 1,
+    borderTopColor: '#1e293b',
+    gap: 8,
+  },
+
+  startRestText: {
+    color: '#22c55e',
+    fontSize: 14,
+    fontWeight: '600',
   },
 
   // Reorder Menu
