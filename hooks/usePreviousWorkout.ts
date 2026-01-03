@@ -81,6 +81,7 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
         }
 
         // Query: Get the most recent completed workout containing this exercise
+        // with at least one completed set
         const { data: workoutExercises, error: weError } = await supabase
           .from('workout_exercises')
           .select(`
@@ -91,13 +92,16 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
               started_at,
               ended_at,
               user_id
+            ),
+            workout_sets!inner (
+              id
             )
           `)
           .eq('exercise_id', exercise.id)
           .eq('workouts.user_id', user!.id)
+          .eq('workout_sets.is_completed', true)
           .not('workouts.ended_at', 'is', null)
-          .order('workouts(started_at)', { ascending: false })
-          .limit(1);
+          .order('workouts(started_at)', { ascending: false });
 
         if (weError) throw weError;
 
@@ -106,6 +110,7 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
           return;
         }
 
+        // Take the first workout_exercise (most recent with completed sets)
         const workoutExercise = workoutExercises[0];
         const workout = Array.isArray(workoutExercise.workouts)
           ? workoutExercise.workouts[0]
@@ -203,6 +208,7 @@ export async function fetchPreviousWorkoutData(
     }
 
     // Query: Get the most recent completed workout containing this exercise
+    // with at least one completed set
     const { data: workoutExercises, error: weError } = await supabase
       .from('workout_exercises')
       .select(`
@@ -213,18 +219,22 @@ export async function fetchPreviousWorkoutData(
           started_at,
           ended_at,
           user_id
+        ),
+        workout_sets!inner (
+          id
         )
       `)
       .eq('exercise_id', exercise.id)
       .eq('workouts.user_id', userId)
+      .eq('workout_sets.is_completed', true)
       .not('workouts.ended_at', 'is', null)
-      .order('workouts(started_at)', { ascending: false })
-      .limit(1);
+      .order('workouts(started_at)', { ascending: false });
 
     if (weError || !workoutExercises || workoutExercises.length === 0) {
       return null;
     }
 
+    // Take the first workout_exercise (most recent with completed sets)
     const workoutExercise = workoutExercises[0];
     const workout = Array.isArray(workoutExercise.workouts)
       ? workoutExercise.workouts[0]
@@ -297,4 +307,4 @@ export function usePreviousWorkoutLegacy(exerciseExternalId: string): LegacyPrev
     lastDate: lastDateStr,
     lastSets: data.sets.length,
   };
-}
+}

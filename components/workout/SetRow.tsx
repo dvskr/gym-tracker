@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
 
   // SET Column
   setColumn: {
-    width: 44,
+    width: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
 
   // PREVIOUS Column
   previousColumn: {
-    width: 80,
+    width: 72,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -270,6 +270,12 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           // Insert workout exercises
           for (const exercise of activeWorkout.exercises) {
+            // Skip exercises with no completed sets
+            const completedSets = exercise.sets.filter((s) => s.isCompleted);
+            if (completedSets.length === 0) {
+              continue; // Don't save this exercise at all
+            }
+
             // Use dbId if available (already exists in DB), otherwise look up by external_id
             let exerciseId: string;
             
@@ -323,29 +329,25 @@ export const useWorkoutStore = create<WorkoutState>()(
 
             if (weError) throw weError;
 
-            // Insert sets
-            const completedSets = exercise.sets.filter((s) => s.isCompleted);
-            
-            if (completedSets.length > 0) {
-              const setsToInsert = completedSets.map((s) => ({
-                workout_exercise_id: workoutExercise.id,
-                set_number: s.setNumber,
-                weight: s.weight,
-                weight_unit: s.weightUnit,
-                reps: s.reps,
-                set_type: s.setType,
-                is_completed: true,
-                completed_at: s.completedAt,
-                is_pr: s.isPR,
-                pr_type: s.prType,
-              }));
+            // Insert sets (we already checked completedSets.length > 0 above)
+            const setsToInsert = completedSets.map((s) => ({
+              workout_exercise_id: workoutExercise.id,
+              set_number: s.setNumber,
+              weight: s.weight,
+              weight_unit: s.weightUnit,
+              reps: s.reps,
+              set_type: s.setType,
+              is_completed: true,
+              completed_at: s.completedAt,
+              is_pr: s.isPR,
+              pr_type: s.prType,
+            }));
 
-              const { error: setsError } = await supabase
-                .from('workout_sets')
-                .insert(setsToInsert);
+            const { error: setsError } = await supabase
+              .from('workout_sets')
+              .insert(setsToInsert);
 
-              if (setsError) throw setsError;
-            }
+            if (setsError) throw setsError;
           }
 
           // Clear active workout
