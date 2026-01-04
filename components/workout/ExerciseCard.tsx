@@ -345,11 +345,15 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 assistanceWeight={set.assistanceWeight}
                 onWeightChange={(value) => {
                   const numValue = parseFloat(value) || 0;
-                  onUpdateSet(set.id, { weight: numValue });
+                  // Cap at database max to prevent overflow (precision 7, scale 2 = max 99999.99)
+                  const cappedValue = Math.min(numValue, 99999.99);
+                  onUpdateSet(set.id, { weight: cappedValue });
                 }}
                 onRepsChange={(value) => {
                   const numValue = parseInt(value, 10) || 0;
-                  onUpdateSet(set.id, { reps: numValue });
+                  // Cap at reasonable max
+                  const cappedValue = Math.min(numValue, 9999);
+                  onUpdateSet(set.id, { reps: cappedValue });
                 }}
                 onDurationChange={(value) => {
                   onUpdateSet(set.id, { durationSeconds: value });

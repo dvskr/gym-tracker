@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  Vibration,
   Modal,
   Pressable,
 } from 'react-native';
@@ -105,8 +104,10 @@ export function InlineRestTimer({ exerciseId, onTimerEnd }: InlineRestTimerProps
   useEffect(() => {
     if (isFinished && !hasNotifiedRef.current) {
       hasNotifiedRef.current = true;
+      // UI haptic feedback (controlled by global hapticEnabled setting)
       warningHaptic();
-      Vibration.vibrate([0, 200, 100, 200]);
+      // Note: Rest timer vibration/sound are handled by restTimerNotificationService
+      // based on restTimerSound and restTimerVibration settings
       onTimerEnd?.();
 
       // Pulse animation
@@ -476,4 +477,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
+

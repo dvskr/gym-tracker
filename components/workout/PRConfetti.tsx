@@ -35,8 +35,9 @@ export const PRConfetti = forwardRef<PRConfettiRef>((_, ref) => {
    * Trigger confetti animation
    */
   const fire = useCallback(() => {
-    logger.log('[PRConfetti] 🎊 Firing confetti!');
+    logger.log('[PRConfetti] 🎉 FIRE CALLED - Starting confetti animation');
     setShooting(true);
+    logger.log('[PRConfetti] shooting state set to true');
   }, []);
 
   // Expose fire method via ref (for imperative control if needed)
@@ -49,9 +50,12 @@ export const PRConfetti = forwardRef<PRConfettiRef>((_, ref) => {
    * Unregister on unmount
    */
   useEffect(() => {
+    logger.log('[PRConfetti] Component mounted - registering trigger');
     registerConfettiTrigger(fire);
+    logger.log('[PRConfetti] Trigger registered successfully');
 
     return () => {
+      logger.log('[PRConfetti] Component unmounting - unregistering trigger');
       unregisterConfettiTrigger();
     };
   }, [fire]);
@@ -68,6 +72,8 @@ export const PRConfetti = forwardRef<PRConfettiRef>((_, ref) => {
   if (!shooting) {
     return null;
   }
+
+  logger.log('[PRConfetti] Rendering ConfettiCannon component');
 
   return (
     <ConfettiCannon

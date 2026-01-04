@@ -137,7 +137,7 @@ export default function AdminReviewDashboard() {
       await supabase.from('notifications').insert({
         user_id: exercise.user_id,
         type: 'exercise_approved',
-        title: 'x}0 Your Exercise Was Added!',
+        title: '🎉 Your Exercise Was Added!',
         message: `Your custom exercise "${exercise.name}" has been approved and added to the exercise library. Thank you for contributing!`,
         data: {
           exercise_id: newExercise.id,
@@ -476,4 +476,4 @@ export default function AdminReviewDashboard() {
     </div>
   );
 }
-
+

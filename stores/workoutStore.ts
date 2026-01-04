@@ -12,7 +12,6 @@ import { calculateStreak } from '@/lib/utils/streakCalculation';
 import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
 import { useSettingsStore } from './settingsStore';
-import { celebratePR } from '@/lib/utils/celebrations';
 
 /*
 =============================================================================
@@ -149,7 +148,7 @@ interface WorkoutState {
   // Set Actions
   addSet: (exerciseId: string) => void;
   updateSet: (exerciseId: string, setId: string, data: Partial<WorkoutSet>) => void;
-  completeSet: (exerciseId: string, setId: string) => void;
+  completeSet: (exerciseId: string, setId: string) => Promise<void>;
   deleteSet: (exerciseId: string, setId: string) => void;
   duplicateSet: (exerciseId: string, setId: string) => void;
   markSetAsPR: (exerciseId: string, setId: string, prType: 'max_weight' | 'max_reps' | 'max_volume') => void;
@@ -307,6 +306,7 @@ export const useWorkoutStore = create<WorkoutState>()(
                     gif_url: exercise.exercise.gifUrl,
                     instructions: exercise.exercise.instructions,
                     is_custom: true, // Mark as custom since it wasn't found
+                    created_by: user.id, // Required by RLS policy
                   })
                   .select()
                   .single();
@@ -334,15 +334,17 @@ export const useWorkoutStore = create<WorkoutState>()(
             const setsToInsert = completedSets.map((s) => ({
               workout_exercise_id: workoutExercise.id,
               set_number: s.setNumber,
-              weight: s.weight,
+              weight: Math.min(s.weight || 0, 99999.99), // Cap at max database value
               weight_unit: s.weightUnit,
-              reps: s.reps,
+              reps: Math.min(s.reps || 0, 9999), // Cap at reasonable max
               set_type: s.setType,
               is_completed: true,
               completed_at: s.completedAt,
               is_pr: s.isPR,
               pr_type: s.prType,
             }));
+
+            logger.log(`[WorkoutStore] Inserting ${setsToInsert.length} sets, ${setsToInsert.filter(s => s.is_pr).length} are PRs`);
 
             const { error: setsError } = await supabase
               .from('workout_sets')
@@ -351,8 +353,111 @@ export const useWorkoutStore = create<WorkoutState>()(
             if (setsError) throw setsError;
           }
 
+          // Save PRs to personal_records table - MUST DO THIS BEFORE CLEARING STATE
+          const workoutPRs = get().getWorkoutPRs();
+          logger.log(`[WorkoutStore] Found ${workoutPRs.length} PRs before clearing state`);
+          
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'workoutStore.ts:save-prs',message:'Checking for PRs to save',data:{prCount:workoutPRs.length,prs:workoutPRs.map(p=>({exercise:p.exerciseName,type:p.prType,weight:p.weight,reps:p.reps}))},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-celebration',hypothesisId:'PR_NOT_SAVED'})}).catch(()=>{});
+          // #endregion
+          
+          if (workoutPRs.length > 0) {
+            logger.log(`[WorkoutStore] Saving ${workoutPRs.length} PR(s) to personal_records table`);
+            
+            for (const pr of workoutPRs) {
+              // Get the database UUID for the exercise
+              let dbExerciseId: string | null = null;
+              
+              const exercise = activeWorkout.exercises.find(e => e.id === pr.exerciseId);
+              if (exercise) {
+                if (exercise.exercise.dbId) {
+                  dbExerciseId = exercise.exercise.dbId;
+                } else {
+                  const { data: dbExercise } = await supabase
+                    .from('exercises')
+                    .select('id')
+                    .eq('external_id', exercise.exercise.id)
+                    .single();
+                  dbExerciseId = dbExercise?.id || null;
+                }
+              }
+              
+              if (!dbExerciseId) {
+                logger.warn(`[WorkoutStore] Could not find database ID for PR exercise: ${pr.exerciseName}`);
+                continue;
+              }
+              
+              // Calculate the PR value based on type
+              let value: number;
+              if (pr.prType === 'max_weight') {
+                value = pr.weight;
+              } else if (pr.prType === 'max_reps') {
+                value = pr.reps;
+              } else if (pr.prType === 'max_volume') {
+                value = pr.weight * pr.reps;
+              } else {
+                value = 0;
+              }
+              
+              // Check if PR already exists for this exercise and type
+              const { data: existingPR } = await supabase
+                .from('personal_records')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('exercise_id', dbExerciseId)
+                .eq('record_type', pr.prType)
+                .single();
+              
+              if (existingPR) {
+                // Update existing PR if new value is better
+                if (value > existingPR.value) {
+                  const { error: updateError } = await supabase
+                    .from('personal_records')
+                    .update({
+                      value,
+                      weight: pr.weight,
+                      reps: pr.reps,
+                      workout_id: workout.id,
+                      achieved_at: new Date().toISOString(),
+                    })
+                    .eq('id', existingPR.id);
+                  
+                  if (updateError) {
+                    logger.error('[WorkoutStore] Error updating PR:', updateError);
+                  } else {
+                    logger.log(`[WorkoutStore] Updated PR: ${pr.exerciseName} - ${pr.prType} = ${value}`);
+                  }
+                }
+              } else {
+                // Insert new PR
+                const { error: insertError } = await supabase
+                  .from('personal_records')
+                  .insert({
+                    user_id: user.id,
+                    exercise_id: dbExerciseId,
+                    record_type: pr.prType,
+                    value,
+                    weight: pr.weight,
+                    reps: pr.reps,
+                    workout_id: workout.id,
+                    achieved_at: new Date().toISOString(),
+                  });
+                
+                if (insertError) {
+                  logger.error('[WorkoutStore] Error inserting PR:', insertError);
+                } else {
+                  logger.log(`[WorkoutStore] Inserted PR: ${pr.exerciseName} - ${pr.prType} = ${value}`);
+                }
+              }
+            }
+          }
+
+          // Don't celebrate here - celebration will happen on the complete screen
+          // The complete screen will check for PRs and trigger celebration when mounted
+          logger.log('[WorkoutStore] Workout saved with PRs - celebration will happen on complete screen');
+
           // Clear active workout
- logger.log('[WorkoutStore] endWorkout: clearing state...');
+logger.log('[WorkoutStore] endWorkout: clearing state...');
           set({
             activeWorkout: null,
             isWorkoutActive: false,
@@ -572,6 +677,8 @@ export const useWorkoutStore = create<WorkoutState>()(
       },
 
       updateSet: (exerciseId: string, setId: string, data: Partial<WorkoutSet>) => {
+        logger.log(`[WorkoutStore] updateSet called: exerciseId=${exerciseId}, setId=${setId}, data=${JSON.stringify(data)}`);
+        
         set((state) => {
           if (!state.activeWorkout) return state;
 
@@ -594,7 +701,22 @@ export const useWorkoutStore = create<WorkoutState>()(
         });
       },
 
-      completeSet: (exerciseId: string, setId: string) => {
+      completeSet: async (exerciseId: string, setId: string) => {
+        logger.log(`[WorkoutStore] completeSet called for exercise ${exerciseId}, set ${setId}`);
+        
+        const state = get();
+        if (!state.activeWorkout) return;
+
+        // Find the exercise and set
+        const exercise = state.activeWorkout.exercises.find(e => e.id === exerciseId);
+        const targetSet = exercise?.sets.find(s => s.id === setId);
+        
+        if (!exercise || !targetSet) return;
+
+        const wasCompleted = targetSet.isCompleted;
+        const isNowCompleting = !wasCompleted;
+
+        // Toggle the set completion
         set((state) => {
           if (!state.activeWorkout) return state;
 
@@ -621,6 +743,84 @@ export const useWorkoutStore = create<WorkoutState>()(
             },
           };
         });
+
+        // If completing (not uncompleting), check for PRs
+        // Re-fetch the set to get the LATEST values (in case reps/weight just updated)
+        const latestState = get();
+        const latestExercise = latestState.activeWorkout?.exercises.find(e => e.id === exerciseId);
+        const latestSet = latestExercise?.sets.find(s => s.id === setId);
+        
+        logger.log(`[WorkoutStore] PR check decision: isNowCompleting=${isNowCompleting}, weight=${latestSet?.weight}, reps=${latestSet?.reps}`);
+        
+        if (isNowCompleting && latestSet && latestSet.weight && latestSet.reps) {
+          // Import at top of file if not already
+          const { checkForPR } = await import('@/lib/utils/prDetection');
+          const { celebratePR } = await import('@/lib/utils/celebrations');
+          const { data: { user } } = await supabase.auth.getUser();
+          
+          if (user) {
+            // Get the database UUID for this exercise
+            // exercise.exercise.id is the external_id, we need the database UUID
+            let dbExerciseId = latestExercise.exercise.dbId || latestExercise.exercise.id;
+            
+            // If we don't have dbId and id looks like an external ID (not a UUID), look it up
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(dbExerciseId);
+            
+            if (!isUUID) {
+              // Need to look up the database UUID from external_id
+              const { data: dbExercise } = await supabase
+                .from('exercises')
+                .select('id')
+                .eq('external_id', latestExercise.exercise.id)
+                .single();
+              
+              if (dbExercise) {
+                dbExerciseId = dbExercise.id;
+              } else {
+                logger.warn(`[PR Check] Could not find database UUID for exercise ${latestExercise.exercise.name} (external_id: ${latestExercise.exercise.id})`);
+                return; // Skip PR check if we can't find the database ID
+              }
+            }
+            
+            const prChecks = await checkForPR(
+              user.id,
+              dbExerciseId,
+              latestSet.weight,
+              latestSet.reps,
+              latestExercise.exercise.name
+            );
+
+            if (prChecks.length > 0) {
+              // Mark set with first PR type (usually max_weight is most significant)
+              const primaryPR = prChecks[0];
+              
+              // Update the set with PR badge
+              set((state) => {
+                if (!state.activeWorkout) return state;
+
+                const exercises = state.activeWorkout.exercises.map((e) => {
+                  if (e.id !== exerciseId) return e;
+
+                  const sets = e.sets.map((s) =>
+                    s.id === setId ? { ...s, isPR: true, prType: primaryPR.prType } : s
+                  );
+
+                  return { ...e, sets };
+                });
+
+                return {
+                  activeWorkout: {
+                    ...state.activeWorkout,
+                    exercises,
+                  },
+                };
+              });
+
+              // Don't celebrate here - wait until workout is saved
+              // The celebration will happen in endWorkout if workout is saved
+            }
+          }
+        }
       },
 
       deleteSet: (exerciseId: string, setId: string) => {
@@ -704,9 +904,7 @@ export const useWorkoutStore = create<WorkoutState>()(
           };
         });
 
-        // Trigger PR celebration (sound + confetti + haptic)
-        // Respects user settings for each celebration type
-        celebratePR();
+        // Don't celebrate here - celebration happens when workout is saved
       },
 
       getWorkoutPRs: () => {
@@ -955,15 +1153,16 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
         userId,
       });
       
-      // Record workout time for smart timing suggestions
+      // Record workout time for smart timing suggestions (using ended_at as start approximation)
+      const workoutEndDate = new Date(workoutEndedAt);
       await smartTimingService.recordWorkoutTime(
-        new Date(workoutStartedAt),
-        Math.floor((Date.now() - new Date(workoutStartedAt).getTime()) / 60000) // Duration in minutes
+        workoutEndDate,
+        60 // Default duration in minutes since we don't have the exact start time here
       );
       
- logger.log('S& Engagement notifications triggered');
+logger.log('S& Engagement notifications triggered');
     } catch (error) {
- logger.error('Failed to trigger engagement notifications:', error);
+logger.error('Failed to trigger engagement notifications:', error);
     }
   }, 1000); // Small delay to let workout save settle
 }

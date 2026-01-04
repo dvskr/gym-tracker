@@ -25,7 +25,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { mediumHaptic, lightHaptic } from '@/lib/utils/haptics';
 
 export default function ProfileScreen() {
-  const { user, profile, signOut } = useAuthStore();
+  const { user, signOut } = useAuthStore();
 
   const handleSignOut = () => {
     mediumHaptic();
@@ -94,9 +94,9 @@ export default function ProfileScreen() {
           }}
         >
           <View style={styles.avatarContainer}>
-            {profile?.avatar_url ? (
+            {user?.user_metadata?.avatar_url ? (
               <Image 
-                source={{ uri: profile.avatar_url }} 
+                source={{ uri: user.user_metadata.avatar_url }} 
                 style={styles.avatar} 
               />
             ) : (
@@ -107,7 +107,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.profileInfo}>
             <Text style={styles.profileName}>
-              {profile?.full_name || 'Set up your profile'}
+              {user?.user_metadata?.full_name || 'Set up your profile'}
             </Text>
             <Text style={styles.profileEmail}>{user?.email}</Text>
           </View>

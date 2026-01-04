@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Clock, Volume2, Vibrate, Eye, Calculator, Trophy, ChevronRight } from 'lucide-react-native';
+import { Clock, Volume2, Vibrate, Eye, Calculator, Trophy, ChevronRight, Timer } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useUnits } from '@/hooks/useUnits';
 import { SettingsHeader } from '../../components/SettingsHeader';
@@ -195,6 +195,8 @@ export default function WorkoutSettingsScreen() {
   const {
     restTimerDefault,
     autoStartTimer,
+    restTimerSound,
+    restTimerVibration,
     hapticEnabled,
     showPreviousWorkout,
     autoFillSets,
@@ -236,6 +238,24 @@ export default function WorkoutSettingsScreen() {
             toggleValue={autoStartTimer}
             onToggleChange={setAutoStartTimer}
           />
+          <View style={styles.divider} />
+          <SettingRow
+            icon={<Volume2 size={24} color="#3b82f6" />}
+            label="Sound"
+            description="Play sound on rest complete"
+            toggle
+            toggleValue={restTimerSound}
+            onToggleChange={(v) => useSettingsStore.getState().updateSettings({ restTimerSound: v })}
+          />
+          <View style={styles.divider} />
+          <SettingRow
+            icon={<Vibrate size={24} color="#3b82f6" />}
+            label="Vibration"
+            description="Vibrate on rest complete"
+            toggle
+            toggleValue={restTimerVibration}
+            onToggleChange={(v) => useSettingsStore.getState().updateSettings({ restTimerVibration: v })}
+          />
         </View>
 
         {/* Feedback Section */}
@@ -248,16 +268,6 @@ export default function WorkoutSettingsScreen() {
             toggle
             toggleValue={hapticEnabled}
             onToggleChange={setHapticEnabled}
-          />
-          <View style={styles.divider} />
-          <SettingRow
-            icon={<Volume2 size={24} color="#3b82f6" />}
-            label="Sound Effects"
-            description="Audio feedback for actions"
-            toggle
-            toggleValue={false}
-            onToggleChange={() => {}}
-            disabled
           />
         </View>
 

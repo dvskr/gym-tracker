@@ -63,7 +63,7 @@ export function generateDetailedShareText(template: Template): string {
   }
 
   if (template.target_muscles && template.target_muscles.length > 0) {
-    text += `x} Target: ${template.target_muscles.join(' • ')}\n`;
+    text += `🎯 Target: ${template.target_muscles.join(' • ')}\n`;
   }
 
   if (template.estimated_duration) {
@@ -220,4 +220,4 @@ export async function copyTemplateJSONToClipboard(template: Template): Promise<b
     return false;
   }
 }
-
+

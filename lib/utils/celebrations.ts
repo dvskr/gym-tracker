@@ -23,7 +23,7 @@ let triggerConfetti: ConfettiCallback | null = null;
  */
 export function registerConfettiTrigger(callback: ConfettiCallback): void {
   triggerConfetti = callback;
-  logger.log('[Celebrations] ✅ Confetti trigger registered');
+  logger.log('[Celebrations] Confetti trigger registered');
 }
 
 /**
@@ -59,13 +59,20 @@ export function isConfettiReady(): boolean {
 export async function celebratePR(): Promise<void> {
   const { prCelebrations, prSound, prConfetti } = useSettingsStore.getState();
 
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:59',message:'celebratePR called',data:{prCelebrations,prSound,prConfetti},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SETTINGS_DISABLED'})}).catch(()=>{});
+  // #endregion
+
   // Check master toggle first
   if (!prCelebrations) {
-    logger.log('[Celebrations] 🎉 PR celebrations disabled in settings');
+    logger.log('[Celebrations] PR celebrations disabled in settings');
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:68',message:'Celebrations DISABLED',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SETTINGS_DISABLED'})}).catch(()=>{});
+    // #endregion
     return;
   }
 
-  logger.log('[Celebrations] 🏆 Celebrating PR!', {
+  logger.log('[Celebrations] Celebrating PR', {
     sound: prSound,
     confetti: prConfetti,
   });
@@ -73,36 +80,51 @@ export async function celebratePR(): Promise<void> {
   // 1. Haptic feedback (always if master is on)
   try {
     successHaptic();
-    logger.log('[Celebrations] ✅ Haptic feedback triggered');
+    logger.log('[Celebrations] Haptic feedback triggered');
   } catch (error) {
-    logger.warn('[Celebrations] ⚠️ Haptic not available:', error);
+    logger.warn('[Celebrations] Haptic not available:', error);
   }
 
   // 2. Play sound (if enabled)
   if (prSound) {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:89',message:'About to call playPRSound',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SOUND_NOT_LOADED'})}).catch(()=>{});
+    // #endregion
     try {
       await playPRSound();
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:95',message:'playPRSound completed',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SOUND_NOT_LOADED'})}).catch(()=>{});
+      // #endregion
     } catch (error) {
-      logger.error('[Celebrations] ❌ Error playing sound:', error);
+      logger.error('[Celebrations] Error playing sound:', error);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:101',message:'playPRSound ERROR',data:{error:String(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SOUND_NOT_LOADED'})}).catch(()=>{});
+      // #endregion
     }
   } else {
-    logger.log('[Celebrations] 🔇 Sound skipped (disabled)');
+    logger.log('[Celebrations] Sound skipped (disabled)');
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'celebrations.ts:108',message:'Sound SKIPPED - disabled in settings',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SETTINGS_DISABLED'})}).catch(()=>{});
+    // #endregion
   }
 
   // 3. Trigger confetti (if enabled and registered)
   if (prConfetti) {
+    logger.log('[Celebrations] Confetti enabled - checking if registered');
+    logger.log('[Celebrations] triggerConfetti function exists:', !!triggerConfetti);
     if (triggerConfetti) {
       try {
+        logger.log('[Celebrations] Calling triggerConfetti()');
         triggerConfetti();
-        logger.log('[Celebrations] 🎊 Confetti triggered');
+        logger.log('[Celebrations] Confetti triggered');
       } catch (error) {
-        logger.error('[Celebrations] ❌ Error triggering confetti:', error);
+        logger.error('[Celebrations] Error triggering confetti:', error);
       }
     } else {
-      logger.warn('[Celebrations] ⚠️ Confetti enabled but not registered');
+      logger.warn('[Celebrations] Confetti enabled but not registered - PRConfetti component may not be mounted');
     }
   } else {
-    logger.log('[Celebrations] Confetti skipped (disabled)');
+    logger.log('[Celebrations] Confetti skipped (disabled in settings)');
   }
 }
 

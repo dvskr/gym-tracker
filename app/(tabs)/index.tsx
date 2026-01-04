@@ -332,8 +332,9 @@ export default function HomeScreen() {
               if (templateExercise.sets && templateExercise.sets.length > 0) {
                 // Use individual template set targets
                 prefillSets = templateExercise.sets.map((templateSet, idx) => {
-                  // Check if previous workout has data for this set number
-                  const prevSet = previousData?.sets[idx];
+                  // Check if previous workout has data for this EXACT set number (idx + 1)
+                  // Don't fallback to other sets - only match exact set numbers
+                  const prevSet = previousData?.sets.find(s => s.set_number === (idx + 1));
                   return {
                     // Previous workout takes priority over template targets
                     weight: prevSet?.weight ?? templateSet.target_weight,
@@ -341,7 +342,7 @@ export default function HomeScreen() {
                   };
                 });
               } else if (previousData && previousData.sets.length > 0) {
-                // Fallback to previous workout data
+                // Fallback to previous workout data - only use the actual sets that were completed
                 prefillSets = previousData.sets.map((s) => ({
                   weight: s.weight,
                   reps: s.reps,

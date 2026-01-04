@@ -103,7 +103,7 @@ class NotificationService {
       name: 'Achievements & PRs',
       importance: Notifications.AndroidImportance.DEFAULT,
       lightColor: '#f59e0b',
-      sound: 'default',
+      sound: null, // Custom sound played via expo-av
     });
 
     // Streaks
@@ -250,4 +250,4 @@ class NotificationService {
 }
 
 export const notificationService = new NotificationService();
-
+

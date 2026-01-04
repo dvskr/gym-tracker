@@ -50,11 +50,11 @@ interface SettingsState {
   quietHoursEnd: string;
   
   // Notification Details
-  restTimerAlerts: boolean;
   restTimerSound: boolean;
   restTimerVibration: boolean;
   inactivityReminders: boolean;
   achievementNotifications: boolean;
+  achievementSoundEnabled: boolean;
   backupReminders: boolean;
   updateNotifications: boolean;
 
@@ -158,11 +158,11 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   quietHoursEnd: '07:00',
   
   // Notification Details
-  restTimerAlerts: true,
   restTimerSound: true,
   restTimerVibration: true,
   inactivityReminders: true,
   achievementNotifications: true,
+  achievementSoundEnabled: true,
   backupReminders: true,
   updateNotifications: false,
 
@@ -520,4 +520,4 @@ export async function initializeSettings(userId: string) {
   } catch (error) {
  logger.error('[Settings] R Error initializing settings:', error);
   }
-}
+}

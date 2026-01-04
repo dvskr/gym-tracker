@@ -163,7 +163,7 @@ export default function AddCustomExerciseScreen() {
       if (error) throw error;
 
       Alert.alert(
-        'Success! x}0',
+        'Success! 🎉',
         'Your custom exercise has been added and is ready to use!',
         [
           {
@@ -650,4 +650,4 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
-
+

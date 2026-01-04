@@ -408,7 +408,7 @@ export default function ProgressScreen() {
             <TouchableOpacity 
               onPress={() => {
                 lightHaptic();
-                // Navigate to full PR list (future feature)
+                router.push('/prs');
               }}
             >
               <Text style={styles.seeAllText}>See All</Text>
@@ -474,7 +474,7 @@ export default function ProgressScreen() {
           <TouchableOpacity
             onPress={() => {
               lightHaptic();
-              // Navigate to full achievements screen (future feature)
+              router.push('/achievements');
             }}
           >
             <Text style={styles.seeAllText}>See All</Text>

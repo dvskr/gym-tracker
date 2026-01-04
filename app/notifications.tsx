@@ -2,89 +2,46 @@ import React from 'react';
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
-  Pressable,
+  FlatList,
+  TouchableOpacity,
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { 
   Trophy, 
-  Award, 
-  Flame, 
   Bell, 
-  Info, 
-  BellOff, 
-  Trash2,
+  Flame,
+  Info,
   CheckCheck,
+  Trash2,
+  BellOff,
 } from 'lucide-react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNotificationStore } from '../stores/notificationStore';
 import { AppNotification } from '../types/notifications';
 import { SettingsHeader } from '../components/SettingsHeader';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { lightHaptic } from '@/lib/utils/haptics';
 
 export default function NotificationsScreen() {
-  useBackNavigation(); // Enable Android back gesture support
+  useBackNavigation();
 
   const router = useRouter();
-  const { 
-    notifications, 
-    markAsRead, 
-    markAllAsRead, 
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
     deleteNotification,
     clearAll,
   } = useNotificationStore();
 
-  const handleClearAll = () => {
-    Alert.alert(
-      'Clear All Notifications',
-      'Are you sure you want to delete all notifications?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Clear All', 
-          style: 'destructive',
-          onPress: clearAll,
-        },
-      ]
-    );
-  };
+  const unreadCount = notifications.filter(n => !n.read).length;
 
-  const getIcon = (type: AppNotification['type']) => {
-    switch (type) {
-      case 'pr':
-        return <Trophy size={20} color="#f59e0b" />;
-      case 'achievement':
-        return <Award size={20} color="#8b5cf6" />;
-      case 'streak':
-        return <Flame size={20} color="#ef4444" />;
-      case 'reminder':
-        return <Bell size={20} color="#3b82f6" />;
-      default:
-        return <Info size={20} color="#6b7280" />;
-    }
-  };
-
-  const getBackgroundColor = (type: AppNotification['type']) => {
-    switch (type) {
-      case 'pr':
-        return '#451a03';
-      case 'achievement':
-        return '#3730a3';
-      case 'streak':
-        return '#7f1d1d';
-      case 'reminder':
-        return '#1e3a8a';
-      default:
-        return '#1f2937';
-    }
-  };
-
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp);
+  const formatTimeAgo = (timestamp: string): string => {
     const now = new Date();
+    const date = new Date(timestamp);
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
@@ -93,102 +50,209 @@ export default function NotificationsScreen() {
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString();
   };
 
-  const renderRightActions = (id: string) => {
-    return (
-      <Pressable 
-        style={styles.deleteAction}
-        onPress={() => deleteNotification(id)}
-      >
-        <Trash2 size={20} color="#fff" />
-        <Text style={styles.deleteText}>Delete</Text>
-      </Pressable>
+  const getNotificationIcon = (notification: AppNotification) => {
+    // For achievements, show the actual emoji
+    if (notification.type === 'achievement' && notification.data?.achievementIcon) {
+      return (
+        <Text style={styles.emojiIcon}>{notification.data.achievementIcon}</Text>
+      );
+    }
+
+    // Fallback icons for other types
+    switch (notification.type) {
+      case 'achievement':
+        return <Trophy size={24} color="#fbbf24" />;
+      case 'pr':
+        return <Trophy size={24} color="#f59e0b" />;
+      case 'streak':
+        return <Flame size={24} color="#ef4444" />;
+      case 'reminder':
+        return <Bell size={24} color="#60a5fa" />;
+      default:
+        return <Info size={24} color="#94a3b8" />;
+    }
+  };
+
+  const getIconBackground = (type: string) => {
+    switch (type) {
+      case 'achievement':
+        return '#78350f'; // Amber/brown
+      case 'pr':
+        return '#7c2d12'; // Orange/brown
+      case 'streak':
+        return '#7f1d1d'; // Red
+      case 'reminder':
+        return '#1e3a8a'; // Blue
+      default:
+        return '#334155'; // Gray
+    }
+  };
+
+  const handleNotificationPress = (notification: AppNotification) => {
+    lightHaptic();
+
+    if (!notification.read) {
+      markAsRead(notification.id);
+    }
+
+    // Navigate based on type
+    if (notification.type === 'achievement') {
+      router.push('/(tabs)/progress');
+    }
+  };
+
+  const handleMarkAllRead = () => {
+    lightHaptic();
+    markAllAsRead();
+  };
+
+  const handleClearAll = () => {
+    lightHaptic();
+    Alert.alert(
+      'Clear All Notifications',
+      'Are you sure you want to delete all notifications? This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear All',
+          style: 'destructive',
+          onPress: () => {
+            clearAll();
+            lightHaptic();
+          },
+        },
+      ]
     );
   };
 
-  const renderNotification = ({ item }: { item: AppNotification }) => (
-    <Swipeable
-      renderRightActions={() => renderRightActions(item.id)}
-      overshootRight={false}
-    >
-      <Pressable
-        style={[
-          styles.notificationItem,
-          !item.read && styles.unread,
-        ]}
-        onPress={() => !item.read && markAsRead(item.id)}
+  const handleDelete = (id: string) => {
+    lightHaptic();
+    deleteNotification(id);
+  };
+
+  const renderRightActions = (id: string) => {
+    return (
+      <TouchableOpacity
+        style={styles.deleteAction}
+        onPress={() => handleDelete(id)}
+        activeOpacity={0.7}
       >
-        <View style={[styles.iconContainer, { backgroundColor: getBackgroundColor(item.type) }]}>
-          {getIcon(item.type)}
-        </View>
-        
-        <View style={styles.content}>
-          <View style={styles.titleRow}>
-            <Text style={styles.notificationTitle} numberOfLines={1}>
-              {item.title}
-            </Text>
-            {!item.read && <View style={styles.unreadDot} />}
+        <Trash2 size={20} color="#fff" />
+        <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderNotification = ({ item }: { item: AppNotification }) => {
+    // Get the display title - for achievements, show the achievement name
+    const displayTitle = item.type === 'achievement' && item.data?.achievementTitle
+      ? item.data.achievementTitle
+      : item.title;
+
+    // Get the display message - for achievements, show the description
+    const displayMessage = item.type === 'achievement' && item.data?.achievementDescription
+      ? item.data.achievementDescription
+      : item.message;
+
+    return (
+      <Swipeable
+        renderRightActions={() => renderRightActions(item.id)}
+        overshootRight={false}
+      >
+        <TouchableOpacity
+          style={[
+            styles.notificationCard,
+            !item.read && styles.notificationUnread,
+          ]}
+          onPress={() => handleNotificationPress(item)}
+          activeOpacity={0.7}
+        >
+          {/* Icon */}
+          <View style={[styles.iconContainer, { backgroundColor: getIconBackground(item.type) }]}>
+            {getNotificationIcon(item)}
           </View>
-          <Text style={styles.message} numberOfLines={2}>
-            {item.message}
-          </Text>
-          <Text style={styles.time}>{formatTime(item.timestamp)}</Text>
-        </View>
-      </Pressable>
-    </Swipeable>
+
+          {/* Content */}
+          <View style={styles.contentContainer}>
+            {/* Title Row */}
+            <View style={styles.titleRow}>
+              <Text style={styles.notificationTitle} numberOfLines={1}>
+                {displayTitle}
+              </Text>
+              {!item.read && <View style={styles.unreadDot} />}
+            </View>
+
+            {/* Description */}
+            <Text style={styles.notificationMessage} numberOfLines={2}>
+              {displayMessage}
+            </Text>
+
+            {/* Timestamp */}
+            <Text style={styles.timestamp}>{formatTimeAgo(item.timestamp)}</Text>
+          </View>
+        </TouchableOpacity>
+      </Swipeable>
+    );
+  };
+
+  const renderEmpty = () => (
+    <View style={styles.emptyContainer}>
+      <View style={styles.emptyIconContainer}>
+        <BellOff size={48} color="#4b5563" />
+      </View>
+      <Text style={styles.emptyTitle}>No Notifications</Text>
+      <Text style={styles.emptyMessage}>
+        You're all caught up! Achievements, PRs, and reminders will appear here.
+      </Text>
+    </View>
   );
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const renderHeader = () => {
+    if (unreadCount === 0) return null;
+
+    return (
+      <View style={styles.unreadBanner}>
+        <Text style={styles.unreadBannerText}>
+          {unreadCount} unread notification{unreadCount !== 1 ? 's' : ''}
+        </Text>
+        <TouchableOpacity onPress={handleMarkAllRead} activeOpacity={0.7}>
+          <Text style={styles.markAllText}>Mark all read</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <SettingsHeader title="Notifications" />
+      <SettingsHeader
+        title="Notifications"
+        rightButton={
+          notifications.length > 0 ? (
+            <TouchableOpacity onPress={handleClearAll} style={styles.headerButton}>
+              <Trash2 size={20} color="#ef4444" />
+            </TouchableOpacity>
+          ) : undefined
+        }
+      />
 
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          Notifications
-          {unreadCount > 0 && (
-            <Text style={styles.unreadCount}> ({unreadCount} unread)</Text>
-          )}
-        </Text>
-        
-        <View style={styles.headerActions}>
-          {unreadCount > 0 && (
-            <Pressable onPress={markAllAsRead} style={styles.headerButton}>
-              <CheckCheck size={20} color="#3b82f6" />
-              <Text style={styles.markAllReadText}>Mark all read</Text>
-            </Pressable>
-          )}
-          
-          {notifications.length > 0 && (
-            <Pressable onPress={handleClearAll} style={styles.headerButton}>
-              <Trash2 size={18} color="#ef4444" />
-            </Pressable>
-          )}
-        </View>
-      </View>
+      {renderHeader()}
 
-      {notifications.length === 0 ? (
-        <View style={styles.empty}>
-          <BellOff size={64} color="#475569" />
-          <Text style={styles.emptyTitle}>No notifications yet</Text>
-          <Text style={styles.emptyText}>
-            You'll see your PRs, achievements, and reminders here
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={notifications}
-          keyExtractor={(item) => item.id}
-          renderItem={renderNotification}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <FlatList
+        data={notifications}
+        keyExtractor={(item) => item.id}
+        renderItem={renderNotification}
+        ListEmptyComponent={renderEmpty}
+        contentContainerStyle={[
+          styles.listContent,
+          notifications.length === 0 && styles.listContentEmpty,
+        ]}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
     </SafeAreaView>
   );
 }
@@ -198,105 +262,112 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
   },
-  header: {
+  headerButton: {
+    padding: 8,
+    marginRight: -8,
+  },
+
+  // Unread Banner
+  unreadBanner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
     borderBottomWidth: 1,
     borderBottomColor: '#1e293b',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#f1f5f9',
-  },
-  unreadCount: {
-    fontSize: 16,
-    fontWeight: '400',
+  unreadBannerText: {
+    fontSize: 14,
     color: '#94a3b8',
   },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  headerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: '#1e293b',
-  },
-  markAllReadText: {
-    fontSize: 13,
+  markAllText: {
+    fontSize: 14,
     fontWeight: '600',
-    color: '#3b82f6',
+    color: '#60a5fa',
   },
+
+  // List
   listContent: {
-    paddingBottom: 16,
-  },
-  notificationItem: {
-    flexDirection: 'row',
     padding: 16,
-    backgroundColor: '#1e293b',
-    borderBottomWidth: 1,
-    borderBottomColor: '#0f172a',
   },
-  unread: {
-    backgroundColor: '#1e293b',
-    borderLeftWidth: 3,
-    borderLeftColor: '#3b82f6',
+  listContentEmpty: {
+    flex: 1,
   },
+  separator: {
+    height: 12,
+  },
+
+  // Notification Card
+  notificationCard: {
+    flexDirection: 'row',
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+  notificationUnread: {
+    backgroundColor: '#1e3a5f',
+    borderColor: '#3b82f6',
+  },
+
+  // Icon
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 52,
+    height: 52,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
-  content: {
+  emojiIcon: {
+    fontSize: 28,
+  },
+
+  // Content
+  contentContainer: {
     flex: 1,
+    justifyContent: 'center',
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: 4,
   },
   notificationTitle: {
-    flex: 1,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     color: '#f1f5f9',
+    flex: 1,
   },
   unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: '#3b82f6',
     marginLeft: 8,
   },
-  message: {
+  notificationMessage: {
     fontSize: 14,
     color: '#94a3b8',
     lineHeight: 20,
     marginBottom: 6,
   },
-  time: {
+  timestamp: {
     fontSize: 12,
     color: '#64748b',
   },
+
+  // Delete Action
   deleteAction: {
     backgroundColor: '#dc2626',
     justifyContent: 'center',
     alignItems: 'center',
     width: 80,
-    height: '100%',
+    marginLeft: 8,
+    borderRadius: 16,
   },
   deleteText: {
     color: '#fff',
@@ -304,24 +375,33 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 4,
   },
-  empty: {
+
+  // Empty State
+  emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyIconContainer: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: '#1e293b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#f1f5f9',
-    marginTop: 16,
     marginBottom: 8,
   },
-  emptyText: {
+  emptyMessage: {
     fontSize: 14,
     color: '#64748b',
     textAlign: 'center',
     lineHeight: 20,
   },
 });
-

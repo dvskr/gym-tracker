@@ -6,6 +6,8 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { eventEmitter } from '../utils/eventEmitter';
 import { useNotificationStore } from '@/stores/notificationStore';
 import { successHaptic } from '@/lib/utils/haptics';
+import { playAchievementSound } from '../utils/sounds';
+import { getSafeAchievementEmoji, getSafePREmoji } from '../utils/emojiValidator';
 
 export interface PRNotification {
   exerciseName: string;
@@ -27,19 +29,19 @@ export interface Achievement {
 
 const PR_MESSAGES = {
   weight: [
-    "New weight PR! {exercise}: {value}{unit} x ",
+    "New weight PR! {exercise}: {value}{unit} 💪",
     "You're getting stronger! {exercise} PR: {value}{unit}",
-    "Beast mode! New {exercise} record: {value}{unit} x",
+    "Beast mode! New {exercise} record: {value}{unit} 🏋️",
     "Crushing it! {exercise}: {value}{unit} personal best!",
   ],
   reps: [
-    "Rep record! {exercise}: {value} reps x}",
+    "Rep record! {exercise}: {value} reps 🔁",
     "More reps than ever! {exercise}: {value}",
-    "Rep beast! New {exercise} record: {value} reps x",
+    "Rep beast! New {exercise} record: {value} reps 💪",
   ],
   volume: [
-    "Volume PR! {exercise}: {value}{unit} total x",
-    "Massive volume! {exercise}: {value}{unit} xa",
+    "Volume PR! {exercise}: {value}{unit} total 📊",
+    "Massive volume! {exercise}: {value}{unit} 🔥",
   ],
 };
 
@@ -63,17 +65,20 @@ class AchievementNotificationService {
       // In-app notification (toast)
       this.showPRToast(pr);
 
+      // Get safe emoji for PR type
+      const prEmoji = getSafePREmoji(pr.type);
+
       // Add to notification center
       useNotificationStore.getState().addNotification({
         type: 'pr',
-        title: 'New Personal Record! x ',
+        title: `New Personal Record! ${prEmoji}`,
         message: `${pr.exerciseName}: ${pr.newValue}${pr.unit || ''}`,
         data: pr,
       });
 
       // Push notification (only if app is backgrounded)
       await notificationService.sendNotification(
-        'x  New Personal Record!',
+        `${prEmoji} New Personal Record!`,
         message,
         {
           channelId: 'achievements',
@@ -86,7 +91,7 @@ class AchievementNotificationService {
         }
       );
 
-logger.log(`x PR notification sent: ${pr.exerciseName} ${pr.type}`);
+logger.log(`🏆 PR notification sent: ${pr.exerciseName} ${pr.type}`);
     } catch (error) {
 logger.error('Failed to notify PR:', error);
     }
@@ -104,36 +109,57 @@ logger.error('Failed to notify PR:', error);
    */
   async notifyAchievement(achievement: Achievement): Promise<void> {
     try {
-      // Haptic celebration (checks settings internally)
-      successHaptic();
+      const { achievementNotifications, achievementSoundEnabled, hapticEnabled } = useSettingsStore.getState();
 
-      // In-app celebration
+      // 1. Haptic feedback (if enabled)
+      if (hapticEnabled !== false) {
+        try {
+          successHaptic();
+        } catch (error) {
+          logger.log('[AchievementNotifications] Haptic not available');
+        }
+      }
+
+      // 2. In-app toast - ALWAYS show (good UX, non-intrusive)
       eventEmitter.emit('achievement_unlocked', achievement);
 
-      // Add to notification center
+      // 3. Add to notification center - ALWAYS add (user can review later)
       useNotificationStore.getState().addNotification({
         type: 'achievement',
-        title: `${achievement.icon} Achievement Unlocked!`,
-        message: `${achievement.title}: ${achievement.description}`,
-        data: achievement,
+        title: 'Achievement Unlocked!',
+        message: achievement.description,
+        data: {
+          achievementId: achievement.id,
+          achievementTitle: achievement.title,
+          achievementIcon: achievement.icon,
+          achievementDescription: achievement.description,
+        },
       });
 
-      // Push notification
-      await notificationService.sendNotification(
-        `${achievement.icon} Achievement Unlocked!`,
-        `${achievement.title}: ${achievement.description}`,
-        {
-          channelId: 'achievements',
-          data: { 
-            type: 'achievement',
-            achievementId: achievement.id,
-          },
-        }
-      );
+      // 4. Play custom sound (controlled by achievementSoundEnabled only)
+      if (achievementSoundEnabled) {
+        await playAchievementSound();
+      }
 
- logger.log(`x} Achievement unlocked: ${achievement.title}`);
+      // 5. Push notification (controlled by achievementNotifications only)
+      if (achievementNotifications) {
+        await notificationService.sendNotification(
+          `${achievement.icon} Achievement Unlocked!`,
+          `${achievement.title}: ${achievement.description}`,
+          {
+            channelId: 'achievements',
+            data: { 
+              type: 'achievement',
+              achievementId: achievement.id,
+            },
+          }
+        );
+        logger.log(`Achievement notification sent: ${achievement.title}`);
+      } else {
+        logger.log('[AchievementNotifications] Push notification skipped (disabled in settings)');
+      }
     } catch (error) {
- logger.error('Failed to notify achievement:', error);
+      logger.error('Failed to notify achievement:', error);
     }
   }
 
@@ -157,7 +183,7 @@ logger.error('Failed to notify PR:', error);
           id: 'first_workout',
           title: 'First Steps',
           description: 'Completed your first workout',
-          icon: 'x}',
+          icon: getSafeAchievementEmoji('first_workout'),
           category: 'workout',
         });
       }
@@ -165,11 +191,13 @@ logger.error('Failed to notify PR:', error);
       // Workout milestones
       const workoutMilestones = [10, 25, 50, 100, 250, 500, 1000];
       if (workoutMilestones.includes(workoutStats.totalWorkouts)) {
+        const icon = workoutStats.totalWorkouts >= 500 ? '👑' : 
+                    workoutStats.totalWorkouts >= 100 ? '💯' : '💪';
         achievements.push({
           id: `workouts_${workoutStats.totalWorkouts}`,
           title: `${workoutStats.totalWorkouts} Workouts!`,
           description: `Completed ${workoutStats.totalWorkouts} workouts`,
-          icon: workoutStats.totalWorkouts >= 500 ? 'x ' : 'x',
+          icon,
           category: 'workout',
         });
       }
@@ -177,11 +205,14 @@ logger.error('Failed to notify PR:', error);
       // Streak milestones (also handled by engagement service, but can celebrate here too)
       const streakMilestones = [7, 30, 100, 365];
       if (streakMilestones.includes(workoutStats.streak)) {
+        const icon = workoutStats.streak >= 365 ? '🎖️' : 
+                    workoutStats.streak >= 100 ? '👑' : 
+                    workoutStats.streak >= 30 ? '🗓️' : '📅';
         achievements.push({
           id: `streak_${workoutStats.streak}`,
           title: `${workoutStats.streak}-Day Warrior!`,
           description: `Worked out ${workoutStats.streak} days in a row`,
-          icon: 'x',
+          icon,
           category: 'streak',
         });
       }
@@ -189,11 +220,12 @@ logger.error('Failed to notify PR:', error);
       // Set milestones
       const setMilestones = [100, 500, 1000, 5000, 10000];
       if (setMilestones.includes(workoutStats.totalSets)) {
+        const icon = workoutStats.totalSets >= 1000 ? '💎' : '💪';
         achievements.push({
           id: `sets_${workoutStats.totalSets}`,
           title: `${workoutStats.totalSets.toLocaleString()} Sets!`,
           description: `Completed ${workoutStats.totalSets.toLocaleString()} total sets`,
-          icon: 'x`',
+          icon,
           category: 'volume',
         });
       }
@@ -201,22 +233,23 @@ logger.error('Failed to notify PR:', error);
       // Rep milestones
       const repMilestones = [1000, 5000, 10000, 50000, 100000];
       if (repMilestones.includes(workoutStats.totalReps)) {
+        const icon = workoutStats.totalReps >= 10000 ? '🔁' : '💪';
         achievements.push({
           id: `reps_${workoutStats.totalReps}`,
           title: `${workoutStats.totalReps.toLocaleString()} Reps!`,
           description: `Completed ${workoutStats.totalReps.toLocaleString()} total reps`,
-          icon: 'x',
+          icon,
           category: 'volume',
         });
       }
 
       // Volume milestones (in lbs)
       const volumeMilestones = [
-        { value: 10000, title: '10K Club' },
-        { value: 50000, title: '50K Club' },
-        { value: 100000, title: '100K Club' },
-        { value: 500000, title: 'Half Million Club' },
-        { value: 1000000, title: 'Million Pound Club' },
+        { value: 10000, title: '10K Club', icon: '🎊' },
+        { value: 50000, title: '50K Club', icon: '🚀' },
+        { value: 100000, title: '100K Club', icon: '💎' },
+        { value: 500000, title: 'Half Million Club', icon: '🌟' },
+        { value: 1000000, title: 'Million Pound Club', icon: '🏆' },
       ];
 
       for (const milestone of volumeMilestones) {
@@ -226,7 +259,7 @@ logger.error('Failed to notify PR:', error);
             id: `volume_${milestone.value}`,
             title: milestone.title,
             description: `Lifted ${milestone.value.toLocaleString()}+ lbs total`,
-            icon: milestone.value >= 1000000 ? 'x9️' : 'x',
+            icon: milestone.icon,
             category: 'volume',
           });
         }
@@ -241,7 +274,7 @@ logger.error('Failed to notify PR:', error);
         }
       }
     } catch (error) {
- logger.error('Failed to check workout achievements:', error);
+logger.error('Failed to check workout achievements:', error);
     }
   }
 
@@ -258,13 +291,13 @@ logger.error('Failed to notify PR:', error);
         .maybeSingle();
 
       if (error) {
- logger.error('Error checking achievement:', error);
+logger.error('Error checking achievement:', error);
         return false;
       }
 
       return !!data;
     } catch (error) {
- logger.error('Error checking achievement:', error);
+logger.error('Error checking achievement:', error);
       return false;
     }
   }
@@ -283,10 +316,10 @@ logger.error('Failed to notify PR:', error);
         });
 
       if (error) {
- logger.error('Error saving achievement:', error);
+logger.error('Error saving achievement:', error);
       }
     } catch (error) {
- logger.error('Error saving achievement:', error);
+logger.error('Error saving achievement:', error);
     }
   }
 
@@ -301,13 +334,13 @@ logger.error('Failed to notify PR:', error);
         .eq('user_id', userId);
 
       if (error) {
- logger.error('Error getting achievements:', error);
+logger.error('Error getting achievements:', error);
         return [];
       }
 
       return data.map(a => a.achievement_id);
     } catch (error) {
- logger.error('Error getting achievements:', error);
+logger.error('Error getting achievements:', error);
       return [];
     }
   }
@@ -323,17 +356,16 @@ logger.error('Failed to notify PR:', error);
         .eq('user_id', userId);
 
       if (error) {
- logger.error('Error counting achievements:', error);
+logger.error('Error counting achievements:', error);
         return 0;
       }
 
       return count || 0;
     } catch (error) {
- logger.error('Error counting achievements:', error);
+logger.error('Error counting achievements:', error);
       return 0;
     }
   }
 }
 
 export const achievementNotificationService = new AchievementNotificationService();
-

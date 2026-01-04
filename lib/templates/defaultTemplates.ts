@@ -213,11 +213,18 @@ export async function fetchDefaultTemplates(): Promise<DefaultTemplate[]> {
     }
 
     // Filter to exercises matching this template's muscles
-    const matchingExercises = allExercises.filter(ex => 
-      config.muscles.some(muscle => 
-        ex.primary_muscles?.toLowerCase().includes(muscle.toLowerCase())
-      )
-    );
+    const matchingExercises = allExercises.filter(ex => {
+      // Handle primary_muscles as either string or array
+      const primaryMuscles = Array.isArray(ex.primary_muscles) 
+        ? ex.primary_muscles 
+        : (ex.primary_muscles ? [ex.primary_muscles] : []);
+      
+      return config.muscles.some(muscle => 
+        primaryMuscles.some(pm => 
+          pm?.toLowerCase().includes(muscle.toLowerCase())
+        )
+      );
+    });
 
     // Find preferred exercises that exist in database
     const preferredPatterns = PREFERRED_EXERCISES[templateId] || [];
@@ -389,4 +396,4 @@ export const FALLBACK_TEMPLATES: DefaultTemplate[] = [
     ],
   },
 ];
-
+

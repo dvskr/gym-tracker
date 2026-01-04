@@ -59,6 +59,14 @@ export async function checkForPR(
     return results;
   }
 
+  // Validate UUID format (must be 36 characters with hyphens, or 32 hex chars)
+  const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(exerciseId);
+  
+  if (!isValidUUID) {
+    logger.warn(`[PR Detection] Invalid exercise ID format: "${exerciseId}" for ${exerciseName || 'unknown'}. Skipping PR check.`);
+    return results;
+  }
+
   try {
     // Calculate volume for this set
     const volume = weight * reps;
@@ -71,7 +79,7 @@ export async function checkForPR(
       .eq('exercise_id', exerciseId);
 
     if (error) {
- logger.error('Error fetching PRs:', error);
+      logger.error('Error fetching PRs:', error);
       return results;
     }
 
@@ -320,4 +328,4 @@ export function formatPRValue(prType: PRType, value: number, weight?: number, re
 export function celebratePR() {
   successHaptic();
 }
-
+

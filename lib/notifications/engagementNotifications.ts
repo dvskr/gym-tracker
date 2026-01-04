@@ -17,15 +17,15 @@ const STREAK_MESSAGES = {
     "{streak} days of progress - keep going! x",
   ],
   celebration: [
-    "Amazing! {streak} days in a row! x}0",
+    "Amazing! {streak} days in a row! 🔥",
     "{streak}-day streak! You're unstoppable!",
-    "New streak record: {streak} days! x ",
+    "New streak record: {streak} days! 💪",
     "Incredible dedication! {streak} consecutive days!",
     "{streak} days strong! This is your year! ⭐",
   ],
   milestone: [
-    "x}` Milestone Alert: {streak} days!",
-    "x  {streak}-Day Warrior!",
+    "🎖️ Milestone Alert: {streak} days!",
+    "🏆 {streak}-Day Warrior!",
     "⭐ Legend Status: {streak} Days!",
   ],
 };
@@ -218,7 +218,7 @@ class EngagementNotificationService {
         }
       );
 
- logger.log(`x}0 Sent streak celebration for ${streak} days`);
+logger.log(`🏆 Sent streak celebration for ${streak} days`);
     } catch (error) {
  logger.error('Failed to send streak celebration:', error);
     }
@@ -256,4 +256,4 @@ class EngagementNotificationService {
 }
 
 export const engagementNotificationService = new EngagementNotificationService();
-
+

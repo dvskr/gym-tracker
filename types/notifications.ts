@@ -5,7 +5,13 @@ export interface AppNotification {
   message: string;
   timestamp: string;
   read: boolean;
-  data?: Record<string, any>;
+  data?: {
+    achievementId?: string;
+    achievementTitle?: string;
+    achievementIcon?: string;
+    achievementDescription?: string;
+    [key: string]: any;
+  };
   icon?: string;
 }
 
@@ -15,4 +21,4 @@ export interface NotificationGroup {
   date: string;
   notifications: AppNotification[];
 }
-
+

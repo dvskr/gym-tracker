@@ -508,12 +508,12 @@ export default function TemplatesScreen() {
       setFolders(data.folders);
       setUncategorizedTemplates(data.uncategorized);
     } catch (error) {
- logger.error('Error fetching templates:', error);
+      logger.error('Error fetching templates:', error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [user?.id, session]);
+  }, [user?.id]);
 
   useEffect(() => {
     fetchData();

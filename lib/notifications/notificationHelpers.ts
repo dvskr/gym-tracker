@@ -69,7 +69,7 @@ export async function sendRestTimerNotification(nextExercise?: string): Promise<
  */
 export async function sendPRNotification(exercise: string, newRecord: string): Promise<void> {
   await notificationService.sendNotification(
-    "New Personal Record! x}0",
+    "New Personal Record! 🏆",
     `Amazing! You just hit a new PR on ${exercise}: ${newRecord}`,
     {
       channelId: 'achievements',
@@ -163,4 +163,4 @@ export async function getWorkoutReminderCount(): Promise<number> {
   const scheduled = await notificationService.getScheduledNotifications();
   return scheduled.filter(n => n.content.data?.type === 'workout-reminder').length;
 }
-
+

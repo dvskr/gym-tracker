@@ -137,8 +137,14 @@ export default function ActiveWorkoutScreen() {
       // Check if we're completing (not uncompleting) BEFORE calling completeSet
       const isCompleting = !set.isCompleted;
 
-      // Complete the set (toggles isCompleted)
-      completeSet(exerciseId, setId);
+      // Dismiss keyboard to ensure all text inputs (weight/reps) save their values
+      Keyboard.dismiss();
+      
+      // Small delay to let blur events fire and save values
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Complete the set (toggles isCompleted and checks for PRs)
+      await completeSet(exerciseId, setId);
 
       // If completing (not uncompleting), start rest timer
       if (isCompleting) {
@@ -148,7 +154,7 @@ export default function ActiveWorkoutScreen() {
         }
       }
     },
-    [activeWorkout, completeSet, startRestTimer]
+    [activeWorkout, completeSet, startRestTimer, autoStartTimer]
   );
 
   // Handle move exercise up

@@ -165,7 +165,7 @@ export async function sendPRNotification(
 ): Promise<void> {
   try {
     await sendLocalNotification(
-      `New PR! x}0`,
+      `New PR! 🏆`,
       `You just hit a ${recordType} record on ${exerciseName}: ${value}!`,
       { type: 'pr', exerciseName, recordType, value }
     );
@@ -238,4 +238,4 @@ export async function getScheduledNotificationCount(): Promise<number> {
     return 0;
   }
 }
-
+

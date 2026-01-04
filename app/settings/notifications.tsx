@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Switch,
   Pressable,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -14,23 +13,19 @@ import {
   Bell,
   BellOff,
   Calendar,
-  Timer,
-  Volume2,
-  Vibrate,
   Flame,
   Clock,
   Trophy,
   Award,
   CloudUpload,
   ChevronRight,
-  Send,
+  Volume2,
 } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useNotificationPermissions } from '../../hooks/useNotificationPermissions';
 import { NotificationPermissionBanner } from '../../components/notifications';
 import { SettingsHeader } from '../../components/SettingsHeader';
 import { Button } from '../../components/ui';
-import { notificationService } from '@/lib/notifications/notificationService';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 import { lightHaptic } from '@/lib/utils/haptics';
 
@@ -121,34 +116,6 @@ export default function NotificationSettingsScreen() {
     openSettings: openSystemSettings,
   } = useNotificationPermissions();
 
-  const handleSendTestNotification = async () => {
-    try {
-      await notificationService.scheduleNotification(
-        'Test Notification ',
-        'Notifications are working perfectly!',
-        {
-          seconds: 1,
-        },
-        {
-          channelId: 'general',
-          data: { type: 'test' },
-        }
-      );
-      
-      Alert.alert(
-        'Test Sent!',
-        'You should receive a notification in 1 second.',
-        [{ text: 'OK' }]
-      );
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'Failed to send test notification. Make sure notifications are enabled.',
-        [{ text: 'OK' }]
-      );
-    }
-  };
-
   // If system permissions not granted, show permission prompt
   if (!isGranted) {
     return (
@@ -217,47 +184,12 @@ export default function NotificationSettingsScreen() {
           <Divider />
           
           <SettingRow
-            icon={<ChevronRight size={20} color="#94a3b8" />}
+            icon={<Calendar size={20} color="#94a3b8" />}
             title="Configure Schedule"
             subtitle="Set your workout days and times"
             onPress={() => router.push('/settings/reminders' as any)}
             disabled={isDisabled || !settings.workoutReminders}
             showChevron
-          />
-        </View>
-
-        {/* During Workout */}
-        <SectionHeader title="DURING WORKOUT" />
-        <View style={styles.section}>
-          <SettingRow
-            icon={<Timer size={20} color="#f59e0b" />}
-            title="Rest Timer Alerts"
-            subtitle="Notify when rest period ends"
-            value={settings.restTimerAlerts}
-            onValueChange={(v) => settings.updateSettings({ restTimerAlerts: v })}
-            disabled={isDisabled}
-          />
-          
-          <Divider />
-          
-          <SettingRow
-            icon={<Volume2 size={20} color="#94a3b8" />}
-            title="Sound"
-            subtitle="Play sound on rest complete"
-            value={settings.restTimerSound}
-            onValueChange={(v) => settings.updateSettings({ restTimerSound: v })}
-            disabled={isDisabled || !settings.restTimerAlerts}
-          />
-          
-          <Divider />
-          
-          <SettingRow
-            icon={<Vibrate size={20} color="#94a3b8" />}
-            title="Vibration"
-            subtitle="Vibrate on rest complete"
-            value={settings.restTimerVibration}
-            onValueChange={(v) => settings.updateSettings({ restTimerVibration: v })}
-            disabled={isDisabled || !settings.restTimerAlerts}
           />
         </View>
 
@@ -293,36 +225,30 @@ export default function NotificationSettingsScreen() {
             title="Achievements"
             subtitle="Milestone notifications"
             value={settings.achievementNotifications}
-            onValueChange={(v) => settings.updateSettings({ achievementNotifications: v })}
+            onValueChange={(v) => {
+              if (!v || (v && !settings.achievementNotifications)) {
+                lightHaptic();
+              }
+              settings.updateSettings({ achievementNotifications: v });
+            }}
             disabled={isDisabled}
           />
-        </View>
-
-        {/* System */}
-        <SectionHeader title="SYSTEM" />
-        <View style={styles.section}>
+          
+          <Divider />
+          
           <SettingRow
-            icon={<CloudUpload size={20} color="#06b6d4" />}
-            title="Backup Reminders"
-            subtitle="Weekly backup reminders"
-            value={settings.backupReminders}
-            onValueChange={(v) => settings.updateSettings({ backupReminders: v })}
-            disabled={isDisabled}
+            icon={<Volume2 size={20} color={settings.achievementNotifications && !isDisabled ? "#8b5cf6" : "#4b5563"} />}
+            title="Sound on Achievement"
+            subtitle="Play sound when unlocked"
+            value={settings.achievementSoundEnabled}
+            onValueChange={(v) => {
+              if (settings.achievementNotifications && !isDisabled) {
+                lightHaptic();
+              }
+              settings.updateSettings({ achievementSoundEnabled: v });
+            }}
+            disabled={isDisabled || !settings.achievementNotifications}
           />
-        </View>
-
-        {/* Test Notification */}
-        <View style={styles.testSection}>
-          <Button
-            title="Send Test Notification"
-            variant="secondary"
-            onPress={handleSendTestNotification}
-            icon={<Send size={20} color="#f1f5f9" />}
-            disabled={isDisabled}
-          />
-          <Text style={styles.testHint}>
-            Test if notifications are working on this device
-          </Text>
         </View>
 
         <View style={styles.bottomSpacer} />
@@ -439,17 +365,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#334155',
     marginLeft: 56,
-  },
-  testSection: {
-    marginTop: 24,
-    marginHorizontal: 16,
-  },
-  testHint: {
-    fontSize: 13,
-    color: '#64748b',
-    textAlign: 'center',
-    marginTop: 12,
-    lineHeight: 18,
   },
   bottomSpacer: {
     height: 32,

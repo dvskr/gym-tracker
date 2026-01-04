@@ -160,12 +160,10 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
     (setNumber: number): PreviousSetData | null => {
       if (!data?.sets || data.sets.length === 0) return null;
 
-      // Try to find exact set number match
+      // Only return data if there's an exact set number match
+      // Don't fallback - if the set wasn't completed before, don't show previous data
       const exactMatch = data.sets.find((s) => s.set_number === setNumber);
-      if (exactMatch) return exactMatch;
-
-      // Fallback to last set if requested set doesn't exist
-      return data.sets[data.sets.length - 1] || null;
+      return exactMatch || null;
     },
     [data]
   );

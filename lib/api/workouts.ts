@@ -199,7 +199,9 @@ export async function getWorkoutById(workoutId: string): Promise<WorkoutDetail |
           reps,
           set_type,
           rpe,
-          is_completed
+          is_completed,
+          is_pr,
+          pr_type
         )
       )
     `)
@@ -257,4 +259,4 @@ export async function getWorkoutCount(userId: string): Promise<number> {
   if (error) throw error;
   return count || 0;
 }
-
+

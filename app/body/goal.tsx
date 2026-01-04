@@ -387,7 +387,7 @@ export default function WeightGoalScreen() {
             <View style={styles.remainingContainer}>
               <Text style={styles.remainingText}>
                 {progress.remaining === 0
-                  ? 'x}0 Goal reached!'
+                  ? '🎉 Goal reached!'
                   : `${progress.remaining} ${bodyWeight.label} to go`}
               </Text>
             </View>
@@ -955,4 +955,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
+
