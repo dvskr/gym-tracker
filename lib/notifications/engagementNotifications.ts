@@ -218,7 +218,7 @@ class EngagementNotificationService {
         }
       );
 
-logger.log(`🏆 Sent streak celebration for ${streak} days`);
+logger.log(`Sent streak celebration for ${streak} days`);
     } catch (error) {
  logger.error('Failed to send streak celebration:', error);
     }

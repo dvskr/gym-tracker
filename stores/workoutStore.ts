@@ -357,10 +357,6 @@ export const useWorkoutStore = create<WorkoutState>()(
           const workoutPRs = get().getWorkoutPRs();
           logger.log(`[WorkoutStore] Found ${workoutPRs.length} PRs before clearing state`);
           
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'workoutStore.ts:save-prs',message:'Checking for PRs to save',data:{prCount:workoutPRs.length,prs:workoutPRs.map(p=>({exercise:p.exerciseName,type:p.prType,weight:p.weight,reps:p.reps}))},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-celebration',hypothesisId:'PR_NOT_SAVED'})}).catch(()=>{});
-          // #endregion
-          
           if (workoutPRs.length > 0) {
             logger.log(`[WorkoutStore] Saving ${workoutPRs.length} PR(s) to personal_records table`);
             
@@ -457,7 +453,7 @@ export const useWorkoutStore = create<WorkoutState>()(
           logger.log('[WorkoutStore] Workout saved with PRs - celebration will happen on complete screen');
 
           // Clear active workout
-logger.log('[WorkoutStore] endWorkout: clearing state...');
+ logger.log('[WorkoutStore] endWorkout: clearing state...');
           set({
             activeWorkout: null,
             isWorkoutActive: false,

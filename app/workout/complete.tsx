@@ -50,16 +50,28 @@ export default function WorkoutCompleteScreen() {
 
   // Trigger celebration when workout data is loaded and has PRs
   useEffect(() => {
+    logger.log('[Complete] Celebration useEffect triggered', { 
+      hasWorkout: !!workout, 
+      hasPRs, 
+      workoutId: workout?.id 
+    });
+    
     if (workout && hasPRs) {
-      logger.log('[Complete] HAS PRs - starting celebration!', { workoutId: workout.id });
+      logger.log('[Complete] PRs DETECTED! Starting celebration in 500ms...', { 
+        workoutId: workout.id,
+        exerciseCount: workout.workout_exercises?.length || 0,
+      });
       
-      // Small delay to ensure component is mounted
+      // Small delay to ensure PRConfetti component is mounted
       const timer = setTimeout(async () => {
-        logger.log('[Complete] Triggering PR celebration for completed workout');
+        logger.log('[Complete] Timer fired - calling celebratePR()');
         const { celebratePR } = await import('@/lib/utils/celebrations');
         await celebratePR();
+        logger.log('[Complete] celebratePR() completed');
       }, 500);
       return () => clearTimeout(timer);
+    } else {
+      logger.log('[Complete] No celebration - hasPRs:', hasPRs, 'hasWorkout:', !!workout);
     }
   }, [workout, hasPRs]);
 
@@ -87,10 +99,30 @@ export default function WorkoutCompleteScreen() {
     reps: workout?.total_reps || 0,
   };
 
-  // Check for PRs
+  // Check for PRs in the workout data
   const hasPRs = workout?.workout_exercises?.some((ex) =>
     ex.workout_sets?.some((set) => set.is_pr)
   ) || false;
+  
+  // Log PR detection for debugging
+  useEffect(() => {
+    if (workout) {
+      const prSets = workout.workout_exercises?.flatMap(ex => 
+        ex.workout_sets?.filter(set => set.is_pr).map(set => ({
+          exercise: ex.exercises?.name,
+          weight: set.weight,
+          reps: set.reps,
+          prType: set.pr_type,
+        })) || []
+      ) || [];
+      
+      logger.log('[Complete] PR Detection Result:', {
+        hasPRs,
+        prCount: prSets.length,
+        prSets: prSets,
+      });
+    }
+  }, [workout, hasPRs]);
 
   const formatDuration = (seconds: number): string => {
     if (seconds < 60) return `${seconds}s`;
@@ -267,8 +299,8 @@ export default function WorkoutCompleteScreen() {
 
   return (
     <>
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-        <View style={styles.content}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <View style={styles.content}>
         {/* Compact Horizontal Header */}
         <View style={styles.header}>
           <View style={styles.trophyCircle}>

@@ -91,7 +91,7 @@ class AchievementNotificationService {
         }
       );
 
-logger.log(`🏆 PR notification sent: ${pr.exerciseName} ${pr.type}`);
+logger.log(`PR notification sent: ${pr.exerciseName} ${pr.type}`);
     } catch (error) {
 logger.error('Failed to notify PR:', error);
     }

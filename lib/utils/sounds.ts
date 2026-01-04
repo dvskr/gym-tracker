@@ -114,45 +114,24 @@ class SoundManager {
   async playPRCelebration(): Promise<void> {
     const { prCelebrations, prSound } = useSettingsStore.getState();
 
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:114',message:'playPRCelebration called',data:{prCelebrations,prSound,soundExists:!!this.prCelebrationSound,isLoaded:this.isLoaded},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SOUND_NOT_LOADED'})}).catch(()=>{});
-    // #endregion
-
     // Check both master toggle AND sound toggle
     if (!prCelebrations || !prSound) {
       logger.log('[SoundManager] PR sound skipped (disabled in settings)');
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:122',message:'Sound SKIPPED - settings check',data:{prCelebrations,prSound},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SETTINGS_DISABLED'})}).catch(()=>{});
-      // #endregion
       return;
     }
 
     if (!this.prCelebrationSound) {
       logger.warn('[SoundManager] PR sound not loaded - cannot play');
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:130',message:'Sound SKIPPED - sound object NULL',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'SOUND_NOT_LOADED'})}).catch(()=>{});
-      // #endregion
       return;
     }
 
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:137',message:'About to play sound',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'DEVICE_SILENT'})}).catch(()=>{});
-      // #endregion
-      
       // Reset to beginning and play
       await this.prCelebrationSound.setPositionAsync(0);
       await this.prCelebrationSound.playAsync();
       logger.log('[SoundManager] PR celebration sound played');
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:146',message:'Sound PLAYED successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'DEVICE_SILENT'})}).catch(()=>{});
-      // #endregion
     } catch (error) {
       logger.error('[SoundManager] Error playing PR sound:', error);
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sounds.ts:152',message:'Sound playback ERROR',data:{error:String(error),errorMessage:error instanceof Error ? error.message : 'unknown'},timestamp:Date.now(),sessionId:'debug-session',runId:'pr-sound-v2',hypothesisId:'DEVICE_SILENT'})}).catch(()=>{});
-      // #endregion
     }
   }
 

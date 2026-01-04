@@ -35,7 +35,7 @@ export const PRConfetti = forwardRef<PRConfettiRef>((_, ref) => {
    * Trigger confetti animation
    */
   const fire = useCallback(() => {
-    logger.log('[PRConfetti] 🎉 FIRE CALLED - Starting confetti animation');
+    logger.log('[PRConfetti] FIRE CALLED - Starting confetti animation');
     setShooting(true);
     logger.log('[PRConfetti] shooting state set to true');
   }, []);

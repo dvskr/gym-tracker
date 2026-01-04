@@ -764,12 +764,8 @@ export default function ExerciseDetailScreen() {
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Exercise not found</Text>
           <TouchableOpacity style={styles.backButtonError} onPress={() => {
-            // #region agent log
             const currentTab = getCurrentTab();
             const backTo = (returnTo as string) || currentTab || '/(tabs)';
-            console.log('[DEBUG_NAV] Exercise detail error back button pressed:', JSON.stringify({returnTo,currentTab,backTo,timestamp:Date.now()}));
-            fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/exercise/[id]/index.tsx:762',message:'Exercise detail error back pressed',data:{returnTo,currentTab,backTo},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2,H4'})}).catch(()=>{});
-            // #endregion
             router.push(backTo);
           }}>
             <Text style={styles.backButtonText}>Go Back</Text>
@@ -786,12 +782,8 @@ export default function ExerciseDetailScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => {
-          // #region agent log
           const currentTab = getCurrentTab();
           const backTo = (returnTo as string) || currentTab || '/(tabs)';
-          console.log('[DEBUG_NAV] Exercise detail back button pressed:', JSON.stringify({exerciseId:id,returnTo,currentTab,backTo,timestamp:Date.now()}));
-          fetch('http://127.0.0.1:7242/ingest/068831e1-39c2-46d3-afd8-7578e38ed77a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/exercise/[id]/index.tsx:776',message:'Exercise detail back pressed',data:{exerciseId:id,returnTo,currentTab,backTo},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2,H4'})}).catch(()=>{});
-          // #endregion
           router.push(backTo);
         }}>
           <ArrowLeft size={24} color="#ffffff" />
