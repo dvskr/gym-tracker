@@ -20,6 +20,8 @@ import {
   CloudUpload,
   ChevronRight,
   Volume2,
+  Moon,
+  BarChart3,
 } from 'lucide-react-native';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useNotificationPermissions } from '../../hooks/useNotificationPermissions';
@@ -215,6 +217,17 @@ export default function NotificationSettingsScreen() {
             onValueChange={(v) => settings.updateSettings({ inactivityReminders: v })}
             disabled={isDisabled}
           />
+          
+          <Divider />
+          
+          <SettingRow
+            icon={<BarChart3 size={20} color="#14b8a6" />}
+            title="Weekly Summary"
+            subtitle="Progress report every Sunday"
+            value={settings.weeklySummary}
+            onValueChange={(v) => settings.updateSettings({ weeklySummary: v })}
+            disabled={isDisabled}
+          />
         </View>
 
         {/* Celebrations */}
@@ -223,13 +236,27 @@ export default function NotificationSettingsScreen() {
           <SettingRow
             icon={<Award size={20} color="#8b5cf6" />}
             title="Achievements"
-            subtitle="Milestone notifications"
+            subtitle="Badge unlock notifications"
             value={settings.achievementNotifications}
             onValueChange={(v) => {
               if (!v || (v && !settings.achievementNotifications)) {
                 lightHaptic();
               }
               settings.updateSettings({ achievementNotifications: v });
+            }}
+            disabled={isDisabled}
+          />
+          
+          <Divider />
+          
+          <SettingRow
+            icon={<Trophy size={20} color="#f59e0b" />}
+            title="Milestone Alerts"
+            subtitle="Workout & volume milestones"
+            value={settings.milestoneAlerts}
+            onValueChange={(v) => {
+              lightHaptic();
+              settings.updateSettings({ milestoneAlerts: v });
             }}
             disabled={isDisabled}
           />
@@ -249,6 +276,40 @@ export default function NotificationSettingsScreen() {
             }}
             disabled={isDisabled || !settings.achievementNotifications}
           />
+        </View>
+
+        {/* Quiet Hours */}
+        <SectionHeader title="QUIET HOURS" />
+        <View style={styles.section}>
+          <SettingRow
+            icon={<Moon size={20} color="#6366f1" />}
+            title="Do Not Disturb"
+            subtitle={settings.quietHoursEnabled 
+              ? `${settings.quietHoursStart} - ${settings.quietHoursEnd}`
+              : "Silence notifications at night"
+            }
+            value={settings.quietHoursEnabled}
+            onValueChange={(v) => {
+              lightHaptic();
+              settings.updateSettings({ quietHoursEnabled: v });
+            }}
+            disabled={isDisabled}
+          />
+          
+          {settings.quietHoursEnabled && !isDisabled && (
+            <>
+              <Divider />
+              <View style={styles.timeRow}>
+                <Text style={styles.timeLabel}>Start Time</Text>
+                <Text style={styles.timeValue}>{settings.quietHoursStart}</Text>
+              </View>
+              <Divider />
+              <View style={styles.timeRow}>
+                <Text style={styles.timeLabel}>End Time</Text>
+                <Text style={styles.timeValue}>{settings.quietHoursEnd}</Text>
+              </View>
+            </>
+          )}
         </View>
 
         <View style={styles.bottomSpacer} />
@@ -365,6 +426,23 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#334155',
     marginLeft: 56,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginLeft: 40,
+  },
+  timeLabel: {
+    fontSize: 15,
+    color: '#94a3b8',
+  },
+  timeValue: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#6366f1',
   },
   bottomSpacer: {
     height: 32,

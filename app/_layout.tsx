@@ -1,15 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { clearMemoryCache } from '@/lib/images/cacheManager';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useAuthStore } from '@/stores/authStore';
-import { initializeSettings } from '@/stores/settingsStore';
+import { initializeSettings, useSettingsStore } from '@/stores/settingsStore';
 import { loadSounds, unloadSounds } from '@/lib/utils/sounds';
+import { initializeNotifications } from '@/lib/notifications';
 
 export default function RootLayout() {
   const { user, initialize, isInitialized } = useAuthStore();
+  const hasInitializedNotifications = useRef(false);
+  const settingsHydrated = useSettingsStore((s) => s._hasHydrated);
 
   useEffect(() => {
     // Initialize auth
@@ -22,6 +25,15 @@ export default function RootLayout() {
       initializeSettings(user.id);
     }
   }, [user?.id, isInitialized]);
+
+  useEffect(() => {
+    // Initialize notifications after settings are hydrated and user is logged in
+    // Only run once per app session
+    if (user?.id && isInitialized && settingsHydrated && !hasInitializedNotifications.current) {
+      hasInitializedNotifications.current = true;
+      initializeNotifications(user.id);
+    }
+  }, [user?.id, isInitialized, settingsHydrated]);
 
   useEffect(() => {
     // Load sounds on app startup

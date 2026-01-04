@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { logger } from '@/lib/utils/logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { notificationService } from './notificationService';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 export interface WorkoutReminder {
   id: string;
@@ -56,13 +57,27 @@ class WorkoutReminderService {
 
   /**
    * Schedule a weekly reminder
+   * Respects settings: notificationsEnabled, workoutReminders
    */
   async scheduleReminder(reminder: WorkoutReminder): Promise<string | null> {
+    const { notificationsEnabled, workoutReminders } = useSettingsStore.getState();
+    
     // Cancel existing if updating
     await this.cancelReminder(reminder.id);
 
+    // Check global settings
+    if (!notificationsEnabled) {
+      logger.log('[WorkoutReminder] Skipped - notifications disabled globally');
+      return null;
+    }
+    
+    if (!workoutReminders) {
+      logger.log('[WorkoutReminder] Skipped - workout reminders disabled in settings');
+      return null;
+    }
+
     if (!reminder.enabled) {
- logger.log(` Reminder ${reminder.id} is disabled, skipping schedule`);
+      logger.log(`[WorkoutReminder] Reminder ${reminder.id} is disabled, skipping schedule`);
       return null;
     }
 
@@ -73,11 +88,12 @@ class WorkoutReminderService {
         : 'Workout Reminder';
 
       // Create trigger for weekly notification
-      const trigger: any = {
-        weekday: reminder.dayOfWeek + 1, // Expo uses 1-7 (Sun-Sat), we use 0-6
+      // Expo uses 1-7 for weekday (Sunday = 1, Saturday = 7), we use 0-6 (Sunday = 0)
+      const trigger = {
+        type: 'weekly' as const,
+        weekday: reminder.dayOfWeek + 1,
         hour: reminder.hour,
         minute: reminder.minute,
-        repeats: true,
       };
 
       const notificationId = await notificationService.scheduleNotification(
@@ -312,4 +328,4 @@ class WorkoutReminderService {
 }
 
 export const workoutReminderService = new WorkoutReminderService();
-
+

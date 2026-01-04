@@ -108,67 +108,39 @@ export async function sendPasswordResetEmail(
 /**
  * Delete user account and all associated data
  * THIS CANNOT BE UNDONE
+ * Uses edge function with service role to properly delete auth user
  */
 export async function deleteAccount(
   password: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    // Get current session for authorization
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
       return { success: false, error: 'Not authenticated' };
     }
 
-    // Verify password before deletion
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: user.email!,
-      password,
+    // Call edge function to delete account
+    // Edge function has service role access to fully delete auth user
+    const { data, error } = await supabase.functions.invoke('delete-user', {
+      body: { password },
     });
 
-    if (signInError) {
-      return { success: false, error: 'Invalid password' };
+    if (error) {
+      logger.error('Error calling delete-user function:', error);
+      return { success: false, error: error.message || 'Failed to delete account' };
     }
 
-    // Delete all user data
-    // Note: Most tables have ON DELETE CASCADE from profiles, 
-    // but we'll explicitly delete for safety
-
-    // Delete custom exercises
-    await supabase
-      .from('exercises')
-      .delete()
-      .eq('created_by', user.id)
-      .eq('is_custom', true);
-
-    // Other tables will be deleted automatically via CASCADE
-    // when we delete the profile
-
-    // Delete profile (this cascades to most other tables)
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', user.id);
-
-    if (profileError) {
- logger.error('Error deleting profile:', profileError);
-      return { success: false, error: 'Failed to delete user data' };
+    if (data?.error) {
+      return { success: false, error: data.error };
     }
 
-    // Delete from Supabase Auth
-    // Note: This requires service role key, so we'll call an edge function
-    // For now, we'll just sign out (auth user will remain but be inaccessible)
-    const { error: authError } = await supabase.auth.admin.deleteUser(user.id);
-    
-    if (authError) {
- logger.log('Note: Auth deletion requires admin API. Profile deleted.');
-    }
-
-    // Sign out
+    // Sign out locally
     await supabase.auth.signOut();
 
     return { success: true };
   } catch (error: any) {
- logger.error('Error deleting account:', error);
+    logger.error('Error deleting account:', error);
     return { success: false, error: error.message || 'Failed to delete account' };
   }
 }
@@ -197,4 +169,4 @@ export function validatePassword(password: string): { valid: boolean; errors: st
     errors,
   };
 }
-
+

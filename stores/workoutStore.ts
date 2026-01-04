@@ -1126,6 +1126,9 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
       // Reschedule inactivity reminders (resets the clock)
       await engagementNotificationService.scheduleInactivityReminders(workoutEndedAt);
       
+      // Reschedule weekly summary (ensures it's always scheduled for next Sunday)
+      await engagementNotificationService.scheduleWeeklySummary();
+      
       // Get workout stats for achievements
       const workoutCount = await getWorkoutCount(userId);
       

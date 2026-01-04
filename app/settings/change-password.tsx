@@ -12,12 +12,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, router } from 'expo-router';
-import { Eye, EyeOff, Lock, ChevronLeft, Check, X } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { Eye, EyeOff, Lock, Check, X, Shield, CheckCircle } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
 import { errorHaptic, successHaptic } from '@/lib/utils/haptics';
+import { SettingsHeader } from '@/components/SettingsHeader';
+import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 export default function ChangePasswordScreen() {
+  useBackNavigation();
+  
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,14 +33,31 @@ export default function ChangePasswordScreen() {
 
   // Password strength requirements
   const requirements = [
-    { label: 'At least 8 characters', met: newPassword.length >= 8 },
-    { label: 'Contains uppercase letter', met: /[A-Z]/.test(newPassword) },
-    { label: 'Contains lowercase letter', met: /[a-z]/.test(newPassword) },
-    { label: 'Contains number', met: /[0-9]/.test(newPassword) },
+    { id: 'length', label: 'At least 8 characters', met: newPassword.length >= 8 },
+    { id: 'uppercase', label: 'One uppercase letter (A-Z)', met: /[A-Z]/.test(newPassword) },
+    { id: 'lowercase', label: 'One lowercase letter (a-z)', met: /[a-z]/.test(newPassword) },
+    { id: 'number', label: 'One number (0-9)', met: /[0-9]/.test(newPassword) },
   ];
 
   const allRequirementsMet = requirements.every(r => r.met);
   const passwordsMatch = newPassword === confirmPassword && confirmPassword.length > 0;
+
+  // Calculate password strength percentage
+  const strengthPercentage = (requirements.filter(r => r.met).length / requirements.length) * 100;
+  
+  const getStrengthColor = () => {
+    if (strengthPercentage <= 25) return '#ef4444';
+    if (strengthPercentage <= 50) return '#f59e0b';
+    if (strengthPercentage <= 75) return '#eab308';
+    return '#22c55e';
+  };
+
+  const getStrengthLabel = () => {
+    if (strengthPercentage <= 25) return 'Weak';
+    if (strengthPercentage <= 50) return 'Fair';
+    if (strengthPercentage <= 75) return 'Good';
+    return 'Strong';
+  };
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -57,7 +78,7 @@ export default function ChangePasswordScreen() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    if (currentPassword === newPassword) {
+    if (currentPassword === newPassword && currentPassword.length > 0) {
       newErrors.newPassword = 'New password must be different from current';
     }
 
@@ -107,7 +128,7 @@ export default function ChangePasswordScreen() {
       
       Alert.alert(
         'Password Changed',
-        'Your password has been updated successfully.',
+        'Your password has been updated successfully. You will remain logged in on this device.',
         [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
@@ -128,20 +149,20 @@ export default function ChangePasswordScreen() {
     setValue: (val: string) => void,
     show: boolean,
     setShow: (val: boolean) => void,
-    error?: string,
+    errorKey: string,
     placeholder?: string
   ) => (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputContainer, error && styles.inputError]}>
-        <Lock size={20} color="#6b7280" style={styles.inputIcon} />
+      <View style={[styles.inputContainer, errors[errorKey] && styles.inputError]}>
+        <Lock size={20} color="#64748b" style={styles.inputIcon} />
         <TextInput
           style={styles.input}
           value={value}
           onChangeText={(text) => {
             setValue(text);
-            if (errors[label.toLowerCase().replace(' ', '')]) {
-              setErrors(prev => ({ ...prev, [label.toLowerCase().replace(' ', '')]: '' }));
+            if (errors[errorKey]) {
+              setErrors(prev => ({ ...prev, [errorKey]: '' }));
             }
           }}
           placeholder={placeholder || label}
@@ -152,30 +173,19 @@ export default function ChangePasswordScreen() {
         />
         <TouchableOpacity onPress={() => setShow(!show)} style={styles.eyeButton}>
           {show ? (
-            <EyeOff size={20} color="#6b7280" />
+            <EyeOff size={20} color="#64748b" />
           ) : (
-            <Eye size={20} color="#6b7280" />
+            <Eye size={20} color="#64748b" />
           )}
         </TouchableOpacity>
       </View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {errors[errorKey] && <Text style={styles.errorText}>{errors[errorKey]}</Text>}
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
-      <Stack.Screen
-        options={{
-          title: 'Change Password',
-          headerStyle: { backgroundColor: '#0f172a' },
-          headerTintColor: '#f1f5f9',
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <ChevronLeft size={24} color="#f1f5f9" />
-            </TouchableOpacity>
-          ),
-        }}
-      />
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <SettingsHeader title="Change Password" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -185,7 +195,19 @@ export default function ChangePasswordScreen() {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
+          {/* Security Info */}
+          <View style={styles.securityCard}>
+            <Shield size={24} color="#3b82f6" />
+            <View style={styles.securityContent}>
+              <Text style={styles.securityTitle}>Keep your account secure</Text>
+              <Text style={styles.securityText}>
+                Use a strong, unique password that you don't use elsewhere.
+              </Text>
+            </View>
+          </View>
+
           {/* Current Password */}
           {renderPasswordInput(
             'Current Password',
@@ -193,7 +215,7 @@ export default function ChangePasswordScreen() {
             setCurrentPassword,
             showCurrentPassword,
             setShowCurrentPassword,
-            errors.currentPassword,
+            'currentPassword',
             'Enter current password'
           )}
 
@@ -204,20 +226,43 @@ export default function ChangePasswordScreen() {
             setNewPassword,
             showNewPassword,
             setShowNewPassword,
-            errors.newPassword,
+            'newPassword',
             'Enter new password'
+          )}
+
+          {/* Password Strength Indicator */}
+          {newPassword.length > 0 && (
+            <View style={styles.strengthContainer}>
+              <View style={styles.strengthHeader}>
+                <Text style={styles.strengthLabel}>Password strength:</Text>
+                <Text style={[styles.strengthValue, { color: getStrengthColor() }]}>
+                  {getStrengthLabel()}
+                </Text>
+              </View>
+              <View style={styles.strengthBarBg}>
+                <View 
+                  style={[
+                    styles.strengthBar, 
+                    { width: `${strengthPercentage}%`, backgroundColor: getStrengthColor() }
+                  ]} 
+                />
+              </View>
+            </View>
           )}
 
           {/* Password Requirements */}
           {newPassword.length > 0 && (
             <View style={styles.requirements}>
-              {requirements.map((req, index) => (
-                <View key={index} style={styles.requirementRow}>
-                  {req.met ? (
-                    <Check size={16} color="#22c55e" />
-                  ) : (
-                    <X size={16} color="#6b7280" />
-                  )}
+              <Text style={styles.requirementsTitle}>Requirements:</Text>
+              {requirements.map((req) => (
+                <View key={req.id} style={styles.requirementRow}>
+                  <View style={[styles.requirementIcon, req.met && styles.requirementIconMet]}>
+                    {req.met ? (
+                      <Check size={12} color="#fff" />
+                    ) : (
+                      <X size={12} color="#64748b" />
+                    )}
+                  </View>
                   <Text style={[
                     styles.requirementText,
                     req.met && styles.requirementMet
@@ -231,21 +276,21 @@ export default function ChangePasswordScreen() {
 
           {/* Confirm Password */}
           {renderPasswordInput(
-            'Confirm Password',
+            'Confirm New Password',
             confirmPassword,
             setConfirmPassword,
             showConfirmPassword,
             setShowConfirmPassword,
-            errors.confirmPassword,
+            'confirmPassword',
             'Confirm new password'
           )}
 
           {/* Match Indicator */}
-          {confirmPassword.length > 0 && (
+          {confirmPassword.length > 0 && !errors.confirmPassword && (
             <View style={styles.matchIndicator}>
               {passwordsMatch ? (
                 <>
-                  <Check size={16} color="#22c55e" />
+                  <CheckCircle size={16} color="#22c55e" />
                   <Text style={styles.matchText}>Passwords match</Text>
                 </>
               ) : (
@@ -261,10 +306,10 @@ export default function ChangePasswordScreen() {
           <TouchableOpacity
             style={[
               styles.submitButton,
-              (!allRequirementsMet || !passwordsMatch || isLoading) && styles.submitButtonDisabled
+              (!allRequirementsMet || !passwordsMatch || !currentPassword || isLoading) && styles.submitButtonDisabled
             ]}
             onPress={handleChangePassword}
-            disabled={!allRequirementsMet || !passwordsMatch || isLoading}
+            disabled={!allRequirementsMet || !passwordsMatch || !currentPassword || isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color="#ffffff" />
@@ -275,7 +320,7 @@ export default function ChangePasswordScreen() {
 
           {/* Security Note */}
           <Text style={styles.securityNote}>
-            You'll remain logged in after changing your password. Other devices will need to log in again.
+            You'll remain logged in on this device. Other devices will need to log in again with your new password.
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -288,10 +333,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
   },
-  backButton: {
-    padding: 8,
-    marginLeft: -8,
-  },
   keyboardView: {
     flex: 1,
   },
@@ -299,9 +340,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
-    gap: 20,
+    padding: 16,
+    gap: 16,
   },
+  
+  // Security Card
+  securityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    borderRadius: 12,
+    padding: 16,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)',
+  },
+  securityContent: {
+    flex: 1,
+  },
+  securityTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#93c5fd',
+    marginBottom: 4,
+  },
+  securityText: {
+    fontSize: 13,
+    color: '#64748b',
+    lineHeight: 18,
+  },
+
+  // Input styles
   inputGroup: {
     gap: 8,
   },
@@ -318,16 +387,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#334155',
     paddingHorizontal: 14,
+    height: 52,
   },
   inputError: {
     borderColor: '#ef4444',
   },
   inputIcon: {
-    marginRight: 10,
+    marginRight: 12,
   },
   input: {
     flex: 1,
-    height: 50,
     fontSize: 16,
     color: '#f1f5f9',
   },
@@ -336,33 +405,82 @@ const styles = StyleSheet.create({
     marginRight: -8,
   },
   errorText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#ef4444',
     marginTop: 4,
   },
+
+  // Strength Indicator
+  strengthContainer: {
+    gap: 8,
+  },
+  strengthHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  strengthLabel: {
+    fontSize: 13,
+    color: '#64748b',
+  },
+  strengthValue: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  strengthBarBg: {
+    height: 6,
+    backgroundColor: '#334155',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  strengthBar: {
+    height: '100%',
+    borderRadius: 3,
+  },
+
+  // Requirements
   requirements: {
     backgroundColor: '#1e293b',
     borderRadius: 12,
     padding: 16,
-    gap: 10,
+    gap: 12,
+  },
+  requirementsTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#94a3b8',
+    marginBottom: 4,
   },
   requirementRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
+  requirementIcon: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#334155',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  requirementIconMet: {
+    backgroundColor: '#22c55e',
+  },
   requirementText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#64748b',
   },
   requirementMet: {
     color: '#22c55e',
   },
+
+  // Match Indicator
   matchIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginTop: -12,
+    marginTop: -8,
   },
   matchText: {
     fontSize: 13,
@@ -372,12 +490,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#ef4444',
   },
+
+  // Submit Button
   submitButton: {
     backgroundColor: '#3b82f6',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 8,
   },
   submitButtonDisabled: {
     backgroundColor: '#1e40af',
@@ -388,12 +508,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#ffffff',
   },
+
+  // Security Note
   securityNote: {
     fontSize: 13,
-    color: '#6b7280',
+    color: '#64748b',
     textAlign: 'center',
     lineHeight: 18,
-    marginTop: 8,
+    paddingHorizontal: 16,
   },
 });
-

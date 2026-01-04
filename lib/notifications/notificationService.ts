@@ -4,6 +4,7 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { notificationAnalyticsService } from './notificationAnalytics';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 // Configure how notifications appear when app is in foreground
 Notifications.setNotificationHandler({
@@ -16,6 +17,38 @@ Notifications.setNotificationHandler({
 
 class NotificationService {
   private expoPushToken: string | null = null;
+
+  /**
+   * Check if current time is within quiet hours
+   * Returns true if notifications should be suppressed
+   */
+  isInQuietHours(): boolean {
+    const { quietHoursEnabled, quietHoursStart, quietHoursEnd } = useSettingsStore.getState();
+    
+    if (!quietHoursEnabled) {
+      return false;
+    }
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentTime = currentHour * 60 + currentMinute; // Convert to minutes since midnight
+    
+    // Parse quiet hours (format: "HH:MM")
+    const [startHour, startMinute] = quietHoursStart.split(':').map(Number);
+    const [endHour, endMinute] = quietHoursEnd.split(':').map(Number);
+    const startTime = startHour * 60 + startMinute;
+    const endTime = endHour * 60 + endMinute;
+    
+    // Handle overnight quiet hours (e.g., 22:00 to 07:00)
+    if (startTime > endTime) {
+      // Quiet hours span midnight
+      return currentTime >= startTime || currentTime < endTime;
+    } else {
+      // Quiet hours within same day
+      return currentTime >= startTime && currentTime < endTime;
+    }
+  }
 
   /**
    * Initialize notifications and get push token
@@ -171,6 +204,7 @@ class NotificationService {
 
   /**
    * Send immediate notification
+   * Respects quiet hours unless skipQuietHours is true
    */
   async sendNotification(
     title: string,
@@ -179,8 +213,15 @@ class NotificationService {
       channelId?: string;
       data?: Record<string, any>;
       sound?: string;
+      skipQuietHours?: boolean; // For urgent notifications like rest timer
     }
   ): Promise<void> {
+    // Check quiet hours (unless explicitly skipped)
+    if (!options?.skipQuietHours && this.isInQuietHours()) {
+      logger.log('[Notification] Suppressed during quiet hours:', title);
+      return;
+    }
+    
     await Notifications.scheduleNotificationAsync({
       content: {
         title,

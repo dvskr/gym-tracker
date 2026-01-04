@@ -48,9 +48,12 @@ const PR_MESSAGES = {
 class AchievementNotificationService {
   /**
    * Notify about new PR
+   * Respects settings: notificationsEnabled, prNotifications
    */
   async notifyPR(pr: PRNotification): Promise<void> {
     try {
+      const { notificationsEnabled, prNotifications } = useSettingsStore.getState();
+      
       const messages = PR_MESSAGES[pr.type];
       const template = messages[Math.floor(Math.random() * messages.length)];
       
@@ -62,13 +65,13 @@ class AchievementNotificationService {
       // Haptic celebration (checks settings internally)
       successHaptic();
 
-      // In-app notification (toast)
+      // In-app notification (toast) - ALWAYS show (good UX, non-intrusive)
       this.showPRToast(pr);
 
       // Get safe emoji for PR type
       const prEmoji = getSafePREmoji(pr.type);
 
-      // Add to notification center
+      // Add to notification center - ALWAYS add (user can review later)
       useNotificationStore.getState().addNotification({
         type: 'pr',
         title: `New Personal Record! ${prEmoji}`,
@@ -76,24 +79,27 @@ class AchievementNotificationService {
         data: pr,
       });
 
-      // Push notification (only if app is backgrounded)
-      await notificationService.sendNotification(
-        `${prEmoji} New Personal Record!`,
-        message,
-        {
-          channelId: 'achievements',
-          data: { 
-            type: 'pr_notification',
-            exercise: pr.exerciseName,
-            prType: pr.type,
-            value: pr.newValue,
-          },
-        }
-      );
-
-logger.log(`PR notification sent: ${pr.exerciseName} ${pr.type}`);
+      // Push notification (controlled by settings)
+      if (notificationsEnabled && prNotifications) {
+        await notificationService.sendNotification(
+          `${prEmoji} New Personal Record!`,
+          message,
+          {
+            channelId: 'achievements',
+            data: { 
+              type: 'pr_notification',
+              exercise: pr.exerciseName,
+              prType: pr.type,
+              value: pr.newValue,
+            },
+          }
+        );
+        logger.log(`[PRNotification] Push sent: ${pr.exerciseName} ${pr.type}`);
+      } else {
+        logger.log(`[PRNotification] Push skipped - notifications: ${notificationsEnabled}, prNotifications: ${prNotifications}`);
+      }
     } catch (error) {
-logger.error('Failed to notify PR:', error);
+      logger.error('Failed to notify PR:', error);
     }
   }
 
@@ -165,6 +171,7 @@ logger.error('Failed to notify PR:', error);
 
   /**
    * Check for achievements after workout
+   * Respects settings: notificationsEnabled, milestoneAlerts
    */
   async checkWorkoutAchievements(workoutStats: {
     totalWorkouts: number;
@@ -174,6 +181,14 @@ logger.error('Failed to notify PR:', error);
     streak: number;
     userId: string;
   }): Promise<void> {
+    const { notificationsEnabled, milestoneAlerts } = useSettingsStore.getState();
+    
+    // Check if milestone alerts are enabled
+    if (!notificationsEnabled || !milestoneAlerts) {
+      logger.log('[Achievements] Milestone alerts disabled - skipping check');
+      return;
+    }
+    
     try {
       const achievements: Achievement[] = [];
 

@@ -1,6 +1,9 @@
 import { notificationService } from './notificationService';
 import { logger } from '@/lib/utils/logger';
 import { useNotificationStore } from '@/stores/notificationStore';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { supabase } from '@/lib/supabase';
+import { useAuthStore } from '@/stores/authStore';
 
 export interface StreakData {
   currentStreak: number;
@@ -43,12 +46,26 @@ const MILESTONE_STREAKS = [7, 14, 21, 30, 60, 90, 100, 150, 200, 250, 300, 365];
 class EngagementNotificationService {
   /**
    * Check if we should send a streak reminder (user hasn't worked out today but has a streak)
+   * Respects settings: notificationsEnabled, streakReminders
    */
   async checkStreakReminder(streakData: StreakData): Promise<void> {
+    const { notificationsEnabled, streakReminders } = useSettingsStore.getState();
+    
+    // Check settings first
+    if (!notificationsEnabled) {
+      logger.log('[StreakReminder] Skipped - notifications disabled globally');
+      return;
+    }
+    
+    if (!streakReminders) {
+      logger.log('[StreakReminder] Skipped - streak reminders disabled in settings');
+      return;
+    }
+    
     const { currentStreak, lastWorkoutDate } = streakData;
     
     if (currentStreak < 2) {
- logger.log(' No streak to protect (streak < 2)');
+      logger.log('[StreakReminder] No streak to protect (streak < 2)');
       return;
     }
     
@@ -97,7 +114,7 @@ class EngagementNotificationService {
           data: { 
             type: 'streak_reminder', 
             streak,
-            date: new Date().toISOString().split('T')[0], // Track date sent
+            date: (() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`; })(), // Track date sent (local timezone)
           },
         }
       );
@@ -113,7 +130,9 @@ class EngagementNotificationService {
    */
   private async hasStreakReminderToday(): Promise<boolean> {
     const scheduled = await notificationService.getScheduledNotifications();
-    const today = new Date().toISOString().split('T')[0];
+    // Use local date format (not UTC) for timezone-correct comparison
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     
     return scheduled.some(n => 
       n.content.data?.type === 'streak_reminder' &&
@@ -123,12 +142,26 @@ class EngagementNotificationService {
 
   /**
    * Schedule inactivity reminders after each workout
+   * Respects settings: notificationsEnabled, inactivityReminders
    */
   async scheduleInactivityReminders(lastWorkoutDate: string): Promise<void> {
+    const { notificationsEnabled, inactivityReminders } = useSettingsStore.getState();
+    
+    // Always cancel existing first (in case setting was turned off)
+    await this.cancelInactivityReminders();
+    
+    // Check settings
+    if (!notificationsEnabled) {
+      logger.log('[InactivityReminder] Skipped - notifications disabled globally');
+      return;
+    }
+    
+    if (!inactivityReminders) {
+      logger.log('[InactivityReminder] Skipped - inactivity reminders disabled in settings');
+      return;
+    }
+    
     try {
-      // Cancel existing inactivity notifications
-      await this.cancelInactivityReminders();
-
       const lastWorkout = new Date(lastWorkoutDate);
       let scheduled = 0;
       
@@ -186,9 +219,18 @@ class EngagementNotificationService {
 
   /**
    * Send streak celebration (immediate) for milestone streaks
+   * Respects settings: notificationsEnabled, streakReminders
    */
   async celebrateStreak(streak: number): Promise<void> {
     if (!MILESTONE_STREAKS.includes(streak)) {
+      return;
+    }
+    
+    const { notificationsEnabled, streakReminders } = useSettingsStore.getState();
+    
+    // Check settings
+    if (!notificationsEnabled || !streakReminders) {
+      logger.log('[StreakCelebration] Skipped - notifications or streak reminders disabled');
       return;
     }
 
@@ -246,12 +288,251 @@ logger.log(`Sent streak celebration for ${streak} days`);
     
     for (const notification of scheduled) {
       const type = notification.content.data?.type;
-      if (type === 'streak_reminder' || type === 'inactivity_reminder' || type === 'streak_celebration') {
+      if (type === 'streak_reminder' || type === 'inactivity_reminder' || type === 'streak_celebration' || type === 'weekly_summary') {
         await notificationService.cancelNotification(notification.identifier);
       }
     }
 
- logger.log('S& Cancelled all engagement notifications');
+    logger.log('[Engagement] Cancelled all engagement notifications');
+  }
+
+  /**
+   * Calculate weekly stats for the current user
+   */
+  private async calculateWeeklyStats(userId: string): Promise<{
+    workoutsThisWeek: number;
+    volumeThisWeek: number;
+    workoutsLastWeek: number;
+    volumeLastWeek: number;
+    currentStreak: number;
+    totalPRs: number;
+  }> {
+    try {
+      const now = new Date();
+      
+      // Get start of this week (Monday)
+      const thisWeekStart = new Date(now);
+      thisWeekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
+      thisWeekStart.setHours(0, 0, 0, 0);
+      
+      // Get start of last week
+      const lastWeekStart = new Date(thisWeekStart);
+      lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+      
+      // Get end of last week (start of this week)
+      const lastWeekEnd = new Date(thisWeekStart);
+
+      // Query this week's workouts
+      const { data: thisWeekWorkouts } = await supabase
+        .from('workouts')
+        .select('total_volume')
+        .eq('user_id', userId)
+        .not('ended_at', 'is', null)
+        .gte('ended_at', thisWeekStart.toISOString());
+
+      // Query last week's workouts
+      const { data: lastWeekWorkouts } = await supabase
+        .from('workouts')
+        .select('total_volume')
+        .eq('user_id', userId)
+        .not('ended_at', 'is', null)
+        .gte('ended_at', lastWeekStart.toISOString())
+        .lt('ended_at', lastWeekEnd.toISOString());
+
+      // Query this week's PRs
+      const { count: prCount } = await supabase
+        .from('personal_records')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('achieved_at', thisWeekStart.toISOString());
+
+      // Calculate streak
+      const { calculateStreak } = await import('@/lib/utils/streakCalculation');
+      const streakData = await calculateStreak(userId);
+
+      const workoutsThisWeek = thisWeekWorkouts?.length || 0;
+      const volumeThisWeek = thisWeekWorkouts?.reduce((sum, w) => sum + (w.total_volume || 0), 0) || 0;
+      const workoutsLastWeek = lastWeekWorkouts?.length || 0;
+      const volumeLastWeek = lastWeekWorkouts?.reduce((sum, w) => sum + (w.total_volume || 0), 0) || 0;
+
+      return {
+        workoutsThisWeek,
+        volumeThisWeek,
+        workoutsLastWeek,
+        volumeLastWeek,
+        currentStreak: streakData.currentStreak,
+        totalPRs: prCount || 0,
+      };
+    } catch (error) {
+      logger.error('[WeeklySummary] Error calculating stats:', error);
+      return {
+        workoutsThisWeek: 0,
+        volumeThisWeek: 0,
+        workoutsLastWeek: 0,
+        volumeLastWeek: 0,
+        currentStreak: 0,
+        totalPRs: 0,
+      };
+    }
+  }
+
+  /**
+   * Format volume for display (e.g., 25430 -> "25.4K")
+   */
+  private formatVolume(volume: number): string {
+    if (volume >= 1000000) {
+      return `${(volume / 1000000).toFixed(1)}M`;
+    } else if (volume >= 1000) {
+      return `${(volume / 1000).toFixed(1)}K`;
+    }
+    return volume.toLocaleString();
+  }
+
+  /**
+   * Schedule weekly summary notification (sent every Sunday at 6 PM)
+   * Respects settings: notificationsEnabled, weeklySummary
+   */
+  async scheduleWeeklySummary(): Promise<void> {
+    const { notificationsEnabled, weeklySummary } = useSettingsStore.getState();
+    
+    // Cancel existing weekly summary
+    await this.cancelWeeklySummary();
+    
+    if (!notificationsEnabled || !weeklySummary) {
+      logger.log('[WeeklySummary] Skipped - notifications or weekly summary disabled');
+      return;
+    }
+
+    try {
+      // Schedule for next Sunday at 6 PM
+      const now = new Date();
+      const daysUntilSunday = (7 - now.getDay()) % 7 || 7; // If today is Sunday, schedule for next Sunday
+      const nextSunday = new Date(now);
+      nextSunday.setDate(now.getDate() + daysUntilSunday);
+      nextSunday.setHours(18, 0, 0, 0);
+
+      // Note: We can't calculate stats at schedule time (they'd be stale by Sunday)
+      // Instead, we schedule a generic notification and calculate stats when it fires
+      // For now, store the user ID so we can fetch stats on notification receive
+      const userId = useAuthStore.getState().user?.id;
+
+      await notificationService.scheduleNotification(
+        'Weekly Progress Report',
+        'Tap to see your workout stats from this week!',
+        {
+          type: 'date' as const,
+          date: nextSunday.getTime(),
+        },
+        {
+          channelId: 'general',
+          data: { 
+            type: 'weekly_summary',
+            userId, // Include user ID for potential deep linking
+          },
+        }
+      );
+
+      logger.log(`[WeeklySummary] Scheduled for ${nextSunday.toLocaleDateString()}`);
+    } catch (error) {
+      logger.error('[WeeklySummary] Failed to schedule:', error);
+    }
+  }
+
+  /**
+   * Send immediate weekly summary with calculated stats
+   * Call this when user taps the weekly summary notification or for testing
+   */
+  async sendWeeklySummaryNow(userId: string): Promise<void> {
+    const { notificationsEnabled, weeklySummary } = useSettingsStore.getState();
+    
+    if (!notificationsEnabled || !weeklySummary) {
+      return;
+    }
+
+    try {
+      const stats = await this.calculateWeeklyStats(userId);
+      const { weightUnit } = useSettingsStore.getState();
+      
+      // Build dynamic message based on stats
+      let message = '';
+      
+      if (stats.workoutsThisWeek === 0) {
+        message = 'No workouts this week. Start fresh next week!';
+      } else {
+        const parts: string[] = [];
+        
+        // Workouts count
+        parts.push(`${stats.workoutsThisWeek} workout${stats.workoutsThisWeek !== 1 ? 's' : ''}`);
+        
+        // Volume
+        if (stats.volumeThisWeek > 0) {
+          parts.push(`${this.formatVolume(stats.volumeThisWeek)} ${weightUnit} lifted`);
+        }
+        
+        // PRs
+        if (stats.totalPRs > 0) {
+          parts.push(`${stats.totalPRs} PR${stats.totalPRs !== 1 ? 's' : ''}`);
+        }
+        
+        // Streak
+        if (stats.currentStreak >= 3) {
+          parts.push(`${stats.currentStreak}-day streak`);
+        }
+        
+        message = parts.join(' | ');
+        
+        // Week over week comparison
+        if (stats.workoutsLastWeek > 0) {
+          const workoutDiff = stats.workoutsThisWeek - stats.workoutsLastWeek;
+          const volumeChange = stats.volumeLastWeek > 0 
+            ? Math.round(((stats.volumeThisWeek - stats.volumeLastWeek) / stats.volumeLastWeek) * 100)
+            : 0;
+          
+          if (volumeChange > 0) {
+            message += ` (+${volumeChange}% vs last week)`;
+          } else if (volumeChange < 0) {
+            message += ` (${volumeChange}% vs last week)`;
+          }
+        }
+      }
+
+      // Add to notification center
+      useNotificationStore.getState().addNotification({
+        type: 'info',
+        title: 'Weekly Progress Report',
+        message,
+        data: stats,
+      });
+
+      await notificationService.sendNotification(
+        'Weekly Progress Report',
+        message,
+        {
+          channelId: 'general',
+          data: { type: 'weekly_summary', ...stats },
+        }
+      );
+
+      logger.log('[WeeklySummary] Sent with stats:', stats);
+    } catch (error) {
+      logger.error('[WeeklySummary] Failed to send:', error);
+    }
+  }
+
+  /**
+   * Cancel weekly summary notification
+   */
+  private async cancelWeeklySummary(): Promise<void> {
+    try {
+      const scheduled = await notificationService.getScheduledNotifications();
+      for (const notification of scheduled) {
+        if (notification.content.data?.type === 'weekly_summary') {
+          await notificationService.cancelNotification(notification.identifier);
+        }
+      }
+    } catch (error) {
+      logger.error('[WeeklySummary] Failed to cancel:', error);
+    }
   }
 }
 

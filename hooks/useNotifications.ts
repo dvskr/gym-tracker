@@ -40,16 +40,23 @@ export function useNotifications() {
     const data = response.notification.request.content.data;
 
     // Navigate based on notification type
-    if (data?.type === 'pr') {
-      // Navigate to exercise history
-      if (data.exerciseName) {
-        // router.push(`/exercise/${data.exerciseId}/history`);
-      }
-    } else if (data?.type === 'milestone') {
-      // Navigate to history/stats
-      router.push('/(tabs)/history');
+    if (data?.type === 'pr' || data?.type === 'pr_notification') {
+      // Navigate to progress to see PRs
+      router.push('/(tabs)/progress');
+    } else if (data?.type === 'milestone' || data?.type === 'achievement') {
+      // Navigate to progress/achievements
+      router.push('/(tabs)/progress');
     } else if (data?.type === 'workout_reminder') {
       // Navigate to workout screen
+      router.push('/(tabs)/workout');
+    } else if (data?.type === 'weekly_summary') {
+      // Navigate to progress screen to see stats
+      router.push('/(tabs)/progress');
+    } else if (data?.type === 'streak_reminder' || data?.type === 'streak_celebration') {
+      // Navigate to progress to see streak
+      router.push('/(tabs)/progress');
+    } else if (data?.type === 'inactivity_reminder') {
+      // Navigate to workout screen to start a workout
       router.push('/(tabs)/workout');
     }
   };
@@ -58,4 +65,4 @@ export function useNotifications() {
     // You can expose functions here if needed
   };
 }
-
+
