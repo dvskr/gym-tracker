@@ -427,7 +427,7 @@ export async function getAllPRs(userId: string): Promise<ExercisePRs[]> {
     }
 
     const exercisePRs = exerciseMap.get(exerciseId);
-    if (!exercisePRs) continue;
+    if (!exercisePRs) return; // Use 'return' instead of 'continue' in forEach
     
     switch (pr.record_type) {
       case 'max_weight':
