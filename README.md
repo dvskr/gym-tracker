@@ -15,7 +15,7 @@ A modern, full-featured workout tracking app built with React Native, Expo, and 
 ## 📦 Tech Stack
 
 - **Framework**: React Native with Expo Router
-- **Styling**: NativeWind (Tailwind CSS for React Native)
+- **Styling**: React Native StyleSheet API
 - **Backend**: Supabase (PostgreSQL + Auth + Realtime)
 - **State Management**: Zustand
 - **Forms**: React Hook Form + Zod
@@ -123,11 +123,11 @@ The app uses Supabase Auth with:
 
 ## 🎨 Theming
 
-The app uses a custom dark theme with NativeWind:
+The app uses a custom dark theme with React Native StyleSheet API:
 - Primary colors: Blue (500, 600, 700)
 - Dark backgrounds: Slate (800, 900, 950)
 
-Customize colors in `tailwind.config.js`.
+Theme values are defined in `lib/theme/` and `lib/styles/`.
 
 ## 🚧 Development Status
 
