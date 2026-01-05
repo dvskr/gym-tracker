@@ -15,7 +15,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Camera, User, X } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAuthStore } from '../../stores/authStore';
 import {
   getProfile,
@@ -72,7 +71,6 @@ export default function EditProfileScreen() {
   const [currentProfile, setCurrentProfile] = useState<any>(null);
   
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     full_name: '',
@@ -319,36 +317,6 @@ export default function EditProfileScreen() {
               <Text style={styles.disabledInputText}>{formData.email}</Text>
             </View>
             <Text style={styles.hint}>Contact support to change email</Text>
-          </View>
-
-          {/* Date of Birth */}
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Date of Birth</Text>
-            <TouchableOpacity
-              style={styles.input}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Text style={formData.date_of_birth ? styles.inputText : styles.placeholder}>
-                {formData.date_of_birth
-                  ? formData.date_of_birth.toLocaleDateString()
-                  : 'Select date'}
-              </Text>
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={formData.date_of_birth || new Date()}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(event, selectedDate) => {
-                  setShowDatePicker(Platform.OS === 'ios');
-                  if (selectedDate) {
-                    setFormData({ ...formData, date_of_birth: selectedDate });
-                  }
-                }}
-                maximumDate={new Date()}
-                minimumDate={new Date(1900, 0, 1)}
-              />
-            )}
           </View>
 
           {/* Gender */}

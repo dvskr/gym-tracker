@@ -33,7 +33,7 @@ import { QuickWeightLog, WeightSparkline } from '@/components/home';
 import { getLatestMeasurements } from '@/lib/api/measurements';
 import { format } from 'date-fns';
 import { NotificationBell } from '@/components/NotificationBell';
-import { PlateauAlerts, RecoveryStatus, CheckinPrompt } from '@/components/ai';
+import { PlateauAlerts, RecoveryStatus } from '@/components/ai';
 import { DefaultTemplates } from '@/components/workout/DefaultTemplates';
 import { DefaultTemplate } from '@/lib/templates/defaultTemplates';
 import { tabDataCache } from '@/lib/cache/tabDataCache';
@@ -513,11 +513,8 @@ export default function HomeScreen() {
           />
         )}
 
-        {/* Recovery Status */}
-        {/* Daily Check-in Prompt */}
-        {session && isPreloadComplete && <CheckinPrompt />}
-
         {/* Recovery Status - Only render after preload to avoid loading states */}
+        {/* NOTE: CheckinPrompt REMOVED - zero friction to start workout */}
         {session && isPreloadComplete && <RecoveryStatus />}
 
         {/* Plateau Detection Alerts - Only render after preload to avoid loading states */}
@@ -614,17 +611,16 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
               >
                 <View style={[styles.quickLinkIcon, { backgroundColor: '#8b5cf620' }]}>
-                  <Ruler size={18} color="#8b5cf6" />
+                  <Ruler size={16} color="#8b5cf6" />
                 </View>
                 <View style={styles.quickLinkInfo}>
-                  <Text style={styles.quickLinkTitle}>Measurements</Text>
-                  <Text style={styles.quickLinkSubtitle}>
+                  <Text style={styles.quickLinkTitle} numberOfLines={1}>Measurements</Text>
+                  <Text style={styles.quickLinkSubtitle} numberOfLines={1}>
                     {lastMeasurementDate
-                      ? format(new Date(lastMeasurementDate), 'MMM d')
+                      ? `Last: ${format(new Date(lastMeasurementDate), 'MMM d')}`
                       : 'Not logged'}
                   </Text>
                 </View>
-                <ChevronRight size={16} color="#475569" />
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -633,13 +629,12 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
               >
                 <View style={[styles.quickLinkIcon, { backgroundColor: '#22c55e20' }]}>
-                  <Camera size={18} color="#22c55e" />
+                  <Camera size={16} color="#22c55e" />
                 </View>
                 <View style={styles.quickLinkInfo}>
-                  <Text style={styles.quickLinkTitle}>Photos</Text>
-                  <Text style={styles.quickLinkSubtitle}>Progress pics</Text>
+                  <Text style={styles.quickLinkTitle} numberOfLines={1}>Photos</Text>
+                  <Text style={styles.quickLinkSubtitle} numberOfLines={1}>Progress pics</Text>
                 </View>
-                <ChevronRight size={16} color="#475569" />
               </TouchableOpacity>
             </View>
           </View>
@@ -972,7 +967,7 @@ const styles = StyleSheet.create({
 
   quickLinksRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
   },
 
   quickLinkCard: {
@@ -981,30 +976,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1e293b',
     borderRadius: 12,
-    padding: 12,
-    gap: 10,
+    padding: 10,
+    gap: 8,
   },
 
   quickLinkIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   quickLinkInfo: {
     flex: 1,
+    minWidth: 0,
   },
 
   quickLinkTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#ffffff',
   },
 
   quickLinkSubtitle: {
-    fontSize: 11,
+    fontSize: 10,
     color: '#64748b',
+    marginTop: 1,
   },
 });

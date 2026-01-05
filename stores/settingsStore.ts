@@ -75,6 +75,10 @@ interface SettingsState {
   showProgressiveOverload: boolean;
   showWorkoutAnalysis: boolean;
 
+  // Workout Split Preferences (NEW)
+  preferredSplit: 'Push' | 'Pull' | 'Legs' | 'Full Body' | null;
+  splitHistory: Record<string, number>; // { 'Push': 15, 'Pull': 12, 'Legs': 10 }
+
   // Hydration flag
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
@@ -111,7 +115,9 @@ interface SettingsState {
   setHealthAutoSync: (enabled: boolean) => void;
   setSyncWeight: (enabled: boolean) => void;
   setSyncBodyMeasurements: (enabled: boolean) => void;
-  updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated'>>) => void;
+  recordWorkoutSplit: (split: string) => void;
+  getPreferredSplit: () => string | null;
+  updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated' | 'recordWorkoutSplit' | 'getPreferredSplit'>>) => void;
   resetToDefaults: () => void;
   syncFromProfile: (profile: any) => void;
   syncToProfile: (userId: string) => Promise<void>;
@@ -182,6 +188,10 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   showWorkoutSuggestions: true,
   showProgressiveOverload: true,
   showWorkoutAnalysis: true,
+  
+  // Workout Split Preferences (NEW)
+  preferredSplit: null,
+  splitHistory: {},
   
   // Hydration
   _hasHydrated: false,
@@ -360,6 +370,29 @@ export const useSettingsStore = create<SettingsState>()(
       setSyncBodyMeasurements: (enabled) => {
         set({ syncBodyMeasurements: enabled });
         debounceSyncToProfile();
+      },
+
+      recordWorkoutSplit: (split: string) => {
+        set((state) => {
+          const history = { ...state.splitHistory };
+          history[split] = (history[split] || 0) + 1;
+          
+          // Determine most used split
+          const mostUsed = Object.entries(history)
+            .sort(([, a], [, b]) => (b as number) - (a as number))[0]?.[0] || null;
+          
+          logger.log(`[Settings] Recorded workout split: ${split}, new count: ${history[split]}, preferred: ${mostUsed}`);
+          
+          return {
+            splitHistory: history,
+            preferredSplit: mostUsed as any,
+          };
+        });
+      },
+
+      getPreferredSplit: () => {
+        const state = get();
+        return state.preferredSplit;
       },
 
       updateSettings: (settings) => {

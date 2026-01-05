@@ -8,12 +8,31 @@ export interface MuscleRecoveryStatus {
   optimalRecoveryDays: number;
 }
 
+export interface MuscleRecoveryDetail {
+  name: string;
+  recoveryPercent: number;  // 0-100
+  status: 'ready' | 'almost' | 'recovering' | 'fatigued';
+  daysSinceTraining: number;
+  hoursUntilReady: number;  // 0 if ready
+}
+
 export interface RecoveryStatus {
+  // Actionable output (NEW)
+  readyToTrain: string[];      // ["Chest", "Back", "Shoulders"]
+  needsRest: string[];         // ["Legs", "Biceps"]
+  suggestedFocus: string;      // "Push" or "Pull" or "Legs" or "Upper" or "Lower"
+  
+  // NEW: Detailed muscle recovery with percentages
+  muscleDetails: MuscleRecoveryDetail[];
+  
+  // Legacy output (kept for backwards compatibility)
   overall: 'recovered' | 'moderate' | 'fatigued' | 'overtrained';
   score: number; // 0-100
   muscleGroups: MuscleRecoveryStatus[];
   recommendation: string;
   suggestedAction: 'train_hard' | 'train_light' | 'active_recovery' | 'rest';
+  
+  // Stats
   consecutiveDays: number;
   workoutsThisWeek: number;
 }
@@ -39,15 +58,14 @@ class RecoveryService {
 
   /**
    * Get comprehensive recovery status for user
+   * REFACTORED: No longer depends on daily check-in data
+   * Uses workout data only for reliable, zero-friction recovery status
    */
   async getRecoveryStatus(userId: string): Promise<RecoveryStatus> {
     try {
       const recentWorkouts = await this.getRecentWorkouts(userId, 14);
       
-      // Get today's check-in data
-      const checkinData = await this.getTodaysCheckin(userId);
-      
-      // Get fitness preferences
+      // Get fitness preferences (experience_level, fitness_goal, etc.)
       const fitnessPrefs = await this.getFitnessPreferences(userId);
       
       if (recentWorkouts.length === 0) {
@@ -61,12 +79,11 @@ class RecoveryService {
       const workoutsThisWeek = this.countWorkoutsThisWeek(recentWorkouts);
       const consecutiveDays = this.getConsecutiveTrainingDays(recentWorkouts);
       
-      // Calculate overall score (now includes check-in data and fitness prefs)
+      // Calculate overall score (no check-in dependency)
       const overallScore = this.calculateOverallScore(
         muscleStatus,
         workoutsThisWeek,
         consecutiveDays,
-        checkinData,
         fitnessPrefs
       );
       
@@ -76,11 +93,32 @@ class RecoveryService {
         muscleStatus,
         consecutiveDays,
         workoutsThisWeek,
-        checkinData,
         fitnessPrefs
       );
 
+      // NEW: Calculate actionable output
+      const readyToTrain = muscleStatus
+        .filter(m => m.status === 'fresh' || m.status === 'recovering')
+        .map(m => this.capitalizeMuscle(m.muscle));
+      
+      const needsRest = muscleStatus
+        .filter(m => m.status === 'fatigued')
+        .map(m => this.capitalizeMuscle(m.muscle));
+      
+      // Determine suggested workout focus based on ready muscles
+      const suggestedFocus = this.determineSuggestedFocus(muscleStatus);
+      
+      // NEW: Calculate muscle recovery details with percentages
+      const muscleDetails = this.calculateMuscleDetails(muscleStatus, fitnessPrefs);
+
       return {
+        // Actionable output (NEW)
+        readyToTrain,
+        needsRest,
+        suggestedFocus,
+        muscleDetails,
+        
+        // Legacy output
         overall: status,
         score: overallScore,
         muscleGroups: muscleStatus,
@@ -93,6 +131,90 @@ class RecoveryService {
  logger.error('Failed to get recovery status:', error);
       return this.getDefaultStatus();
     }
+  }
+
+  /**
+   * Capitalize muscle name for display
+   */
+  private capitalizeMuscle(muscle: string): string {
+    return muscle.charAt(0).toUpperCase() + muscle.slice(1);
+  }
+
+  /**
+   * Calculate detailed muscle recovery with percentages
+   */
+  private calculateMuscleDetails(
+    muscleStatus: MuscleRecoveryStatus[],
+    fitnessPrefs?: any | null
+  ): MuscleRecoveryDetail[] {
+    return muscleStatus.map(muscle => {
+      const hoursSinceTraining = muscle.daysSinceTraining * 24;
+      const baseRecoveryHours = muscle.optimalRecoveryDays * 24;
+      
+      // Calculate recovery percentage
+      const recoveryPercent = Math.min(100, Math.round((hoursSinceTraining / baseRecoveryHours) * 100));
+      
+      // Determine detailed status
+      let status: MuscleRecoveryDetail['status'];
+      if (recoveryPercent >= 100) status = 'ready';
+      else if (recoveryPercent >= 75) status = 'almost';
+      else if (recoveryPercent >= 40) status = 'recovering';
+      else status = 'fatigued';
+      
+      // Hours until ready
+      const hoursUntilReady = Math.max(0, Math.round(baseRecoveryHours - hoursSinceTraining));
+      
+      return {
+        name: this.capitalizeMuscle(muscle.muscle),
+        recoveryPercent,
+        status,
+        daysSinceTraining: muscle.daysSinceTraining,
+        hoursUntilReady,
+      };
+    });
+  }
+
+  /**
+   * Determine suggested workout focus based on muscle recovery status
+   */
+  private determineSuggestedFocus(muscleStatus: MuscleRecoveryStatus[]): string {
+    // Group muscles by workout type
+    const pushMuscles = ['chest', 'shoulders', 'triceps'];
+    const pullMuscles = ['back', 'lats', 'biceps', 'traps', 'forearms'];
+    const legMuscles = ['quadriceps', 'hamstrings', 'glutes', 'calves'];
+    const coreMuscles = ['core', 'abs'];
+
+    // Calculate readiness score for each group
+    const getGroupReadiness = (muscles: string[]): number => {
+      const relevant = muscleStatus.filter(m => muscles.includes(m.muscle));
+      if (relevant.length === 0) return 100; // Never trained = ready
+      
+      const freshCount = relevant.filter(m => m.status === 'fresh').length;
+      const recoveringCount = relevant.filter(m => m.status === 'recovering').length;
+      const fatiguedCount = relevant.filter(m => m.status === 'fatigued').length;
+      
+      return (freshCount * 100 + recoveringCount * 50 + fatiguedCount * 0) / relevant.length;
+    };
+
+    const pushReadiness = getGroupReadiness(pushMuscles);
+    const pullReadiness = getGroupReadiness(pullMuscles);
+    const legReadiness = getGroupReadiness(legMuscles);
+
+    // Find the most ready group
+    const scores = [
+      { type: 'Push', score: pushReadiness },
+      { type: 'Pull', score: pullReadiness },
+      { type: 'Legs', score: legReadiness },
+    ];
+
+    scores.sort((a, b) => b.score - a.score);
+    
+    // If top score is low, suggest rest
+    if (scores[0].score < 30) {
+      return 'Rest Day';
+    }
+
+    return scores[0].type;
   }
 
   /**
@@ -170,12 +292,12 @@ class RecoveryService {
 
   /**
    * Calculate overall recovery score (0-100)
+   * REFACTORED: No longer uses check-in data - purely workout-based
    */
   private calculateOverallScore(
     muscleStatus: MuscleRecoveryStatus[],
     workoutsThisWeek: number,
     consecutiveDays: number,
-    checkinData?: any,
     fitnessPrefs?: any | null
   ): number {
     let score = 100;
@@ -183,7 +305,7 @@ class RecoveryService {
     // Get target from fitness preferences or default to 4
     const targetWorkouts = fitnessPrefs?.weekly_workout_target || 4;
 
-    // Training frequency adjustments - now personalized to target
+    // Training frequency adjustments - personalized to target
     if (workoutsThisWeek >= 7) {
       score -= 35; // Training every day = overtraining risk
     } else if (workoutsThisWeek >= 6) {
@@ -224,44 +346,6 @@ class RecoveryService {
       score -= 10;
     }
 
-    // Check-in data adjustments
-    if (checkinData) {
-      // Poor sleep quality (1-2)
-      if (checkinData.sleep_quality && checkinData.sleep_quality <= 2) {
-        score -= 15;
-      } else if (checkinData.sleep_quality === 3) {
-        score -= 7;
-      }
-
-      // Insufficient sleep hours
-      if (checkinData.sleep_hours && checkinData.sleep_hours < 6) {
-        score -= 12;
-      } else if (checkinData.sleep_hours && checkinData.sleep_hours < 7) {
-        score -= 6;
-      }
-
-      // High stress (4-5)
-      if (checkinData.stress_level && checkinData.stress_level >= 4) {
-        score -= 12;
-      } else if (checkinData.stress_level === 3) {
-        score -= 5;
-      }
-
-      // High soreness (4-5)
-      if (checkinData.soreness_level && checkinData.soreness_level >= 4) {
-        score -= 15;
-      } else if (checkinData.soreness_level === 3) {
-        score -= 7;
-      }
-
-      // Low energy (1-2)
-      if (checkinData.energy_level && checkinData.energy_level <= 2) {
-        score -= 10;
-      } else if (checkinData.energy_level === 3) {
-        score -= 5;
-      }
-    }
-
     // Muscle fatigue adjustments
     const fatiguedCount = muscleStatus.filter(m => m.status === 'fatigued').length;
     const recoveringCount = muscleStatus.filter(m => m.status === 'recovering').length;
@@ -277,13 +361,13 @@ class RecoveryService {
 
   /**
    * Get recommendation based on recovery metrics
+   * REFACTORED: No longer uses check-in data
    */
   private getRecommendation(
     score: number,
     muscleStatus: MuscleRecoveryStatus[],
     consecutiveDays: number,
     workoutsThisWeek: number,
-    checkinData?: any,
     fitnessPrefs?: any | null
   ): {
     status: RecoveryStatus['overall'];
@@ -298,30 +382,7 @@ class RecoveryService {
       .filter(m => m.status === 'fatigued')
       .map(m => m.muscle);
 
-    // Check for wellness red flags
-    const poorSleep = checkinData?.sleep_quality && checkinData.sleep_quality <= 2;
-    const highStress = checkinData?.stress_level && checkinData.stress_level >= 4;
-    const highSoreness = checkinData?.soreness_level && checkinData.soreness_level >= 4;
-    const lowEnergy = checkinData?.energy_level && checkinData.energy_level <= 2;
-
-    // Severe wellness issues override score
-    if (poorSleep && (highStress || lowEnergy)) {
-      return {
-        status: 'overtrained',
-        recommendation: 'Poor sleep and low energy/high stress detected. Your body needs rest today. Consider a rest day or very light activity.',
-        action: 'rest',
-      };
-    }
-
-    if (highSoreness && lowEnergy) {
-      return {
-        status: 'fatigued',
-        recommendation: 'High soreness and low energy detected. Take it easy today with active recovery or rest.',
-        action: 'active_recovery',
-      };
-    }
-
-      // Recovered (80-100)
+    // Recovered (80-100)
     if (score >= 80) {
       let recommendation = 'You\'re well recovered and ready for an intense session! ';
       
@@ -343,11 +404,6 @@ class RecoveryService {
         recommendation += 'All muscle groups recovered!';
       }
 
-      // Add wellness note if available
-      if (checkinData?.energy_level && checkinData.energy_level >= 4) {
-        recommendation += ' Your energy levels are great!';
-      }
-
       // Check if today is preferred rest day
       if (fitnessPrefs?.preferred_rest_days) {
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
@@ -367,10 +423,6 @@ class RecoveryService {
     if (score >= 60) {
       let recommendation = '';
       
-      if (poorSleep || highStress) {
-        recommendation = 'Your wellness metrics suggest taking it easier today. ';
-      }
-      
       if (consecutiveDays >= 3) {
         recommendation += `You've trained ${consecutiveDays} days in a row. Consider a lighter session or active recovery today.`;
       } else if (fatiguedMuscles.length > 2) {
@@ -379,14 +431,10 @@ class RecoveryService {
         recommendation += 'Moderate recovery. A normal workout is fine, but listen to your body.';
       }
 
-      if (highSoreness) {
-        recommendation += ' High soreness detected - consider lighter weights.';
-      }
-
       return {
         status: 'moderate',
         recommendation,
-        action: consecutiveDays >= 3 || fatiguedMuscles.length > 2 || poorSleep || highSoreness ? 'train_light' : 'train_hard',
+        action: consecutiveDays >= 3 || fatiguedMuscles.length > 2 ? 'train_light' : 'train_hard',
       };
     }
 
@@ -551,6 +599,13 @@ class RecoveryService {
    */
   private getDefaultStatus(): RecoveryStatus {
     return {
+      // Actionable output
+      readyToTrain: ['All muscle groups'],
+      needsRest: [],
+      suggestedFocus: 'Full Body',
+      muscleDetails: [],
+      
+      // Legacy output
       overall: 'recovered',
       score: 100,
       muscleGroups: [],
@@ -559,31 +614,6 @@ class RecoveryService {
       consecutiveDays: 0,
       workoutsThisWeek: 0,
     };
-  }
-
-  /**
-   * Get today's check-in data
-   */
-  private async getTodaysCheckin(userId: string): Promise<any> {
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      
-      const { data, error } = await supabase
-        .from('daily_checkins')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('date', today)
-        .single();
-
-      if (error && error.code !== 'PGRST116') { // Not found is ok
-        throw error;
-      }
-
-      return data;
-    } catch (error) {
- logger.error('Error fetching check-in:', error);
-      return null;
-    }
   }
 
   /**
@@ -611,4 +641,4 @@ class RecoveryService {
 }
 
 export const recoveryService = new RecoveryService();
-
+

@@ -6,171 +6,315 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { RefreshCw } from 'lucide-react-native';
-import { workoutSuggestionService, WorkoutSuggestion as WorkoutSuggestionType } from '@/lib/ai/workoutSuggestions';
+import { RefreshCw, Check, Star, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { recoveryService, RecoveryStatus, MuscleRecoveryDetail } from '@/lib/ai/recoveryService';
 import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { getPersonalizedExercises, PersonalizedExercise } from '@/lib/ai/exerciseSuggestions';
 import { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
-import { AIFeedback } from './AIFeedback';
+import { lightHaptic } from '@/lib/utils/haptics';
+
+// Workout type definitions
+const WORKOUT_TYPES = {
+  Push: {
+    name: 'Push Day',
+    emoji: '💪',
+    muscles: ['Chest', 'Shoulders', 'Triceps'],
+  },
+  Pull: {
+    name: 'Pull Day',
+    emoji: '🏋️',
+    muscles: ['Back', 'Biceps', 'Lats'],
+  },
+  Legs: {
+    name: 'Leg Day',
+    emoji: '🦵',
+    muscles: ['Quads', 'Hamstrings', 'Glutes'],
+  },
+  'Full Body': {
+    name: 'Full Body',
+    emoji: '🔥',
+    muscles: ['All muscle groups'],
+  },
+};
+
+type WorkoutType = keyof typeof WORKOUT_TYPES;
 
 export function WorkoutSuggestion() {
   const { user } = useAuthStore();
-  const router = useRouter();
+  const { preferredSplit } = useSettingsStore();
   
-  // Try to get cached data immediately
-  const [suggestion, setSuggestion] = useState<WorkoutSuggestionType | null>(() => {
-    if (!user) return null;
-    return getCachedData<WorkoutSuggestionType>(user.id, 'suggestion');
-  });
-  
-  const [isLoading, setIsLoading] = useState(!suggestion);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<WorkoutType | null>(null);
+  const [suggestedType, setSuggestedType] = useState<WorkoutType>('Push');
+  const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus | null>(null);
+  const [exercises, setExercises] = useState<PersonalizedExercise[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingExercises, setIsLoadingExercises] = useState(false);
+  const [showRecovery, setShowRecovery] = useState(false);
 
-  const fetchSuggestion = useCallback(async (forceRefresh = false) => {
+  // Get suggestion based on recovery status
+  const getSuggestionFromRecovery = useCallback(async () => {
     if (!user) return;
     
     try {
-      if (forceRefresh) {
-        setIsRefreshing(true);
+      setIsLoading(true);
+      
+      // Check cache first
+      const cached = getCachedData<RecoveryStatus>(user.id, 'recovery');
+      
+      let status: RecoveryStatus;
+      if (cached) {
+        status = cached;
       } else {
-        setIsLoading(true);
+        status = await recoveryService.getRecoveryStatus(user.id);
+        setCacheData(user.id, 'recovery', status);
       }
-      setError(null);
       
-      const result = await workoutSuggestionService.getSuggestion(user.id, forceRefresh);
-      setSuggestion(result);
+      setRecoveryStatus(status);
       
-      // Cache the result
-      setCacheData(user.id, 'suggestion', result);
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to get suggestion';
-      setError(errorMessage);
- logger.error('Error fetching suggestion:', err);
+      // Determine suggested type from recovery
+      const focus = status.suggestedFocus;
+      if (focus === 'Push' || focus === 'Pull' || focus === 'Legs') {
+        setSuggestedType(focus);
+        setSelectedType(focus);
+      } else if (focus === 'Rest Day') {
+        // Still show options but highlight rest
+        setSuggestedType('Full Body');
+        setSelectedType(null);
+      } else {
+        setSuggestedType('Full Body');
+        setSelectedType('Full Body');
+      }
+    } catch (err) {
+      logger.error('Error getting recovery status:', err);
+      // Default to Push
+      setSuggestedType('Push');
+      setSelectedType('Push');
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
+    }
+  }, [user]);
+
+  // Load exercises when type changes
+  const loadExercises = useCallback(async (type: WorkoutType) => {
+    if (!user?.id) return;
+    
+    setIsLoadingExercises(true);
+    try {
+      const personalized = await getPersonalizedExercises(user.id, type);
+      setExercises(personalized);
+    } catch (error) {
+      logger.error('Failed to load personalized exercises:', error);
+    } finally {
+      setIsLoadingExercises(false);
     }
   }, [user]);
 
   useEffect(() => {
-    // Only fetch if we don't have cached data
-    if (user && !suggestion) {
-      fetchSuggestion();
+    getSuggestionFromRecovery();
+  }, [getSuggestionFromRecovery]);
+
+  useEffect(() => {
+    if (selectedType) {
+      loadExercises(selectedType);
     }
-  }, [user, suggestion, fetchSuggestion]);
+  }, [selectedType, loadExercises]);
 
-  const handleRefresh = () => {
-    fetchSuggestion(true);
-  };
-
-  const startSuggestedWorkout = () => {
-    if (!suggestion) return;
-
-    // Navigate to start workout with suggested name
-    router.push({
-      pathname: '/workout/start',
-      params: {
-        suggestedName: suggestion.type,
-        suggestedExercises: JSON.stringify(suggestion.exercises),
-      },
-    } as any);
-  };
-
-  // Helper to clean markdown from exercise names
-  const cleanExerciseName = (name: string) => {
-    return name.replace(/\*\*/g, '').trim();
+  const handleTypeSelect = (type: WorkoutType) => {
+    lightHaptic();
+    setSelectedType(type);
   };
 
   if (!user) return null;
-
-  // Error state with retry
-  if (error && !suggestion) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity onPress={() => fetchSuggestion()} style={styles.retryButton}>
-            <Text style={styles.retryText}>Tap to retry</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
 
   if (isLoading) {
     return <WorkoutSuggestionSkeleton />;
   }
 
-  if (!suggestion) return null;
+  const currentWorkout = selectedType ? WORKOUT_TYPES[selectedType] : null;
+  const isRestDay = recoveryStatus?.suggestedFocus === 'Rest Day';
+
+  // Get relevant muscles for the selected workout
+  const getRelevantMuscles = (): MuscleRecoveryDetail[] => {
+    if (!recoveryStatus?.muscleDetails || !selectedType) return [];
+    
+    const muscleGroups = WORKOUT_TYPES[selectedType].muscles.map(m => m.toLowerCase());
+    return recoveryStatus.muscleDetails.filter(m => 
+      muscleGroups.some(group => m.name.toLowerCase().includes(group))
+    );
+  };
 
   return (
     <View style={styles.container}>
-      {/* Header with label and refresh */}
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.label}>Today</Text>
+        <Text style={styles.label}>TODAY'S SUGGESTION</Text>
         <TouchableOpacity 
-          onPress={handleRefresh} 
-          disabled={isRefreshing}
+          onPress={getSuggestionFromRecovery}
           style={styles.refreshButton}
         >
-          <RefreshCw 
-            size={18} 
-            color={isRefreshing ? '#475569' : '#60a5fa'} 
-            style={isRefreshing ? { opacity: 0.5 } : undefined}
-          />
+          <RefreshCw size={16} color="#60a5fa" />
         </TouchableOpacity>
       </View>
+
+      {/* Rest day warning */}
+      {isRestDay && (
+        <View style={styles.restWarning}>
+          <Text style={styles.restWarningText}>
+            💤 Rest day recommended, but you can still train
+          </Text>
+        </View>
+      )}
       
-      {/* Workout title - clean, no extra text */}
-      <Text style={styles.workoutTitle}>
-        {suggestion.type}
-      </Text>
-      
-      {/* Subtitle */}
-      <Text style={styles.subtitle}>
-        {suggestion.reason || 'Based on your training history'}
-      </Text>
-      
-      {/* Exercise list - clean, no numbered circles */}
-      <View style={styles.exercises}>
-        {suggestion.exercises.slice(0, 5).map((ex, i) => (
-          <View key={i} style={styles.exerciseRow}>
-            <Text style={styles.exerciseName} numberOfLines={1}>
-              {cleanExerciseName(ex.name)}
-            </Text>
-            <Text style={styles.exerciseSets}>
-              {ex.sets} × {ex.reps}
+      {/* Workout Type Selector - User picks */}
+      <View style={styles.typeSelector}>
+        {(Object.keys(WORKOUT_TYPES) as WorkoutType[]).map((type) => {
+          const workout = WORKOUT_TYPES[type];
+          const isSelected = selectedType === type;
+          const isSuggested = suggestedType === type && !isRestDay;
+          const isPreferred = preferredSplit === type && !isSuggested;
+          
+          return (
+            <Pressable
+              key={type}
+              style={[
+                styles.typeButton,
+                isSelected && styles.typeButtonSelected,
+                isSuggested && !isSelected && styles.typeButtonSuggested,
+              ]}
+              onPress={() => handleTypeSelect(type)}
+            >
+              {isSuggested && !isSelected && (
+                <View style={styles.suggestedBadge}>
+                  <Check size={10} color="#10b981" strokeWidth={3} />
+                </View>
+              )}
+              {isPreferred && (
+                <View style={styles.preferredBadge}>
+                  <Star size={8} color="#eab308" fill="#eab308" />
+                </View>
+              )}
+              <Text style={styles.typeEmoji}>{workout.emoji}</Text>
+              <Text style={[
+                styles.typeName,
+                isSelected && styles.typeNameSelected,
+              ]}>
+                {type}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+
+      {/* Selected workout preview */}
+      {currentWorkout && (
+        <>
+          <View style={styles.workoutPreview}>
+            <Text style={styles.previewTitle}>{currentWorkout.name}</Text>
+            <Text style={styles.previewMuscles}>
+              {currentWorkout.muscles.join(' • ')}
             </Text>
           </View>
-        ))}
-      </View>
-      
-      {/* Clean button */}
-      <Pressable
-        onPress={startSuggestedWorkout}
-        style={({ pressed }) => [
-          styles.startButton,
-          pressed && styles.startButtonPressed
-        ]}
-      >
-        <Text style={styles.startButtonText}>Start Workout</Text>
-      </Pressable>
 
-      {/* Feedback */}
-      <View style={styles.feedbackContainer}>
-        <AIFeedback 
-          feature="workout_suggestion" 
-          context={{ 
-            workoutType: suggestion.type,
-            exerciseCount: suggestion.exercises.length
-          }}
-        />
-      </View>
+          {/* Exercise list */}
+          {isLoadingExercises ? (
+            <View style={styles.loadingExercises}>
+              <ActivityIndicator size="small" color="#3b82f6" />
+            </View>
+          ) : exercises.length > 0 ? (
+            <View style={styles.exercises}>
+              {exercises.map((ex, i) => (
+                <View key={i} style={styles.exerciseRow}>
+                  <Text style={styles.exerciseName} numberOfLines={1}>
+                    {ex.name}
+                  </Text>
+                  <View style={styles.exerciseDetail}>
+                    <Text style={styles.exerciseSets}>
+                      {ex.sets} × {ex.reps}
+                    </Text>
+                    {ex.lastWeight && ex.lastWeight > 0 && (
+                      <Text style={styles.lastWeight}> • {ex.lastWeight}lbs</Text>
+                    )}
+                  </View>
+                </View>
+              ))}
+              <Text style={styles.libraryNote}>From your exercise library</Text>
+            </View>
+          ) : (
+            <View style={styles.noExercises}>
+              <Text style={styles.noExercisesText}>
+                No exercises found for this workout type
+              </Text>
+            </View>
+          )}
+
+          {/* Muscle Recovery (Expandable) */}
+          {recoveryStatus?.muscleDetails && recoveryStatus.muscleDetails.length > 0 && (
+            <>
+              <TouchableOpacity
+                style={styles.recoveryToggle}
+                onPress={() => {
+                  lightHaptic();
+                  setShowRecovery(!showRecovery);
+                }}
+              >
+                <Text style={styles.recoveryToggleText}>Muscle Recovery</Text>
+                {showRecovery ? (
+                  <ChevronUp size={16} color="#64748b" />
+                ) : (
+                  <ChevronDown size={16} color="#64748b" />
+                )}
+              </TouchableOpacity>
+
+              {showRecovery && (
+                <View style={styles.recoverySection}>
+                  {getRelevantMuscles().map(muscle => (
+                    <View key={muscle.name} style={styles.muscleRow}>
+                      <Text style={styles.muscleName}>{muscle.name}</Text>
+                      <View style={styles.barContainer}>
+                        <View
+                          style={[
+                            styles.barFill,
+                            {
+                              width: `${muscle.recoveryPercent}%`,
+                              backgroundColor: getRecoveryColor(muscle.recoveryPercent),
+                            },
+                          ]}
+                        />
+                      </View>
+                      <Text style={styles.percentText}>
+                        {muscle.recoveryPercent >= 100 ? '✓' : `${muscle.recoveryPercent}%`}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </>
+          )}
+        </>
+      )}
+
+      {/* No selection prompt */}
+      {!selectedType && (
+        <View style={styles.noSelectionPrompt}>
+          <Text style={styles.noSelectionText}>
+            Pick a workout type above to get started
+          </Text>
+        </View>
+      )}
     </View>
   );
+}
+
+function getRecoveryColor(percent: number): string {
+  if (percent >= 100) return '#22c55e'; // Green
+  if (percent >= 75) return '#eab308';  // Yellow
+  if (percent >= 40) return '#f97316';  // Orange
+  return '#ef4444';                      // Red
 }
 
 const styles = StyleSheet.create({
@@ -184,54 +328,109 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   refreshButton: {
     padding: 6,
   },
-  errorContainer: {
-    backgroundColor: '#451a1a',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    gap: 12,
-  },
-  errorText: {
-    color: '#fca5a5',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  retryButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  retryText: {
-    color: '#60a5fa',
-    fontWeight: '600',
-    fontSize: 14,
-  },
   label: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     color: '#64748b',
     textTransform: 'uppercase',
-    letterSpacing: 1.2,
+    letterSpacing: 0.5,
   },
-  workoutTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginTop: 8,
+  restWarning: {
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 12,
   },
-  subtitle: {
-    fontSize: 14,
+  restWarningText: {
+    fontSize: 13,
     color: '#94a3b8',
-    marginTop: 4,
-    marginBottom: 20,
+    textAlign: 'center',
+  },
+  typeSelector: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  typeButton: {
+    flex: 1,
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    position: 'relative',
+  },
+  typeButtonSelected: {
+    backgroundColor: '#1e3a5f',
+    borderColor: '#3b82f6',
+  },
+  typeButtonSuggested: {
+    borderColor: '#10b981',
+    borderStyle: 'dashed',
+  },
+  suggestedBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: '#0f172a',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#10b981',
+  },
+  preferredBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    padding: 2,
+  },
+  typeEmoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  typeName: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#94a3b8',
+  },
+  typeNameSelected: {
+    color: '#fff',
+  },
+  workoutPreview: {
+    marginBottom: 12,
+  },
+  previewTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  previewMuscles: {
+    fontSize: 13,
+    color: '#64748b',
+    marginTop: 2,
+  },
+  loadingExercises: {
+    alignItems: 'center',
+    paddingVertical: 24,
   },
   exercises: {
-    gap: 12,
-    marginBottom: 24,
+    gap: 10,
+    marginBottom: 12,
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    padding: 12,
   },
   exerciseRow: {
     flexDirection: 'row',
@@ -240,36 +439,91 @@ const styles = StyleSheet.create({
   },
   exerciseName: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
     color: '#cbd5e1',
     fontWeight: '500',
   },
+  exerciseDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   exerciseSets: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#64748b',
     fontWeight: '600',
-    marginLeft: 12,
   },
-  startButton: {
-    backgroundColor: '#3b82f6',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  startButtonPressed: {
-    backgroundColor: '#2563eb',
-  },
-  startButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
+  lastWeight: {
+    fontSize: 12,
+    color: '#22c55e',
     fontWeight: '600',
   },
-  feedbackContainer: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#334155',
+  libraryNote: {
+    fontSize: 11,
+    color: '#64748b',
+    textAlign: 'center',
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  noExercises: {
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    padding: 16,
     alignItems: 'center',
   },
+  noExercisesText: {
+    fontSize: 13,
+    color: '#64748b',
+  },
+  recoveryToggle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+  },
+  recoveryToggleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#94a3b8',
+  },
+  recoverySection: {
+    gap: 8,
+    paddingBottom: 12,
+  },
+  muscleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  muscleName: {
+    width: 90,
+    fontSize: 12,
+    color: '#cbd5e1',
+  },
+  barContainer: {
+    flex: 1,
+    height: 6,
+    backgroundColor: '#0f172a',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  barFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  percentText: {
+    width: 32,
+    fontSize: 11,
+    color: '#64748b',
+    textAlign: 'right',
+  },
+  noSelectionPrompt: {
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  noSelectionText: {
+    fontSize: 14,
+    color: '#64748b',
+  },
 });
-

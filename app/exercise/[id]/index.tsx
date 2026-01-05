@@ -30,7 +30,6 @@ import {
   ChevronUp,
   Maximize2,
   X,
-  Play,
   PlusCircle,
   Edit2,
   Save,
@@ -724,20 +723,6 @@ export default function ExerciseDetailScreen() {
     }
   };
 
-  // Handle start workout with this exercise
-  const startWorkoutWithExercise = () => {
-    if (!exercise) return;
-    lightHaptic();
-    router.push({
-      pathname: '/workout/active',
-      params: {
-        exerciseId: exercise.id,
-        exerciseName: exercise.name,
-        quickStart: 'true'
-      }
-    });
-  };
-
   // Handle add to current workout
   const addExerciseToCurrentWorkout = () => {
     if (!exercise || !currentWorkout) return;
@@ -822,23 +807,11 @@ export default function ExerciseDetailScreen() {
       <View style={styles.gifSection}>
         <View style={styles.gifCard}>
           {exercise.gif_url ? (
-            <>
-              <Image
-                source={{ uri: exercise.gif_url }}
-                style={styles.exerciseGif}
-                resizeMode="contain"
-              />
-              
-              {/* Play Button at Bottom-Right Corner */}
-              <Pressable 
-                style={styles.cornerPlayButton}
-                onPress={startWorkoutWithExercise}
-              >
-                <View style={styles.playButtonCircle}>
-                  <Play size={28} color="#FFF" />
-                </View>
-              </Pressable>
-            </>
+            <Image
+              source={{ uri: exercise.gif_url }}
+              style={styles.exerciseGif}
+              resizeMode="contain"
+            />
           ) : (
             <View style={styles.gifPlaceholder}>
               <Dumbbell size={48} color="#64748b" />
@@ -1028,30 +1001,6 @@ const styles = StyleSheet.create({
     color: '#64748b',
     fontSize: 14,
     marginTop: 8,
-  },
-
-  // Play button at bottom-right corner
-  cornerPlayButton: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    zIndex: 10,
-  },
-
-  playButtonCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#3B82F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
 
   // Tabs

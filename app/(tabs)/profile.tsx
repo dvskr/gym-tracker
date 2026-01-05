@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   User,
   ChevronRight,
@@ -19,12 +20,38 @@ import {
   Shield,
   Info,
   LogOut,
+  Heart,
 } from 'lucide-react-native';
 import { useAuthStore } from '@/stores/authStore';
 import { mediumHaptic, lightHaptic } from '@/lib/utils/haptics';
+import { getProfile } from '@/lib/api/profile';
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuthStore();
+  const [profileData, setProfileData] = useState<{ avatar_url?: string; full_name?: string } | null>(null);
+
+  // Fetch profile data from database
+  const loadProfile = useCallback(async () => {
+    if (!user?.id) return;
+    try {
+      const profile = await getProfile(user.id);
+      if (profile) {
+        setProfileData({
+          avatar_url: profile.avatar_url,
+          full_name: profile.full_name,
+        });
+      }
+    } catch (error) {
+      // Silent fail - fallback to user metadata
+    }
+  }, [user?.id]);
+
+  // Reload profile when screen comes into focus (after editing)
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+    }, [loadProfile])
+  );
 
   const handleSignOut = () => {
     mediumHaptic();
@@ -93,9 +120,9 @@ export default function ProfileScreen() {
           }}
         >
           <View style={styles.avatarContainer}>
-            {user?.user_metadata?.avatar_url ? (
+            {profileData?.avatar_url ? (
               <Image 
-                source={{ uri: user.user_metadata.avatar_url }} 
+                source={{ uri: profileData.avatar_url }} 
                 style={styles.avatar} 
               />
             ) : (
@@ -106,7 +133,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.profileInfo}>
             <Text style={styles.profileName}>
-              {user?.user_metadata?.full_name || 'Set up your profile'}
+              {profileData?.full_name || user?.user_metadata?.full_name || 'Set up your profile'}
             </Text>
             <Text style={styles.profileEmail}>{user?.email}</Text>
           </View>
@@ -132,6 +159,17 @@ export default function ProfileScreen() {
             label="Workout Settings"
             route="/settings/workout"
             description="Rest timer, sounds, logging"
+          />
+        </View>
+
+        {/* Wellness */}
+        <SectionHeader title="Wellness" />
+        <View style={styles.section}>
+          <NavigationItem
+            icon={<Heart size={22} color="#ef4444" />}
+            label="Wellness Check-in"
+            route="/settings/wellness"
+            description="Track energy and soreness"
           />
         </View>
 

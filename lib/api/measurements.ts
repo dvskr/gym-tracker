@@ -295,4 +295,28 @@ export async function deleteMeasurementById(id: string): Promise<void> {
 
   if (error) throw error;
 }
-
+
+// Update measurement by ID
+export async function updateMeasurementById(
+  id: string,
+  data: Partial<MeasurementData>
+): Promise<MeasurementEntry> {
+  // Filter out undefined values
+  const cleanData: Record<string, any> = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined) {
+      cleanData[key] = value === '' ? null : value;
+    }
+  });
+
+  const { data: result, error } = await supabase
+    .from('body_measurements')
+    .update(cleanData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return result;
+}
+

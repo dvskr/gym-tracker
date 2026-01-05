@@ -893,20 +893,44 @@ x MANDATORY RULES:
     // ==========================================
     if (dataState.hasCheckin && checkin) {
       contextText += `\nx TODAY'S CHECK-IN:\n`;
-      contextText += `- Energy Level: ${checkin.energyLevel}/10\n`;
-      contextText += `- Motivation: ${checkin.motivation}/10\n`;
-      
-      if (checkin.sleepQuality) {
-        contextText += `- Sleep Quality: ${checkin.sleepQuality}/10\n`;
+      // FIX: Use correct snake_case field names from database
+      if (checkin.energy_level) {
+        const energyLabels = ['Exhausted', 'Low', 'Normal', 'Good', 'Great'];
+        contextText += `- Energy: ${energyLabels[checkin.energy_level - 1] || checkin.energy_level} (${checkin.energy_level}/5)\n`;
       }
       
-      if (checkin.soreness && checkin.soreness.length > 0) {
-        contextText += `- Sore Areas: ${checkin.soreness.join(', ')}\n`;
-        contextText += `  ⚠️ Avoid overworking these areas today\n`;
+      if (checkin.soreness_level) {
+        const sorenessLabels = ['None', 'Mild', 'Moderate', 'Significant', 'Severe'];
+        contextText += `- Soreness: ${sorenessLabels[checkin.soreness_level - 1] || checkin.soreness_level} (${checkin.soreness_level}/5)\n`;
+      }
+      
+      if (checkin.sleep_quality) {
+        const sleepLabels = ['Terrible', 'Poor', 'Okay', 'Good', 'Great'];
+        contextText += `- Sleep Quality: ${sleepLabels[checkin.sleep_quality - 1] || checkin.sleep_quality} (${checkin.sleep_quality}/5)\n`;
+      }
+      
+      if (checkin.sleep_hours) {
+        contextText += `- Sleep Hours: ${checkin.sleep_hours} hours\n`;
+      }
+      
+      if (checkin.stress_level) {
+        const stressLabels = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'];
+        contextText += `- Stress: ${stressLabels[checkin.stress_level - 1] || checkin.stress_level} (${checkin.stress_level}/5)\n`;
       }
       
       if (checkin.notes) {
         contextText += `- Notes: ${checkin.notes}\n`;
+      }
+
+      // Add wellness-based recommendations
+      if (checkin.energy_level && checkin.energy_level <= 2) {
+        contextText += `\nWARNING: LOW ENERGY - Consider lighter training or active recovery today\n`;
+      }
+      if (checkin.soreness_level && checkin.soreness_level >= 4) {
+        contextText += `WARNING: HIGH SORENESS - Focus on recovery or unaffected muscle groups\n`;
+      }
+      if (checkin.sleep_quality && checkin.sleep_quality <= 2) {
+        contextText += `WARNING: POOR SLEEP - May need reduced intensity today\n`;
       }
     }
 
@@ -1051,13 +1075,12 @@ async function getTodayCheckin(userId: string): Promise<any | null> {
     .from('daily_checkins')
     .select('*')
     .eq('user_id', userId)
-    .gte('created_at', today)
-    .order('created_at', { ascending: false })
-    .limit(1)
+    .eq('date', today)  // FIX: Use 'date' column, not 'created_at'
     .single();
 
-  if (error) {
-    // No check-in today is not an error
+  if (error && error.code !== 'PGRST116') {
+    // PGRST116 = not found (ok), other errors should be logged
+    logger.error('Error fetching today check-in:', error);
     return null;
   }
 

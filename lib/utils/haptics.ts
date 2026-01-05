@@ -118,4 +118,4 @@ export function selectionHaptic() {
     // Fail silently
   }
 }
-
+

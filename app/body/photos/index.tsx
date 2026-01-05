@@ -47,13 +47,13 @@ import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 type FilterType = 'all' | PhotoType;
 type ViewMode = 'grid' | 'timeline';
 
-const FILTERS: { key: FilterType; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'front', label: 'Front' },
-  { key: 'side_left', label: 'Side (L)' },
-  { key: 'side_right', label: 'Side (R)' },
-  { key: 'back', label: 'Back' },
-  { key: 'flexed_front', label: 'Flexed' },
+const FILTERS: { key: FilterType; label: string; emoji: string }[] = [
+  { key: 'all', label: 'All', emoji: '📷' },
+  { key: 'front', label: 'Front', emoji: '🧍' },
+  { key: 'side_left', label: 'Side', emoji: '👈' },
+  { key: 'side_right', label: 'Side', emoji: '👉' },
+  { key: 'back', label: 'Back', emoji: '🔙' },
+  { key: 'flexed_front', label: 'Flexed', emoji: '💪' },
 ];
 
 const screenWidth = Dimensions.get('window').width;
@@ -82,6 +82,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ selected, onSelect }) => (
           onSelect(filter.key);
         }}
       >
+        <Text style={styles.filterEmoji}>{filter.emoji}</Text>
         <Text
           style={[
             styles.filterChipText,
@@ -210,17 +211,23 @@ interface EmptyStateProps {
 
 const EmptyState: React.FC<EmptyStateProps> = ({ onTakePhoto }) => (
   <View style={styles.emptyState}>
-    <View style={styles.emptyIcon}>
-      <ImageIcon size={48} color="#475569" />
+    <View style={styles.emptyIconRow}>
+      <Text style={styles.emptyEmoji}>🧍</Text>
+      <Text style={styles.emptyEmoji}>💪</Text>
+      <Text style={styles.emptyEmoji}>🔙</Text>
     </View>
-    <Text style={styles.emptyTitle}>No Progress Photos Yet</Text>
+    <Text style={styles.emptyTitle}>Start Your Photo Journey</Text>
     <Text style={styles.emptySubtitle}>
-      Take your first progress photo to track your transformation
+      Track your transformation with progress photos.{'\n'}
+      Capture front, side, and back poses regularly.
     </Text>
     <TouchableOpacity style={styles.emptyButton} onPress={onTakePhoto}>
       <Camera size={20} color="#ffffff" />
-      <Text style={styles.emptyButtonText}>Take Photo</Text>
+      <Text style={styles.emptyButtonText}>Take First Photo</Text>
     </TouchableOpacity>
+    <View style={styles.emptyTips}>
+      <Text style={styles.emptyTipText}>💡 Same lighting & pose for best comparison</Text>
+    </View>
   </View>
 );
 
@@ -442,8 +449,11 @@ const styles = StyleSheet.create({
   },
 
   filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     borderRadius: 20,
     backgroundColor: '#1e293b',
     marginRight: 8,
@@ -451,6 +461,10 @@ const styles = StyleSheet.create({
 
   filterChipActive: {
     backgroundColor: '#3b82f6',
+  },
+
+  filterEmoji: {
+    fontSize: 14,
   },
 
   filterChipText: {
@@ -545,6 +559,17 @@ const styles = StyleSheet.create({
     padding: 40,
   },
 
+  emptyIconRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 24,
+  },
+
+  emptyEmoji: {
+    fontSize: 48,
+    opacity: 0.8,
+  },
+
   emptyIcon: {
     width: 96,
     height: 96,
@@ -556,34 +581,48 @@ const styles = StyleSheet.create({
   },
 
   emptyTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#ffffff',
-    marginBottom: 8,
+    marginBottom: 12,
   },
 
   emptySubtitle: {
-    fontSize: 14,
-    color: '#64748b',
+    fontSize: 15,
+    color: '#94a3b8',
     textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 20,
+    marginBottom: 28,
+    lineHeight: 22,
   },
 
   emptyButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#3b82f6',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    gap: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 28,
+    borderRadius: 14,
+    gap: 10,
   },
 
   emptyButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
+  },
+
+  emptyTips: {
+    marginTop: 32,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: '#1e293b',
+    borderRadius: 10,
+  },
+
+  emptyTipText: {
+    fontSize: 13,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
 
   // No Results
@@ -618,4 +657,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
 });
-
+

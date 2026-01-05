@@ -227,6 +227,20 @@ export function RecoveryStatus() {
         </View>
       </View>
       
+      {/* Suggested Focus - NEW */}
+      {status.suggestedFocus && status.suggestedFocus !== 'Rest Day' && (
+        <View style={styles.suggestedFocusContainer}>
+          <Text style={styles.suggestedFocusLabel}>SUGGESTED TODAY</Text>
+          <Text style={styles.suggestedFocusValue}>{status.suggestedFocus}</Text>
+          {status.readyToTrain && status.readyToTrain.length > 0 && (
+            <Text style={styles.readyMuscles}>
+              Ready: {status.readyToTrain.slice(0, 4).join(', ')}
+              {status.readyToTrain.length > 4 && ` +${status.readyToTrain.length - 4} more`}
+            </Text>
+          )}
+        </View>
+      )}
+
       {/* Stats row - inline, with units */}
       <View style={styles.statsRow}>
         <View style={styles.stat}>
@@ -435,6 +449,32 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: '#64748b',
+  },
+  suggestedFocusContainer: {
+    backgroundColor: '#0f172a',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  suggestedFocusLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#64748b',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  suggestedFocusValue: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#60a5fa',
+  },
+  readyMuscles: {
+    fontSize: 12,
+    color: '#94a3b8',
+    marginTop: 4,
+    textAlign: 'center',
   },
   muscleSection: {
     marginTop: 16,

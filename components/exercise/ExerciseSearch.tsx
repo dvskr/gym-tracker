@@ -13,7 +13,7 @@ import {
   UIManager,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Search, X, Dumbbell, Home, User, Footprints, Circle, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { Search, X, Dumbbell, Home, User, Footprints, Circle, ChevronDown, ChevronUp, Star } from 'lucide-react-native';
 import { useDebouncedCallback } from 'use-debounce';
 import { ExerciseDBExercise, BodyPart } from '@/types/database';
 import { useExerciseStore, FILTER_PRESETS, FilterPresetKey } from '@/stores/exerciseStore';
@@ -136,11 +136,14 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     clearFilters,
     clearAllFilters,
     clearError,
+    loadFavorites,
+    getFavoriteExercises,
   } = useExerciseStore();
 
   // Local state for immediate UI feedback
   const [localSearchText, setLocalSearchText] = useState(searchQuery);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   // Calculate active filter count (excluding search)
   const activeFilterCount = React.useMemo(() => {
@@ -156,14 +159,17 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     setLocalSearchText(searchQuery);
   }, [searchQuery]);
 
-  // Fetch exercises on mount - force refresh to get all exercises
+  // Fetch exercises and favorites on mount
   useEffect(() => {
     // Force=true to refresh and get all 1300+ exercises (not cached 10)
     fetchExercises(true);
+    loadFavorites();
   }, []);
 
-  // Get filtered exercises
-  const exercises = getFilteredExercises();
+  // Get filtered exercises or favorites
+  const allExercises = getFilteredExercises();
+  const favoriteExercises = getFavoriteExercises();
+  const exercises = showFavoritesOnly ? favoriteExercises : allExercises;
 
   // Create debounced search handler (300ms delay)
   const debouncedSearch = useDebouncedCallback((text: string) => {
@@ -468,6 +474,34 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         </View>
       )}
 
+      {/* Favorites Toggle */}
+      {favoriteExercises.length > 0 && (
+        <View style={styles.favoritesToggleRow}>
+          <TouchableOpacity
+            style={[
+              styles.favoritesToggle,
+              showFavoritesOnly && styles.favoritesToggleActive,
+            ]}
+            onPress={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            activeOpacity={0.7}
+          >
+            <Star
+              size={16}
+              color={showFavoritesOnly ? '#fbbf24' : '#64748b'}
+              fill={showFavoritesOnly ? '#fbbf24' : 'transparent'}
+            />
+            <Text
+              style={[
+                styles.favoritesToggleText,
+                showFavoritesOnly && styles.favoritesToggleTextActive,
+              ]}
+            >
+              Favorites ({favoriteExercises.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Results Count */}
       <View style={styles.resultsRow}>
         <Text style={styles.resultsText}>
@@ -684,6 +718,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+  },
+
+  favoritesToggleRow: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+  },
+
+  favoritesToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#1e293b',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+
+  favoritesToggleActive: {
+    backgroundColor: 'rgba(251, 191, 36, 0.15)',
+    borderColor: '#fbbf24',
+  },
+
+  favoritesToggleText: {
+    color: '#64748b',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  favoritesToggleTextActive: {
+    color: '#fbbf24',
   },
 
   resultsRow: {

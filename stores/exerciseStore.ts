@@ -423,6 +423,13 @@ export const useExerciseStore = create<ExerciseState>()(
         const { favoriteIds } = get();
         const isFavorited = favoriteIds.includes(exerciseId);
         
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          logger.error('Cannot toggle favorite: No user logged in');
+          return;
+        }
+        
         // Optimistic update
         if (isFavorited) {
           set({ favoriteIds: favoriteIds.filter(id => id !== exerciseId) });
@@ -437,14 +444,18 @@ export const useExerciseStore = create<ExerciseState>()(
             const { error } = await supabase
               .from('user_exercise_favorites')
               .delete()
-              .eq('exercise_id', exerciseId);
+              .eq('exercise_id', exerciseId)
+              .eq('user_id', user.id);
             
             if (error) throw error;
           } else {
             // Add to favorites
             const { error } = await supabase
               .from('user_exercise_favorites')
-              .insert({ exercise_id: exerciseId });
+              .insert({ 
+                exercise_id: exerciseId,
+                user_id: user.id 
+              });
             
             if (error) throw error;
           }

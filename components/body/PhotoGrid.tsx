@@ -73,6 +73,9 @@ interface PhotoThumbnailProps {
 }
 
 const PhotoThumbnail: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
+  const dateObj = parseISO(photo.taken_at);
+  const dateText = format(dateObj, 'MMM d');
+  
   return (
     <TouchableOpacity
       style={styles.thumbnailContainer}
@@ -84,6 +87,11 @@ const PhotoThumbnail: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
         style={styles.thumbnail}
         resizeMode="cover"
       />
+      {/* Date badge at top */}
+      <View style={styles.thumbnailDateBadge}>
+        <Text style={styles.thumbnailDate}>{dateText}</Text>
+      </View>
+      {/* Type label at bottom */}
       <View style={styles.thumbnailOverlay}>
         <Text style={styles.thumbnailType}>
           {PHOTO_TYPE_LABELS[photo.photo_type as PhotoType] || photo.photo_type}
@@ -241,6 +249,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e293b',
   },
 
+  thumbnailDateBadge: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 4,
+  },
+
+  thumbnailDate: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+
   thumbnailOverlay: {
     position: 'absolute',
     bottom: 0,
@@ -266,4 +290,4 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoGrid;
-
+
