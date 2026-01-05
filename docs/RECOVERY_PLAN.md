@@ -239,10 +239,12 @@ git commit -m "chore: move media to Supabase Storage"
 ```bash
 # Create .env.example
 cat > .env.example << 'EOF'
-# Supabase
+# Supabase (client-side)
 EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Supabase (server-side ONLY - do NOT use EXPO_PUBLIC_ prefix!)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # APIs
 EXPO_PUBLIC_EXERCISEDB_API_KEY=your-api-key
