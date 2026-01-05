@@ -47,14 +47,35 @@ class AIService {
         p_user_id: user.id,
       });
 
-      if (error) throw error;
+      if (error) {
+        logger.error('checkLimits rpc error:', error);
+        throw error;
+      }
 
+      // If the RPC returns a boolean (e.g., `true`), convert it to the expected object structure
+      if (typeof data === 'boolean') {
+        const defaultLimits: AILimitStatus = {
+          allowed: data,
+          used: 0,
+          limit: 10, // Default free tier limit
+          remaining: data ? 10 : 0,
+          tier: 'free',
+          is_premium: false,
+        };
+        this.cachedLimits = defaultLimits;
+        this.limitsLastFetched = now;
+        logger.log('checkLimits SUCCESS (boolean converted):', defaultLimits);
+        return defaultLimits;
+      }
+
+      // Otherwise, assume it's the full AILimitStatus object
       this.cachedLimits = data;
       this.limitsLastFetched = now;
+      logger.log('checkLimits SUCCESS (object):', data);
       return data;
 
     } catch (error) {
- logger.error('Failed to check AI limits:', error);
+      logger.error('Failed to check AI limits:', error);
       // Default to allowing (fail open for UX)
       return {
         allowed: true,
@@ -324,8 +345,13 @@ class AIService {
         throw error;
       }
 
+      // Validate data.content exists
+      if (!data || typeof data.content === 'undefined') {
+        throw new Error('AI response missing content field');
+      }
+
       // Log successful response for debugging
-      // 3. Update cached limits
+      // Update cached limits
       if (data.limits) {
         this.cachedLimits = {
           ...this.cachedLimits!,
@@ -417,4 +443,4 @@ class AIService {
   }
 }
 
-export const aiService = new AIService();
+export const aiService = new AIService();

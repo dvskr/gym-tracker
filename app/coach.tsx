@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Sparkles, Send, ArrowLeft, RefreshCw, Database, Play } from 'lucide-react-native';
+import { Sparkles, Send, ArrowLeft, RefreshCw, Play } from 'lucide-react-native';
 import { aiService } from '@/lib/ai/aiService';
 import { FITNESS_COACH_SYSTEM_PROMPT } from '@/lib/ai/prompts';
 import { buildCoachContext } from '@/lib/ai/contextBuilder';
@@ -353,29 +353,6 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
     }
   };
 
-  const refreshContext = async () => {
-    if (!user) return;
-    
-    setIsLoadingContext(true);
-    try {
-      // Invalidate cache and reload
-      invalidateCacheKey(user.id, 'coachContext');
-      
-      // Build fresh context
-      const context = await buildCoachContext(user.id);
-      const contextText = typeof context === 'string' ? context : context.text;
-      
-      // Update cache and state with fresh data
-      setCacheData(user.id, 'coachContext', contextText);
-      setUserContext(contextText);
-      
-      // Refresh contextual data for suggested questions
-      await fetchContextData();
-    } finally {
-      setIsLoadingContext(false);
-    }
-  };
-
   const handleStartWorkout = async (workoutName: string, exercises: any[]) => {
     if (!exercises || exercises.length === 0) {
       Alert.alert('No Exercises', 'This workout plan has no exercises.');
@@ -526,9 +503,6 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           <Text style={styles.headerTitle}>AI Coach</Text>
         </View>
         <View style={styles.headerActions}>
-          <Pressable onPress={refreshContext} style={styles.actionButton}>
-            <Database size={18} color="#94a3b8" />
-          </Pressable>
           <Pressable onPress={confirmClearChat} style={styles.actionButton}>
             <RefreshCw size={18} color="#94a3b8" />
           </Pressable>
@@ -542,7 +516,11 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           <Text style={styles.loadingText}>Loading your training data...</Text>
         </View>
       ) : (
-        <>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior="padding"
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}
+        >
           {messages.length === 0 && !isLoading ? (
             <SuggestedQuestions
               onSelect={(question) => sendMessage(question)}
@@ -584,38 +562,33 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           )}
 
           {/* Input */}
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-          >
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={input}
-                onChangeText={setInput}
-                placeholder="Ask your coach..."
-                placeholderTextColor="#6b7280"
-                multiline
-                maxLength={500}
-                editable={!isLoading}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={input}
+              onChangeText={setInput}
+              placeholder="Ask your coach..."
+              placeholderTextColor="#6b7280"
+              multiline
+              maxLength={500}
+              editable={!isLoading}
+            />
+            <Pressable
+              style={[
+                styles.sendButton,
+                (!input.trim() || isLoading) && styles.sendButtonDisabled,
+              ]}
+              onPress={() => sendMessage()}
+              disabled={!input.trim() || isLoading}
+            >
+              <Send
+                size={20}
+                color={input.trim() && !isLoading ? '#3b82f6' : '#6b7280'}
+                fill={input.trim() && !isLoading ? '#3b82f6' : 'transparent'}
               />
-              <Pressable
-                style={[
-                  styles.sendButton,
-                  (!input.trim() || isLoading) && styles.sendButtonDisabled,
-                ]}
-                onPress={() => sendMessage()}
-                disabled={!input.trim() || isLoading}
-              >
-                <Send
-                  size={20}
-                  color={input.trim() && !isLoading ? '#3b82f6' : '#6b7280'}
-                  fill={input.trim() && !isLoading ? '#3b82f6' : 'transparent'}
-                />
-              </Pressable>
-            </View>
-          </KeyboardAvoidingView>
-        </>
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
       )}
       
       {/* Auth Modal */}
@@ -633,6 +606,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0f172a',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -780,6 +756,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     padding: 12,
+    paddingBottom: 16,
+    marginTop: 8,
     backgroundColor: '#1e293b',
     borderTopWidth: 1,
     borderTopColor: '#334155',

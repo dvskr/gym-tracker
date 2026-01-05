@@ -37,8 +37,8 @@ export default function ProfileScreen() {
       const profile = await getProfile(user.id);
       if (profile) {
         setProfileData({
-          avatar_url: profile.avatar_url,
-          full_name: profile.full_name,
+          avatar_url: profile.avatar_url ?? undefined,
+          full_name: profile.full_name ?? undefined,
         });
       }
     } catch (error) {
@@ -63,10 +63,18 @@ export default function ProfileScreen() {
         { 
           text: 'Sign Out', 
           style: 'destructive',
-          onPress: signOut 
+          onPress: async () => {
+            await signOut();
+          }
         },
       ]
     );
+  };
+
+  const handleSignIn = () => {
+    mediumHaptic();
+    // Navigate to login screen
+    router.push('/(auth)/login');
   };
 
   const NavigationItem = ({ 
@@ -111,34 +119,46 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Header */}
-        <TouchableOpacity
-          style={styles.profileHeader}
-          onPress={() => {
-            lightHaptic();
-            router.push('/settings/profile');
-          }}
-        >
-          <View style={styles.avatarContainer}>
-            {profileData?.avatar_url ? (
-              <Image 
-                source={{ uri: profileData.avatar_url }} 
-                style={styles.avatar} 
-              />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <User size={40} color="#6b7280" />
-              </View>
-            )}
-          </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>
-              {profileData?.full_name || user?.user_metadata?.full_name || 'Set up your profile'}
+        {/* Profile Header - Only show when logged in */}
+        {user && (
+          <TouchableOpacity
+            style={styles.profileHeader}
+            onPress={() => {
+              lightHaptic();
+              router.push('/settings/profile');
+            }}
+          >
+            <View style={styles.avatarContainer}>
+              {profileData?.avatar_url ? (
+                <Image 
+                  source={{ uri: profileData.avatar_url }} 
+                  style={styles.avatar} 
+                />
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <User size={40} color="#6b7280" />
+                </View>
+              )}
+            </View>
+            <View style={styles.profileInfo}>
+              <Text style={styles.profileName}>
+                {profileData?.full_name || user?.user_metadata?.full_name || 'Set up your profile'}
+              </Text>
+              <Text style={styles.profileEmail}>{user?.email}</Text>
+            </View>
+            <ChevronRight size={24} color="#6b7280" />
+          </TouchableOpacity>
+        )}
+
+        {/* Guest Mode Message */}
+        {!user && (
+          <View style={styles.guestHeader}>
+            <Text style={styles.guestTitle}>Guest Mode</Text>
+            <Text style={styles.guestSubtitle}>
+              Sign in to access all features and sync your data
             </Text>
-            <Text style={styles.profileEmail}>{user?.email}</Text>
           </View>
-          <ChevronRight size={24} color="#6b7280" />
-        </TouchableOpacity>
+        )}
 
         {/* Preferences */}
         <SectionHeader title="Preferences" />
@@ -184,16 +204,20 @@ export default function ProfileScreen() {
           />
         </View>
 
-        {/* Account */}
-        <SectionHeader title="Account" />
-        <View style={styles.section}>
-          <NavigationItem
-            icon={<Shield size={22} color="#60a5fa" />}
-            label="Account & Security"
-            route="/settings/account"
-            description="Password, email, delete account"
-          />
-        </View>
+        {/* Account - Only show when logged in */}
+        {user && (
+          <>
+            <SectionHeader title="Account" />
+            <View style={styles.section}>
+              <NavigationItem
+                icon={<Shield size={22} color="#60a5fa" />}
+                label="Account & Security"
+                route="/settings/account"
+                description="Password, email, delete account"
+              />
+            </View>
+          </>
+        )}
 
         {/* About */}
         <SectionHeader title="About" />
@@ -206,14 +230,24 @@ export default function ProfileScreen() {
           />
         </View>
 
-        {/* Sign Out */}
-        <TouchableOpacity 
-          style={styles.signOutButton}
-          onPress={handleSignOut}
-        >
-          <LogOut size={22} color="#ef4444" />
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
+        {/* Sign Out / Sign In Button */}
+        {user ? (
+          <TouchableOpacity 
+            style={styles.signOutButton}
+            onPress={handleSignOut}
+          >
+            <LogOut size={22} color="#ef4444" />
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity 
+            style={styles.signInButton}
+            onPress={handleSignIn}
+          >
+            <LogOut size={22} color="#3b82f6" />
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Bottom Spacing */}
         <View style={styles.bottomSpacer} />
@@ -242,6 +276,24 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
+  },
+  guestHeader: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  guestTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#f1f5f9',
+    marginBottom: 8,
+  },
+  guestSubtitle: {
+    fontSize: 14,
+    color: '#94a3b8',
+    textAlign: 'center',
   },
   avatarContainer: {
     marginRight: 14,
@@ -346,6 +398,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#ef4444',
+  },
+  signInButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 8,
+    gap: 10,
+  },
+  signInButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#3b82f6',
   },
 
   bottomSpacer: {

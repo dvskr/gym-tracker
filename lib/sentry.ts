@@ -3,9 +3,10 @@
  * 
  * To use Sentry, add EXPO_PUBLIC_SENTRY_DSN to your .env file:
  * EXPO_PUBLIC_SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
+ * 
+ * Note: Sentry is only imported if DSN is configured to avoid loading
+ * the package unnecessarily in development.
  */
-
-import * as Sentry from 'sentry-expo';
 
 const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN;
 
@@ -14,12 +15,22 @@ const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN;
  */
 export const isSentryEnabled = !!SENTRY_DSN && !__DEV__;
 
+// Lazy-load Sentry only if DSN is configured
+let Sentry: typeof import('sentry-expo') | null = null;
+if (SENTRY_DSN) {
+  try {
+    Sentry = require('sentry-expo');
+  } catch (error) {
+    console.warn('[Sentry] Failed to load sentry-expo package:', error);
+  }
+}
+
 /**
  * Initialize Sentry
  * Call this at app startup (before any components render)
  */
 export function initSentry(): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     if (__DEV__) {
       console.log('[Sentry] DSN not configured, skipping initialization');
     }
@@ -70,7 +81,7 @@ export function captureException(
   error: unknown,
   context?: Record<string, unknown>
 ): void {
-  if (!isSentryEnabled) {
+  if (!isSentryEnabled || !Sentry) {
     return;
   }
 
@@ -92,7 +103,7 @@ export function captureMessage(
   level: 'info' | 'warning' | 'error' = 'info',
   context?: Record<string, unknown>
 ): void {
-  if (!isSentryEnabled) {
+  if (!isSentryEnabled || !Sentry) {
     return;
   }
 
@@ -115,7 +126,7 @@ export function setUser(user: {
   email?: string;
   username?: string;
 }): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return;
   }
 
@@ -135,7 +146,7 @@ export function setUser(user: {
  * Call this on logout
  */
 export function clearUser(): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return;
   }
 
@@ -156,7 +167,7 @@ export function addBreadcrumb(
   data?: Record<string, unknown>,
   level: 'debug' | 'info' | 'warning' | 'error' = 'info'
 ): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return;
   }
 
@@ -177,7 +188,7 @@ export function addBreadcrumb(
  * Set a tag for all subsequent events
  */
 export function setTag(key: string, value: string): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return;
   }
 
@@ -192,7 +203,7 @@ export function setTag(key: string, value: string): void {
  * Set extra context for all subsequent events
  */
 export function setExtra(key: string, value: unknown): void {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return;
   }
 
@@ -228,7 +239,7 @@ export function startTransaction(
   name: string,
   operation: string
 ): { finish: () => void } | null {
-  if (!SENTRY_DSN) {
+  if (!SENTRY_DSN || !Sentry) {
     return null;
   }
 
