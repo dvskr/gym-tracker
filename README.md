@@ -80,17 +80,19 @@ All tables have Row Level Security (RLS) enabled for data protection.
    cd gym-tracker
    ```
 
-2. **Install dependencies**
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Then edit `.env` and fill in your Supabase credentials:
+   - `EXPO_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+   - `EXPO_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anon/public key
+   - `SUPABASE_SERVICE_ROLE_KEY`: Your service role key (for scripts only)
+
+3. **Install dependencies**
    ```bash
    npm install
-   ```
-
-3. **Set up environment variables**
-   
-   Create a `.env` file:
-   ```env
-   EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
-   EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
 4. **Set up Supabase**
@@ -102,7 +104,7 @@ All tables have Row Level Security (RLS) enabled for data protection.
 
 5. **Start the development server**
    ```bash
-   npm start
+   npx expo start
    ```
 
 ## 📱 Running the App
