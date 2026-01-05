@@ -17,7 +17,6 @@ import {
   Dumbbell,
   Bell,
   Shield,
-  Download,
   Info,
   LogOut,
 } from 'lucide-react-native';
@@ -155,13 +154,6 @@ export default function ProfileScreen() {
             label="Account & Security"
             route="/settings/account"
             description="Password, email, delete account"
-          />
-          <View style={styles.divider} />
-          <NavigationItem
-            icon={<Download size={22} color="#60a5fa" />}
-            label="Export Data"
-            route="/settings/export"
-            description="Download your workout history"
           />
         </View>
 

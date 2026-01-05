@@ -455,22 +455,6 @@ export default function EditProfileScreen() {
           </View>
         </View>
 
-        {/* Save Button */}
-        <View style={styles.saveButtonContainer}>
-          <TouchableOpacity
-            style={[styles.saveButtonBottom, saving && styles.saveButtonDisabled]}
-            onPress={handleSave}
-            disabled={saving}
-            activeOpacity={0.7}
-          >
-            {saving ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.saveButtonText}>Save Changes</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.bottomSpacer} />
       </ScrollView>
     </SafeAreaView>
@@ -634,26 +618,6 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: 32,
-  },
-  saveButtonContainer: {
-    padding: 16,
-    marginTop: 24,
-  },
-  saveButtonBottom: {
-    backgroundColor: '#3b82f6',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  saveButtonDisabled: {
-    backgroundColor: '#475569',
-    opacity: 0.6,
-  },
-  saveButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
   },
 });
 
