@@ -426,7 +426,8 @@ export async function getAllPRs(userId: string): Promise<ExercisePRs[]> {
       });
     }
 
-    const exercisePRs = exerciseMap.get(exerciseId)!;
+    const exercisePRs = exerciseMap.get(exerciseId);
+    if (!exercisePRs) continue;
     
     switch (pr.record_type) {
       case 'max_weight':
@@ -607,4 +608,4 @@ export function formatPRValue(recordType: RecordType, value: number): string {
       return value.toString();
   }
 }
-
+

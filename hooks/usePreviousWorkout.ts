@@ -98,7 +98,7 @@ export function usePreviousWorkout(exerciseExternalId: string | undefined): UseP
             )
           `)
           .eq('exercise_id', exercise.id)
-          .eq('workouts.user_id', user!.id)
+          .eq('workouts.user_id', user?.id ?? '')
           .eq('workout_sets.is_completed', true)
           .not('workouts.ended_at', 'is', null)
           .order('workouts(started_at)', { ascending: false });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   Text,
@@ -72,7 +72,7 @@ interface PhotoThumbnailProps {
   onPress: () => void;
 }
 
-const PhotoThumbnail: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
+const PhotoThumbnailInner: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
   const dateObj = parseISO(photo.taken_at);
   const dateText = format(dateObj, 'MMM d');
   
@@ -101,6 +101,8 @@ const PhotoThumbnail: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
   );
 };
 
+const PhotoThumbnail = memo(PhotoThumbnailInner);
+
 // ============================================
 // Month Section Component
 // ============================================
@@ -111,13 +113,13 @@ interface MonthSectionProps {
   startIndex: number;
 }
 
-const MonthSection: React.FC<MonthSectionProps> = ({ group, onPhotoPress, startIndex }) => {
+const MonthSectionInner: React.FC<MonthSectionProps> = ({ group, onPhotoPress, startIndex }) => {
   // Pad photos to fill row if needed
   const paddedPhotos = [...group.photos];
   const remainder = paddedPhotos.length % NUM_COLUMNS;
   if (remainder > 0) {
     for (let i = 0; i < NUM_COLUMNS - remainder; i++) {
-      paddedPhotos.push(null as any);
+      paddedPhotos.push(null as unknown as ProgressPhoto);
     }
   }
 
@@ -146,6 +148,8 @@ const MonthSection: React.FC<MonthSectionProps> = ({ group, onPhotoPress, startI
     </View>
   );
 };
+
+const MonthSection = memo(MonthSectionInner);
 
 // ============================================
 // Main Component

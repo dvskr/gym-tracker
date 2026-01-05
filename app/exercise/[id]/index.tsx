@@ -280,8 +280,8 @@ const HistoryTab: React.FC<{
         {[1, 2, 3, 4].map((i) => (
           <View key={i} style={styles.historyItemSkeleton}>
             <Skeleton width="40%" height={16} />
-            <Skeleton width="60%" height={14} style={{ marginTop: 8 }} />
-            <Skeleton width="80%" height={12} style={{ marginTop: 4 }} />
+            <Skeleton width="60%" height={14} style={styles.skeletonMt8} />
+            <Skeleton width="80%" height={12} style={styles.skeletonMt4} />
           </View>
         ))}
       </View>
@@ -446,9 +446,9 @@ const RecordsTab: React.FC<{
         {[1, 2, 3, 4].map((i) => (
           <View key={i} style={styles.recordCardSkeleton}>
             <Skeleton width={40} height={40} borderRadius={20} />
-            <View style={{ flex: 1, marginLeft: 12 }}>
+            <View style={styles.skeletonFlexContent}>
               <Skeleton width="50%" height={14} />
-              <Skeleton width="70%" height={24} style={{ marginTop: 4 }} />
+              <Skeleton width="70%" height={24} style={styles.skeletonMt4} />
             </View>
           </View>
         ))}
@@ -597,9 +597,10 @@ export default function ExerciseDetailScreen() {
   }, [exercise, user?.id, activeTab]);
 
   const fetchExercise = async () => {
+    if (!id) return;
     setIsLoading(true);
     try {
-      const data = await getExerciseById(id!);
+      const data = await getExerciseById(id);
       setExercise(data);
     } catch (error) {
  logger.error('Failed to fetch exercise:', error);
@@ -1638,6 +1639,20 @@ const styles = StyleSheet.create({
     minHeight: 300,
     borderWidth: 1,
     borderColor: '#334155',
+  },
+
+  // Skeleton helper styles
+  skeletonMt4: {
+    marginTop: 4,
+  },
+
+  skeletonMt8: {
+    marginTop: 8,
+  },
+
+  skeletonFlexContent: {
+    flex: 1,
+    marginLeft: 12,
   },
 });
 

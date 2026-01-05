@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -12,6 +11,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { Search, X, Dumbbell, Home, User, Footprints, Circle, ChevronDown, ChevronUp, Star } from 'lucide-react-native';
 import { useDebouncedCallback } from 'use-debounce';
@@ -68,13 +68,18 @@ const EQUIPMENT_FILTERS = [
 // Exercise List Item Component
 interface ExerciseItemProps {
   exercise: ExerciseDBExercise;
-  onSelect: () => void;
+  onSelect: (exercise: ExerciseDBExercise) => void;
 }
 
-const ExerciseItem = memo<ExerciseItemProps>(({ exercise, onSelect }) => (
+const ExerciseItem = memo<ExerciseItemProps>(({ exercise, onSelect }) => {
+  const handlePress = useCallback(() => {
+    onSelect(exercise);
+  }, [exercise, onSelect]);
+
+  return (
   <TouchableOpacity
     style={styles.exerciseItem}
-    onPress={onSelect}
+    onPress={handlePress}
     activeOpacity={0.7}
   >
     {/* Thumbnail */}
@@ -111,7 +116,8 @@ const ExerciseItem = memo<ExerciseItemProps>(({ exercise, onSelect }) => (
       <Text style={styles.chevronText}>+</Text>
     </View>
   </TouchableOpacity>
-));
+  );
+});
 
 ExerciseItem.displayName = 'ExerciseItem';
 
@@ -242,7 +248,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
     ({ item }: { item: ExerciseDBExercise }) => (
       <ExerciseItem
         exercise={item}
-        onSelect={() => handleSelectExercise(item)}
+        onSelect={handleSelectExercise}
       />
     ),
     [handleSelectExercise]
@@ -509,8 +515,8 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         </Text>
       </View>
 
-      {/* Exercise List */}
-      <FlatList
+      {/* Exercise List - FlashList for better performance with large lists */}
+      <FlashList
         data={exercises}
         renderItem={renderExerciseItem}
         keyExtractor={keyExtractor}
@@ -518,15 +524,6 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        initialNumToRender={15}
-        maxToRenderPerBatch={10}
-        windowSize={10}
-        removeClippedSubviews={true}
-        getItemLayout={(_, index) => ({
-          length: 80,
-          offset: 80 * index,
-          index,
-        })}
       />
     </View>
   );

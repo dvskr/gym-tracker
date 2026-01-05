@@ -79,7 +79,11 @@ export default function AccountSettingsScreen() {
         {
           text: 'Send Email',
           onPress: async () => {
-            const result = await sendPasswordResetEmail(user.email!);
+            if (!user.email) {
+              Alert.alert('Error', 'No email address found for this account');
+              return;
+            }
+            const result = await sendPasswordResetEmail(user.email);
             if (result.success) {
               Alert.alert('Success', 'Password reset email sent. Please check your inbox.');
             } else {

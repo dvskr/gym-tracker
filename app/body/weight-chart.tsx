@@ -279,11 +279,6 @@ export default function WeightChartScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => {
-          // #region agent log
-          const parentTab = getCurrentTab();
-          console.log('[DEBUG_NAV] Back button pressed:', JSON.stringify({from:'/body/weight-chart',action:'navigate to parent tab',parentTab,timestamp:Date.now()}));
-          // #endregion
-          // Navigate to parent tab instead of router.push(getCurrentTab() || '/(tabs)')
           router.push(getCurrentTab());
         }}>
           <ArrowLeft size={24} color="#ffffff" />

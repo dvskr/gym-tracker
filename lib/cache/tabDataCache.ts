@@ -31,11 +31,13 @@ class TabDataCache {
   get(key: string, duration?: number): any | null {
     if (this.isValid(key, duration)) {
       const entry = this.cache.get(key);
-      const age = Math.round((Date.now() - entry!.lastFetched) / 1000);
- logger.log(`[Cache] S ${key} hit (age: ${age}s)`);
-      return entry!.data;
+      if (entry) {
+        const age = Math.round((Date.now() - entry.lastFetched) / 1000);
+        logger.log(`[Cache] S ${key} hit (age: ${age}s)`);
+        return entry.data;
+      }
     }
- logger.log(`[Cache] S ${key} miss`);
+    logger.log(`[Cache] S ${key} miss`);
     return null;
   }
 
@@ -78,4 +80,4 @@ class TabDataCache {
 
 // Singleton instance
 export const tabDataCache = new TabDataCache();
-
+

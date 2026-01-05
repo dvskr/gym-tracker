@@ -1,11 +1,13 @@
 // Track which tab initiated navigation to non-tab routes
 // This allows proper back navigation with Slot-based tabs
 
+import { navLogger } from '@/lib/utils/logger';
+
 let currentTab: string = '/';
 
 export function setCurrentTab(tabPath: string) {
   currentTab = tabPath;
-  console.log('[NAV_STATE] Current tab set to:', tabPath);
+  navLogger.debug('Current tab set to:', tabPath);
 }
 
 export function getCurrentTab(): string {

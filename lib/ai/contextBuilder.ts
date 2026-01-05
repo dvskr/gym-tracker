@@ -1,18 +1,23 @@
 ﻿import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
+import type {
+  UserContextData,
+  RecentWorkoutContext,
+  WorkoutWithExercises,
+  WorkoutExerciseData,
+  PersonalRecordWithExercise,
+  InjuryContext,
+  MainLiftData,
+  LiftSession,
+  DbProfile,
+  DbDailyCheckin,
+  DbUserInjury,
+} from './types';
 
 /**
  * Build user context for AI prompts (legacy compatibility)
  */
-export const buildUserContext = (data: {
-  recentWorkouts?: any[];
-  personalRecords?: any[];
-  currentStreak?: number;
-  totalWorkouts?: number;
-  preferredUnits?: string;
-  goals?: string;
-  experienceLevel?: string;
-}): string => {
+export const buildUserContext = (data: UserContextData): string => {
   let context = '';
 
   if (data.experienceLevel) {
@@ -983,7 +988,7 @@ DO NOT make claims about data marked with R.
 /**
  * Get recent workouts for user
  */
-async function getRecentWorkouts(userId: string, days: number): Promise<any[]> {
+async function getRecentWorkouts(userId: string, days: number): Promise<WorkoutWithExercises[]> {
   const since = new Date();
   since.setDate(since.getDate() - days);
 
@@ -1013,7 +1018,7 @@ async function getRecentWorkouts(userId: string, days: number): Promise<any[]> {
 /**
  * Get personal records for user
  */
-async function getPersonalRecords(userId: string, limit: number): Promise<any[]> {
+async function getPersonalRecords(userId: string, limit: number): Promise<PersonalRecordWithExercise[]> {
   const { data, error } = await supabase
     .from('personal_records')
     .select('*, exercises(name)')
@@ -1032,7 +1037,7 @@ async function getPersonalRecords(userId: string, limit: number): Promise<any[]>
 /**
  * Get user profile
  */
-async function getUserProfile(userId: string): Promise<any | null> {
+async function getUserProfile(userId: string): Promise<DbProfile | null> {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -1050,7 +1055,7 @@ async function getUserProfile(userId: string): Promise<any | null> {
 /**
  * Get active injuries
  */
-async function getActiveInjuries(userId: string): Promise<any[]> {
+async function getActiveInjuries(userId: string): Promise<DbUserInjury[]> {
   const { data, error } = await supabase
     .from('user_injuries')
     .select('*')
@@ -1068,7 +1073,7 @@ async function getActiveInjuries(userId: string): Promise<any[]> {
 /**
  * Get today's check-in
  */
-async function getTodayCheckin(userId: string): Promise<any | null> {
+async function getTodayCheckin(userId: string): Promise<DbDailyCheckin | null> {
   const today = new Date().toISOString().split('T')[0];
 
   const { data, error } = await supabase
@@ -1090,7 +1095,7 @@ async function getTodayCheckin(userId: string): Promise<any | null> {
 /**
  * Build workout history context text
  */
-function buildWorkoutHistoryContext(workouts: any[]): string {
+function buildWorkoutHistoryContext(workouts: WorkoutWithExercises[]): string {
   if (workouts.length === 0) return '';
 
   let context = '\nx RECENT WORKOUT HISTORY:\n\n';
@@ -1131,9 +1136,9 @@ function buildWorkoutHistoryContext(workouts: any[]): string {
 }
 
 /**
- * Build P❌ context text
+ * Build PR context text
  */
-function buildPRContext(prs: any[]): string {
+function buildPRContext(prs: PersonalRecordWithExercise[]): string {
   if (prs.length === 0) return '';
 
   let context = '📝  PERSONAL RECORDS:\n';

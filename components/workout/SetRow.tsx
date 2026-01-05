@@ -424,6 +424,9 @@ function SetRowComponent({
                 placeholder={weightUnit}
                 placeholderTextColor="#64748b"
                 editable={!isCompleted}
+                accessible={true}
+                accessibilityLabel={`Weight for set ${setNumber}, ${weightInput || 'empty'} ${weightUnit}`}
+                accessibilityHint="Enter weight value"
               />
             </View>
             <View style={styles.inputColumn}>
@@ -437,6 +440,9 @@ function SetRowComponent({
                 placeholder="reps"
                 placeholderTextColor="#64748b"
                 editable={!isCompleted}
+                accessible={true}
+                accessibilityLabel={`Reps for set ${setNumber}, ${repsInput || 'empty'} reps`}
+                accessibilityHint="Enter number of repetitions"
               />
             </View>
           </>
@@ -451,7 +457,11 @@ function SetRowComponent({
       friction={2}
       enableTrackpadTwoFingerGesture
     >
-      <View style={[styles.row, isCompleted && styles.rowCompleted]}>
+      <View 
+        style={[styles.row, isCompleted && styles.rowCompleted]}
+        accessible={true}
+        accessibilityLabel={`Set ${setNumber}${isCompleted ? ', completed' : ''}`}
+      >
         {/* SET */}
         <View style={styles.setColumn}>
           <Text style={styles.setNumber}>{setNumber}</Text>
@@ -463,6 +473,10 @@ function SetRowComponent({
           style={styles.previousColumn}
           onPress={handlePreviousTap}
           disabled={!hasPrevious}
+          accessible={true}
+          accessibilityLabel={hasPrevious ? `Previous: ${previousText}. Double tap to copy` : 'No previous data'}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !hasPrevious }}
         >
           <Text style={[styles.previousText, hasPrevious && styles.previousTextActive]}>
             {previousText}
@@ -478,6 +492,10 @@ function SetRowComponent({
           style={[styles.checkButton, isCompleted && styles.checkButtonCompleted]}
           onPress={handleComplete}
           hitSlop={8}
+          accessible={true}
+          accessibilityLabel={isCompleted ? `Set ${setNumber} completed. Double tap to uncomplete` : `Mark set ${setNumber} as complete`}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: isCompleted }}
         >
           {isCompleted && <Check size={16} color="#ffffff" strokeWidth={3} />}
         </Pressable>

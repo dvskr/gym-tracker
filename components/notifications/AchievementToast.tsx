@@ -9,9 +9,15 @@ export function AchievementToast() {
   const [visible, setVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-150)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on('achievement_unlocked', (ach: Achievement) => {
+      // Clear any existing timeout
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+
       setAchievement(ach);
       setVisible(true);
 
@@ -40,7 +46,7 @@ export function AchievementToast() {
       ).start();
 
       // Auto hide after 5 seconds
-      setTimeout(() => {
+      hideTimeoutRef.current = setTimeout(() => {
         Animated.timing(slideAnim, {
           toValue: -150,
           duration: 300,
@@ -49,10 +55,16 @@ export function AchievementToast() {
           setVisible(false);
           setAchievement(null);
         });
+        hideTimeoutRef.current = null;
       }, 5000);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
   }, [slideAnim, rotateAnim]);
 
   if (!visible || !achievement) return null;
@@ -180,4 +192,4 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
 });
-
+

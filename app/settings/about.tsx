@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { logger } from '@/lib/utils/logger';
 import {
   View,
@@ -82,6 +82,16 @@ export default function AboutScreen() {
 
   const { user } = useAuthStore();
   const [copiedUserId, setCopiedUserId] = useState(false);
+  const copiedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current) {
+        clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const { version, buildNumber } = getAppVersion();
   const { model, osName, osVersion } = getDeviceInfo();
@@ -134,7 +144,17 @@ export default function AboutScreen() {
     if (user?.id) {
       await Clipboard.setStringAsync(user.id);
       setCopiedUserId(true);
-      setTimeout(() => setCopiedUserId(false), 2000);
+      
+      // Clear previous timeout if exists
+      if (copiedTimeoutRef.current) {
+        clearTimeout(copiedTimeoutRef.current);
+      }
+      
+      copiedTimeoutRef.current = setTimeout(() => {
+        setCopiedUserId(false);
+        copiedTimeoutRef.current = null;
+      }, 2000);
+      
       Alert.alert('Copied', 'User ID copied to clipboard');
     }
   };

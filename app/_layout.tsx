@@ -4,10 +4,15 @@ import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { clearMemoryCache } from '@/lib/images/cacheManager';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useAuthStore } from '@/stores/authStore';
 import { initializeSettings, useSettingsStore } from '@/stores/settingsStore';
 import { loadSounds, unloadSounds } from '@/lib/utils/sounds';
 import { initializeNotifications } from '@/lib/notifications';
+import { initSentry, setUser, clearUser } from '@/lib/sentry';
+
+// Initialize Sentry before any component renders
+initSentry();
 
 export default function RootLayout() {
   const { user, initialize, isInitialized } = useAuthStore();
@@ -25,6 +30,15 @@ export default function RootLayout() {
       initializeSettings(user.id);
     }
   }, [user?.id, isInitialized]);
+
+  useEffect(() => {
+    // Set/clear Sentry user for error context
+    if (user?.id) {
+      setUser({ id: user.id, email: user.email ?? undefined });
+    } else {
+      clearUser();
+    }
+  }, [user?.id, user?.email]);
 
   useEffect(() => {
     // Initialize notifications after settings are hydrated and user is logged in
@@ -60,10 +74,12 @@ export default function RootLayout() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <Slot />
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <Slot />
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }

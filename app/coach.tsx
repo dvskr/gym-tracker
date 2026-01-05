@@ -498,10 +498,10 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           </Text>
           
           {/* Action Button for Workout */}
-          {parsed.action?.type === 'workout' && (
+          {parsed.action?.type === 'workout' && parsed.action.name && parsed.action.exercises && (
             <Pressable
               style={styles.actionButton}
-              onPress={() => handleStartWorkout(parsed.action!.name, parsed.action!.exercises)}
+              onPress={() => handleStartWorkout(parsed.action?.name ?? '', parsed.action?.exercises ?? [])}
             >
               <Play size={18} color="#ffffff" />
               <Text style={styles.actionButtonText}>Start This Workout</Text>

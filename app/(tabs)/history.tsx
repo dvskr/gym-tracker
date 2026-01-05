@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Modal,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
@@ -105,7 +106,7 @@ const WorkoutItemSkeleton = () => (
   <View style={styles.workoutCard}>
     <View style={styles.cardLeft}>
       <Skeleton width={100} height={14} borderRadius={4} />
-      <View style={{ marginTop: 4 }}>
+      <View style={styles.skeletonMt4}>
         <Skeleton width={50} height={12} borderRadius={4} />
       </View>
     </View>
@@ -127,12 +128,16 @@ const WorkoutItemSkeleton = () => (
 
 interface WorkoutCardProps {
   item: WorkoutHistoryItem;
-  onPress: () => void;
+  onPress: (id: string) => void;
   showDate?: boolean;
   weightUnit: string;
 }
 
-const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = true, weightUnit }) => {
+const WorkoutCard = React.memo(function WorkoutCard({ item, onPress, showDate = true, weightUnit }: WorkoutCardProps) {
+  // Create stable callback reference
+  const handlePress = useCallback(() => {
+    onPress(item.id);
+  }, [item.id, onPress]);
   const formatDuration = (seconds: number): string => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -157,7 +162,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = tru
   return (
     <TouchableOpacity
       style={styles.workoutCard}
-      onPress={onPress}
+      onPress={handlePress}
       activeOpacity={0.7}
     >
       {showDate && (
@@ -207,7 +212,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ item, onPress, showDate = tru
       <ChevronRight size={20} color="#475569" />
     </TouchableOpacity>
   );
-};
+});
 
 // ============================================
 // Main Component
@@ -455,14 +460,19 @@ export default function HistoryScreen() {
     setFilter(newFilter);
   };
 
-  // Handle workout press
-  const handleWorkoutPress = (workoutId: string) => {
+  // Handle workout press - memoized
+  const handleWorkoutPress = useCallback((workoutId: string) => {
     requireAuth(() => {
       lightHaptic();
       setShowDateSheet(false);
       router.push(`/workout/${workoutId}`);
     }, 'Sign in to view your workout history and details.');
-  };
+  }, [requireAuth]);
+
+  // Close date sheet - memoized
+  const handleCloseDateSheet = useCallback(() => {
+    setShowDateSheet(false);
+  }, []);
 
   // Handle refresh
   const handleRefresh = () => {
@@ -599,12 +609,12 @@ export default function HistoryScreen() {
         ) : error ? (
           <ErrorState />
         ) : (
-          <FlatList
+          <FlashList
             data={workouts}
             renderItem={({ item }) => (
               <WorkoutCard
                 item={item}
-                onPress={() => handleWorkoutPress(item.id)}
+                onPress={handleWorkoutPress}
                 weightUnit={weightUnit}
               />
             )}
@@ -663,12 +673,12 @@ export default function HistoryScreen() {
         visible={showDateSheet}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowDateSheet(false)}
+        onRequestClose={handleCloseDateSheet}
       >
         <TouchableOpacity
           style={styles.sheetOverlay}
           activeOpacity={1}
-          onPress={() => setShowDateSheet(false)}
+          onPress={handleCloseDateSheet}
         >
           <View style={styles.sheetContent}>
             {/* Header */}
@@ -685,7 +695,7 @@ export default function HistoryScreen() {
               </View>
               <TouchableOpacity
                 style={styles.sheetCloseButton}
-                onPress={() => setShowDateSheet(false)}
+                onPress={handleCloseDateSheet}
               >
                 <X size={24} color="#94a3b8" />
               </TouchableOpacity>
@@ -703,7 +713,7 @@ export default function HistoryScreen() {
                 renderItem={({ item }) => (
                   <WorkoutCard
                     item={item}
-                    onPress={() => handleWorkoutPress(item.id)}
+                    onPress={handleWorkoutPress}
                     showDate={false}
                     weightUnit={weightUnit}
                   />
@@ -1104,6 +1114,11 @@ const styles = StyleSheet.create({
   sheetEmptyText: {
     color: '#64748b',
     fontSize: 14,
+  },
+
+  // Skeleton helper styles
+  skeletonMt4: {
+    marginTop: 4,
   },
 });
 

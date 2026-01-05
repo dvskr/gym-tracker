@@ -383,7 +383,10 @@ export async function getExerciseChartData(
     if (!workoutMap.has(key)) {
       workoutMap.set(key, []);
     }
-    workoutMap.get(key)!.push(record);
+    const workoutRecords = workoutMap.get(key);
+    if (workoutRecords) {
+      workoutRecords.push(record);
+    }
   });
 
   // Aggregate per workout
@@ -447,4 +450,4 @@ export async function getExercisesByMuscle(
   if (error) throw error;
   return data || [];
 }
-
+

@@ -72,10 +72,6 @@ export default function UnitsSettingsScreen() {
   }, [unitSystem]);
 
   const handleBack = () => {
-    // #region agent log
-    const parentTab = params.returnTo as string || getCurrentTab();
-    console.log('[DEBUG_NAV] Settings back button:', JSON.stringify({from:'/settings/units',to:parentTab,timestamp:Date.now()}));
-    // #endregion
     const returnPath = params.returnTo as string || getCurrentTab();
     router.push(returnPath);
   };
@@ -136,18 +132,11 @@ export default function UnitsSettingsScreen() {
         
         {/* SAVE BUTTON */}
         <TouchableOpacity
-          style={{
-            backgroundColor: '#3b82f6',
-            marginHorizontal: 20,
-            marginTop: 24,
-            paddingVertical: 16,
-            borderRadius: 12,
-            alignItems: 'center',
-          }}
+          style={styles.bigSaveButton}
           onPress={handleSave}
           activeOpacity={0.8}
         >
-          <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
+          <Text style={styles.bigSaveButtonText}>
             Save Settings
           </Text>
         </TouchableOpacity>
@@ -335,12 +324,22 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  saveButton: {
+
+  bigSaveButton: {
+    backgroundColor: '#3b82f6',
+    marginHorizontal: 20,
+    marginTop: 24,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  bigSaveButtonText: {
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
-    color: '#3b82f6',
-    marginRight: 16,
   },
+
   sectionHeader: {
     paddingHorizontal: 16,
     paddingTop: 24,
@@ -500,4 +499,3 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
-

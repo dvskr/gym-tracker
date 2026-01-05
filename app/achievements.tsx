@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Trophy, Lock, Check } from 'lucide-react-native';
@@ -14,6 +14,7 @@ import { useAuthStore } from '../stores/authStore';
 import { getAchievements, Achievement } from '../lib/api/achievements';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 import { lightHaptic } from '@/lib/utils/haptics';
+import { logger } from '@/lib/utils/logger';
 
 export default function AchievementsScreen() {
   useBackNavigation();
@@ -38,7 +39,7 @@ export default function AchievementsScreen() {
       const data = await getAchievements(user.id);
       setAchievements(data);
     } catch (error) {
-      console.error('Failed to fetch achievements:', error);
+      logger.error('Failed to fetch achievements', error);
     } finally {
       setIsLoading(false);
     }
@@ -171,7 +172,7 @@ export default function AchievementsScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <SettingsHeader title="Achievements" />
 
-      <FlatList
+      <FlashList
         data={filteredAchievements}
         keyExtractor={(item) => item.id}
         renderItem={renderAchievement}

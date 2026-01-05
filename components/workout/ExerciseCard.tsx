@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -167,6 +167,22 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
     setShowExerciseDetail(true);
   }, []);
 
+  // Toggle form tips
+  const handleToggleFormTips = useCallback(() => {
+    lightHaptic();
+    setFormTipsExpanded(prev => !prev);
+  }, []);
+
+  // Close exercise detail modal
+  const handleCloseExerciseDetail = useCallback(() => {
+    setShowExerciseDetail(false);
+  }, []);
+
+  // Close reorder menu
+  const handleCloseReorderMenu = useCallback(() => {
+    setShowReorderMenu(false);
+  }, []);
+
   return (
     <Card variant="default" style={styles.card}>
       {/* Exercise Header */}
@@ -178,13 +194,23 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           onLongPress={handleDragHandlePress}
           delayLongPress={200}
           activeOpacity={0.6}
+          accessible={true}
+          accessibilityLabel={`Reorder ${exercise.name}`}
+          accessibilityHint="Opens menu to move exercise up or down"
+          accessibilityRole="button"
         >
           <GripVertical size={20} color="#6b7280" />
         </TouchableOpacity>
 
         {/* Exercise Thumbnail (PNG, not GIF) - Tappable */}
         {exercise.gifUrl && (
-          <TouchableOpacity onPress={handleExercisePress} activeOpacity={0.7}>
+          <TouchableOpacity 
+            onPress={handleExercisePress} 
+            activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel={`View ${exercise.name} demonstration`}
+            accessibilityRole="button"
+          >
             <Image
               source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
               style={styles.gif}
@@ -192,13 +218,25 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
               cachePolicy="memory-disk"
               placeholder={{ blurhash: 'L6PZfSi_.AyE_3t7t7R**0o#DgR4' }}
               transition={150}
+              accessible={true}
+              accessibilityLabel={`${exercise.name} exercise thumbnail`}
             />
           </TouchableOpacity>
         )}
 
         {/* Exercise Info - Make name tappable */}
-        <View style={styles.exerciseInfo}>
-          <TouchableOpacity onPress={handleExercisePress} activeOpacity={0.7}>
+        <View 
+          style={styles.exerciseInfo}
+          accessible={true}
+          accessibilityLabel={`${exercise.name}, ${exercise.bodyPart}, ${exercise.equipment}. ${completedSets} of ${totalSets} sets completed`}
+        >
+          <TouchableOpacity 
+            onPress={handleExercisePress} 
+            activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel={`${exercise.name}. Double tap for exercise details`}
+            accessibilityRole="button"
+          >
             <Text style={styles.exerciseName} numberOfLines={2}>
               {exercise.name}
             </Text>
@@ -232,11 +270,12 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
           {showFormTipsEnabled && (
             <TouchableOpacity
               style={styles.formTipsButton}
-              onPress={() => {
-                lightHaptic();
-                setFormTipsExpanded(!formTipsExpanded);
-              }}
+              onPress={handleToggleFormTips}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessible={true}
+              accessibilityLabel={formTipsExpanded ? 'Hide form tips' : 'Show form tips'}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: formTipsExpanded }}
             >
               <Lightbulb 
                 size={20} 
@@ -251,6 +290,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
             style={styles.removeButton}
             onPress={onRemove}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessible={true}
+            accessibilityLabel={`Remove ${exercise.name} from workout`}
+            accessibilityRole="button"
           >
             <X size={20} color="#ef4444" />
           </TouchableOpacity>
@@ -378,6 +420,9 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         style={styles.addSetButton}
         onPress={handleAddSet}
         activeOpacity={0.7}
+        accessible={true}
+        accessibilityLabel={`Add set to ${exercise.name}. Currently ${totalSets} sets`}
+        accessibilityRole="button"
       >
         <Plus size={16} color="#3b82f6" />
         <Text style={styles.addSetText}>Add Set</Text>
@@ -403,12 +448,12 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         visible={showExerciseDetail}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setShowExerciseDetail(false)}
+        onRequestClose={handleCloseExerciseDetail}
       >
         <View style={styles.detailModalOverlay}>
           <Pressable
             style={StyleSheet.absoluteFill}
-            onPress={() => setShowExerciseDetail(false)}
+            onPress={handleCloseExerciseDetail}
           />
           <View style={styles.detailModalContent}>
             {/* Header */}
@@ -417,7 +462,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 {exercise.name}
               </Text>
               <TouchableOpacity
-                onPress={() => setShowExerciseDetail(false)}
+                onPress={handleCloseExerciseDetail}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <X size={24} color="#9CA3AF" />
@@ -461,7 +506,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         visible={showReorderMenu}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setShowReorderMenu(false)}
+        onRequestClose={handleCloseReorderMenu}
       >
         <Pressable
           style={styles.menuOverlay}
@@ -548,8 +593,33 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
 // Memoization
 // ============================================
 
-// Remove memoization to allow re-renders when settings change
-export const ExerciseCard = ExerciseCardComponent;
+// Memoize with custom comparison that checks exercise and sets
+export const ExerciseCard = memo(ExerciseCardComponent, (prevProps, nextProps) => {
+  // Check if exercise data changed
+  if (prevProps.workoutExercise.id !== nextProps.workoutExercise.id) return false;
+  if (prevProps.workoutExercise.exercise.id !== nextProps.workoutExercise.exercise.id) return false;
+  
+  // Check if sets changed (length or any set's data)
+  const prevSets = prevProps.workoutExercise.sets;
+  const nextSets = nextProps.workoutExercise.sets;
+  if (prevSets.length !== nextSets.length) return false;
+  
+  for (let i = 0; i < prevSets.length; i++) {
+    if (prevSets[i].id !== nextSets[i].id) return false;
+    if (prevSets[i].weight !== nextSets[i].weight) return false;
+    if (prevSets[i].reps !== nextSets[i].reps) return false;
+    if (prevSets[i].isCompleted !== nextSets[i].isCompleted) return false;
+  }
+  
+  // Check position
+  if (prevProps.index !== nextProps.index) return false;
+  if (prevProps.totalExercises !== nextProps.totalExercises) return false;
+  
+  // Callbacks don't need deep comparison - they're stable via useCallback in parent
+  return true;
+});
+
+ExerciseCard.displayName = 'ExerciseCard';
 
 export default ExerciseCard;
 

@@ -292,11 +292,14 @@ class PlateauDetectionService {
           });
         }
 
-        exerciseMap.get(exerciseId)!.history.push({
-          weight: set.weight,
-          reps: set.reps,
-          date: set.created_at,
-        });
+        const exerciseData = exerciseMap.get(exerciseId);
+        if (exerciseData) {
+          exerciseData.history.push({
+            weight: set.weight,
+            reps: set.reps,
+            date: set.created_at,
+          });
+        }
       }
 
       // Filter exercises with enough data
@@ -343,4 +346,4 @@ class PlateauDetectionService {
 }
 
 export const plateauDetectionService = new PlateauDetectionService();
-
+

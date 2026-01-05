@@ -66,6 +66,10 @@ function AchievementCardComponent({
   const percentComplete = Math.min(100, Math.round((progress / achievement.requirement) * 100));
 
   const Container = onPress ? TouchableOpacity : View;
+  
+  const a11yLabel = isUnlocked 
+    ? `${achievement.title}, unlocked. ${achievement.description}`
+    : `${achievement.title}, locked. ${achievement.description}. Progress: ${progress} of ${achievement.requirement}, ${percentComplete}% complete`;
 
   return (
     <Container
@@ -76,6 +80,9 @@ function AchievementCardComponent({
       ]}
       onPress={onPress}
       activeOpacity={0.7}
+      accessible={true}
+      accessibilityLabel={a11yLabel}
+      accessibilityRole={onPress ? 'button' : 'text'}
     >
       {/* Icon */}
       <View
@@ -178,16 +185,23 @@ interface AchievementListItemProps {
   onPress?: () => void;
 }
 
-export function AchievementListItem({ achievement, onPress }: AchievementListItemProps) {
+function AchievementListItemInner({ achievement, onPress }: AchievementListItemProps) {
   const isUnlocked = !!achievement.unlockedAt;
   const progress = achievement.progress || 0;
   const percentComplete = Math.min(100, Math.round((progress / achievement.requirement) * 100));
+  
+  const a11yLabel = isUnlocked 
+    ? `${achievement.title}, unlocked`
+    : `${achievement.title}, ${percentComplete}% complete`;
 
   return (
     <TouchableOpacity
       style={[styles.listItem, !isUnlocked && styles.listItemLocked]}
       onPress={onPress}
       activeOpacity={0.7}
+      accessible={true}
+      accessibilityLabel={a11yLabel}
+      accessibilityRole="button"
     >
       <View
         style={[
@@ -224,6 +238,8 @@ export function AchievementListItem({ achievement, onPress }: AchievementListIte
     </TouchableOpacity>
   );
 }
+
+export const AchievementListItem = memo(AchievementListItemInner);
 
 // ============================================
 // Recent Achievement Toast
@@ -472,4 +488,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
+

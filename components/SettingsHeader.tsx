@@ -19,7 +19,6 @@ export function SettingsHeader({ title, onBack, rightButton }: SettingsHeaderPro
       onBack();
     } else {
       const returnPath = (params.returnTo as string) || getCurrentTab();
-      console.log('[DEBUG_NAV] Settings back:', JSON.stringify({from:title,to:returnPath,timestamp:Date.now()}));
       router.push(returnPath);
     }
   };

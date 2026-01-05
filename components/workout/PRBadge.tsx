@@ -93,6 +93,9 @@ function PRBadgeComponent({
         { transform: [{ scale: scaleAnim }] },
         style,
       ]}
+      accessible={true}
+      accessibilityLabel={`Personal record: ${label}`}
+      accessibilityRole="text"
     >
       <Trophy size={sizeConfig.icon} color="#fbbf24" fill="#fbbf24" />
       {showLabel && (
@@ -329,4 +332,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
+

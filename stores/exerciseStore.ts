@@ -267,29 +267,30 @@ export const useExerciseStore = create<ExerciseState>()(
         // Apply preset filters first if active
         if (activePreset) {
           const preset = FILTER_PRESETS[activePreset];
+          const { equipment: presetEquipment, bodyParts: presetBodyParts, exerciseKeywords: presetKeywords } = preset;
           
           // Filter by preset equipment
-          if (preset.equipment && preset.equipment.length > 0) {
+          if (presetEquipment && presetEquipment.length > 0) {
             filtered = filtered.filter((exercise) =>
-              preset.equipment!.some((equipment) =>
+              presetEquipment.some((equipment) =>
                 exercise.equipment.toLowerCase().includes(equipment.toLowerCase())
               )
             );
           }
           
           // Filter by preset body parts
-          if (preset.bodyParts && preset.bodyParts.length > 0) {
+          if (presetBodyParts && presetBodyParts.length > 0) {
             filtered = filtered.filter((exercise) =>
-              preset.bodyParts!.some((bodyPart) =>
+              presetBodyParts.some((bodyPart) =>
                 exercise.bodyPart.toLowerCase().includes(bodyPart.toLowerCase())
               )
             );
           }
           
           // Filter by preset exercise keywords
-          if (preset.exerciseKeywords && preset.exerciseKeywords.length > 0) {
+          if (presetKeywords && presetKeywords.length > 0) {
             filtered = filtered.filter((exercise) =>
-              preset.exerciseKeywords!.some((keyword) =>
+              presetKeywords.some((keyword) =>
                 exercise.name.toLowerCase().includes(keyword.toLowerCase())
               )
             );

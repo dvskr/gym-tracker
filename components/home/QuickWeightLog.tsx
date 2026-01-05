@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { logger } from '@/lib/utils/logger';
 import {
   View,
@@ -27,6 +27,16 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
   const [todayWeight, setTodayWeight] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const successTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Fetch today's weight or last weight
   const fetchWeight = useCallback(async () => {
@@ -74,7 +84,16 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
       
       successHaptic();
       
-      setTimeout(() => setShowSuccess(false), 2000);
+      // Clear previous timeout if exists
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+      
+      successTimeoutRef.current = setTimeout(() => {
+        setShowSuccess(false);
+        successTimeoutRef.current = null;
+      }, 2000);
+      
       onWeightLogged?.();
     } catch (error) {
  logger.error('Error logging weight:', error);
@@ -264,4 +283,4 @@ const styles = StyleSheet.create({
 });
 
 export default QuickWeightLog;
-
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   StyleSheet,
@@ -25,7 +25,7 @@ interface PressableCardProps extends BaseCardProps, TouchableOpacityProps {
 
 type CardProps = NonPressableCardProps | PressableCardProps;
 
-export const Card: React.FC<CardProps> = ({
+const CardComponent: React.FC<CardProps> = ({
   variant = 'default',
   children,
   noPadding = false,
@@ -60,6 +60,9 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
+export const Card = memo(CardComponent);
+Card.displayName = 'Card';
+
 const styles = StyleSheet.create({
   base: {
     borderRadius: 16,
@@ -89,4 +92,4 @@ const styles = StyleSheet.create({
     padding: 0,
   },
 });
-
+

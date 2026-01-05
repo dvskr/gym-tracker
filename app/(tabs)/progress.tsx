@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { logger } from '@/lib/utils/logger';
 import {
   View,
@@ -159,8 +159,8 @@ const WeeklySummarySkeleton = () => (
       {[1, 2, 3].map((i) => (
         <View key={i} style={styles.weeklyStat}>
           <Skeleton width={48} height={48} borderRadius={24} />
-          <Skeleton width={40} height={24} style={{ marginTop: 8 }} />
-          <Skeleton width={60} height={12} style={{ marginTop: 4 }} />
+          <Skeleton width={40} height={24} style={styles.skeletonMt8} />
+          <Skeleton width={60} height={12} style={styles.skeletonMt4} />
         </View>
       ))}
     </View>
@@ -172,8 +172,8 @@ const StatsGridSkeleton = () => (
     {[1, 2, 3, 4, 5, 6].map((i) => (
       <View key={i} style={styles.statCard}>
         <Skeleton width={40} height={40} borderRadius={20} />
-        <Skeleton width={50} height={24} style={{ marginTop: 8 }} />
-        <Skeleton width={70} height={12} style={{ marginTop: 4 }} />
+        <Skeleton width={50} height={24} style={styles.skeletonMt8} />
+        <Skeleton width={70} height={12} style={styles.skeletonMt4} />
       </View>
     ))}
   </View>
@@ -287,9 +287,11 @@ export default function ProgressScreen() {
     return volume.toLocaleString();
   };
 
-  const maxMusclePercentage = muscleDistribution.length > 0 
-    ? Math.max(...muscleDistribution.map(m => m.percentage))
-    : 0;
+  // Memoize expensive calculation
+  const maxMusclePercentage = useMemo(() => {
+    if (muscleDistribution.length === 0) return 0;
+    return Math.max(...muscleDistribution.map(m => m.percentage));
+  }, [muscleDistribution]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -421,9 +423,9 @@ export default function ProgressScreen() {
             {[1, 2, 3].map((i) => (
               <View key={i} style={styles.prItem}>
                 <Skeleton width={32} height={32} borderRadius={16} />
-                <View style={{ flex: 1, marginLeft: 12 }}>
+                <View style={styles.skeletonFlexContent}>
                   <Skeleton width="60%" height={14} />
-                  <Skeleton width="40%" height={12} style={{ marginTop: 4 }} />
+                  <Skeleton width="40%" height={12} style={styles.skeletonMt4} />
                 </View>
                 <Skeleton width={60} height={12} />
               </View>
@@ -482,9 +484,9 @@ export default function ProgressScreen() {
             {[1, 2].map((i) => (
               <View key={i} style={styles.achievementSkeletonCard}>
                 <Skeleton width={44} height={44} borderRadius={12} />
-                <View style={{ flex: 1, marginLeft: 12 }}>
+                <View style={styles.skeletonFlexContent}>
                   <Skeleton width="60%" height={16} />
-                  <Skeleton width="80%" height={12} style={{ marginTop: 6 }} />
+                  <Skeleton width="80%" height={12} style={styles.skeletonMt6} />
                 </View>
               </View>
             ))}
@@ -522,7 +524,7 @@ export default function ProgressScreen() {
                   <Skeleton width={80} height={14} />
                   <Skeleton width={30} height={14} />
                 </View>
-                <Skeleton width="100%" height={8} borderRadius={4} style={{ marginTop: 6 }} />
+                <Skeleton width="100%" height={8} borderRadius={4} style={styles.skeletonMt6} />
               </View>
             ))}
           </View>
@@ -904,5 +906,23 @@ const styles = StyleSheet.create({
 
   bottomSpacer: {
     height: 40,
+  },
+
+  // Skeleton helper styles
+  skeletonMt4: {
+    marginTop: 4,
+  },
+
+  skeletonMt6: {
+    marginTop: 6,
+  },
+
+  skeletonMt8: {
+    marginTop: 8,
+  },
+
+  skeletonFlexContent: {
+    flex: 1,
+    marginLeft: 12,
   },
 });

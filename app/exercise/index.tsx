@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  FlatList,
   TouchableOpacity,
   RefreshControl,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -137,9 +137,9 @@ interface ExerciseItemProps {
     gifUrl?: string | null;
     thumbnailUrl?: string | null;
   };
-  onPress: () => void;
+  onPress: (id: string) => void;
   isFavorite?: boolean;
-  onToggleFavorite?: () => void;
+  onToggleFavorite?: (id: string) => void;
   showFavoriteIcon?: boolean;
 }
 
@@ -154,6 +154,15 @@ const ExerciseItem = memo(function ExerciseItem({
   const thumbnailUrl = exercise.thumbnailUrl || null;
   const EquipmentIcon = getEquipmentIcon(exercise.equipment);
   const iconColor = getEquipmentColor(exercise.equipment);
+
+  // Memoized handlers
+  const handlePress = useCallback(() => {
+    onPress(exercise.id);
+  }, [exercise.id, onPress]);
+
+  const handleToggleFavorite = useCallback(() => {
+    onToggleFavorite?.(exercise.id);
+  }, [exercise.id, onToggleFavorite]);
   
   // Get color for body part tag
   const getBodyPartColor = (bodyPart: string) => {
@@ -176,7 +185,7 @@ const ExerciseItem = memo(function ExerciseItem({
   return (
     <TouchableOpacity
       style={styles.exerciseItem}
-      onPress={onPress}
+      onPress={handlePress}
       activeOpacity={0.7}
     >
       {/* Thumbnail or Equipment-Based Icon */}
@@ -230,10 +239,7 @@ const ExerciseItem = memo(function ExerciseItem({
       {showFavoriteIcon && onToggleFavorite && (
         <TouchableOpacity
           style={styles.favoriteButton}
-          onPress={(e) => {
-            e.stopPropagation();
-            onToggleFavorite();
-          }}
+          onPress={handleToggleFavorite}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Star
@@ -404,9 +410,9 @@ export default function ExerciseLibraryScreen() {
     ({ item }: { item: any }) => (
       <ExerciseItem
         exercise={item}
-        onPress={() => handleExercisePress(item.id)}
+        onPress={handleExercisePress}
         isFavorite={isFavorite(item.id)}
-        onToggleFavorite={() => handleToggleFavorite(item.id)}
+        onToggleFavorite={handleToggleFavorite}
       />
     ),
     [handleExercisePress, handleToggleFavorite, isFavorite]
@@ -758,8 +764,8 @@ export default function ExerciseLibraryScreen() {
         <Text style={styles.allExercisesTitle}>All Exercises</Text>
       )}
 
-      {/* Exercise List */}
-      <FlatList
+      {/* Exercise List - FlashList for 1400+ exercises */}
+      <FlashList
         data={exercises}
         renderItem={renderExerciseItem}
         keyExtractor={keyExtractor}
@@ -774,9 +780,6 @@ export default function ExerciseLibraryScreen() {
             colors={['#3b82f6']}
           />
         }
-        initialNumToRender={15}
-        maxToRenderPerBatch={10}
-        windowSize={10}
       />
     </SafeAreaView>
   );

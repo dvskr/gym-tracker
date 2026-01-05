@@ -19,6 +19,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { errorHaptic, successHaptic } from '@/lib/utils/haptics';
 import { SettingsHeader } from '@/components/SettingsHeader';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { logger } from '@/lib/utils/logger';
 
 export default function ChangeEmailScreen() {
   useBackNavigation();
@@ -110,7 +111,7 @@ export default function ChangeEmailScreen() {
       setEmailSent(true);
 
     } catch (error) {
-      console.error('Error changing email:', error);
+      logger.error('Error changing email', error);
       Alert.alert(
         'Error',
         error instanceof Error ? error.message : 'Failed to change email. Please try again.'

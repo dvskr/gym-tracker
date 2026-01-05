@@ -76,8 +76,12 @@ export default function WorkoutCompleteScreen() {
   }, [workout, hasPRs]);
 
   const fetchWorkout = async () => {
+    if (!workoutId) {
+      setIsLoading(false);
+      return;
+    }
     try {
-      const data = await getWorkoutById(workoutId!);
+      const data = await getWorkoutById(workoutId);
       setWorkout(data);
       if (data) {
         setWorkoutName(data.name || 'Workout');
@@ -379,7 +383,7 @@ export default function WorkoutCompleteScreen() {
                     key={exercise.id || index}
                     style={[
                       styles.exerciseRow,
-                      index === workout.workout_exercises!.length - 1 &&
+                      index === (workout.workout_exercises?.length ?? 0) - 1 &&
                         styles.exerciseRowLast,
                     ]}
                   >

@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Trophy, TrendingUp, Calendar } from 'lucide-react-native';
@@ -15,6 +15,7 @@ import { supabase } from '../lib/supabase';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 import { lightHaptic } from '@/lib/utils/haptics';
 import { useUnits } from '@/hooks/useUnits';
+import { logger } from '@/lib/utils/logger';
 
 interface PersonalRecord {
   id: string;
@@ -81,7 +82,7 @@ export default function PersonalRecordsScreen() {
 
       setPrs(formattedPRs);
     } catch (error) {
-      console.error('Failed to fetch PRs:', error);
+      logger.error('Failed to fetch PRs', error);
     } finally {
       setIsLoading(false);
     }
@@ -276,7 +277,7 @@ export default function PersonalRecordsScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <SettingsHeader title="Personal Records" />
 
-      <FlatList
+      <FlashList
         data={filteredPRs}
         keyExtractor={(item) => item.id}
         renderItem={renderPR}

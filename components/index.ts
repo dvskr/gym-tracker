@@ -12,4 +12,9 @@ export { AchievementCard, AchievementBadge, AchievementListItem, AchievementToas
 
 // Modals
 export { AuthPromptModal } from './modals/AuthPromptModal';
-
+
+// Error Handling
+export { ErrorBoundary } from './ErrorBoundary';
+export { ErrorFallback } from './ErrorFallback';
+export { ScreenErrorBoundary } from './ScreenErrorBoundary';
+

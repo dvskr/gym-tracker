@@ -18,6 +18,7 @@ import { supabase } from '@/lib/supabase';
 import { errorHaptic, successHaptic } from '@/lib/utils/haptics';
 import { SettingsHeader } from '@/components/SettingsHeader';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { logger } from '@/lib/utils/logger';
 
 export default function ChangePasswordScreen() {
   useBackNavigation();
@@ -132,7 +133,7 @@ export default function ChangePasswordScreen() {
         [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
-      console.error('Error changing password:', error);
+      logger.error('Error changing password', error);
       Alert.alert(
         'Error',
         error instanceof Error ? error.message : 'Failed to change password. Please try again.'

@@ -9,9 +9,15 @@ export function PRToast() {
   const [visible, setVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-150)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on('pr_achieved', (pr: PRNotification) => {
+      // Clear any existing timeout
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+
       setPRData(pr);
       setVisible(true);
 
@@ -32,7 +38,7 @@ export function PRToast() {
       ]).start();
 
       // Auto hide after 4 seconds
-      setTimeout(() => {
+      hideTimeoutRef.current = setTimeout(() => {
         Animated.parallel([
           Animated.timing(slideAnim, {
             toValue: -150,
@@ -48,10 +54,16 @@ export function PRToast() {
           setVisible(false);
           setPRData(null);
         });
+        hideTimeoutRef.current = null;
       }, 4000);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
   }, [slideAnim, scaleAnim]);
 
   if (!visible || !prData) return null;
@@ -190,4 +202,4 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
 });
-
+

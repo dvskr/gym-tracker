@@ -20,7 +20,19 @@ class EventEmitter {
       this.listeners.set(event, []);
     }
     
-    const callbacks = this.listeners.get(event)!;
+    const callbacks = this.listeners.get(event);
+    if (!callbacks) {
+      // This shouldn't happen since we just set it above, but satisfy TypeScript
+      this.listeners.set(event, [callback]);
+      const newCallbacks = this.listeners.get(event) ?? [];
+      return () => {
+        const index = newCallbacks.indexOf(callback);
+        if (index > -1) {
+          newCallbacks.splice(index, 1);
+        }
+      };
+    }
+    
     callbacks.push(callback);
     
     // Return unsubscribe function
@@ -126,4 +138,4 @@ export const Events = {
 } as const;
 
 export default eventEmitter;
-
+

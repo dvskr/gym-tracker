@@ -10,11 +10,11 @@ import { PreloadProvider } from '@/contexts/PreloadContext';
 import { setCurrentTab } from '@/lib/navigation/navigationState';
 
 const tabs = [
-  { name: 'index', title: 'Home', icon: Home, path: '/(tabs)' },
-  { name: 'workout', title: 'Workout', icon: Dumbbell, path: '/(tabs)/workout' },
-  { name: 'history', title: 'History', icon: History, path: '/(tabs)/history' },
-  { name: 'progress', title: 'Progress', icon: TrendingUp, path: '/(tabs)/progress' },
-  { name: 'profile', title: 'Profile', icon: User, path: '/(tabs)/profile' },
+  { name: 'index', title: 'Home', icon: Home, path: '/(tabs)', a11yLabel: 'Home tab, shows dashboard and quick actions' },
+  { name: 'workout', title: 'Workout', icon: Dumbbell, path: '/(tabs)/workout', a11yLabel: 'Workout tab, start or continue a workout' },
+  { name: 'history', title: 'History', icon: History, path: '/(tabs)/history', a11yLabel: 'History tab, view past workouts' },
+  { name: 'progress', title: 'Progress', icon: TrendingUp, path: '/(tabs)/progress', a11yLabel: 'Progress tab, track body measurements and goals' },
+  { name: 'profile', title: 'Profile', icon: User, path: '/(tabs)/profile', a11yLabel: 'Profile tab, settings and account' },
 ];
 
 // Persist preload status outside component to survive unmounts
@@ -31,30 +31,20 @@ export default function TabsLayout() {
     isComplete: false,
   });
 
-  // #region agent log
-  useEffect(() => {
-    console.log('[DEBUG_NAV] Pathname changed:', JSON.stringify({pathname,timestamp:Date.now()}));
-    // Log navigation state
-    if (typeof router.canGoBack === 'function') {
-      console.log('[DEBUG_NAV] Can go back:', router.canGoBack());
-    }
-  }, [pathname]);
-  // #endregion
-
   useEffect(() => {
     // Reset preload flag if user changed
     if (user?.id && user.id !== currentUserId) {
- logger.log('[TabsLayout] User changed, resetting preload flag');
+      logger.log('[TabsLayout] User changed, resetting preload flag');
       preloadCompleted = false;
       currentUserId = user.id;
     }
 
     // Only run preload once per user session
     if (user && !isAuthLoading && !preloadCompleted) {
- logger.log('[TabsLayout] Starting app data preload...');
+      logger.log('[TabsLayout] Starting app data preload...');
       preloadAllAppData(user.id, setPreloadProgress)
         .finally(() => {
- logger.log('[TabsLayout] Preload complete');
+          logger.log('[TabsLayout] Preload complete');
           setIsPreloading(false);
           preloadCompleted = true;
         });
@@ -65,7 +55,7 @@ export default function TabsLayout() {
       currentUserId = null;
     } else if (preloadCompleted) {
       // Already preloaded, skip loading screen
- logger.log('[TabsLayout] Skipping preload - already completed');
+      logger.log('[TabsLayout] Skipping preload - already completed');
       setIsPreloading(false);
     }
   }, [user, isAuthLoading]);
@@ -76,36 +66,13 @@ export default function TabsLayout() {
   }
 
   const isActive = (tabPath: string, tabName: string) => {
-    // #region agent log
-    let result = false;
-    
-    //  IMPORTANT: Don't let nested routes (like /settings/* or /body/*) trigger tab changes
+    // IMPORTANT: Don't let nested routes (like /settings/* or /body/*) trigger tab changes
     // These routes should preserve the current tab as active
-    
-    if (tabName === 'index') {
-      result = pathname === '/' || pathname === '/(tabs)' || pathname === '/(tabs)/index' || pathname.includes('/coach');
-    } else if (tabName === 'workout') {
-      // Workout tab owns /template/* and /workout/* and /exercise/* routes
-      result = pathname.includes('/workout') || pathname.includes('/template') || pathname.includes('/exercise');
-    } else if (tabName === 'history') {
-      result = pathname.includes('/history');
-    } else if (tabName === 'progress') {
-      // Progress tab owns /body/* routes
-      result = pathname.includes('/progress') || pathname.includes('/body/');
-    } else if (tabName === 'profile') {
-      // Profile tab owns /settings/* routes
-      result = pathname.includes('/profile') || pathname.includes('/settings');
-    } else {
-      result = pathname.includes(tabName);
-    }
-    
-    console.log('[DEBUG_NAV] isActive check:', JSON.stringify({tabName,tabPath,pathname,result,timestamp:Date.now()}));
-    // #endregion
     
     if (tabName === 'index') {
       return pathname === '/' || pathname === '/(tabs)' || pathname === '/(tabs)/index' || pathname.includes('/coach');
     } else if (tabName === 'workout') {
-      // Workout tab owns /template/* and /workout/* routes
+      // Workout tab owns /template/* and /workout/* and /exercise/* routes
       return pathname.includes('/workout') || pathname.includes('/template') || pathname.includes('/exercise');
     } else if (tabName === 'history') {
       return pathname.includes('/history');
@@ -136,24 +103,18 @@ export default function TabsLayout() {
                 key={tab.name}
                 style={styles.tabItem}
                 onPress={() => {
-                  // #region agent log
-                  const isTabActive = isActive(tab.path, tab.name);
-                  console.log('[DEBUG_NAV] Tab clicked:', JSON.stringify({tabName:tab.name,tabPath:tab.path,currentPathname:pathname,isTabActive,willNavigate:!isTabActive,timestamp:Date.now()}));
-                  // #endregion
                   if (!isActive(tab.path, tab.name)) {
-                    // #region agent log
-                    console.log('[DEBUG_NAV] Executing router.replace:', JSON.stringify({from:pathname,to:tab.path,tabName:tab.name,canGoBack:typeof router.canGoBack === 'function' ? router.canGoBack() : 'unknown',timestamp:Date.now()}));
-                    // #endregion
                     // Track current tab for back navigation
                     setCurrentTab(tab.path);
                     // Use replace for tab switches to avoid stack pollution
                     // This prevents: [Home, Workout, Profile] stacking up
                     router.replace(tab.path as any);
-                    // #region agent log
-                    console.log('[DEBUG_NAV] router.replace completed:', JSON.stringify({tabName:tab.name,tabPath:tab.path,timestamp:Date.now()}));
-                    // #endregion
                   }
                 }}
+                accessible={true}
+                accessibilityLabel={tab.a11yLabel}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: active }}
               >
                 <Icon 
                   color={active ? '#3b82f6' : '#94a3b8'} 

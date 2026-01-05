@@ -211,8 +211,9 @@ export default function WorkoutDetailScreen() {
   }, [id]);
 
   const fetchWorkout = async () => {
+    if (!id) return;
     try {
-      const data = await getWorkoutById(id!);
+      const data = await getWorkoutById(id);
       setWorkout(data);
       if (data) {
         setEditedName(data.name || 'Workout');
@@ -259,7 +260,8 @@ export default function WorkoutDetailScreen() {
     if (!workout || !editedName.trim()) return;
 
     try {
-      await updateWorkout(id!, { name: editedName.trim() });
+      if (!id) return;
+      await updateWorkout(id, { name: editedName.trim() });
       setWorkout({ ...workout, name: editedName.trim() });
       setIsEditingName(false);
       successHaptic();
@@ -284,7 +286,8 @@ export default function WorkoutDetailScreen() {
             setIsDeleting(true);
             mediumHaptic();
             try {
-              await deleteWorkout(id!);
+              if (!id) return;
+              await deleteWorkout(id);
               router.push(getCurrentTab() || '/(tabs)');
             } catch (error) {
  logger.error('Failed to delete workout:', error);

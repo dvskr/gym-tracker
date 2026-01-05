@@ -178,11 +178,14 @@ class ProgressiveOverloadService {
         });
       }
       
-      sessionMap.get(dateKey)!.sets.push({
-        weight: set.weight,
-        reps: set.reps,
-        setNumber: set.setNumber,
-      });
+      const session = sessionMap.get(dateKey);
+      if (session) {
+        session.sets.push({
+          weight: set.weight,
+          reps: set.reps,
+          setNumber: set.setNumber,
+        });
+      }
     }
 
     // Sort by date descending
@@ -351,4 +354,4 @@ class ProgressiveOverloadService {
 }
 
 export const progressiveOverloadService = new ProgressiveOverloadService();
-
+

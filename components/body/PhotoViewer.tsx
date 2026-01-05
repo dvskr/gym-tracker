@@ -56,19 +56,33 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const flatListRef = useRef<FlatList>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Reset index when modal opens
   React.useEffect(() => {
     if (visible) {
       setCurrentIndex(initialIndex);
+      
+      // Clear previous timeout if exists
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
       // Scroll to initial index
-      setTimeout(() => {
+      scrollTimeoutRef.current = setTimeout(() => {
         flatListRef.current?.scrollToIndex({
           index: initialIndex,
           animated: false,
         });
+        scrollTimeoutRef.current = null;
       }, 100);
     }
+    
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, [visible, initialIndex]);
 
   const currentPhoto = photos[currentIndex];
@@ -370,4 +384,4 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoViewer;
-
+

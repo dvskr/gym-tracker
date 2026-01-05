@@ -136,7 +136,7 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
 
         <View style={styles.setsInfo}>
           <Text style={styles.setsText}>
-            {hasIndividualSets ? exercise.sets!.length : (exercise.target_sets || 3)} sets
+            {hasIndividualSets ? (exercise.sets?.length ?? 0) : (exercise.target_sets || 3)} sets
           </Text>
           {hasIndividualSets && (
             <Text style={styles.expandHint}>{expanded ? '▲' : '▼'}</Text>
@@ -145,9 +145,9 @@ const ExerciseRow: React.FC<ExerciseRowProps> = ({
       </TouchableOpacity>
 
       {/* Individual Sets (when expanded) */}
-      {expanded && hasIndividualSets && (
+      {expanded && hasIndividualSets && exercise.sets && (
         <View style={styles.setsExpanded}>
-          {exercise.sets!.map((set, setIdx) => (
+          {exercise.sets.map((set, setIdx) => (
             <View key={setIdx} style={styles.setDetailRow}>
               <View style={styles.setNumberBadge}>
                 <Text style={styles.setNumberText}>{set.set_number}</Text>
@@ -473,8 +473,9 @@ export default function TemplateDetailScreen() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
+            if (!id) return;
             try {
-              await deleteTemplate(id!);
+              await deleteTemplate(id);
               router.push(getCurrentTab() || '/(tabs)');
             } catch (error) {
  logger.error('Error deleting template:', error);
@@ -881,11 +882,11 @@ export default function TemplateDetailScreen() {
                   key={exercise.id}
                   exercise={exercise}
                   index={index}
-                  totalCount={template.exercises!.length}
+                  totalCount={template.exercises?.length ?? 0}
                   onMoveUp={() => handleMoveExercise(index, index - 1)}
                   onMoveDown={() => handleMoveExercise(index, index + 1)}
                   onEdit={() => handleEditExercise(exercise)}
-                  onDelete={() => handleDeleteExercise(exercise.id!)}
+                  onDelete={() => exercise.id && handleDeleteExercise(exercise.id)}
                   weightUnit={weightUnit}
                 />
               ))}

@@ -465,7 +465,7 @@ export const useWorkoutStore = create<WorkoutState>()(
           });
 
           // Trigger engagement notifications in background
-          triggerEngagementNotifications(user.id, workout.ended_at);
+          triggerEngagementNotifications(user.id, workout.ended_at ?? new Date().toISOString());
 
           // Invalidate AI cache so coach sees latest workout
           invalidateCoachContextAfterWorkout(user.id);
@@ -748,7 +748,7 @@ export const useWorkoutStore = create<WorkoutState>()(
         
         logger.log(`[WorkoutStore] PR check decision: isNowCompleting=${isNowCompleting}, weight=${latestSet?.weight}, reps=${latestSet?.reps}`);
         
-        if (isNowCompleting && latestSet && latestSet.weight && latestSet.reps) {
+        if (isNowCompleting && latestExercise && latestSet && latestSet.weight && latestSet.reps) {
           // Import at top of file if not already
           const { checkForPR } = await import('@/lib/utils/prDetection');
           const { celebratePR } = await import('@/lib/utils/celebrations');

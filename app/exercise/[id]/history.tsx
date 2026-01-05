@@ -280,6 +280,16 @@ const ChartsTab: React.FC<ChartsTabProps> = ({
     value: number;
     label: string;
   } | null>(null);
+  const touchedPointTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (touchedPointTimeoutRef.current) {
+        clearTimeout(touchedPointTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Filter and prepare chart data
   const chartData = useMemo(() => {
@@ -360,8 +370,16 @@ const ChartsTab: React.FC<ChartsTabProps> = ({
       label,
     });
     
+    // Clear previous timeout if exists
+    if (touchedPointTimeoutRef.current) {
+      clearTimeout(touchedPointTimeoutRef.current);
+    }
+    
     // Clear after 2 seconds
-    setTimeout(() => setTouchedPoint(null), 2000);
+    touchedPointTimeoutRef.current = setTimeout(() => {
+      setTouchedPoint(null);
+      touchedPointTimeoutRef.current = null;
+    }, 2000);
   };
 
   if (!chartData || history.length < 2) {
@@ -487,8 +505,8 @@ const StatsSkeleton = () => (
       {[1, 2, 3, 4, 5].map((i) => (
         <View key={i} style={styles.statItem}>
           <Skeleton width={40} height={40} borderRadius={20} />
-          <Skeleton width={60} height={24} style={{ marginTop: 8 }} />
-          <Skeleton width={80} height={12} style={{ marginTop: 4 }} />
+          <Skeleton width={60} height={24} style={styles.skeletonMt8} />
+          <Skeleton width={80} height={12} style={styles.skeletonMt4} />
         </View>
       ))}
     </ScrollView>
@@ -1146,4 +1164,13 @@ const styles = StyleSheet.create({
   listFooter: {
     height: 40,
   },
-});
+
+  // Skeleton helper styles
+  skeletonMt4: {
+    marginTop: 4,
+  },
+
+  skeletonMt8: {
+    marginTop: 8,
+  },
+});

@@ -4,6 +4,7 @@
  */
 
 import { EMOJIS } from '../constants/emojis';
+import { logger } from './logger';
 
 /**
  * Checks if a string contains corrupted emoji patterns
@@ -21,19 +22,19 @@ export function isCorruptedEmoji(str: string): boolean {
   
   // Check if the string matches any corrupted pattern exactly
   if (corruptedPatterns.includes(str.trim())) {
-    console.warn(`[EmojiValidator] Detected exact corrupted pattern: "${str}"`);
+    logger.warn(`[EmojiValidator] Detected exact corrupted pattern: "${str}"`);
     return true;
   }
   
   // Check if it contains corrupted patterns
   if (corruptedPatterns.some(pattern => str.includes(pattern))) {
-    console.warn(`[EmojiValidator] Detected corrupted pattern in: "${str}"`);
+    logger.warn(`[EmojiValidator] Detected corrupted pattern in: "${str}"`);
     return true;
   }
   
   // If it's pure ASCII (no high Unicode), it's likely corrupted
   if (/^[\x00-\x7F]+$/.test(str) && str.length < 3) {
-    console.warn(`[EmojiValidator] Detected ASCII-only string: "${str}"`);
+    logger.warn(`[EmojiValidator] Detected ASCII-only string: "${str}"`);
     return true;
   }
   
@@ -47,7 +48,7 @@ export function sanitizeEmoji(emoji: string | undefined | null, fallback: string
   if (!emoji) return fallback;
   
   if (isCorruptedEmoji(emoji)) {
-    console.warn(`[EmojiValidator] Corrupted emoji detected: "${emoji}", using fallback: "${fallback}"`);
+    logger.warn(`[EmojiValidator] Corrupted emoji detected: "${emoji}", using fallback: "${fallback}"`);
     return fallback;
   }
   
