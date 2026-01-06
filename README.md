@@ -556,7 +556,7 @@ Suggested Focus: Chest or Back (fully recovered)
 
 | Feature | Type | API Calls | Cost | UI Location |
 |---------|------|-----------|------|-------------|
-| **AI Coach Chat** | 🤖 Real AI | ✅ YES | ~$0.03/chat | ✅ Home → Coach screen |
+| **AI Coach Chat** | 🤖 Real AI | ✅ YES | ~$0.0003/msg | ✅ Home → Coach screen |
 | **Workout Suggestions** | 📊 Database | ❌ NO | Free | ✅ Workout tab |
 | **Progressive Overload** | 🧮 Math | ❌ NO | Free | ✅ During workout |
 | **Form Tips** | 📚 Database | ❌ NO | Free | ✅ During workout |
@@ -625,8 +625,8 @@ There is NO fallback system because all "AI" features except Coach Chat are alre
 
 #### **Models Used**
 - **Primary**: `gpt-4o-mini` (fast, cost-effective)
-- **Pricing**: $0.00015 per 1K input tokens, $0.0006 per 1K output tokens
-- **Average Cost per Request**: $0.02-0.05 (depends on context length)
+- **Pricing**: $0.15 per 1M input tokens, $0.60 per 1M output tokens
+- **Average Cost per Message**: ~$0.0003 (0.03 cents per message)
 
 #### **Actual AI Usage Breakdown**
 Based on typical user behavior:
@@ -634,14 +634,14 @@ Based on typical user behavior:
 - **Free Tier User** (10 chat messages/day limit):
   - ~5-7 coach chat messages per day
   - ~0 other AI features (they don't use AI)
-  - **Actual Cost**: ~$0.10-0.25/day ($3-7.50/month)
+  - **Actual Cost**: ~$0.0015-0.0021/day ($0.045-0.063/month = ~5-6 cents/month)
   
 - **Premium User** (100 chat messages/day limit):
   - ~20-30 coach chat messages per day
   - ~0 other AI features (they don't use AI)
-  - **Actual Cost**: ~$0.40-1.00/day ($12-30/month)
+  - **Actual Cost**: ~$0.006-0.009/day ($0.18-0.27/month = ~20-30 cents/month)
 
-**Critical Insight**: The app is **dramatically more profitable** than initially projected because only 1 feature uses AI. Users get "unlimited" access to Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, and Recovery Status **for free** (no API costs).
+**Critical Insight**: The app is **extremely profitable** because only 1 feature uses AI, and GPT-4o-mini costs are minimal (~$0.0003/message). Users get "unlimited" access to Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, and Recovery Status **for free** (no API costs). Even heavy premium users cost less than $0.30/month in AI costs.
 
 ---
 
@@ -953,7 +953,7 @@ Configure what data to sync:
 
 | Service | Purpose | Cost |
 |---------|---------|------|
-| **OpenAI GPT-4o-mini** | AI coaching, workout suggestions, form tips | $0.03 per request |
+| **OpenAI GPT-4o-mini** | AI coaching chat only | ~$0.0003 per message (0.03¢) |
 
 ### **Platform Integrations**
 
@@ -1475,16 +1475,17 @@ Configure in `app.json`:
 - **Profit margin: 80-85%** (extremely profitable!)
 
 **Free Tier Costs** (Actual):
-- AI: ~$0.10-0.20/month (~5-7 chat messages only)
-- Infrastructure: ~$0.10/month
-- **Total: ~$0.20-0.30/month per free user**
-- Subsidized by premium users (acceptable at 30:1 ratio)
+- AI: ~$0.05-0.06/month (~5-7 chat messages only, at $0.0003/msg)
+- Infrastructure: ~$0.10/month (Supabase free tier)
+- **Total: ~$0.15-0.16/month per free user**
+- Easily subsidized by premium users (sustainable at 100:1 ratio)
 
-**Key Insight**: App is **extremely profitable** because:
-1. Only 1 feature (Coach Chat) uses paid AI
+**Key Insight**: App is **exceptionally profitable** because:
+1. Only 1 feature (Coach Chat) uses paid AI, and GPT-4o-mini is dirt cheap ($0.0003/msg)
 2. 5 "AI" features are completely free (database/algorithms)
-3. Users perceive high value ("7 AI features!") but costs are minimal
-4. Free users get unlimited access to 5/6 visible features
+3. Users perceive high value ("AI-powered app!") but actual AI costs are negligible
+4. Free users cost ~$0.15/month, premium users cost ~$0.40/month in AI
+5. Can sustain 100+ free users per paying user and still be profitable
 
 ### **Alternative Revenue Streams**
 1. **Coaching Marketplace**: Take 20% commission on personal trainer bookings

@@ -6,9 +6,11 @@ import { clearMemoryCache } from '@/lib/images/cacheManager';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useAuthStore } from '@/stores/authStore';
+import { useProStore } from '@/stores/proStore';
 import { initializeSettings, useSettingsStore } from '@/stores/settingsStore';
 import { loadSounds, unloadSounds } from '@/lib/utils/sounds';
 import { initializeNotifications } from '@/lib/notifications';
+import { initializePurchases, identifyUser, logoutUser } from '@/lib/services/revenuecat';
 import { initSentry, setUser, clearUser } from '@/lib/sentry';
 
 // Initialize Sentry before any component renders
@@ -16,6 +18,7 @@ initSentry();
 
 export default function RootLayout() {
   const { user, initialize, isInitialized } = useAuthStore();
+  const { checkStatus, reset: resetProStore } = useProStore();
   const hasInitializedNotifications = useRef(false);
   const settingsHydrated = useSettingsStore((s) => s._hasHydrated);
 
@@ -25,11 +28,40 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
+    // Initialize RevenueCat
+    const initPurchases = async () => {
+      try {
+        await initializePurchases(user?.id);
+        if (user) {
+          await checkStatus();
+        }
+      } catch (error) {
+        console.error('Failed to initialize purchases:', error);
+      }
+    };
+    initPurchases();
+  }, []);
+
+  useEffect(() => {
     // Initialize settings from profile when user logs in
     if (user?.id && isInitialized) {
       initializeSettings(user.id);
     }
   }, [user?.id, isInitialized]);
+
+  useEffect(() => {
+    // Handle user login/logout for purchases
+    const handleUserChange = async () => {
+      if (user?.id) {
+        await identifyUser(user.id);
+        await checkStatus();
+      } else {
+        await logoutUser();
+        resetProStore();
+      }
+    };
+    handleUserChange();
+  }, [user?.id]);
 
   useEffect(() => {
     // Set/clear Sentry user for error context
@@ -70,6 +102,9 @@ export default function RootLayout() {
     if (nextState === 'background') {
       // Free up RAM when app goes to background
       clearMemoryCache();
+    } else if (nextState === 'active') {
+      // Refresh Pro status when app comes to foreground
+      checkStatus();
     }
   };
 

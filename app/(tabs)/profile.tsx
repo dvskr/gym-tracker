@@ -21,6 +21,7 @@ import {
   Info,
   LogOut,
   Heart,
+  Crown,
 } from 'lucide-react-native';
 import { useAuthStore } from '@/stores/authStore';
 import { mediumHaptic, lightHaptic } from '@/lib/utils/haptics';
@@ -190,6 +191,17 @@ export default function ProfileScreen() {
             label="Wellness Check-in"
             route="/settings/wellness"
             description="Track energy and soreness"
+          />
+        </View>
+
+        {/* Subscription */}
+        <SectionHeader title="Subscription" />
+        <View style={styles.section}>
+          <NavigationItem
+            icon={<Crown size={22} color="#fbbf24" />}
+            label="Manage Subscription"
+            route="/settings/subscription"
+            description="Upgrade to Pro or manage plan"
           />
         </View>
 
