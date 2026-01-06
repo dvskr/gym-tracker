@@ -1,3 +1,23 @@
+/**
+ * Workout Suggestion Service
+ * 
+ * Generates complete workout plans (name + exercises with sets/reps).
+ * HYBRID: Tries AI first, falls back to rule-based algorithms.
+ * 
+ * How it works:
+ * 1. Tries to call OpenAI API for personalized suggestion
+ * 2. If API fails/unavailable → uses rule-based fallback
+ * 3. Validates all suggestions (equipment, injuries, exercise existence)
+ * 4. Caches for 4 hours
+ * 
+ * Cost: 
+ * - AI path: ~$0.01-0.02 per suggestion (usually cached)
+ * - Fallback path: $0 (pure calculation)
+ * 
+ * Note: This service is prefetched but the UI component (WorkoutSuggestion)
+ * only uses recoveryService + exerciseSuggestions, so AI is rarely triggered.
+ */
+
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 import { aiService } from './aiService';

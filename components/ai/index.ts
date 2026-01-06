@@ -3,14 +3,11 @@ export { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
 // NOTE: FormTips removed - now using database-backed version in components/workout/FormTips.tsx
 export { WeightRecommendation, WeightRecommendationBadge } from './WeightRecommendation';
 export { WeightSuggestion } from './WeightSuggestion';
-export { WorkoutAnalysis } from './WorkoutAnalysis';
+// NOTE: WorkoutAnalysis removed - component was never used in any screen
 export { PlateauAlerts } from './PlateauAlerts';
 export { RecoveryStatus } from './RecoveryStatus';
 export { RecoveryStatusSkeleton } from './RecoveryStatusSkeleton';
-export { AIUsageWarning } from './AIUsageWarning';
-export { AIUsageIndicator } from './AIUsageIndicator';
-export { AILimitModal } from './AILimitModal';
+// NOTE: AIUsageIndicator, AIUsageWarning, AILimitModal removed - dead code, never rendered
 export { AIFeedback } from './AIFeedback';
-export { DailyCheckin } from './DailyCheckin';
-export { CheckinPrompt } from './CheckinPrompt';
+// NOTE: DailyCheckin and CheckinPrompt removed - explicitly removed from home screen for zero friction
 export { SuggestedQuestions } from './SuggestedQuestions';

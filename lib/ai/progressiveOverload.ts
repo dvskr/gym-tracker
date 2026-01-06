@@ -1,3 +1,19 @@
+/**
+ * Progressive Overload Service
+ * 
+ * Calculates weight/rep recommendations for each set.
+ * Uses mathematical formulas - NOT AI/OpenAI - completely free.
+ * 
+ * How it works:
+ * - Analyzes last 10 sessions of an exercise
+ * - If target reps hit 2+ times → increase weight by 5-10 lbs
+ * - If not hitting target reps → stay at current weight or increase reps
+ * - Adjusts for fatigue on later sets (set 3 gets lower rec than set 1)
+ * - Considers user's fitness level (beginners get bigger jumps)
+ * 
+ * Cost: $0 (no API calls, pure calculation)
+ */
+
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 

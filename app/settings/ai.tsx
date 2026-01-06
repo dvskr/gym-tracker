@@ -302,13 +302,7 @@ export default function AISettingsScreen() {
                 onValueChange={(v) => settings.updateSettings({ showProgressiveOverload: v })}
               />
 
-              <SettingsRow
-                icon={<BarChart size={20} color="#8b5cf6" />}
-                title="Workout Analysis"
-                subtitle="Post-workout AI feedback"
-                value={settings.showWorkoutAnalysis}
-                onValueChange={(v) => settings.updateSettings({ showWorkoutAnalysis: v })}
-              />
+              {/* NOTE: Workout Analysis removed - dead code, component never rendered */}
             </View>
           </View>
         )}

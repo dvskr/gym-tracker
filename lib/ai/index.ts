@@ -21,7 +21,7 @@ export { AILimitError } from './types';
 // ==========================================
 export {
   validateWorkoutSuggestion,
-  validateWorkoutAnalysis,
+  // validateWorkoutAnalysis removed - dead code
   validateFormTips,
   validateProgression,
   validateAndFallback,
@@ -110,8 +110,7 @@ export type { WorkoutSuggestion } from './workoutSuggestions';
 export { progressiveOverloadService } from './progressiveOverload';
 export type { SetRecommendation } from './progressiveOverload';
 
-export { workoutAnalysisService } from './workoutAnalysis';
-export type { WorkoutAnalysis } from './workoutAnalysis';
+// NOTE: workoutAnalysisService removed - dead code, never used in UI
 
 export { plateauDetectionService } from './plateauDetection';
 export type { PlateauAlert } from './plateauDetection';

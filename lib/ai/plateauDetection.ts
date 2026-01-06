@@ -1,3 +1,18 @@
+/**
+ * Plateau Detection Service
+ * 
+ * Analyzes workout history to detect training stagnation.
+ * Uses statistical analysis - NOT AI/OpenAI - completely free.
+ * 
+ * How it works:
+ * - Compares volume (weight × reps) over 3+ week periods
+ * - Flags exercises with no progress
+ * - Generates rule-based suggestions (deload, change rep range, etc.)
+ * - Severity based on weeks stalled (mild: 3-4wks, moderate: 4-6wks, significant: 6+wks)
+ * 
+ * Cost: $0 (no API calls, pure data analysis)
+ */
+
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 

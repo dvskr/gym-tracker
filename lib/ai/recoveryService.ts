@@ -1,3 +1,18 @@
+/**
+ * Recovery Status Service
+ * 
+ * Calculates muscle group recovery based on workout history.
+ * Uses time-based algorithms - NOT AI/OpenAI - completely free.
+ * 
+ * How it works:
+ * - Tracks days since each muscle group was trained
+ * - Compares against optimal recovery times (24-72 hours depending on muscle)
+ * - Returns recovery percentage and status per muscle group
+ * - Suggests which workout type (Push/Pull/Legs) to do next
+ * 
+ * Cost: $0 (no API calls, pure calculation)
+ */
+
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 import { LocalWorkout } from '@/lib/types/common';

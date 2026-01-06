@@ -73,7 +73,7 @@ interface SettingsState {
   showFormTips: boolean;
   showWorkoutSuggestions: boolean;
   showProgressiveOverload: boolean;
-  showWorkoutAnalysis: boolean;
+  // NOTE: showWorkoutAnalysis removed - dead code, component never used
 
   // Workout Split Preferences (NEW)
   preferredSplit: 'Push' | 'Pull' | 'Legs' | 'Full Body' | null;
@@ -187,7 +187,7 @@ const DEFAULT_SETTINGS: Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setR
   showFormTips: true,
   showWorkoutSuggestions: true,
   showProgressiveOverload: true,
-  showWorkoutAnalysis: true,
+  // showWorkoutAnalysis removed
   
   // Workout Split Preferences (NEW)
   preferredSplit: null,

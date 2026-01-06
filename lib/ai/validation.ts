@@ -7,7 +7,7 @@ import { logger } from '@/lib/utils/logger';
 
 import Fuse from 'fuse.js';
 import { WorkoutSuggestion } from './workoutSuggestions';
-import { WorkoutAnalysis } from './workoutAnalysis';
+// NOTE: WorkoutAnalysis removed - dead code
 import { supabase } from '@/lib/supabase';
 
 // ==========================================

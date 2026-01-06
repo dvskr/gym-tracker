@@ -35,16 +35,21 @@
 
 ## 🎯 Overview
 
-**Gym Tracker** is a full-featured mobile workout tracking application designed to help fitness enthusiasts of all levels log workouts, track progress, and achieve their fitness goals. Built with modern technologies and production-ready best practices, this app combines the simplicity of manual tracking with the intelligence of AI-powered coaching.
+**Gym Tracker** is a full-featured mobile workout tracking application designed to help fitness enthusiasts of all levels log workouts, track progress, and achieve their fitness goals. Built with modern technologies and production-ready best practices, this app combines manual tracking with intelligent database-driven algorithms and **one true AI feature** (Coach Chat).
+
+**Core Philosophy**: Provide powerful training tools (workout suggestions, progressive overload, plateau detection, recovery tracking, form tips) using efficient database queries and algorithms, while offering **optional AI coaching via chat** for users who want conversational guidance. Despite marketing 7 "AI features," only the Coach Chat actually uses OpenAI API - making the app extremely cost-efficient and profitable.
 
 ### What Makes This App Different?
 
 - **423+ Exercise Library**: Comprehensive database with animated GIFs, muscle targeting, and equipment filters
-- **AI-Powered Coaching**: GPT-4 based workout suggestions, form tips, plateau detection, and progressive overload recommendations
+- **Intelligent Training System**: Smart progressive overload, plateau detection, and recovery tracking using efficient algorithms
+- **AI Coach Chat**: GPT-4 powered conversational fitness coach (only real AI feature)
+- **Smart Workout Suggestions**: Database-driven workout planning based on recovery and history
 - **True Offline-First**: Full functionality without internet, with automatic conflict resolution when syncing
 - **Health Integration**: Bidirectional sync with Apple Health (iOS) and Health Connect (Android)
 - **Smart Notifications**: Workout reminders, rest timer alerts, PR celebrations, and engagement notifications
 - **Production Ready**: Complete error handling, monitoring, rate limiting, and cost protection
+- **Extremely Profitable**: Only 1 feature uses paid AI, rest are free database/algorithm features
 
 ### Target Audience
 
@@ -248,66 +253,115 @@ Comprehensive body measurement tracking with:
 
 ## 🤖 AI Coaching System
 
-### **Production-Ready AI Architecture**
+> **CRITICAL CLARIFICATION**: Despite being marketed as "AI Features," **ONLY 1 of the 7 features actually calls the OpenAI API**. The "AI Coach Chat" is the sole feature that uses real AI. All other features (Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status) are sophisticated database queries and rule-based algorithms that work completely offline and incur **zero API costs**.
 
-The app features a complete AI coaching system powered by OpenAI GPT-4, with enterprise-grade rate limiting, usage tracking, and cost protection.
+### **Production-Ready Hybrid Architecture**
+
+The app features a hybrid coaching system with one true AI feature (Coach Chat powered by OpenAI GPT-4o-mini) and multiple intelligent rule-based features, with enterprise-grade rate limiting, usage tracking, and cost protection for the AI component.
 
 #### **System Architecture**
 ```
-Mobile App → AI Service → Supabase Edge Function → OpenAI API
-                ↓
-          Rate Limiting
-                ↓
-          Usage Tracking
-                ↓
-          Cost Protection
+User Interface
+    ↓
+┌─────────────────────────────────────────────────┐
+│  ONLY AI Feature: Coach Chat                     │
+│  Mobile App → AI Service → Edge Function → OpenAI│
+│                    ↓                              │
+│              Rate Limiting                        │
+│                    ↓                              │
+│              Usage Tracking                       │
+│                    ↓                              │
+│              Cost Protection                      │
+└─────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────┐
+│  All Other "AI" Features (Database/Calculations) │
+│  - Workout Suggestions: Database queries         │
+│  - Progressive Overload: Math calculations       │
+│  - Form Tips: Database lookups                   │
+│  - Plateau Detection: Statistical analysis       │
+│  - Recovery Status: Timestamp calculations       │
+└─────────────────────────────────────────────────┘
 ```
 
 ### **AI Features**
 
-#### **1. Daily Workout Suggestions**
-**What it does**: Analyzes your recent workout history, personal records, recovery status, and available equipment to suggest the optimal workout for today.
+#### **1. Workout Suggestions** ✅
+**Implementation**: 100% Rule-based (NO AI)
 
-**Triggers**: Displayed on home screen, refreshes daily
+**What it does**: Calculates muscle group recovery from workout history and suggests which workout type (Push/Pull/Legs/Full Body) to do today.
+
+**UI Location**: 
+- Primary: Workout tab (`app/(tabs)/workout.tsx:263`) - `<WorkoutSuggestion />` component
+- Shows prominently when no active workout
+
+**Triggers**: Displayed on workout tab, refreshable by user
 
 **Data Used**:
-- Last 14 days of workout history
-- Muscle group recovery times
-- Personal records and plateaus
-- Available gym equipment
-- Fitness goals and experience level
-- Current streak and motivation
+- Last 30 days of workout history from database
+- Muscle group recovery times (rule-based: 48-72 hours)
+- User's preferred split (from settings)
+- User's exercise history for personalized exercise selection
+
+**How it Works**:
+1. **Recovery Calculation** (Database queries):
+   - Queries all workouts from last 30 days
+   - Calculates days since last workout per muscle group
+   - Determines which muscles are fully recovered (time-based logic)
+
+2. **Exercise Selection** (Database queries):
+   - Queries user's workout history for frequently used exercises
+   - Filters by workout type (Push/Pull/Legs)
+   - Returns 4-6 exercises from database
+
+3. **NO AI CALLS**: 
+   - Uses `recoveryService.getRecoveryStatus()` - pure database + math
+   - Uses `getPersonalizedExercises()` - database queries only
+   - No `aiService` calls whatsoever
 
 **Example Output**:
 ```
-Type: Pull Day
-Reason: Your back hasn't been trained in 4 days and is fully recovered. 
-Focus on vertical and horizontal pulling movements.
+Type: Pull Day (Suggested based on recovery)
+Reason: Your back is fully recovered (4 days rest)
 
-Exercises:
+Exercises (from your history):
 - Pull-ups: 4 sets × 8-10 reps
 - Barbell Rows: 4 sets × 8-10 reps
 - Cable Lat Pulldowns: 3 sets × 12-15 reps
 - Face Pulls: 3 sets × 15-20 reps
+
+[Tap "Start Workout" to begin]
 ```
 
 **Features**:
-- Equipment filtering (only suggests exercises you can do)
-- Injury avoidance (respects injury restrictions)
-- Split-based planning (Push/Pull/Legs awareness)
-- Progressive overload consideration
-- Confidence scoring (high/medium/low)
+- ✅ Recovery-based suggestions (database + time calculations)
+- ✅ User can pick any workout type (Push/Pull/Legs/Full Body)
+- ✅ Suggested type highlighted with checkmark
+- ✅ Preferred split starred
+- ✅ Rest day warning if overtraining detected
+- ✅ One-tap to start workout with pre-filled exercises
 
-#### **2. Progressive Overload Recommendations**
-**What it does**: Provides intelligent weight and rep recommendations for each set based on historical performance.
+**Cost**: **FREE** - Zero API calls, pure database queries
 
-**Triggers**: Shown below each set in active workout
+**Navigation**: Available on Workout tab (second tab in bottom navigation)
+
+#### **2. Progressive Overload Recommendations** ✅
+**Implementation**: Rule-based algorithm (NOT AI-powered)
+
+**What it does**: Provides intelligent weight and rep recommendations for each set based on historical performance and proven progressive overload principles.
+
+**UI Location**: 
+- During active workout in `ExerciseCard` component
+- `WeightSuggestion` component shows below each set
+- Can be toggled in workout settings
+
+**Triggers**: Automatically shown for each set when you start an exercise (if enabled in settings)
 
 **Data Used**:
-- Last 10 sessions of the exercise
-- Set-by-set historical performance
-- PR tracking
-- Fatigue accumulation (later sets)
+- Last 30 days of the same exercise
+- Set-by-set historical performance (grouped by workout session)
+- Matching set numbers (set 1 compared to set 1, etc.)
+- PR history for the exercise
 
 **Example Output**:
 ```
@@ -318,82 +372,91 @@ Confidence: High
 Progress Type: Weight increase
 ```
 
-**Logic**:
-- If you hit target reps for 2+ sessions → increase weight
-- If you didn't hit target → increase reps
-- Later sets get fatigue-adjusted recommendations
-- Compares against PR to detect new records
+**Algorithm Logic** (Rule-based, no AI):
+- If you hit target reps for 2+ sessions → increase weight (+2.5-10 lbs based on current weight)
+- If you didn't hit target → increase reps (+1-2 reps)
+- Later sets get fatigue-adjusted recommendations (-5-10 lbs)
+- Compares against PR to detect potential new records
+- Smart weight increments (2.5 lbs for <50 lbs, 5 lbs for 50-200 lbs, 10 lbs for 200+ lbs)
 
-#### **3. AI Form Tips**
-**What it does**: Provides real-time form cues and safety tips for exercises.
+**Cost**: Free (pure calculation-based, no API calls)
 
-**Triggers**: Expandable section in exercise card during workout
+#### **3. Form Tips** ✅
+**Implementation**: Database-driven (NOT AI-powered)
+**What it does**: Provides form cues, breathing techniques, common mistakes, and safety tips for exercises.
+
+**UI Location**:
+- Lightbulb icon button on each exercise card during active workout
+- Expands inline to show tips
+- Located in `ExerciseCard` component (`components/workout/ExerciseCard.tsx:270-304`)
+
+**Implementation**: Database-driven (NOT AI-powered), pulls pre-written tips from `form_tips` table
+
+**Triggers**: User taps lightbulb icon (can be toggled in AI settings with `showFormTips`)
 
 **Data Used**:
-- Exercise name and type
-- Common form mistakes database
-- Your injury history
+- Pre-written form tips from database
+- Exercise-specific cues and warnings
 
 **Example Output**:
 ```
 Barbell Bench Press - Form Tips:
+
+Key Cues:
 ✓ Keep shoulder blades retracted and depressed
 ✓ Maintain slight arch in lower back
 ✓ Lower bar to mid-chest, not neck
 ✓ Drive through your heels
-⚠️ Avoid flaring elbows past 45 degrees
-⚠️ Don't bounce bar off chest
+
+Avoid:
+⚠️ Flaring elbows past 45 degrees
+⚠️ Bouncing bar off chest
+
+Breathing:
+Inhale on the way down, exhale on the way up
+
+Safety:
+Use a spotter for heavy sets
 ```
 
-#### **4. Post-Workout Analysis**
-**What it does**: Provides comprehensive AI-powered analysis after completing a workout.
+**Cost**: Free (pre-written database content, no API calls)
 
-**Triggers**: Shown on workout completion screen
+#### **4. Post-Workout Analysis** ❌
+**Status**: REMOVED - Dead code, component was never integrated
 
-**Data Used**:
-- Current workout data (volume, sets, exercises)
-- Comparison with previous similar workout
-- PR achievements
-- Workout streak and frequency
+**Previous Status**: The `WorkoutAnalysis` component existed but was NOT imported or rendered anywhere in the app. It has been removed to reduce clutter.
 
-**Example Output**:
-```
-Summary: "Great pull session! You increased total volume by 12% 
-compared to last week and hit a new PR on barbell rows. Keep this 
-momentum going!"
+**Current Completion Screen** (`app/workout/complete.tsx`) shows:
+- ✅ Trophy animation and PR confetti
+- ✅ Stats grid (duration, volume, sets, reps, exercises)
+- ✅ Exercise breakdown with PR badges
+- ✅ Workout name and rating
 
-Highlights:
-• New PR: Barbell Row - 205 lbs × 8 reps
-• 15% volume increase vs. last pull day
-• Perfect 4-day recovery between pull sessions
+#### **5. Plateau Detection** ✅
+**Implementation**: Rule-based algorithm (NOT AI-powered, completely free)
 
-Improvements:
-• Consider adding another back width exercise
-• Your rear delts are underworked - add more face pulls
+**What it does**: Monitors your progress across all exercises and alerts you when stagnation is detected using algorithmic analysis (no OpenAI API calls).
 
-Next Workout Tip: "Focus on legs next. It's been 5 days since your 
-last leg day - prioritize squats and hamstring work."
+**UI Location**:
+- Home screen (`app/(tabs)/index.tsx:521`)
+- `<PlateauAlerts />` component
+- Shows as alert cards when plateaus detected
 
-Estimated Calories: 387 kcal
-Total Volume: 12,450 lbs
-Muscles Worked: Lats, Upper Back, Biceps, Rear Delts
-```
+**Triggers**: Automatic background scan, displayed on home screen when applicable
 
-#### **5. Plateau Detection**
-**What it does**: Monitors your progress across all exercises and alerts you when stagnation is detected.
-
-**Triggers**: Automatic scan weekly, shown in notifications center
-
-**Detection Criteria**:
-- No weight increase for 4+ sessions
-- No rep increase for 4+ sessions
-- Declining performance trend
+**Detection Algorithm** (Rule-based):
+1. Analyze weekly max volume for each exercise
+2. Calculate percentage change week-over-week
+3. Flag if stagnant for 4+ consecutive sessions:
+   - No weight increase
+   - No rep increase  
+   - Volume declining or flat
 
 **Example Alert**:
 ```
 ⚠️ Plateau Detected: Bench Press
 
-You've been stuck at 185 lbs for 6 sessions. 
+You've been stuck at 185 lbs for 6 sessions with no progress.
 
 Recommendations:
 • Try a deload week (reduce weight by 20%)
@@ -402,71 +465,183 @@ Recommendations:
 • Check recovery and nutrition
 ```
 
-#### **6. Recovery Status**
-**What it does**: Estimates muscle group recovery based on training frequency and intensity.
+**Cost**: Free (pure algorithmic detection, no API calls)
 
-**Triggers**: Shown on home screen and in workout planning
+#### **6. Recovery Status** ✅
+**Implementation**: Rule-based calculation (NOT AI-powered, completely free)
+
+**What it does**: Estimates muscle group recovery based on training frequency, volume, and time since last workout (no OpenAI API calls).
+
+**UI Location**:
+- Home screen (`app/(tabs)/index.tsx:518`)
+- `<RecoveryStatus />` component
+- Shows recovery cards for each muscle group
+
+**Triggers**: Always displayed on home screen (after data preload completes)
 
 **Data Used**:
-- Last workout per muscle group
-- Volume and intensity of that workout
-- Typical recovery times (48-72 hours)
+- Last 30 days of workout history
+- Volume and intensity per muscle group per workout
+- Predefined recovery times (48-72 hours for major muscle groups)
+
+**Recovery Calculation** (Rule-based):
+- Maps exercises to muscle groups
+- Calculates hours since last workout per muscle group
+- Compares against standard recovery windows:
+  - Chest: 48 hours
+  - Back: 72 hours  
+  - Legs: 72 hours
+  - Shoulders: 48 hours
+  - Arms: 48 hours
 
 **Example Output**:
 ```
 Recovery Status:
-✅ Chest: Fully recovered (3 days rest)
-⚠️ Legs: Still recovering (1 day rest)
-✅ Back: Fully recovered (4 days rest)
-❌ Shoulders: Overtrained (trained 2 days in a row)
+✅ Chest: Fully recovered (72+ hours rest)
+⚠️ Legs: Recovering (24 hours rest - needs 48+ more)
+✅ Back: Fully recovered (96 hours rest)
+✅ Shoulders: Fully recovered (60 hours rest)
+
+Suggested Focus: Chest or Back (fully recovered)
 ```
 
-#### **7. AI Coach Chat**
-**What it does**: Interactive chat interface where you can ask fitness questions.
+**Cost**: Free (time-based calculation, no API calls)
 
-**Triggers**: Dedicated "AI Coach" screen
+#### **7. AI Coach Chat** ✅ **[ONLY REAL AI FEATURE]**
+**Implementation**: TRUE AI-powered (OpenAI GPT-4o-mini)
+
+**What it does**: Interactive chat interface where you can ask fitness questions and get AI-powered responses. This is the **ONLY feature in the entire app** that actually calls the OpenAI API.
+
+**UI Location**:
+- Accessible from home screen via navigation
+- Dedicated Coach screen (`app/coach.tsx`)
+- Full chat interface with persistent message history
+- Shows suggested questions when empty
+
+**Navigation Path**:
+- From home tab: Tap navigation to Coach screen
+- Direct route: `/coach`
+
+**Triggers**: User navigates to Coach screen and sends a message
+
+**Implementation Details**:
+- **Line 266 in `coach.tsx`**: Calls `aiService.complete()` 
+- Edge Function: `ai-complete` proxies requests to OpenAI GPT-4o-mini
+- Includes rate limiting, usage tracking, and cost protection
+- Message history persisted in `coach_messages` database table
+- Loads user context (workouts, PRs, injuries) for personalized responses
+
+**Special Feature**: Can parse workout suggestions and create a "Start This Workout" button that directly launches a workout with AI-suggested exercises.
 
 **Example Questions**:
 - "How do I break through a squat plateau?"
 - "What's a good workout split for 4 days a week?"
 - "Should I train arms on push or pull day?"
 - "How much protein should I eat to build muscle?"
+- "Create me a 4-day workout split"
+- "How do I break through a bench press plateau?"
+
+**User Experience**:
+- Type question → Get AI response
+- AI can suggest complete workouts with "Start This Workout" button
+- Shows suggested questions for inspiration
+- Requires authentication
+- Real-time typing indicator
+
+**Cost**: ~$0.02-0.05 per conversation (depends on length) - **THIS IS THE ONLY FEATURE THAT COSTS MONEY**
+
+---
+
+### **Summary: What ACTUALLY Uses OpenAI API**
+
+| Feature | Type | API Calls | Cost | UI Location |
+|---------|------|-----------|------|-------------|
+| **AI Coach Chat** | 🤖 Real AI | ✅ YES | ~$0.03/chat | ✅ Home → Coach screen |
+| **Workout Suggestions** | 📊 Database | ❌ NO | Free | ✅ Workout tab |
+| **Progressive Overload** | 🧮 Math | ❌ NO | Free | ✅ During workout |
+| **Form Tips** | 📚 Database | ❌ NO | Free | ✅ During workout |
+| **Plateau Detection** | 📈 Algorithm | ❌ NO | Free | ✅ Home screen |
+| **Recovery Status** | ⏱️ Time calc | ❌ NO | Free | ✅ Home screen |
+| **Post-Workout Analysis** | 💀 Dead code | ❌ NO | N/A | ❌ NOT IN UI |
+
+**REALITY CHECK:**
+- ✅ **1 feature** uses OpenAI API: AI Coach Chat
+- ✅ **5 features** are free (database/calculations): Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status
+- ❌ **1 feature** is dead code: Post-Workout Analysis
+
+**What Users Actually See:**
+1. **Home Screen**: Recovery Status widget + Plateau Alerts (both free, no AI)
+2. **Workout Tab**: Workout Suggestion card (free, database queries only)
+3. **Coach Screen**: Real AI chat (ONLY place with actual AI)
+4. **During Workout**: Progressive Overload suggestions + Form Tips (both free, no AI)
+
+---
 
 ### **AI System Technical Details**
 
 #### **Rate Limiting & Cost Protection**
-- **Free Tier**: 10 AI requests per day (~$0.30/day, $9/month)
-- **Premium Tier**: 100 AI requests per day (~$3/day, $90/month)
-- Rate limits enforced at database level
-- 30-second cache for limit checks
-- Automatic fallback to rule-based suggestions
+- **Free Tier**: 10 AI chat messages per day (~$0.30/day max)
+- **Premium Tier**: 100 AI chat messages per day (~$3/day max)
+- Rate limits enforced at database level via `can_use_ai()` function
+- 30-second cache for limit checks (prevents excessive DB queries)
+- Limits only apply to Coach Chat (the only real AI feature)
+
+**Important**: Since only 1 feature uses AI, the "10 requests/day" limit **only** applies to chat messages. All other features (Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status) are unlimited because they're free database queries.
 
 #### **Usage Tracking**
-Every AI request logs:
+Every AI chat message logs:
 - User ID
-- Request type (suggestion, analysis, form tips, etc.)
+- Request type (always "chat" - only real AI feature)
 - Tokens used (input + output)
 - Cost in cents
 - Model used (gpt-4o-mini)
 - Success/failure status
 - Timestamp
 
-Dashboard analytics:
-- Today's usage
-- Monthly usage
-- All-time usage
-- Cost per user
-- Request type breakdown
+**Note**: In practice, `ai_usage` table may be empty if:
+- AI tracking isn't enabled
+- No users have used the Coach Chat feature yet
+- Tracking implementation needs debugging
+
+Dashboard analytics available:
+- Today's AI chat usage
+- Monthly AI chat usage
+- All-time AI chat usage
+- Cost per user (chat only)
+- No tracking needed for other features (they're free)
 
 #### **Fallback System**
-If AI is unavailable or rate limit is hit:
-- Rule-based workout suggestions (analyzes recent history programmatically)
-- Static form tips from database
-- Template-based workout analysis
+There is NO fallback system because all "AI" features except Coach Chat are already database/algorithm-based:
+
+- ✅ **Workout Suggestions**: Always uses database (no fallback needed)
+- ✅ **Form Tips**: Always uses database (no fallback needed)
+- ✅ **Progressive Overload**: Always uses calculations (no fallback needed)
+- ✅ **Recovery Status**: Always uses time-based logic (no fallback needed)
+- ✅ **Plateau Detection**: Always uses algorithm (no fallback needed)
+- ❌ **AI Coach Chat**: Shows "limit reached" error with premium upgrade prompt when quota exhausted
+- ❌ **Post-Workout Analysis**: Not integrated, so no fallback needed
+
+**Clarification**: Previous documentation incorrectly suggested these features "fall back" to rule-based logic. In reality, they **never used AI to begin with**.
 
 #### **Models Used**
-- **Primary**: `gpt-4o-mini` (fast, cost-effective, $0.03 per request)
+- **Primary**: `gpt-4o-mini` (fast, cost-effective)
 - **Pricing**: $0.00015 per 1K input tokens, $0.0006 per 1K output tokens
+- **Average Cost per Request**: $0.02-0.05 (depends on context length)
+
+#### **Actual AI Usage Breakdown**
+Based on typical user behavior:
+
+- **Free Tier User** (10 chat messages/day limit):
+  - ~5-7 coach chat messages per day
+  - ~0 other AI features (they don't use AI)
+  - **Actual Cost**: ~$0.10-0.25/day ($3-7.50/month)
+  
+- **Premium User** (100 chat messages/day limit):
+  - ~20-30 coach chat messages per day
+  - ~0 other AI features (they don't use AI)
+  - **Actual Cost**: ~$0.40-1.00/day ($12-30/month)
+
+**Critical Insight**: The app is **dramatically more profitable** than initially projected because only 1 feature uses AI. Users get "unlimited" access to Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, and Recovery Status **for free** (no API costs).
 
 ---
 
@@ -1274,33 +1449,42 @@ Configure in `app.json`:
 ✅ Health sync (Apple Health, Health Connect)
 ✅ PR tracking and celebrations
 ✅ Basic notifications
-❌ Limited AI features (10 requests/day)
+✅ **UNLIMITED access to all "AI" features**: Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status (they're all database/algorithm-based)
+❌ Limited AI Coach Chat (10 messages/day only)
 
 #### **Premium Tier** ($9.99/month or $79.99/year)
 ✅ Everything in Free
-✅ **Unlimited AI coaching** (100 requests/day)
-✅ Advanced workout analysis
-✅ Personalized plateau detection
-✅ Custom workout programming
+✅ **Unlimited AI Coach Chat** (100 messages/day vs 10/day)
+✅ Advanced workout analysis (when feature is integrated)
+✅ Custom workout programming via AI chat
 ✅ Priority support
 ✅ Early access to new features
 ✅ Export all data (CSV, JSON)
 ✅ Cloud backup storage (10 GB)
 
+**Value Proposition**: Premium is primarily about unlimited AI Coach Chat access. All other "AI" features are already unlimited in free tier since they don't use AI.
+
 ### **Monetization Breakdown**
 
 **Target Revenue**: $50K MRR at 5,000 paying users
 
-**Costs per User** (Premium):
-- AI usage: ~$3/month (100 requests)
+**Actual Costs per User** (Premium):
+- AI usage (realistic): ~$0.40-1.00/month (20-40 chat messages)
 - Infrastructure: ~$1/month (database, storage)
-- Total: ~$4/month per user
-- Profit margin: 60%
+- **Total: ~$1.40-2.00/month per user**
+- **Profit margin: 80-85%** (extremely profitable!)
 
-**Free Tier Costs**:
-- AI: ~$0.30/month (10 requests)
+**Free Tier Costs** (Actual):
+- AI: ~$0.10-0.20/month (~5-7 chat messages only)
 - Infrastructure: ~$0.10/month
-- Subsidized by premium users (acceptable at 10:1 ratio)
+- **Total: ~$0.20-0.30/month per free user**
+- Subsidized by premium users (acceptable at 30:1 ratio)
+
+**Key Insight**: App is **extremely profitable** because:
+1. Only 1 feature (Coach Chat) uses paid AI
+2. 5 "AI" features are completely free (database/algorithms)
+3. Users perceive high value ("7 AI features!") but costs are minimal
+4. Free users get unlimited access to 5/6 visible features
 
 ### **Alternative Revenue Streams**
 1. **Coaching Marketplace**: Take 20% commission on personal trainer bookings
@@ -1367,12 +1551,13 @@ Gym Tracker is the ultimate workout logging app for serious lifters. With 423+ e
 • Automatic PR (personal record) detection
 • Support for all training styles (strength, hypertrophy, endurance)
 
-**🤖 AI COACHING & GUIDANCE**
-• Daily workout suggestions based on your history
-• Intelligent weight/rep recommendations
-• Post-workout analysis and feedback
+**🤖 AI COACH CHAT & INTELLIGENT TOOLS**
+• Real AI-powered fitness coach chat (ask any fitness question)
+• Smart workout suggestions based on recovery analysis
+• Automatic progressive overload recommendations
 • Plateau detection and breakthrough strategies
-• Real-time form tips and safety cues
+• Recovery tracking with personalized timing
+• Comprehensive form tips database for every exercise
 
 **📊 PROGRESS ANALYTICS**
 • Detailed strength progression charts

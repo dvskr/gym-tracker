@@ -1,3 +1,18 @@
+/**
+ * Personalized Exercise Suggestions
+ * 
+ * Fetches exercises based on user's workout history and target muscles.
+ * Uses database queries - NOT AI/OpenAI - completely free.
+ * 
+ * How it works:
+ * - Queries user's recent workouts (last 60 days)
+ * - Finds exercises they've done for target muscle groups
+ * - Calculates average weight used
+ * - Falls back to exercise library if no history
+ * 
+ * Cost: $0 (database queries only)
+ */
+
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 
