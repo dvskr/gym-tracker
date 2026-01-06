@@ -278,7 +278,11 @@ async function getAchievementProgress(userId: string): Promise<AchievementProgre
     .eq('user_id', userId)
     .not('ended_at', 'is', null);
 
-  const workoutDates = (workouts || []).map((w: any) => w.started_at);
+  interface WorkoutStartRow {
+    started_at: string;
+  }
+
+  const workoutDates = (workouts || []).map((w: WorkoutStartRow) => w.started_at);
   const longestStreak = calculateLongestStreak(workoutDates);
 
   // Get total volume and unique exercises
@@ -297,13 +301,24 @@ async function getAchievementProgress(userId: string): Promise<AchievementProgre
     .eq('user_id', userId)
     .not('ended_at', 'is', null);
 
+  interface WorkoutDataRow {
+    workout_exercises: Array<{
+      exercise_id: string;
+      workout_sets: Array<{
+        weight: number | null;
+        reps: number | null;
+        is_completed: boolean;
+      }>;
+    }>;
+  }
+
   let totalVolume = 0;
   const uniqueExerciseIds = new Set<string>();
 
-  (workoutData || []).forEach((workout: any) => {
-    (workout.workout_exercises || []).forEach((we: any) => {
+  (workoutData || []).forEach((workout: WorkoutDataRow) => {
+    (workout.workout_exercises || []).forEach((we) => {
       uniqueExerciseIds.add(we.exercise_id);
-      (we.workout_sets || []).forEach((set: any) => {
+      (we.workout_sets || []).forEach((set) => {
         if (set.is_completed && set.weight && set.reps) {
           totalVolume += set.weight * set.reps;
         }
@@ -430,7 +445,11 @@ export async function getNextAchievements(
       ...a,
       percentComplete: Math.min(100, Math.round(((a.progress || 0) / a.requirement) * 100)),
     }))
-    .sort((a, b) => (b as any).percentComplete - (a as any).percentComplete)
+    .sort((a, b) => {
+      const aPercent = 'percentComplete' in a ? (a as { percentComplete: number }).percentComplete : 0;
+      const bPercent = 'percentComplete' in b ? (b as { percentComplete: number }).percentComplete : 0;
+      return bPercent - aPercent;
+    })
     .slice(0, limit);
 }
 

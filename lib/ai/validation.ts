@@ -222,7 +222,7 @@ export const validateWorkoutSuggestionAdvanced = (
 /**
  * Validate workout suggestion response
  */
-export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion {
+export function validateWorkoutSuggestion(data: unknown): data is WorkoutSuggestion {
   if (!data || typeof data !== 'object') {
  logger.warn('Validation failed: data is not an object');
     return false;
@@ -255,9 +255,11 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
   }
   
   // Validate each exercise
-  const validExercises = data.exercises.every((ex: any, index: number) => {
+  const validExercises = data.exercises.every((ex: unknown, index: number) => {
+    if (!ex || typeof ex !== 'object') return false;
+    const exercise = ex as Record<string, unknown>;
     const isValid = 
-      typeof ex.name === 'string' &&
+      typeof exercise.name === 'string' &&
       ex.name.length > 0 &&
       ex.name.length < 100 &&
       typeof ex.sets === 'number' &&
@@ -287,7 +289,7 @@ export function validateWorkoutSuggestion(data: any): data is WorkoutSuggestion 
 /**
  * Validate workout analysis response
  */
-export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnalysis> {
+export function validateWorkoutAnalysis(data: unknown): data is Partial<WorkoutAnalysis> {
   if (!data || typeof data !== 'object') {
  logger.warn('Validation failed: data is not an object');
     return false;
@@ -315,7 +317,7 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
   }
   
   // Validate highlight strings
-  const validHighlights = data.highlights.every((h: any) => 
+  const validHighlights = data.highlights.every((h: unknown) => 
     typeof h === 'string' && h.length > 0 && h.length < 200
   );
   
@@ -331,7 +333,7 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
   }
   
   // Validate improvement strings
-  const validImprovements = data.improvements.every((i: any) => 
+  const validImprovements = data.improvements.every((i: unknown) => 
     typeof i === 'string' && i.length > 0 && i.length < 200
   );
   
@@ -356,7 +358,7 @@ export function validateWorkoutAnalysis(data: any): data is Partial<WorkoutAnaly
 /**
  * Validate form tips response
  */
-export function validateFormTips(data: any): data is FormTips {
+export function validateFormTips(data: unknown): data is FormTips {
   if (!data || typeof data !== 'object') {
  logger.warn('Validation failed: data is not an object');
     return false;
@@ -380,7 +382,7 @@ export function validateFormTips(data: any): data is FormTips {
     return false;
   }
   
-  const validCues = data.cues.every((cue: any) => 
+  const validCues = data.cues.every((cue: unknown) => 
     typeof cue === 'string' && cue.length > 0 && cue.length < 100
   );
   
@@ -395,7 +397,7 @@ export function validateFormTips(data: any): data is FormTips {
     return false;
   }
   
-  const validMistakes = data.commonMistakes.every((mistake: any) => 
+  const validMistakes = data.commonMistakes.every((mistake: unknown) => 
     typeof mistake === 'string' && mistake.length > 0 && mistake.length < 150
   );
   
@@ -416,7 +418,7 @@ export function validateFormTips(data: any): data is FormTips {
 /**
  * Validate progression recommendation response
  */
-export function validateProgression(data: any): data is ProgressionRecommendation {
+export function validateProgression(data: unknown): data is ProgressionRecommendation {
   if (!data || typeof data !== 'object') {
  logger.warn('Validation failed: data is not an object');
     return false;
@@ -458,8 +460,8 @@ export function validateProgression(data: any): data is ProgressionRecommendatio
  * Validate data and fallback to default if invalid
  */
 export function validateAndFallback<T>(
-  data: any,
-  validator: (d: any) => d is T,
+  data: unknown,
+  validator: (d: unknown) => d is T,
   fallback: T,
   context?: string
 ): T {
@@ -496,9 +498,9 @@ export function sanitizeStringArray(arr: string[], maxLength: number = 200): str
 /**
  * Normalize and validate confidence level
  */
-export function normalizeConfidence(confidence: any): 'high' | 'medium' | 'low' {
-  if (['high', 'medium', 'low'].includes(confidence)) {
-    return confidence;
+export function normalizeConfidence(confidence: unknown): 'high' | 'medium' | 'low' {
+  if (['high', 'medium', 'low'].includes(confidence as string)) {
+    return confidence as 'high' | 'medium' | 'low';
   }
   
   // Try to infer from numeric values
@@ -609,8 +611,13 @@ export const checkResponseSpecificity = (
  * Helper: Build UserContext from workout data
  */
 export const buildUserContextFromData = (data: {
-  recentWorkouts?: any[];
-  personalRecords?: any[];
+  recentWorkouts?: LocalWorkout[];
+  personalRecords?: Array<{
+    exercises?: { name?: string } | null;
+    weight?: number | null;
+    reps?: number | null;
+    [key: string]: unknown;
+  }>;
   workoutCount?: number;
 }): UserContext => {
   const recentExercises: string[] = [];
@@ -627,7 +634,12 @@ export const buildUserContextFromData = (data: {
         
         // Extract weights
         const sets = we.workout_sets || [];
-        const bestSet = sets.reduce((best: any, set: any) => {
+        interface SetData {
+          weight?: number | null;
+          reps?: number | null;
+          [key: string]: unknown;
+        }
+        const bestSet = sets.reduce((best: SetData, set: SetData) => {
           const volume = (set.weight || 0) * (set.reps || 0);
           const bestVolume = (best.weight || 0) * (best.reps || 0);
           return volume > bestVolume ? set : best;
@@ -697,4 +709,4 @@ export const validateResponseQuality = (
     feedback,
   };
 };
-
+

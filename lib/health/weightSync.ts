@@ -280,4 +280,4 @@ export function shouldSyncWeight(): boolean {
 
   return healthSyncEnabled && syncWeight && hasPermissions;
 }
-
+

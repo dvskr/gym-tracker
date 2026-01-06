@@ -9,7 +9,14 @@ export async function scheduleWorkoutReminder(
   time: { hour: number; minute: number },
   message: string = "Time to crush your workout! x"
 ): Promise<string> {
-  const trigger: any = {
+  interface NotificationTrigger {
+    hour: number;
+    minute: number;
+    repeats: boolean;
+    weekday?: number;
+  }
+  
+  const trigger: NotificationTrigger = {
     hour: time.hour,
     minute: time.minute,
     repeats: true,

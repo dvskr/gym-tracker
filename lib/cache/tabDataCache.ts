@@ -5,9 +5,9 @@ import { logger } from '@/lib/utils/logger';
  * tab navigator unmounts screens on tab switch
  */
 
-interface CacheEntry {
+interface CacheEntry<T = unknown> {
   lastFetched: number;
-  data: any;
+  data: T;
 }
 
 class TabDataCache {
@@ -28,13 +28,13 @@ class TabDataCache {
   /**
    * Get cached data if valid
    */
-  get(key: string, duration?: number): any | null {
+  get<T = unknown>(key: string, duration?: number): T | null {
     if (this.isValid(key, duration)) {
       const entry = this.cache.get(key);
       if (entry) {
         const age = Math.round((Date.now() - entry.lastFetched) / 1000);
         logger.log(`[Cache] S ${key} hit (age: ${age}s)`);
-        return entry.data;
+        return entry.data as T;
       }
     }
     logger.log(`[Cache] S ${key} miss`);
@@ -44,7 +44,7 @@ class TabDataCache {
   /**
    * Set cache data
    */
-  set(key: string, data: any): void {
+  set<T = unknown>(key: string, data: T): void {
     this.cache.set(key, {
       lastFetched: Date.now(),
       data,

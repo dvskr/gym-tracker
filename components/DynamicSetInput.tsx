@@ -21,7 +21,13 @@ interface DynamicSetInputProps {
     distance_meters?: number;
     assistance_weight?: number;
   };
-  onUpdate: (updatedSet: any) => void;
+  onUpdate: (updatedSet: {
+    weight?: number;
+    reps?: number;
+    duration_seconds?: number;
+    distance_meters?: number;
+    assistance_weight?: number;
+  }) => void;
 }
 
 export const DynamicSetInput: React.FC<DynamicSetInputProps> = ({

@@ -88,7 +88,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const currentPhoto = photos[currentIndex];
 
   // Handle scroll end
-  const handleScrollEnd = (event: any) => {
+  const handleScrollEnd = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
     const contentOffset = event.nativeEvent.contentOffset.x;
     const newIndex = Math.round(contentOffset / screenWidth);
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < photos.length) {

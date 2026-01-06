@@ -71,7 +71,7 @@ export function safeJSONParse<T>(response: string, fallback: T): T {
 /**
  * Validate and clean exercise array from AI response
  */
-export function cleanExerciseArray(exercises: any[]): Array<{
+export function cleanExerciseArray(exercises: unknown): Array<{
   name: string;
   sets: number;
   reps: string;
@@ -81,11 +81,11 @@ export function cleanExerciseArray(exercises: any[]): Array<{
   }
 
   return exercises
-    .filter((ex) => ex && ex.name)
+    .filter((ex): ex is Record<string, unknown> => ex && typeof ex === 'object' && 'name' in ex)
     .map((ex) => ({
-      name: cleanExerciseName(ex.name),
+      name: cleanExerciseName(String(ex.name)),
       sets: typeof ex.sets === 'number' ? ex.sets : 3,
-      reps: ex.reps || '8-12',
+      reps: typeof ex.reps === 'string' ? ex.reps : '8-12',
     }));
 }
 
@@ -93,10 +93,18 @@ export function cleanExerciseArray(exercises: any[]): Array<{
 // AI HELPER FUNCTIONS
 // ==========================================
 
+interface UserData {
+  level?: string;
+  goals?: string[];
+  preferences?: string;
+  restrictions?: string;
+  [key: string]: unknown;
+}
+
 /**
  * Get AI workout suggestion for today
  */
-export async function getWorkoutSuggestion(userData: any): Promise<string> {
+export async function getWorkoutSuggestion(userData: UserData): Promise<string> {
   const userContext = buildUserContext(userData);
   
   return await aiService.askWithContext(
@@ -111,12 +119,20 @@ export async function getWorkoutSuggestion(userData: any): Promise<string> {
  * Form tips for all 423 exercises are stored in the form_tips table
  */
 
+interface ExerciseHistory {
+  date: string;
+  weight?: number;
+  reps?: number;
+  sets?: number;
+  [key: string]: unknown;
+}
+
 /**
  * Get progression advice for an exercise
  */
 export async function getProgressionAdvice(
   exerciseName: string,
-  history: any[]
+  history: ExerciseHistory[]
 ): Promise<string> {
   const historyContext = buildExerciseHistory(exerciseName, history);
   
@@ -127,12 +143,22 @@ export async function getProgressionAdvice(
   );
 }
 
+interface WorkoutData {
+  name: string;
+  date: string;
+  exercises?: Array<{
+    name: string;
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+}
+
 /**
  * Critique a completed workout
  */
 export async function critiqueWorkout(
-  workout: any,
-  userData: any
+  workout: WorkoutData,
+  userData: UserData
 ): Promise<string> {
   const context = buildCompleteContext({
     user: userData,
@@ -149,7 +175,7 @@ export async function critiqueWorkout(
 /**
  * Get motivational message
  */
-export async function getMotivation(userData: any): Promise<string> {
+export async function getMotivation(userData: UserData): Promise<string> {
   const userContext = buildUserContext(userData);
   
   return await aiService.askWithContext(
@@ -164,7 +190,7 @@ export async function getMotivation(userData: any): Promise<string> {
  */
 export async function askCoach(
   question: string,
-  userData?: any
+  userData?: UserData
 ): Promise<string> {
   const context = userData ? buildUserContext(userData) : '';
   const fullPrompt = context 
@@ -225,10 +251,10 @@ For each alternative, explain:
  * Analyze workout split
  */
 export async function analyzeWorkoutSplit(
-  recentWorkouts: any[]
+  recentWorkouts: WorkoutData[]
 ): Promise<string> {
   const workoutsList = recentWorkouts.map((w, i) => 
-    `${i + 1}. ${w.name} (${new Date(w.date).toLocaleDateString()}) - ${w.exercises?.map((e: any) => e.name).join(', ')}`
+    `${i + 1}. ${w.name} (${new Date(w.date).toLocaleDateString()}) - ${w.exercises?.map((e) => e.name).join(', ')}`
   ).join('\n');
 
   const prompt = `Recent workouts:\n${workoutsList}\n\nAnalyze this training pattern:

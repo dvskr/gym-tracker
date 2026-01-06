@@ -44,8 +44,9 @@ async function uploadGif(exerciseId: string): Promise<string | null> {
     console.log(`✅ ${filename}`);
     return publicUrl;
 
-  } catch (err: any) {
-    console.error(`❌ ${filename}: ${err.message}`);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error(`❌ ${filename}: ${message}`);
     return null;
   }
 }
@@ -62,7 +63,7 @@ async function uploadAll() {
   let completed = 0;
   let skipped = 0;
   let failed = 0;
-  const urlMappings: any[] = [];
+  const urlMappings: Array<{ id: string; name: string; url: string }> = [];
 
   for (const exercise of selected.exercises) {
     const publicUrl = await uploadGif(exercise.id);
@@ -102,4 +103,4 @@ async function uploadAll() {
 }
 
 uploadAll();
-
+

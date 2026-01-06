@@ -232,7 +232,7 @@ export function SyncStatusSheet({ visible, onClose }: SyncStatusSheetProps) {
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Failed Operations</Text>
                   
-                  {failedOperations.slice(0, 5).map((op: any) => (
+                  {failedOperations.slice(0, 5).map((op: { id: string; operation: string; table: string; error?: string }) => (
                     <View key={op.id} style={styles.failedItem}>
                       <Text style={styles.failedItemTitle}>
                         {op.operation} • {op.table}
@@ -509,4 +509,4 @@ const styles = StyleSheet.create({
 });
 
 export default SyncStatusSheet;
-
+

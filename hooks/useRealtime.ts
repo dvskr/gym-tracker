@@ -144,9 +144,9 @@ export function useRealtimeStatus() {
 /**
  * Hook to listen for conflict detection
  */
-export function useConflictDetection(onConflict?: (conflict: any) => void) {
+export function useConflictDetection(onConflict?: (conflict: { localData: unknown; serverData: unknown; table: string }) => void) {
   const [conflictCount, setConflictCount] = useState(0);
-  const [latestConflict, setLatestConflict] = useState<any>(null);
+  const [latestConflict, setLatestConflict] = useState<{ localData: unknown; serverData: unknown; table: string } | null>(null);
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on(Events.CONFLICT_DETECTED, (conflict) => {
@@ -165,7 +165,7 @@ export function useConflictDetection(onConflict?: (conflict: any) => void) {
 /**
  * Generic hook to listen for any event
  */
-export function useEvent(event: string, callback: (data?: any) => void) {
+export function useEvent<T = unknown>(event: string, callback: (data?: T) => void) {
   useEffect(() => {
     const unsubscribe = eventEmitter.on(event, callback);
     return () => unsubscribe();
@@ -173,4 +173,4 @@ export function useEvent(event: string, callback: (data?: any) => void) {
 }
 
 export default useRealtimeWorkouts;
-
+

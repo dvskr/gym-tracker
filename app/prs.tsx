@@ -69,7 +69,19 @@ export default function PersonalRecordsScreen() {
 
       if (error) throw error;
 
-      const formattedPRs: PersonalRecord[] = (data || []).map((pr: any) => ({
+      interface PRData {
+        id: string;
+        exercise_id: string;
+        record_type: string;
+        value: number;
+        unit?: string;
+        date: string;
+        exercises?: {
+          name: string;
+        } | null;
+      }
+
+      const formattedPRs: PersonalRecord[] = (data || []).map((pr: PRData) => ({
         id: pr.id,
         exerciseId: pr.exercise_id,
         exerciseName: pr.exercises?.name || 'Unknown Exercise',

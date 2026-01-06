@@ -152,12 +152,36 @@ export async function getExerciseHistory(
   if (error) throw error;
 
   // Process the data into ExerciseHistoryEntry format
-  const history: ExerciseHistoryEntry[] = (data || []).map((entry: any) => {
+  interface WorkoutExercisesRow {
+    workout_id: string;
+    workouts: {
+      id: string;
+      name: string;
+      started_at: string;
+      user_id: string;
+    } | Array<{
+      id: string;
+      name: string;
+      started_at: string;
+      user_id: string;
+    }>;
+    workout_sets: Array<{
+      set_number: number;
+      weight: number | null;
+      weight_unit: string | null;
+      reps: number | null;
+      rpe: number | null;
+      set_type: string | null;
+      is_completed: boolean;
+    }>;
+  }
+
+  const history: ExerciseHistoryEntry[] = (data || []).map((entry: WorkoutExercisesRow) => {
     const workout = Array.isArray(entry.workouts) ? entry.workouts[0] : entry.workouts;
     const completedSets = (entry.workout_sets || [])
-      .filter((s: any) => s.is_completed)
-      .sort((a: any, b: any) => a.set_number - b.set_number)
-      .map((s: any) => ({
+      .filter((s) => s.is_completed)
+      .sort((a, b) => a.set_number - b.set_number)
+      .map((s) => ({
         set_number: s.set_number,
         weight: s.weight || 0,
         weight_unit: s.weight_unit || 'lbs',
@@ -325,9 +349,30 @@ export async function getExerciseSetRecords(
 
   if (error) throw error;
 
+  interface WorkoutSetRow {
+    weight: number | null;
+    reps: number | null;
+    set_number: number;
+    is_completed: boolean;
+    workout_exercises: {
+      exercise_id: string;
+      workouts: {
+        id: string;
+        started_at: string;
+        user_id: string;
+        ended_at: string | null;
+      } | Array<{
+        id: string;
+        started_at: string;
+        user_id: string;
+        ended_at: string | null;
+      }>;
+    };
+  }
+
   // Process and flatten the data
   const records: ExerciseSetRecord[] = (data || [])
-    .map((set: any) => {
+    .map((set: WorkoutSetRow) => {
       const workout = Array.isArray(set.workout_exercises?.workouts)
         ? set.workout_exercises.workouts[0]
         : set.workout_exercises?.workouts;

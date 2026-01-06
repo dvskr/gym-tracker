@@ -1,6 +1,7 @@
-import { localDB } from '../storage/localDatabase';
+import { localDB, LocalWorkout, LocalTemplate, WeightEntry, Measurement, PersonalRecord } from '../storage/localDatabase';
 import { logger } from '@/lib/utils/logger';
 import { conflictResolver } from './conflictResolver';
+import type { Exercise } from '@/lib/types/common';
 
 /**
  * Data Merger - Intelligently merges server data with local data
@@ -98,7 +99,7 @@ function shouldPreferServer<T extends TimestampedItem>(
  * Merge workouts from server with local workouts
  * Now with conflict detection
  */
-export async function mergeWorkouts(serverWorkouts: any[]): Promise<void> {
+export async function mergeWorkouts(serverWorkouts: LocalWorkout[]): Promise<void> {
  logger.log(`x Merging ${serverWorkouts.length} workout(s)...`);
 
   try {
@@ -121,7 +122,7 @@ export async function mergeWorkouts(serverWorkouts: any[]): Promise<void> {
 /**
  * Merge templates from server with local templates
  */
-export async function mergeTemplates(serverTemplates: any[]): Promise<void> {
+export async function mergeTemplates(serverTemplates: LocalTemplate[]): Promise<void> {
  logger.log(`x Merging ${serverTemplates.length} template(s)...`);
 
   try {
@@ -139,7 +140,7 @@ export async function mergeTemplates(serverTemplates: any[]): Promise<void> {
 /**
  * Merge weight log from server with local weight log
  */
-export async function mergeWeightLog(serverWeightLog: any[]): Promise<void> {
+export async function mergeWeightLog(serverWeightLog: WeightEntry[]): Promise<void> {
  logger.log(`x Merging ${serverWeightLog.length} weight log(s)...`);
 
   try {
@@ -157,7 +158,7 @@ export async function mergeWeightLog(serverWeightLog: any[]): Promise<void> {
 /**
  * Merge measurements from server with local measurements
  */
-export async function mergeMeasurements(serverMeasurements: any[]): Promise<void> {
+export async function mergeMeasurements(serverMeasurements: Measurement[]): Promise<void> {
  logger.log(`x Merging ${serverMeasurements.length} measurement(s)...`);
 
   try {
@@ -175,7 +176,7 @@ export async function mergeMeasurements(serverMeasurements: any[]): Promise<void
 /**
  * Merge personal records from server with local records
  */
-export async function mergePersonalRecords(serverRecords: any[]): Promise<void> {
+export async function mergePersonalRecords(serverRecords: PersonalRecord[]): Promise<void> {
  logger.log(`x Merging ${serverRecords.length} personal record(s)...`);
 
   try {
@@ -193,7 +194,7 @@ export async function mergePersonalRecords(serverRecords: any[]): Promise<void> 
 /**
  * Merge exercises cache (for API exercises)
  */
-export async function mergeExercises(serverExercises: any[]): Promise<void> {
+export async function mergeExercises(serverExercises: Exercise[]): Promise<void> {
  logger.log(`x Caching ${serverExercises.length} exercise(s)...`);
 
   try {
@@ -331,11 +332,11 @@ export interface BatchMergeResult {
 }
 
 export async function batchMerge(data: {
-  workouts?: any[];
-  templates?: any[];
-  weightLog?: any[];
-  measurements?: any[];
-  personalRecords?: any[];
+  workouts?: LocalWorkout[];
+  templates?: LocalTemplate[];
+  weightLog?: WeightEntry[];
+  measurements?: Measurement[];
+  personalRecords?: PersonalRecord[];
 }): Promise<BatchMergeResult> {
   const result: BatchMergeResult = {
     workouts: 0,
@@ -398,4 +399,4 @@ export async function batchMerge(data: {
 
   return result;
 }
-
+

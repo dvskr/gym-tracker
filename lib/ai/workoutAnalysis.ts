@@ -39,7 +39,7 @@ class WorkoutAnalysisService {
    * Analyze completed workout and provide AI-powered feedback
    */
   async analyzeWorkout(
-    workout: any,
+    workout: LocalWorkout,
     userId: string,
     forceRefresh = false
   ): Promise<WorkoutAnalysis> {
@@ -190,8 +190,8 @@ class WorkoutAnalysisService {
    * Get AI-powered analysis
    */
   private async getAIAnalysis(
-    workout: any,
-    previousWorkout: any,
+    workout: LocalWorkout,
+    previousWorkout: LocalWorkout | null,
     userStats: WorkoutStats,
     currentVolume: number,
     previousVolume: number,
@@ -309,7 +309,7 @@ Respond in this exact JSON format:
    * Rule-based analysis (fallback)
    */
   private getRuleBasedAnalysis(
-    workout: any,
+    workout: LocalWorkout,
     volumeComparison: WorkoutAnalysis['volumeComparison'],
     musclesWorked: string[],
     totalVolume: number,
@@ -388,7 +388,7 @@ Respond in this exact JSON format:
   /**
    * Default analysis (error fallback)
    */
-  private getDefaultAnalysis(workout: any): WorkoutAnalysis {
+  private getDefaultAnalysis(workout: LocalWorkout): WorkoutAnalysis {
     const totalSets = this.countTotalSets(workout);
     const musclesWorked = this.getMusclesWorked(workout);
 
@@ -412,7 +412,7 @@ Respond in this exact JSON format:
   /**
    * Build simplified workout context for AI
    */
-  private buildSimpleWorkoutContext(workout: any, volume: number): string {
+  private buildSimpleWorkoutContext(workout: LocalWorkout, volume: number): string {
     const exercises = workout.exercises || [];
     const durationMinutes = Math.round((workout.duration_seconds || 0) / 60);
 
@@ -424,12 +424,18 @@ EXERCISES:`;
 
     for (const ex of exercises) {
       const sets = ex.sets || [];
-      const completedSets = sets.filter((s: any) => s.isCompleted);
+      interface SetData {
+        isCompleted?: boolean;
+        weight?: number;
+        reps?: number;
+        [key: string]: unknown;
+      }
+      const completedSets = sets.filter((s: SetData) => s.isCompleted);
       context += `\n- ${ex.name}: ${completedSets.length} sets`;
       
       if (completedSets.length > 0) {
-        const topSet = completedSets.reduce((max: any, s: any) => 
-          (s.weight * s.reps > max.weight * max.reps) ? s : max
+        const topSet = completedSets.reduce((max: SetData, s: SetData) => 
+          ((s.weight || 0) * (s.reps || 0) > (max.weight || 0) * (max.reps || 0)) ? s : max
         );
         context += ` (top: ${topSet.weight}lbs  ${topSet.reps})`;
       }
@@ -441,7 +447,7 @@ EXERCISES:`;
   /**
    * Calculate total volume (weight × reps)
    */
-  private calculateVolume(workout: any): number {
+  private calculateVolume(workout: LocalWorkout): number {
     let volume = 0;
     for (const exercise of workout.exercises || []) {
       for (const set of exercise.sets || []) {
@@ -456,10 +462,15 @@ EXERCISES:`;
   /**
    * Count total sets
    */
-  private countTotalSets(workout: any): number {
+  private countTotalSets(workout: LocalWorkout): number {
     let count = 0;
     for (const exercise of workout.exercises || []) {
-      count += (exercise.sets || []).filter((s: any) => s.isCompleted || s.completed_at).length;
+      interface SetData {
+        isCompleted?: boolean;
+        completed_at?: string | null;
+        [key: string]: unknown;
+      }
+      count += (exercise.sets || []).filter((s: SetData) => s.isCompleted || s.completed_at).length;
     }
     return count;
   }
@@ -467,7 +478,7 @@ EXERCISES:`;
   /**
    * Get muscles worked
    */
-  private getMusclesWorked(workout: any): string[] {
+  private getMusclesWorked(workout: LocalWorkout): string[] {
     const muscles = new Set<string>();
     for (const exercise of workout.exercises || []) {
       if (exercise.muscle_group) {
@@ -480,7 +491,7 @@ EXERCISES:`;
   /**
    * Estimate calories burned
    */
-  private estimateCalories(workout: any): number {
+  private estimateCalories(workout: LocalWorkout): number {
     // Rough estimate: 6 calories per set + 4 calories per minute
     const totalSets = this.countTotalSets(workout);
     const minutes = (workout.duration_seconds || 0) / 60;
@@ -490,7 +501,7 @@ EXERCISES:`;
   /**
    * Get volume change percentage
    */
-  private getVolumeChangePercent(workout: any): number {
+  private getVolumeChangePercent(workout: LocalWorkout): number {
     // This would need previous workout data - placeholder
     return 10;
   }
@@ -498,7 +509,7 @@ EXERCISES:`;
   /**
    * Get previous similar workout
    */
-  private async getPreviousSimilarWorkout(userId: string, currentWorkout: any) {
+  private async getPreviousSimilarWorkout(userId: string, currentWorkout: LocalWorkout): Promise<LocalWorkout | null> {
     try {
       // Get most recent workout before this one
       const { data, error } = await supabase
@@ -526,8 +537,12 @@ EXERCISES:`;
       if (data) {
         return {
           ...data,
-          exercises: data.workout_exercises?.map((we: any) => ({
-            ...we.exercises,
+          exercises: data.workout_exercises?.map((we: {
+            exercises?: unknown;
+            workout_sets?: unknown;
+            [key: string]: unknown;
+          }) => ({
+            ...(we.exercises as object),
             sets: we.workout_sets,
           })),
         };
@@ -597,7 +612,7 @@ EXERCISES:`;
   /**
    * Get count of new PRs in this workout
    */
-  private async getNewPRCount(userId: string, workout: any): Promise<number> {
+  private async getNewPRCount(userId: string, workout: LocalWorkout): Promise<number> {
     try {
       // Get PRs created today (or in last hour)
       const oneHourAgo = new Date();

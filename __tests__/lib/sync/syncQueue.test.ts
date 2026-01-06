@@ -177,7 +177,7 @@ describe('SyncQueue', () => {
     it('processes operations in order', async () => {
       const calls: string[] = [];
       const mockChain = {
-        insert: jest.fn((data: any) => {
+        insert: jest.fn((data: { name: string }) => {
           calls.push(data.name);
           return mockChain;
         }),

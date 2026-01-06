@@ -172,7 +172,8 @@ export default function AddCustomExerciseScreen() {
           },
         ]
       );
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error adding custom exercise:', error);
       
       if (error.code === '23505') {

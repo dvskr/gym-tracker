@@ -1,5 +1,6 @@
 ﻿import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
+import { LocalWorkout } from '@/lib/types/common';
 import type {
   UserContextData,
   RecentWorkoutContext,
@@ -341,7 +342,14 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     // Active injuries
     if (injuries.data && injuries.data.length > 0) {
       context += `\n⚠️ ACTIVE INJURIES (CRITICAL - DO NOT suggest exercises that aggravate these):\n`;
-      injuries.data.forEach((injury: any) => {
+      interface InjuryRecord {
+        body_part: string;
+        severity?: string;
+        injury_date?: string;
+        notes?: string;
+        [key: string]: unknown;
+      }
+      injuries.data.forEach((injury: InjuryRecord) => {
         context += `- ${injury.body_part.replace(/_/g, ' ').toUpperCase()}`;
         if (injury.injury_type) {
           context += ` (${injury.injury_type})`;
@@ -361,7 +369,19 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     // Recent workouts
     if (recentWorkouts.data && recentWorkouts.data.length > 0) {
       context += `\n=== RECENT WORKOUTS (Last 7 days) ===\n`;
-      recentWorkouts.data.forEach((workout: any) => {
+      interface WorkoutRecord {
+        created_at: string;
+        name: string;
+        total_volume?: number;
+        duration_seconds?: number;
+        workout_exercises?: Array<{
+          exercises?: {
+            name?: string;
+          } | null;
+        }>;
+        [key: string]: unknown;
+      }
+      recentWorkouts.data.forEach((workout: WorkoutRecord) => {
         const date = new Date(workout.created_at);
         const daysAgo = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
         const dateStr = daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo} days ago`;
@@ -374,7 +394,7 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
         // List exercises
         if (workout.workout_exercises && workout.workout_exercises.length > 0) {
           const exercises = workout.workout_exercises
-            .map((we: any) => we.exercises?.name)
+            ?.map((we: { exercises?: { name?: string } | null }) => we.exercises?.name)
             .filter(Boolean);
           if (exercises.length > 0) {
             context += `\n  Exercises: ${exercises.slice(0, 5).join(', ')}`;
@@ -388,7 +408,17 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     // Personal records
     if (prs.data && prs.data.length > 0) {
       context += `\n=== PERSONAL RECORDS (Use these EXACT numbers) ===\n`;
-      prs.data.forEach((pr: any) => {
+      interface PRRecord {
+        exercises?: {
+          name?: string;
+        } | null;
+        record_type?: string;
+        value?: number;
+        unit?: string;
+        date?: string;
+        [key: string]: unknown;
+      }
+      prs.data.forEach((pr: PRRecord) => {
         if (pr.exercises?.name) {
           const unit = profile.data?.unit_system === 'metric' ? 'kg' : 'lbs';
           context += `- ${pr.exercises.name}: ${pr.weight}${unit}  ${pr.reps} reps\n`;
@@ -399,10 +429,19 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     // Main lift history with specific progression data
     if (mainLiftHistory && mainLiftHistory.length > 0) {
       context += `\n=== RECENT LIFT HISTORY (Reference these SPECIFIC numbers in advice) ===\n`;
-      mainLiftHistory.forEach((lift: any) => {
+      interface LiftHistoryItem {
+        sessions: Array<{
+          weight?: number;
+          reps?: number;
+          [key: string]: unknown;
+        }>;
+        exercise?: string;
+        [key: string]: unknown;
+      }
+      mainLiftHistory.forEach((lift: LiftHistoryItem) => {
         if (lift.sessions.length > 0) {
           const recent = lift.sessions.slice(0, 4);
-          const weights = recent.map((s: any) => `${s.weight}${s.reps}`).join(', ');
+          const weights = recent.map((s) => `${s.weight}${s.reps}`).join(', ');
           
           context += `- ${lift.name}: ${weights}`;
           
@@ -423,20 +462,20 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     // Weekly training summary with specific numbers
     if (recentWorkouts.data && recentWorkouts.data.length > 0) {
       const now = new Date();
-      const thisWeek = recentWorkouts.data.filter((w: any) => {
+      const thisWeek = recentWorkouts.data.filter((w: WorkoutRecord) => {
         const workoutDate = new Date(w.created_at);
         const daysDiff = Math.floor((now.getTime() - workoutDate.getTime()) / (1000 * 60 * 60 * 24));
         return daysDiff < 7;
       });
       
-      const lastWeek = recentWorkouts.data.filter((w: any) => {
+      const lastWeek = recentWorkouts.data.filter((w: WorkoutRecord) => {
         const workoutDate = new Date(w.created_at);
         const daysDiff = Math.floor((now.getTime() - workoutDate.getTime()) / (1000 * 60 * 60 * 24));
         return daysDiff >= 7 && daysDiff < 14;
       });
       
-      const thisWeekVolume = thisWeek.reduce((sum: number, w: any) => sum + (w.total_volume || 0), 0);
-      const lastWeekVolume = lastWeek.reduce((sum: number, w: any) => sum + (w.total_volume || 0), 0);
+      const thisWeekVolume = thisWeek.reduce((sum: number, w: WorkoutRecord) => sum + (w.total_volume || 0), 0);
+      const lastWeekVolume = lastWeek.reduce((sum: number, w: WorkoutRecord) => sum + (w.total_volume || 0), 0);
       const unit = profile.data?.unit_system === 'metric' ? 'kg' : 'lbs';
       
       context += `\n=== WEEKLY SUMMARY (Use these numbers when analyzing training) ===\n`;
@@ -569,18 +608,40 @@ async function getMainLiftHistory(userId: string) {
     // Group by exercise and analyze
     const liftData: Record<string, any> = {};
     
-    workouts.forEach((workout: any) => {
-      workout.workout_exercises?.forEach((we: any) => {
+    interface WorkoutWithExercises {
+      workout_exercises?: Array<{
+        exercises?: {
+          name?: string;
+        } | null;
+        workout_sets?: Array<{
+          is_completed?: boolean;
+          weight?: number;
+          reps?: number;
+          set_type?: string;
+          [key: string]: unknown;
+        }>;
+      }>;
+      created_at?: string;
+      [key: string]: unknown;
+    }
+
+    workouts.forEach((workout: WorkoutWithExercises) => {
+      workout.workout_exercises?.forEach((we) => {
         const exerciseName = we.exercises?.name;
         if (!exerciseName || !mainLifts.some(ml => exerciseName.toLowerCase().includes(ml.toLowerCase()))) {
           return;
         }
         
         // Get best set from this workout
-        const completedSets = we.workout_sets?.filter((s: any) => s.is_completed && s.set_type === 'normal') || [];
+        const completedSets = we.workout_sets?.filter((s) => s.is_completed && s.set_type === 'normal') || [];
         if (completedSets.length === 0) return;
         
-        const bestSet = completedSets.reduce((best: any, set: any) => {
+        interface SetData {
+          weight?: number;
+          reps?: number;
+          [key: string]: unknown;
+        }
+        const bestSet = completedSets.reduce((best: SetData, set: SetData) => {
           const volume = (set.weight || 0) * (set.reps || 0);
           const bestVolume = (best?.weight || 0) * (best?.reps || 0);
           return volume > bestVolume ? set : best;
@@ -603,18 +664,30 @@ async function getMainLiftHistory(userId: string) {
     });
     
     // Analyze trends for each lift
-    const results = Object.values(liftData).map((lift: any) => {
+    interface LiftData {
+      exercise: string;
+      sessions: Array<{
+        date: string;
+        weight: number;
+        reps: number;
+        volume: number;
+        [key: string]: unknown;
+      }>;
+      [key: string]: unknown;
+    }
+
+    const results = Object.values(liftData).map((lift: LiftData) => {
       // Sort by date
-      lift.sessions.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      lift.sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       
       // Detect trend
       if (lift.sessions.length >= 3) {
         const recent = lift.sessions.slice(0, 3);
         const older = lift.sessions.slice(3, 6);
         
-        const recentAvgVolume = recent.reduce((sum: number, s: any) => sum + s.volume, 0) / recent.length;
+        const recentAvgVolume = recent.reduce((sum: number, s) => sum + s.volume, 0) / recent.length;
         const olderAvgVolume = older.length > 0 
-          ? older.reduce((sum: number, s: any) => sum + s.volume, 0) / older.length 
+          ? older.reduce((sum: number, s) => sum + s.volume, 0) / older.length 
           : recentAvgVolume;
         
         if (recentAvgVolume > olderAvgVolume * 1.05) {
@@ -626,16 +699,16 @@ async function getMainLiftHistory(userId: string) {
           const fourWeeksAgo = new Date();
           fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
           
-          const recentPeak = Math.max(...recent.map((s: any) => s.volume));
-          const olderSessions = lift.sessions.filter((s: any) => new Date(s.date) < fourWeeksAgo);
+          const recentPeak = Math.max(...recent.map((s) => s.volume));
+          const olderSessions = lift.sessions.filter((s) => new Date(s.date) < fourWeeksAgo);
           const olderPeak = olderSessions.length > 0 
-            ? Math.max(...olderSessions.map((s: any) => s.volume))
+            ? Math.max(...olderSessions.map((s) => s.volume))
             : 0;
           
           if (recentPeak <= olderPeak) {
             lift.trend = 'plateau';
             // Calculate weeks since improvement
-            const lastImprovement = lift.sessions.find((s: any, i: number) => {
+            const lastImprovement = lift.sessions.find((s, i: number) => {
               if (i === 0) return false;
               return s.volume > lift.sessions[i - 1].volume;
             });
@@ -1113,10 +1186,16 @@ function buildWorkoutHistoryContext(workouts: WorkoutWithExercises[]): string {
       if (!ex) continue;
 
       const sets = we.workout_sets || [];
-      const completedSets = sets.filter((s: any) => s.is_completed);
+      interface SetData {
+        is_completed?: boolean;
+        weight?: number;
+        reps?: number;
+        [key: string]: unknown;
+      }
+      const completedSets = sets.filter((s: SetData) => s.is_completed);
 
       if (completedSets.length > 0) {
-        const weights = completedSets.map((s: any) => `${s.weight || 0}${s.reps || 0}`);
+        const weights = completedSets.map((s: SetData) => `${s.weight || 0}${s.reps || 0}`);
         context += `  - ${ex.name}: ${weights.join(', ')}\n`;
       }
     }

@@ -407,12 +407,29 @@ export async function getAllPRs(userId: string): Promise<ExercisePRs[]> {
     .eq('user_id', userId)
     .order('achieved_at', { ascending: false });
 
-  if (error || !prs) return [];
+  if (error || !data) return [];
+
+  interface PRWithExerciseRow {
+    id: string;
+    user_id: string;
+    exercise_id: string;
+    record_type: string;
+    value: number;
+    weight: number | null;
+    reps: number | null;
+    achieved_at: string;
+    workout_id: string | null;
+    exercises: {
+      id: string;
+      name: string;
+      external_id: string;
+    } | null;
+  }
 
   // Group by exercise
   const exerciseMap = new Map<string, ExercisePRs>();
 
-  prs.forEach((pr: any) => {
+  prs.forEach((pr: PRWithExerciseRow) => {
     const exerciseId = pr.exercise_id;
     
     if (!exerciseMap.has(exerciseId)) {
@@ -483,30 +500,48 @@ export async function getPRHistory(
 
   if (error || !data) return [];
 
+  interface PRHistoryWorkoutRow {
+    workout_id: string;
+    workouts: {
+      id: string;
+      started_at: string;
+      user_id: string;
+    } | Array<{
+      id: string;
+      started_at: string;
+      user_id: string;
+    }>;
+    workout_sets: Array<{
+      weight: number | null;
+      reps: number | null;
+      is_completed: boolean;
+    }>;
+  }
+
   const history: PRHistoryEntry[] = [];
   let currentMax = 0;
 
-  data.forEach((entry: any) => {
+  data.forEach((entry: PRHistoryWorkoutRow) => {
     const workout = Array.isArray(entry.workouts) ? entry.workouts[0] : entry.workouts;
-    const completedSets = (entry.workout_sets || []).filter((s: any) => s.is_completed);
+    const completedSets = (entry.workout_sets || []).filter((s) => s.is_completed);
 
     let sessionValue = 0;
 
     switch (recordType) {
       case 'max_weight':
-        sessionValue = Math.max(...completedSets.map((s: any) => s.weight || 0));
+        sessionValue = Math.max(...completedSets.map((s) => s.weight || 0));
         break;
       case 'max_reps':
-        sessionValue = Math.max(...completedSets.map((s: any) => s.reps || 0));
+        sessionValue = Math.max(...completedSets.map((s) => s.reps || 0));
         break;
       case 'max_1rm':
         sessionValue = Math.max(
-          ...completedSets.map((s: any) => calculate1RM(s.weight || 0, s.reps || 0))
+          ...completedSets.map((s) => calculate1RM(s.weight || 0, s.reps || 0))
         );
         break;
       case 'max_volume':
         sessionValue = completedSets.reduce(
-          (sum: number, s: any) => sum + (s.weight || 0) * (s.reps || 0),
+          (sum, s) => sum + (s.weight || 0) * (s.reps || 0),
           0
         );
         break;
@@ -547,7 +582,22 @@ export async function getRecentPRs(
 
   if (error || !data) return [];
 
-  return data.map((pr: any) => ({
+  interface RecentPRRow {
+    id: string;
+    user_id: string;
+    exercise_id: string;
+    record_type: string;
+    value: number;
+    weight: number | null;
+    reps: number | null;
+    achieved_at: string;
+    workout_id: string | null;
+    exercises: {
+      name: string;
+    } | null;
+  }
+
+  return data.map((pr: RecentPRRow) => ({
     ...pr,
     exercise_name: pr.exercises?.name,
   }));

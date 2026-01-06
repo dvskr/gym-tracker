@@ -83,7 +83,8 @@ async function downloadNewGifs() {
       // Rate limiting
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       console.error(`❌ ${exercise.name} - Error: ${err.message}`);
       failed++;
     }
@@ -99,4 +100,4 @@ async function downloadNewGifs() {
 }
 
 downloadNewGifs();
-
+

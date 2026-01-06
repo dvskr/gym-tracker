@@ -35,6 +35,52 @@ import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 export default function HealthSettingsScreen() {
   useBackNavigation(); // Enable Android back gesture support
 
+  // ============================================
+  // iOS: Show "Coming Soon" Message
+  // ============================================
+  if (Platform.OS === 'ios') {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <SettingsHeader title="Health Integration" />
+        <View style={styles.comingSoonContainer}>
+          <View style={styles.comingSoonIcon}>
+            <Heart size={64} color="#3b82f6" />
+          </View>
+          <Text style={styles.comingSoonTitle}>Apple Health Integration</Text>
+          <Text style={styles.comingSoonSubtitle}>Coming Soon!</Text>
+          <Text style={styles.comingSoonMessage}>
+            We're working on Apple Health integration to sync your workouts, heart rate, steps, and body measurements.
+          </Text>
+          <Text style={styles.comingSoonReassurance}>
+            Don't worry - all your workouts and progress are being saved in the app and synced to the cloud.
+          </Text>
+          <View style={styles.comingSoonFeatures}>
+            <View style={styles.featureRow}>
+              <CheckCircle size={20} color="#22c55e" />
+              <Text style={styles.featureText}>Workouts saved in app</Text>
+            </View>
+            <View style={styles.featureRow}>
+              <CheckCircle size={20} color="#22c55e" />
+              <Text style={styles.featureText}>Cloud sync enabled</Text>
+            </View>
+            <View style={styles.featureRow}>
+              <CheckCircle size={20} color="#22c55e" />
+              <Text style={styles.featureText}>Progress tracking active</Text>
+            </View>
+            <View style={styles.featureRow}>
+              <AlertCircle size={20} color="#f59e0b" />
+              <Text style={[styles.featureText, { color: '#f59e0b' }]}>Apple Health sync pending</Text>
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ============================================
+  // Android: Full Health Connect Integration
+  // ============================================
+
   const { isAvailable, hasPermissions, isLoading, permissions, requestPermissions, openSettings } =
     useHealthConnect();
   const {
@@ -604,6 +650,68 @@ const styles = StyleSheet.create({
     marginTop: 8,
     lineHeight: 16,
   },
+  
+  // iOS Coming Soon Styles
+  comingSoonContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  comingSoonIcon: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#1e293b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  comingSoonTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#f1f5f9',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  comingSoonSubtitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#3b82f6',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  comingSoonMessage: {
+    fontSize: 16,
+    color: '#94a3b8',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 12,
+  },
+  comingSoonReassurance: {
+    fontSize: 14,
+    color: '#64748b',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 32,
+  },
+  comingSoonFeatures: {
+    width: '100%',
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    padding: 16,
+    gap: 12,
+  },
+  featureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  featureText: {
+    fontSize: 15,
+    color: '#f1f5f9',
+  },
+  
   syncButton: {
     flexDirection: 'row',
     alignItems: 'center',

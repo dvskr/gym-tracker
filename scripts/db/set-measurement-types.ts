@@ -80,7 +80,15 @@ async function setMeasurementTypes() {
   const forceUpdate = process.argv.includes('--force');
   
   // Fetch ALL exercises (handle pagination)
-  let allExercises: any[] = [];
+  interface ExerciseRecord {
+    id: string;
+    name: string;
+    category?: string;
+    equipment?: string;
+    measurement_type?: string;
+    [key: string]: unknown;
+  }
+  let allExercises: ExerciseRecord[] = [];
   let page = 0;
   const pageSize = 1000;
   
@@ -187,4 +195,4 @@ async function setMeasurementTypes() {
 }
 
 setMeasurementTypes().catch(console.error);
-
+

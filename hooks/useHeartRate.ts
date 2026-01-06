@@ -158,4 +158,4 @@ export function useHeartRateZone(bpm?: number, age?: number) {
 
   return healthService.getHeartRateZone(bpm, age);
 }
-
+

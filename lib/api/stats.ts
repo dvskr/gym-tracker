@@ -184,20 +184,33 @@ export async function getWeeklyStats(userId: string): Promise<WeeklyStats> {
     .lte('started_at', lastWeekEnd.toISOString())
     .not('ended_at', 'is', null);
 
+  interface WorkoutRow {
+    id: string;
+    started_at: string;
+    ended_at: string | null;
+    workout_exercises: Array<{
+      workout_sets: Array<{
+        weight: number | null;
+        reps: number | null;
+        is_completed: boolean;
+      }>;
+    }>;
+  }
+
   // Calculate this week stats
   let thisWeekVolume = 0;
   let thisWeekMinutes = 0;
   let thisWeekSets = 0;
 
-  (thisWeekWorkouts || []).forEach((workout: any) => {
+  (thisWeekWorkouts || []).forEach((workout: WorkoutRow) => {
     if (workout.started_at && workout.ended_at) {
       const start = new Date(workout.started_at);
       const end = new Date(workout.ended_at);
       thisWeekMinutes += Math.round((end.getTime() - start.getTime()) / 60000);
     }
 
-    (workout.workout_exercises || []).forEach((we: any) => {
-      (we.workout_sets || []).forEach((set: any) => {
+    (workout.workout_exercises || []).forEach((we) => {
+      (we.workout_sets || []).forEach((set) => {
         if (set.is_completed && set.weight && set.reps) {
           thisWeekVolume += set.weight * set.reps;
           thisWeekSets++;
@@ -210,15 +223,15 @@ export async function getWeeklyStats(userId: string): Promise<WeeklyStats> {
   let lastWeekVolume = 0;
   let lastWeekMinutes = 0;
 
-  (lastWeekWorkouts || []).forEach((workout: any) => {
+  (lastWeekWorkouts || []).forEach((workout: WorkoutRow) => {
     if (workout.started_at && workout.ended_at) {
       const start = new Date(workout.started_at);
       const end = new Date(workout.ended_at);
       lastWeekMinutes += Math.round((end.getTime() - start.getTime()) / 60000);
     }
 
-    (workout.workout_exercises || []).forEach((we: any) => {
-      (we.workout_sets || []).forEach((set: any) => {
+    (workout.workout_exercises || []).forEach((we) => {
+      (we.workout_sets || []).forEach((set) => {
         if (set.is_completed && set.weight && set.reps) {
           lastWeekVolume += set.weight * set.reps;
         }
@@ -272,13 +285,30 @@ export async function getAllTimeStats(userId: string): Promise<AllTimeStats> {
     };
   }
 
+  interface AllTimeWorkoutRow {
+    id: string;
+    started_at: string;
+    ended_at: string | null;
+    workout_exercises: Array<{
+      exercise_id: string;
+      exercises: {
+        primary_muscles: string[];
+      } | null;
+      workout_sets: Array<{
+        weight: number | null;
+        reps: number | null;
+        is_completed: boolean;
+      }>;
+    }>;
+  }
+
   let totalVolume = 0;
   let totalSets = 0;
   let totalMinutes = 0;
   const muscleSetCount: Record<string, number> = {};
   const workoutDates: string[] = [];
 
-  workouts.forEach((workout: any) => {
+  workouts.forEach((workout: AllTimeWorkoutRow) => {
     // Track workout date
     if (workout.started_at) {
       workoutDates.push(workout.started_at);
@@ -292,10 +322,10 @@ export async function getAllTimeStats(userId: string): Promise<AllTimeStats> {
     }
 
     // Process exercises and sets
-    (workout.workout_exercises || []).forEach((we: any) => {
+    (workout.workout_exercises || []).forEach((we) => {
       const muscles = we.exercises?.primary_muscles || [];
 
-      (we.workout_sets || []).forEach((set: any) => {
+      (we.workout_sets || []).forEach((set) => {
         if (set.is_completed) {
           totalSets++;
           if (set.weight && set.reps) {
@@ -360,7 +390,20 @@ export async function getRecentPRs(userId: string, limit: number = 5): Promise<R
 
   if (error || !data) return [];
 
-  return data.map((pr: any) => ({
+  interface PRRow {
+    id: string;
+    exercise_id: string;
+    record_type: string;
+    value: number;
+    weight: number | null;
+    reps: number | null;
+    achieved_at: string;
+    exercises: {
+      name: string;
+    } | null;
+  }
+
+  return data.map((pr: PRRow) => ({
     id: pr.id,
     exerciseId: pr.exercise_id,
     exerciseName: pr.exercises?.name || 'Unknown Exercise',
@@ -399,14 +442,27 @@ export async function getMuscleDistribution(
     .gte('started_at', startDate.toISOString())
     .not('ended_at', 'is', null);
 
+  interface MuscleWorkoutRow {
+    workout_exercises: Array<{
+      exercises: {
+        primary_muscles: string[];
+      } | null;
+      workout_sets: Array<{
+        weight: number | null;
+        reps: number | null;
+        is_completed: boolean;
+      }>;
+    }>;
+  }
+
   const muscleData: Record<string, number> = {};
   let totalVolume = 0;
 
-  (workouts || []).forEach((workout: any) => {
-    (workout.workout_exercises || []).forEach((we: any) => {
+  (workouts || []).forEach((workout: MuscleWorkoutRow) => {
+    (workout.workout_exercises || []).forEach((we) => {
       const muscles = we.exercises?.primary_muscles || [];
 
-      (we.workout_sets || []).forEach((set: any) => {
+      (we.workout_sets || []).forEach((set) => {
         if (set.is_completed && set.weight && set.reps) {
           const setVolume = set.weight * set.reps;
           totalVolume += setVolume;
@@ -449,6 +505,10 @@ export async function getWorkoutFrequencyByDay(
     .gte('started_at', startDate.toISOString())
     .not('ended_at', 'is', null);
 
+  interface FrequencyWorkoutRow {
+    started_at: string;
+  }
+
   const dayCount: Record<string, number> = {
     Sunday: 0,
     Monday: 0,
@@ -459,7 +519,7 @@ export async function getWorkoutFrequencyByDay(
     Saturday: 0,
   };
 
-  (workouts || []).forEach((workout: any) => {
+  (workouts || []).forEach((workout: FrequencyWorkoutRow) => {
     if (workout.started_at) {
       const day = format(parseISO(workout.started_at), 'EEEE');
       dayCount[day]++;
@@ -503,4 +563,4 @@ export function formatPRValue(recordType: string, value: number): string {
       return value.toString();
   }
 }
-
+

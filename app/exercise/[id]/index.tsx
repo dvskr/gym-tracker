@@ -716,7 +716,7 @@ export default function ExerciseDetailScreen() {
 
       setIsNotesModalOpen(false);
       lightHaptic();
-    } catch (error: any) {
+    } catch (error) {
  logger.error('Error saving notes:', error);
       Alert.alert('Error', 'Failed to save notes. Please try again.');
     } finally {

@@ -2,11 +2,12 @@ import { healthService, WorkoutData } from './healthService';
 import { logger } from '@/lib/utils/logger';
 import { supabase } from '../supabase';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { LocalWorkout } from '@/lib/types/common';
 
 /**
  * Sync a completed workout to health platform
  */
-export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
+export async function syncWorkoutToHealth(workout: LocalWorkout): Promise<boolean> {
   try {
     // Check if health sync is enabled in settings
     const settings = useSettingsStore.getState();
@@ -67,7 +68,7 @@ export async function syncWorkoutToHealth(workout: any): Promise<boolean> {
 /**
  * Sync multiple workouts in batch
  */
-export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
+export async function syncWorkoutsBatchToHealth(workouts: LocalWorkout[]): Promise<{
   success: number;
   failed: number;
   skipped: number;
@@ -102,7 +103,7 @@ export async function syncWorkoutsBatchToHealth(workouts: any[]): Promise<{
 /**
  * Get unsynced workouts for the current user
  */
-export async function getUnsyncedWorkouts(userId: string): Promise<any[]> {
+export async function getUnsyncedWorkouts(userId: string): Promise<LocalWorkout[]> {
   try {
     const { data, error } = await supabase
       .from('workouts')
@@ -125,13 +126,13 @@ export async function getUnsyncedWorkouts(userId: string): Promise<any[]> {
 /**
  * Determine primary muscle group from workout
  */
-function determinePrimaryMuscle(workout: any): string | null {
+function determinePrimaryMuscle(workout: LocalWorkout): string | null {
   // If workout has exercises, analyze them
   if (workout.workout_exercises && workout.workout_exercises.length > 0) {
     // Count muscle groups
     const muscleGroups: Record<string, number> = {};
 
-    workout.workout_exercises.forEach((we: any) => {
+    workout.workout_exercises.forEach((we) => {
       if (we.exercise?.primary_muscles) {
         we.exercise.primary_muscles.forEach((muscle: string) => {
           muscleGroups[muscle] = (muscleGroups[muscle] || 0) + 1;
@@ -158,7 +159,7 @@ function determinePrimaryMuscle(workout: any): string | null {
 /**
  * Calculate estimated calories for a workout
  */
-export function estimateWorkoutCalories(workout: any): number {
+export function estimateWorkoutCalories(workout: LocalWorkout): number {
   const durationMinutes = (workout.duration_seconds || 0) / 60;
   const primaryMuscle = determinePrimaryMuscle(workout) || 'default';
 
@@ -186,4 +187,4 @@ export async function updateWorkoutCalories(workoutId: string, calories: number)
     return false;
   }
 }
-
+

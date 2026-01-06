@@ -4,6 +4,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system/legacy';
 import { format } from 'date-fns';
+import { WorkoutWithExercises } from '@/lib/types/common';
 
 // ============================================
 // Types
@@ -396,8 +397,9 @@ export async function shareWorkout(
       message: content,
       title: `GymTracker: ${workout.name}`,
     });
-  } catch (error: any) {
- logger.error('Error sharing workout:', error.message);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+ logger.error('Error sharing workout:', message);
     throw error;
   }
 }
@@ -420,8 +422,9 @@ export async function shareWorkoutData(
       message: `${workout.name} (${formatLabel})\n\n${content}`,
       title: `GymTracker Export: ${workout.name}`,
     });
-  } catch (error: any) {
- logger.error('Error sharing workout data:', error.message);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+ logger.error('Error sharing workout data:', message);
     throw error;
   }
 }
@@ -517,7 +520,7 @@ export async function exportWorkoutHistory(
 /**
  * Convert workout detail from API to exportable format
  */
-export function convertToExportable(workoutDetail: any): ExportableWorkout {
+export function convertToExportable(workoutDetail: WorkoutWithExercises): ExportableWorkout {
   const startTime = new Date(workoutDetail.started_at);
   const endTime = workoutDetail.ended_at ? new Date(workoutDetail.ended_at) : null;
   const durationMs = endTime ? endTime.getTime() - startTime.getTime() : 0;
@@ -526,10 +529,27 @@ export function convertToExportable(workoutDetail: any): ExportableWorkout {
   let totalVolume = 0;
   let totalSets = 0;
 
-  const exercises: ExportableExercise[] = (workoutDetail.workout_exercises || []).map((we: any) => {
+  interface WorkoutExerciseRow {
+    exercises?: {
+      name?: string;
+      primary_muscles?: string[];
+      equipment?: string;
+    } | null;
+    notes?: string | null;
+    workout_sets?: Array<{
+      set_number: number;
+      weight: number | null;
+      reps: number | null;
+      weight_unit?: string;
+      set_type?: string;
+      is_completed: boolean;
+    }>;
+  }
+
+  const exercises: ExportableExercise[] = (workoutDetail.workout_exercises || []).map((we: WorkoutExerciseRow) => {
     const sets: ExportableSet[] = (we.workout_sets || [])
-      .sort((a: any, b: any) => a.set_number - b.set_number)
-      .map((set: any) => {
+      .sort((a, b) => a.set_number - b.set_number)
+      .map((set) => {
         if (set.is_completed && set.weight && set.reps) {
           totalVolume += set.weight * set.reps;
           totalSets++;

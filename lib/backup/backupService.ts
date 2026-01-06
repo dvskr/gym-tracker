@@ -18,17 +18,17 @@ export interface BackupData {
   version: string;
   createdAt: string;
   userId: string;
-  profile: any;
-  workouts: any[];
-  workoutExercises: any[];
-  workoutSets: any[];
-  templates: any[];
-  templateExercises: any[];
-  bodyWeightLog: any[];
-  bodyMeasurements: any[];
-  personalRecords: any[];
-  customExercises: any[];
-  settings: any;
+  profile: DbProfile | null;
+  workouts: LocalWorkout[];
+  workoutExercises: Array<Record<string, unknown>>;
+  workoutSets: Array<Record<string, unknown>>;
+  templates: LocalTemplate[];
+  templateExercises: Array<Record<string, unknown>>;
+  bodyWeightLog: LocalWeightEntry[];
+  bodyMeasurements: LocalMeasurement[];
+  personalRecords: LocalPersonalRecord[];
+  customExercises: LocalExercise[];
+  settings: Record<string, unknown>;
 }
 
 export interface RestoreResult {
@@ -592,7 +592,7 @@ class BackupService {
 
   private async fetchAllWorkouts(
     userId: string
-  ): Promise<{ workouts: any[]; exercises: any[]; sets: any[] }> {
+  ): Promise<{ workouts: LocalWorkout[]; exercises: Array<Record<string, unknown>>; sets: Array<Record<string, unknown>> }> {
     const { data: workouts, error } = await supabase
       .from('workouts')
       .select(
@@ -610,12 +610,12 @@ class BackupService {
     if (error) throw error;
 
     // Flatten nested structure
-    const exercises: any[] = [];
-    const sets: any[] = [];
+    const exercises: Array<Record<string, unknown>> = [];
+    const sets: Array<Record<string, unknown>> = [];
 
     workouts?.forEach((workout) => {
       if (workout.workout_exercises) {
-        workout.workout_exercises.forEach((exercise: any) => {
+        workout.workout_exercises.forEach((exercise: Record<string, unknown>) => {
           exercises.push({
             ...exercise,
             workout_sets: undefined,
@@ -634,7 +634,7 @@ class BackupService {
 
   private async fetchAllTemplates(
     userId: string
-  ): Promise<{ templates: any[]; exercises: any[] }> {
+  ): Promise<{ templates: LocalTemplate[]; exercises: Array<Record<string, unknown>> }> {
     const { data: templates, error } = await supabase
       .from('workout_templates')
       .select(
@@ -649,7 +649,7 @@ class BackupService {
     if (error) throw error;
 
     // Flatten nested structure
-    const exercises: any[] = [];
+    const exercises: Array<Record<string, unknown>> = [];
 
     templates?.forEach((template) => {
       if (template.template_exercises) {
@@ -707,7 +707,7 @@ class BackupService {
 
   // Restore methods
 
-  private async restoreProfile(profile: any): Promise<void> {
+  private async restoreProfile(profile: DbProfile | null): Promise<void> {
     const { error } = await supabase
       .from('profiles')
       .update(profile)
@@ -717,9 +717,9 @@ class BackupService {
   }
 
   private async restoreWorkouts(
-    workouts: any[],
-    exercises: any[],
-    sets: any[]
+    workouts: LocalWorkout[],
+    exercises: Array<Record<string, unknown>>,
+    sets: Array<Record<string, unknown>>
   ): Promise<number> {
     let count = 0;
 
@@ -755,7 +755,7 @@ class BackupService {
     return count;
   }
 
-  private async restoreTemplates(templates: any[], exercises: any[]): Promise<number> {
+  private async restoreTemplates(templates: LocalTemplate[], exercises: Array<Record<string, unknown>>): Promise<number> {
     let count = 0;
 
     for (const template of templates) {
@@ -780,7 +780,7 @@ class BackupService {
     return count;
   }
 
-  private async restoreWeightLog(entries: any[]): Promise<number> {
+  private async restoreWeightLog(entries: LocalWeightEntry[]): Promise<number> {
     if (entries.length === 0) return 0;
 
     const { error } = await supabase
@@ -791,7 +791,7 @@ class BackupService {
     return entries.length;
   }
 
-  private async restoreMeasurements(entries: any[]): Promise<number> {
+  private async restoreMeasurements(entries: LocalMeasurement[]): Promise<number> {
     if (entries.length === 0) return 0;
 
     const { error } = await supabase
@@ -802,7 +802,7 @@ class BackupService {
     return entries.length;
   }
 
-  private async restorePersonalRecords(records: any[]): Promise<number> {
+  private async restorePersonalRecords(records: LocalPersonalRecord[]): Promise<number> {
     if (records.length === 0) return 0;
 
     const { error } = await supabase
@@ -813,7 +813,7 @@ class BackupService {
     return records.length;
   }
 
-  private async restoreCustomExercises(exercises: any[]): Promise<number> {
+  private async restoreCustomExercises(exercises: LocalExercise[]): Promise<number> {
     if (exercises.length === 0) return 0;
 
     const { error } = await supabase
@@ -824,7 +824,7 @@ class BackupService {
     return exercises.length;
   }
 
-  private async restoreSettings(settings: any): Promise<void> {
+  private async restoreSettings(settings: Record<string, unknown>): Promise<void> {
     // Update Zustand store
     const store = useSettingsStore.getState();
     Object.keys(settings).forEach((key) => {
@@ -838,4 +838,4 @@ class BackupService {
 // Singleton instance
 export const backupService = new BackupService();
 export default backupService;
-
+

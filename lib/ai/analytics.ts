@@ -86,7 +86,7 @@ export interface AIQualityAlert {
   severity: 'low' | 'medium' | 'high' | 'critical';
   type: string;
   message: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   timestamp: Date;
 }
 
@@ -389,7 +389,7 @@ export const buildQualityLog = (params: {
   
   // Validation result
   validationResult?: {
-    exercises: any[];
+    exercises: unknown[];
     wasFiltered: boolean;
     originalCount: number;
   };
@@ -519,4 +519,4 @@ async function getRecentAlerts(limit: number = 20): Promise<AIQualityAlert[]> {
     timestamp: new Date(d.timestamp),
   }));
 }
-
+

@@ -34,7 +34,7 @@ describe('exerciseStore', () => {
     jest.clearAllMocks();
   });
 
-  function mockExercisesQuery(data: any[], error: any = null) {
+  function mockExercisesQuery(data: unknown[], error: Error | null = null) {
     const mockChain = {
       select: jest.fn().mockReturnThis(),
       order: jest.fn().mockReturnThis(),

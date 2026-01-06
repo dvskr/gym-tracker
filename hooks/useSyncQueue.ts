@@ -12,7 +12,13 @@ export interface UseSyncQueueResult {
   
   // Queue info
   queueLength: number;
-  failedOperations: any[];
+  failedOperations: Array<{
+    id: string;
+    operation: string;
+    table: string;
+    error?: string;
+    [key: string]: unknown;
+  }>;
   
   // Actions
   sync: () => Promise<SyncResult>;
@@ -201,4 +207,4 @@ export function useSyncTable(table: string) {
 }
 
 export default useSyncQueue;
-
+

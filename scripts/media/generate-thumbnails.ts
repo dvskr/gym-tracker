@@ -47,7 +47,8 @@ async function regenerateThumbnails() {
         console.log(`✅ Generated ${generated}/${gifFiles.length} thumbnails...`);
       }
       
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       console.error(`❌ ${gifFile}: ${err.message}`);
       failed++;
     }
@@ -72,4 +73,4 @@ async function regenerateThumbnails() {
   console.log(`✨ Display: 56x56px with ultra-sharp clarity!\n`);
 }
 
-regenerateThumbnails();
+regenerateThumbnails();

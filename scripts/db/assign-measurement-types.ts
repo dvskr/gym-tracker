@@ -16,7 +16,14 @@ type MeasurementType =
   | 'reps_only'      // Push-ups, Pull-ups, Sit-ups
   | 'assisted';      // Assisted Pull-ups
 
-const detectMeasurementType = (exercise: any): MeasurementType => {
+interface ExerciseRecord {
+  name: string;
+  category?: string;
+  equipment?: string;
+  [key: string]: unknown;
+}
+
+const detectMeasurementType = (exercise: ExerciseRecord): MeasurementType => {
   const name = exercise.name.toLowerCase();
   const category = exercise.category?.toLowerCase() || '';
   const equipment = exercise.equipment?.toLowerCase() || '';
@@ -172,4 +179,4 @@ async function assignMeasurementTypes() {
 }
 
 assignMeasurementTypes();
-
+

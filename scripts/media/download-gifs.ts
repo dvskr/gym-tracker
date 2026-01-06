@@ -94,8 +94,9 @@ function downloadGif(gifUrl: string, filename: string, exerciseName: string, hea
       const sizeMB = (stats.size / 1024 / 1024).toFixed(2);
       console.log(`✅ ${filename} (${sizeMB} MB)`);
       resolve();
-    } catch (err: any) {
-      reject(new Error(`${err.message} for ${exerciseName} (${gifUrl})`));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      reject(new Error(`${message} for ${exerciseName} (${gifUrl})`));
     }
   });
 }
@@ -115,7 +116,7 @@ async function downloadAllGifs() {
     fs.readFileSync('scripts/selected-400-exercises.json', 'utf-8')
   );
 
-  const selectedIds = selected.exercises.map((ex: any) => ex.id);
+  const selectedIds = selected.exercises.map((ex: { id: string }) => ex.id);
 
   // Get exercises with GIF URLs OR external_id from database
   const { data: exercises, error } = await supabase
@@ -182,7 +183,7 @@ async function downloadAllGifs() {
 
   let completed = 0;
   let failed = 0;
-  const failedList: any[] = [];
+  const failedList: Array<{ name: string; error: string }> = [];
 
   // Download in batches of 5 (be nice to the API)
   const BATCH_SIZE = 5;
@@ -236,4 +237,4 @@ async function downloadAllGifs() {
 }
 
 downloadAllGifs();
-
+

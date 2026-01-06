@@ -12,10 +12,10 @@ interface AuthState {
   hasSeededTemplates: boolean;
   
   initialize: () => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, name: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ error: any }>;
+  resetPassword: (email: string) => Promise<{ error: Error | null }>;
 }
 
 // Track if we've already attempted to seed for this session

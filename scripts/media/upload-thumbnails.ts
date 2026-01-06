@@ -73,7 +73,8 @@ async function uploadThumbnails() {
       // Small delay to avoid rate limits
       await new Promise(resolve => setTimeout(resolve, 50));
       
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
       console.error(`❌ ${filename}: ${err.message}`);
       failed++;
     }
@@ -105,4 +106,4 @@ async function uploadThumbnails() {
 }
 
 uploadThumbnails();
-
+

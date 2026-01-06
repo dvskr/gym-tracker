@@ -134,7 +134,7 @@ export default function RemindersScreen() {
     setShowTimePicker(true);
   }
 
-  async function handleTimeChange(event: any, selectedTime?: Date) {
+  async function handleTimeChange(event: { type: string }, selectedTime?: Date) {
     if (Platform.OS === 'android') {
       setShowTimePicker(false);
     }

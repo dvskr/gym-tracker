@@ -214,7 +214,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
 
   // Handle exercise selection - convert DisplayExercise to ExerciseDBExercise with dbId
   const handleSelectExercise = useCallback(
-    (exercise: any) => { // Using 'any' because exercises are actually DisplayExercise but typed as ExerciseDBExercise
+    (exercise: DisplayExercise) => {
       Keyboard.dismiss();
       
       // Convert to ExerciseDBExercise with dbId

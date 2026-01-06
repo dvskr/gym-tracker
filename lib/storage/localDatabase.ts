@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from '@/lib/utils/logger';
+import type { Exercise } from '@/lib/types/common';
 
 // Storage keys
 const STORAGE_KEYS = {
@@ -14,11 +15,11 @@ const STORAGE_KEYS = {
   PROFILE: '@gym/profile',
 } as const;
 
-export interface SyncOperation {
+export interface SyncOperation<T = unknown> {
   id: string;
   table: string;
   operation: 'create' | 'update' | 'delete';
-  data: any;
+  data: T;
   timestamp: number;
   attempts: number;
   error?: string;
@@ -93,9 +94,44 @@ export interface Measurement {
   _synced?: boolean;
 }
 
+export interface PersonalRecord {
+  id: string;
+  user_id: string;
+  exercise_id: string;
+  exercise_name: string;
+  weight: number;
+  weight_unit: string;
+  reps: number;
+  achieved_at: string;
+  created_at: string;
+  _synced?: boolean;
+}
+
+export interface UserProfile {
+  id: string;
+  email?: string;
+  full_name?: string;
+  avatar_url?: string;
+  fitness_level?: string;
+  goals?: string[];
+  preferred_units?: 'imperial' | 'metric';
+  created_at: string;
+  updated_at?: string;
+  [key: string]: unknown;
+}
+
+interface ExerciseCache {
+  data: Exercise[];
+  cachedAt: number;
+}
+
+interface LastSyncData {
+  [table: string]: number;
+}
+
 class LocalDatabase {
   // Generic Methods
-  async saveLocally(key: string, data: any): Promise<void> {
+  async saveLocally<T>(key: string, data: T): Promise<void> {
     try {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem(key, jsonValue);
@@ -105,7 +141,7 @@ class LocalDatabase {
     }
   }
 
-  async getLocal(key: string): Promise<any[]> {
+  async getLocal<T>(key: string): Promise<T[]> {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : [];
@@ -304,33 +340,43 @@ class LocalDatabase {
   }
 
   // Exercises (Cached from API)
-  async cacheExercises(exercises: any[]): Promise<void> {
-    await this.saveLocally(STORAGE_KEYS.EXERCISES, {
+  async cacheExercises(exercises: Exercise[]): Promise<void> {
+    const cache: ExerciseCache = {
       data: exercises,
       cachedAt: Date.now(),
-    });
+    };
+    await this.saveLocally(STORAGE_KEYS.EXERCISES, cache);
   }
 
-  async getCachedExercises(): Promise<any[]> {
-    const cached = await this.getLocal(STORAGE_KEYS.EXERCISES);
-    if (cached && cached.data) {
-      return cached.data;
+  async getCachedExercises(): Promise<Exercise[]> {
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.EXERCISES);
+      if (!jsonValue) return [];
+      
+      const cached = JSON.parse(jsonValue) as ExerciseCache;
+      return cached.data || [];
+    } catch (error) {
+ logger.error('Error reading cached exercises:', error);
+      return [];
     }
-    return [];
   }
 
   async getExercisesCacheAge(): Promise<number | null> {
-    const cached = await this.getLocal(STORAGE_KEYS.EXERCISES);
-    if (cached && cached.cachedAt) {
-      return Date.now() - cached.cachedAt;
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.EXERCISES);
+      if (!jsonValue) return null;
+      
+      const cached = JSON.parse(jsonValue) as ExerciseCache;
+      return cached.cachedAt ? Date.now() - cached.cachedAt : null;
+    } catch (error) {
+      return null;
     }
-    return null;
   }
 
   // Personal Records
-  async savePersonalRecordLocally(record: any): Promise<void> {
-    const records = await this.getLocal(STORAGE_KEYS.PERSONAL_RECORDS);
-    const existingIndex = records.findIndex((r: any) => r.id === record.id);
+  async savePersonalRecordLocally(record: PersonalRecord): Promise<void> {
+    const records = await this.getLocal<PersonalRecord>(STORAGE_KEYS.PERSONAL_RECORDS);
+    const existingIndex = records.findIndex((r) => r.id === record.id);
     
     if (existingIndex >= 0) {
       records[existingIndex] = { ...record, _synced: false };
@@ -341,8 +387,8 @@ class LocalDatabase {
     await this.saveLocally(STORAGE_KEYS.PERSONAL_RECORDS, records);
   }
 
-  async getLocalPersonalRecords(): Promise<any[]> {
-    return this.getLocal(STORAGE_KEYS.PERSONAL_RECORDS);
+  async getLocalPersonalRecords(): Promise<PersonalRecord[]> {
+    return this.getLocal<PersonalRecord>(STORAGE_KEYS.PERSONAL_RECORDS);
   }
 
   // Sync Queue
@@ -377,28 +423,41 @@ class LocalDatabase {
 
   // Last Sync Timestamp
   async setLastSyncTime(table: string, timestamp: number): Promise<void> {
-    const lastSync = await this.getLocal(STORAGE_KEYS.LAST_SYNC);
-    const syncData = lastSync[0] || {};
-    syncData[table] = timestamp;
-    await this.saveLocally(STORAGE_KEYS.LAST_SYNC, [syncData]);
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.LAST_SYNC);
+      const syncData: LastSyncData = jsonValue ? JSON.parse(jsonValue) : {};
+      syncData[table] = timestamp;
+      await this.saveLocally(STORAGE_KEYS.LAST_SYNC, syncData);
+    } catch (error) {
+ logger.error('Error setting last sync time:', error);
+    }
   }
 
   async getLastSyncTime(table: string): Promise<number | null> {
-    const lastSync = await this.getLocal(STORAGE_KEYS.LAST_SYNC);
-    if (lastSync.length > 0 && lastSync[0][table]) {
-      return lastSync[0][table];
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.LAST_SYNC);
+      if (!jsonValue) return null;
+      
+      const syncData: LastSyncData = JSON.parse(jsonValue);
+      return syncData[table] || null;
+    } catch (error) {
+      return null;
     }
-    return null;
   }
 
   // Profile Cache
-  async saveProfileLocally(profile: any): Promise<void> {
+  async saveProfileLocally(profile: UserProfile): Promise<void> {
     await this.saveLocally(STORAGE_KEYS.PROFILE, profile);
   }
 
-  async getLocalProfile(): Promise<any | null> {
-    const profiles = await this.getLocal(STORAGE_KEYS.PROFILE);
-    return profiles[0] || null;
+  async getLocalProfile(): Promise<UserProfile | null> {
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.PROFILE);
+      return jsonValue ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+ logger.error('Error reading profile:', error);
+      return null;
+    }
   }
 
   // Utility: Merge data (cloud takes precedence for synced items)
@@ -427,4 +486,4 @@ class LocalDatabase {
 // Singleton instance
 export const localDB = new LocalDatabase();
 export default localDB;
-
+

@@ -295,9 +295,10 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
  logger.error('Failed to send message:', error);
-      const errorMessage: Message = {
+      const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: error.message?.includes('limit') 
@@ -353,7 +354,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
     }
   };
 
-  const handleStartWorkout = async (workoutName: string, exercises: any[]) => {
+  const handleStartWorkout = async (workoutName: string, exercises: Array<{ name: string; sets?: number; reps?: string }>) => {
     if (!exercises || exercises.length === 0) {
       Alert.alert('No Exercises', 'This workout plan has no exercises.');
       return;

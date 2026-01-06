@@ -119,7 +119,7 @@ interface SettingsState {
   getPreferredSplit: () => string | null;
   updateSettings: (settings: Partial<Omit<SettingsState, 'setUnitSystem' | 'setTheme' | 'setRestTimerDefault' | 'updateSettings' | 'resetToDefaults' | 'syncFromProfile' | 'syncToProfile' | '_hasHydrated' | 'setHasHydrated' | 'recordWorkoutSplit' | 'getPreferredSplit'>>) => void;
   resetToDefaults: () => void;
-  syncFromProfile: (profile: any) => void;
+  syncFromProfile: (profile: { weight_unit?: string; theme?: string; rest_timer_default?: number; [key: string]: unknown }) => void;
   syncToProfile: (userId: string) => Promise<void>;
 }
 

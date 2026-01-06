@@ -4,6 +4,7 @@ import { supabase } from '../supabase';
 import { localDB } from '../storage/localDatabase';
 import { conflictResolver } from './conflictResolver';
 import { eventEmitter, Events } from '../utils/eventEmitter';
+import { LocalWorkout, LocalTemplate, SyncableRecord } from '@/lib/types/common';
 
 /**
  * Real-time Sync - Subscribes to Supabase real-time changes
@@ -116,7 +117,7 @@ class RealtimeSync {
   }
 
   private async handleWorkoutChange(
-    payload: RealtimePostgresChangesPayload<any>
+    payload: RealtimePostgresChangesPayload<LocalWorkout>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -142,7 +143,7 @@ class RealtimeSync {
     }
   }
 
-  private async handleNewWorkout(workout: any): Promise<void> {
+  private async handleNewWorkout(workout: LocalWorkout): Promise<void> {
     const localWorkouts = await localDB.getLocalWorkouts();
     
     // Check if workout already exists locally
@@ -153,7 +154,7 @@ class RealtimeSync {
     }
   }
 
-  private async handleUpdatedWorkout(workout: any): Promise<void> {
+  private async handleUpdatedWorkout(workout: LocalWorkout): Promise<void> {
     const localWorkouts = await localDB.getLocalWorkouts();
     const index = localWorkouts.findIndex(w => w.id === workout.id);
 
@@ -190,7 +191,7 @@ class RealtimeSync {
     await localDB.saveLocally('@gym/workouts', localWorkouts);
   }
 
-  private async handleDeletedWorkout(workout: any): Promise<void> {
+  private async handleDeletedWorkout(workout: LocalWorkout): Promise<void> {
  logger.log('x Deleting workout from real-time:', workout.id);
     
     const localWorkouts = await localDB.getLocalWorkouts();
@@ -223,7 +224,7 @@ class RealtimeSync {
   }
 
   private async handleTemplateChange(
-    payload: RealtimePostgresChangesPayload<any>
+    payload: RealtimePostgresChangesPayload<LocalTemplate>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -296,7 +297,7 @@ class RealtimeSync {
   }
 
   private async handleWeightChange(
-    payload: RealtimePostgresChangesPayload<any>
+    payload: RealtimePostgresChangesPayload<SyncableRecord>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -360,7 +361,7 @@ class RealtimeSync {
   }
 
   private async handleMeasurementChange(
-    payload: RealtimePostgresChangesPayload<any>
+    payload: RealtimePostgresChangesPayload<SyncableRecord>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -424,7 +425,7 @@ class RealtimeSync {
   }
 
   private async handlePRChange(
-    payload: RealtimePostgresChangesPayload<any>
+    payload: RealtimePostgresChangesPayload<SyncableRecord>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -491,4 +492,4 @@ class RealtimeSync {
 // Singleton instance
 export const realtimeSync = new RealtimeSync();
 export default realtimeSync;
-
+

@@ -51,8 +51,8 @@ export function RecoveryStatus() {
       
       // Cache the result
       setCacheData(user.id, 'recovery', result);
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to fetch recovery status';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch recovery status';
       setError(errorMessage);
       setHasFetched(true);
  logger.error('Failed to fetch recovery status:', err);

@@ -141,7 +141,7 @@ class SyncQueue {
   /**
    * Sync create operation
    */
-  private async syncCreate(table: string, data: any): Promise<void> {
+  private async syncCreate(table: string, data: Record<string, unknown>): Promise<void> {
     // Remove local-only metadata before uploading
     const { _synced, _local_only, ...cleanData } = data;
 
@@ -157,7 +157,7 @@ class SyncQueue {
   /**
    * Sync update operation
    */
-  private async syncUpdate(table: string, data: any): Promise<void> {
+  private async syncUpdate(table: string, data: Record<string, unknown>): Promise<void> {
     const { id, _synced, _local_only, ...updates } = data;
 
     const { error } = await supabase
@@ -291,4 +291,4 @@ class SyncQueue {
 // Singleton instance
 export const syncQueue = new SyncQueue();
 export default syncQueue;
-
+

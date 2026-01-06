@@ -125,11 +125,24 @@ export async function moveTemplateToFolder(
  * Get templates grouped by folder
  */
 export async function getTemplatesGroupedByFolder(userId: string): Promise<{
-  folders: Array<TemplateFolder & { templates: any[] }>;
-  uncategorized: any[];
+  folders: Array<TemplateFolder & { templates: unknown[] }>;
+  uncategorized: unknown[];
 }> {
   // Get all folders
   const folders = await getFolders(userId);
+
+  interface TemplateRow {
+    id: string;
+    folder_id: string | null;
+    user_id: string;
+    name: string;
+    template_exercises: Array<{
+      id: string;
+      exercises: unknown;
+      [key: string]: unknown;
+    }>;
+    [key: string]: unknown;
+  }
 
   // Get all templates with folder info
   const { data: templates, error } = await supabase
@@ -148,9 +161,9 @@ export async function getTemplatesGroupedByFolder(userId: string): Promise<{
   if (error) throw error;
 
   // Transform templates
-  const transformedTemplates = (templates || []).map((t) => ({
+  const transformedTemplates = (templates || []).map((t: TemplateRow) => ({
     ...t,
-    exercises: (t.template_exercises || []).map((te: any) => ({
+    exercises: (t.template_exercises || []).map((te) => ({
       ...te,
       exercise: te.exercises,
     })),
@@ -187,4 +200,4 @@ export const FOLDER_COLORS = [
   '#6366f1', // Indigo
   '#84cc16', // Lime
 ];
-
+

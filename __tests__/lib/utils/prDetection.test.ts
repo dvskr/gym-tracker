@@ -22,7 +22,7 @@ describe('prDetection', () => {
     jest.clearAllMocks();
   });
 
-  function mockPersonalRecords(records: any[], error: any = null) {
+  function mockPersonalRecords(records: unknown[], error: Error | null = null) {
     const mockChain = {
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),

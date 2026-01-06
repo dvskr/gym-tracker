@@ -26,7 +26,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { AIFeedback } from './AIFeedback';
 
 interface WorkoutAnalysisProps {
-  workout: any;
+  workout: LocalWorkout;
 }
 
 export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
@@ -49,8 +49,8 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
 
       const result = await workoutAnalysisService.analyzeWorkout(workout, user.id, forceRefresh);
       setAnalysis(result);
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to analyze workout';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to analyze workout';
       setError(errorMessage);
  logger.error('Failed to analyze workout:', err);
     } finally {
@@ -481,4 +481,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
+

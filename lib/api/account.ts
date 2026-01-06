@@ -36,9 +36,10 @@ export async function changeEmail(
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to change email';
  logger.error('Error changing email:', error);
-    return { success: false, error: error.message || 'Failed to change email' };
+    return { success: false, error: message };
   }
 }
 
@@ -77,9 +78,10 @@ export async function changePassword(
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to change password';
  logger.error('Error changing password:', error);
-    return { success: false, error: error.message || 'Failed to change password' };
+    return { success: false, error: message };
   }
 }
 
@@ -99,9 +101,10 @@ export async function sendPasswordResetEmail(
     }
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to send reset email';
  logger.error('Error sending reset email:', error);
-    return { success: false, error: error.message || 'Failed to send reset email' };
+    return { success: false, error: message };
   }
 }
 
@@ -139,9 +142,10 @@ export async function deleteAccount(
     await supabase.auth.signOut();
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to delete account';
     logger.error('Error deleting account:', error);
-    return { success: false, error: error.message || 'Failed to delete account' };
+    return { success: false, error: message };
   }
 }
 

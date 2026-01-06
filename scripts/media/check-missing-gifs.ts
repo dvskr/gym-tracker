@@ -13,7 +13,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 const LOCAL_GIFS_DIR = path.join(__dirname, '..', 'exercise-gifs');
 
 async function checkMissingGifs() {
-  console.log('= Checking if Missing GIFs Exist Locally\n');
+  console.log('=
+ Checking if Missing GIFs Exist Locally\n');
   console.log('═'.repeat(80));
 
   // Load the broken exercises data
@@ -22,12 +23,20 @@ async function checkMissingGifs() {
   );
 
   // Filter to only those with external_id (should exist as numeric files)
-  const withExternalId = brokenExercises.filter((ex: any) => ex.external_id);
+  interface ExerciseData {
+    id: string;
+    name: string;
+    external_id?: string | null;
+    equipment?: string;
+    primary_muscles?: string[];
+    [key: string]: unknown;
+  }
+  const withExternalId = brokenExercises.filter((ex: ExerciseData) => ex.external_id);
 
   console.log(`Checking ${withExternalId.length} exercises with external_id\n`);
 
-  const found: any[] = [];
-  const missing: any[] = [];
+  const found: ExerciseData[] = [];
+  const missing: ExerciseData[] = [];
 
   for (const ex of withExternalId) {
     const expectedFilename = `${ex.external_id}.gif`;
@@ -108,4 +117,4 @@ async function checkMissingGifs() {
 }
 
 checkMissingGifs();
-
+

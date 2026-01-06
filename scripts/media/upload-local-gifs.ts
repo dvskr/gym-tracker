@@ -116,8 +116,9 @@ async function uploadLocalGifs() {
         throw new Error(`UUID GIF file not found: ${uuidGifPath}`);
       }
 
-    } catch (error: any) {
-      console.log(`      ❌ FAILED: ${error.message}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.log(`      ❌ FAILED: ${message}`);
       console.log('');
       failed++;
       failures.push(`${exercise.name}: ${error.message}`);

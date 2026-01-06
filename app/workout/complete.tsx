@@ -147,7 +147,7 @@ export default function WorkoutCompleteScreen() {
 
     try {
       // Update workout with rating and name
-      const updates: any = {};
+      const updates: { rating?: number; name?: string } = {};
       if (rating > 0) updates.rating = rating;
       if (workoutName !== workout?.name) updates.name = workoutName;
 

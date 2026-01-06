@@ -407,7 +407,7 @@ export default function ExerciseLibraryScreen() {
 
   // Render exercise item
   const renderExerciseItem = useCallback(
-    ({ item }: { item: any }) => (
+    ({ item }: { item: { id: string; [key: string]: unknown } }) => (
       <ExerciseItem
         exercise={item}
         onPress={handleExercisePress}
@@ -419,7 +419,7 @@ export default function ExerciseLibraryScreen() {
   );
 
   // Key extractor
-  const keyExtractor = useCallback((item: any) => item.id, []);
+  const keyExtractor = useCallback((item: { id: string }) => item.id, []);
 
   // List empty component
   const ListEmptyComponent = useCallback(() => {

@@ -242,7 +242,7 @@ export default function ActiveWorkoutScreen() {
 
   // Memoized render function for exercise cards (must be before early returns)
   const renderExerciseCard = useCallback(
-    ({ item, index }: { item: any; index: number }) => {
+    ({ item, index }: { item: { id: string; [key: string]: unknown }; index: number }) => {
       const totalExercises = activeWorkout?.exercises.length || 0;
       return (
         <ExerciseCard
@@ -272,7 +272,7 @@ export default function ActiveWorkoutScreen() {
   );
 
   // Key extractor (must be before early returns)
-  const keyExtractor = useCallback((item: any) => item.id, []);
+  const keyExtractor = useCallback((item: { id: string }) => item.id, []);
 
   // List footer component (must be before early returns)
   const ListFooterComponent = useCallback(

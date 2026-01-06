@@ -11,6 +11,7 @@ import {
   type ValidatedSuggestion
 } from './validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LocalWorkout } from '@/lib/types/common';
 
 export interface WorkoutSuggestion {
   type: string;
@@ -180,9 +181,21 @@ class WorkoutSuggestionService {
    * Get AI-powered suggestion
    */
   private async getAISuggestion(data: {
-    recentWorkouts: any[];
-    personalRecords: any[];
-    profile: any;
+    recentWorkouts: LocalWorkout[];
+    personalRecords: Array<{
+      exercises?: { name?: string } | null;
+      weight?: number | null;
+      reps?: number | null;
+      [key: string]: unknown;
+    }>;
+    profile: {
+      current_streak?: number;
+      weight_unit?: string;
+      fitness_goals?: string;
+      experience_level?: string;
+      available_equipment?: string[];
+      [key: string]: unknown;
+    };
   }): Promise<WorkoutSuggestion> {
     const { recentWorkouts, personalRecords, profile } = data;
 
@@ -193,7 +206,7 @@ class WorkoutSuggestionService {
           name: w.name,
           created_at: w.created_at,
           duration_seconds: w.duration_seconds,
-          exercises: w.workout_exercises?.map((we: any) => ({
+          exercises: w.workout_exercises?.map((we) => ({
             name: we.exercises?.name,
             primary_muscles: we.exercises?.primary_muscles || [],
             secondary_muscles: we.exercises?.secondary_muscles || [],
@@ -238,9 +251,10 @@ class WorkoutSuggestionService {
  logger.log('S& AI service responded successfully');
       return this.parseAISuggestion(response);
 
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('R AI service failed:', {
-        message: error.message,
+        message,
         status: error.status,
         details: error.details || error,
       });
@@ -259,7 +273,7 @@ class WorkoutSuggestionService {
   /**
    * Rule-based suggestion when AI unavailable
    */
-  private getRuleBasedSuggestion(recentWorkouts: any[]): ValidatedSuggestion {
+  private getRuleBasedSuggestion(recentWorkouts: LocalWorkout[]): ValidatedSuggestion {
     const muscleMap = this.analyzeRecentMuscles(recentWorkouts);
     const now = new Date();
     
@@ -322,7 +336,7 @@ class WorkoutSuggestionService {
   /**
    * Analyze recent workouts to find when muscles were last trained
    */
-  private analyzeRecentMuscles(workouts: any[]): Map<string, Date> {
+  private analyzeRecentMuscles(workouts: LocalWorkout[]): Map<string, Date> {
     const muscleLastTrained = new Map<string, Date>();
     
     for (const workout of workouts) {
@@ -355,7 +369,7 @@ class WorkoutSuggestionService {
   /**
    * Default suggestion when no data available
    */
-  private getDefaultSuggestion(recentWorkouts: any[]): ValidatedSuggestion {
+  private getDefaultSuggestion(recentWorkouts: LocalWorkout[]): ValidatedSuggestion {
     // If user has never worked out, suggest full body
     if (recentWorkouts.length === 0) {
       return {
@@ -461,7 +475,7 @@ class WorkoutSuggestionService {
   /**
    * Clean exercise array from AI response
    */
-  private cleanExercises(exercises: any[]): Array<{
+  private cleanExercises(exercises: unknown[]): Array<{
     name: string;
     sets: number;
     reps: string;
@@ -532,7 +546,7 @@ class WorkoutSuggestionService {
                    'Based on your recent training patterns.';
     
     // Extract exercises
-    const exercises: any[] = [];
+    const exercises: unknown[] = [];
     for (let i = exerciseStartIndex; i < lines.length; i++) {
       const line = lines[i];
       // Match patterns like:
@@ -634,4 +648,4 @@ class WorkoutSuggestionService {
 }
 
 export const workoutSuggestionService = new WorkoutSuggestionService();
-
+

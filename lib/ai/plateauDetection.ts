@@ -115,7 +115,15 @@ class PlateauDetectionService {
     reps: number;
     date: Date;
   }> {
-    const weeklyMax = new Map<string, any>();
+    interface WeeklyMaxEntry {
+      week: string;
+      volume: number;
+      weight: number;
+      reps: number;
+      date: Date;
+    }
+
+    const weeklyMax = new Map<string, WeeklyMaxEntry>();
 
     for (const entry of history) {
       const date = new Date(entry.date);
@@ -141,7 +149,13 @@ class PlateauDetectionService {
   /**
    * Detect if volume has stagnated
    */
-  private detectVolumeStagnation(weeklyData: any[]): {
+  private detectVolumeStagnation(weeklyData: Array<{
+    week: string;
+    volume: number;
+    weight: number;
+    reps: number;
+    date: Date;
+  }>): {
     isPlateaued: boolean;
     weeksStalled: number;
   } {
@@ -320,7 +334,13 @@ class PlateauDetectionService {
   ): Promise<{
     exercise: ExerciseHistory | null;
     plateau: PlateauAlert | null;
-    weeklyProgress: any[];
+    weeklyProgress: Array<{
+      week: string;
+      volume: number;
+      weight: number;
+      reps: number;
+      date: Date;
+    }>;
   }> {
     try {
       const exercises = await this.getExerciseProgress(userId);

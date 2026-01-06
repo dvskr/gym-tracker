@@ -17,6 +17,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.gymtracker.app",
       "infoPlist": {
+        "NSCameraUsageDescription": "We need camera access to take progress photos and profile pictures.",
+        "NSPhotoLibraryUsageDescription": "We need photo library access to select progress photos from your gallery.",
+        "NSPhotoLibraryAddUsageDescription": "We need permission to save your progress photos to your photo library.",
         "NSHealthShareUsageDescription": "We read your heart rate and steps to show your daily activity.",
         "NSHealthUpdateUsageDescription": "We save your workouts and body weight to Apple Health.",
         "UIBackgroundModes": ["remote-notification"]

@@ -4,7 +4,7 @@ import { logger } from '@/lib/utils/logger';
  * Used for real-time updates and cross-component communication
  */
 
-type EventCallback = (data?: any) => void;
+type EventCallback<T = unknown> = (data?: T) => void;
 
 class EventEmitter {
   private listeners: Map<string, EventCallback[]> = new Map();
@@ -15,7 +15,7 @@ class EventEmitter {
    * @param callback Function to call when event is emitted
    * @returns Unsubscribe function
    */
-  on(event: string, callback: EventCallback): () => void {
+  on<T = unknown>(event: string, callback: EventCallback<T>): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -23,21 +23,21 @@ class EventEmitter {
     const callbacks = this.listeners.get(event);
     if (!callbacks) {
       // This shouldn't happen since we just set it above, but satisfy TypeScript
-      this.listeners.set(event, [callback]);
+      this.listeners.set(event, [callback as EventCallback]);
       const newCallbacks = this.listeners.get(event) ?? [];
       return () => {
-        const index = newCallbacks.indexOf(callback);
+        const index = newCallbacks.indexOf(callback as EventCallback);
         if (index > -1) {
           newCallbacks.splice(index, 1);
         }
       };
     }
     
-    callbacks.push(callback);
+    callbacks.push(callback as EventCallback);
     
     // Return unsubscribe function
     return () => {
-      const index = callbacks.indexOf(callback);
+      const index = callbacks.indexOf(callback as EventCallback);
       if (index > -1) {
         callbacks.splice(index, 1);
       }
@@ -48,8 +48,8 @@ class EventEmitter {
    * Subscribe to an event (one-time only)
    * Automatically unsubscribes after first emit
    */
-  once(event: string, callback: EventCallback): () => void {
-    const wrappedCallback = (data?: any) => {
+  once<T = unknown>(event: string, callback: EventCallback<T>): () => void {
+    const wrappedCallback = (data?: T) => {
       callback(data);
       unsubscribe();
     };
@@ -63,7 +63,7 @@ class EventEmitter {
    * @param event Event name
    * @param data Optional data to pass to callbacks
    */
-  emit(event: string, data?: any): void {
+  emit<T = unknown>(event: string, data?: T): void {
     const callbacks = this.listeners.get(event);
     if (callbacks) {
       // Create a copy to avoid issues if callbacks modify the array

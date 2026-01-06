@@ -10,7 +10,7 @@ export interface AppNotification {
     achievementTitle?: string;
     achievementIcon?: string;
     achievementDescription?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   icon?: string;
 }

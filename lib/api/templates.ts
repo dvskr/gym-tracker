@@ -172,13 +172,39 @@ export async function getTemplates(userId: string): Promise<Template[]> {
 
   if (error) throw error;
 
+  interface TemplateRow {
+    id: string;
+    user_id: string;
+    name: string;
+    description: string | null;
+    target_muscles: string[] | null;
+    estimated_duration: number | null;
+    times_used: number;
+    last_used_at: string | null;
+    is_archived: boolean;
+    created_at: string;
+    updated_at: string | null;
+    template_exercises: Array<{
+      id: string;
+      template_id: string;
+      exercise_id: string;
+      order_index: number;
+      target_sets: number;
+      target_reps_min: number | null;
+      target_reps_max: number | null;
+      rest_seconds: number | null;
+      notes: string | null;
+      exercises: Exercise;
+    }>;
+  }
+
   // Try to fetch sets separately for each template exercise
-  const templates = await Promise.all((data || []).map(async (t) => {
+  const templates = await Promise.all((data || []).map(async (t: TemplateRow) => {
     const exercises = await Promise.all((t.template_exercises || [])
-      .sort((a: any, b: any) => a.order_index - b.order_index)
-      .map(async (te: any) => {
+      .sort((a, b) => a.order_index - b.order_index)
+      .map(async (te) => {
         // Try to fetch sets (will fail silently if table doesn't exist)
-        let sets: any[] = [];
+        let sets: TemplateSet[] = [];
         const { data: setsData, error: setsError } = await supabase
           .from('template_sets')
           .select('*')
@@ -222,11 +248,22 @@ export async function getTemplateById(templateId: string): Promise<Template> {
 
   if (error) throw error;
 
+  interface TemplateExerciseRow {
+    id: string;
+    order_index: number;
+    exercises: Exercise;
+    target_sets: number;
+    target_reps_min: number | null;
+    target_reps_max: number | null;
+    rest_seconds: number | null;
+    notes: string | null;
+  }
+
   // Fetch sets for each exercise separately
   const exercises = await Promise.all((data.template_exercises || [])
-    .sort((a: any, b: any) => a.order_index - b.order_index)
-    .map(async (te: any) => {
-      let sets: any[] = [];
+    .sort((a: TemplateExerciseRow, b: TemplateExerciseRow) => a.order_index - b.order_index)
+    .map(async (te: TemplateExerciseRow) => {
+      let sets: TemplateSet[] = [];
       const { data: setsData, error: setsError } = await supabase
         .from('template_sets')
         .select('*')
@@ -393,4 +430,4 @@ export async function duplicateTemplate(templateId: string): Promise<Template> {
   });
 
   return copy;
-}
+}

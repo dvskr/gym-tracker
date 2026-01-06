@@ -2,27 +2,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from '@/lib/utils/logger';
 import { localDB } from '../storage/localDatabase';
 import { syncQueue } from './syncQueue';
+import type { SyncableRecord } from '@/lib/types/common';
 
 export type ConflictStrategy = 'server_wins' | 'client_wins' | 'latest_wins' | 'manual';
 
-export interface Conflict {
+export interface Conflict<T extends SyncableRecord = SyncableRecord> {
   id: string;
   table: string;
   itemId: string;
-  localData: any;
-  serverData: any;
+  localData: T;
+  serverData: T;
   localUpdatedAt: Date;
   serverUpdatedAt: Date;
   detectedAt: Date;
   resolvedAt?: Date;
   resolution?: 'local' | 'server' | 'merged';
-  mergedData?: any;
+  mergedData?: T;
 }
 
-export interface ConflictResolutionResult {
-  data: any;
+export interface ConflictResolutionResult<T extends SyncableRecord = SyncableRecord> {
+  data: T;
   resolution: 'local' | 'server' | 'merged' | 'deferred';
-  conflict?: Conflict;
+  conflict?: Conflict<T>;
 }
 
 class ConflictResolver {
@@ -60,7 +61,7 @@ class ConflictResolver {
    * 2. Both have been modified since last sync
    * 3. They have different content
    */
-  hasConflict(localData: any, serverData: any): boolean {
+  hasConflict<T extends SyncableRecord>(localData: T | null, serverData: T | null): boolean {
     if (!localData || !serverData) return false;
 
     // If local is not synced, it means local changes are pending
@@ -79,14 +80,14 @@ class ConflictResolver {
   /**
    * Resolve conflict based on current strategy
    */
-  async resolve(
-    local: any,
-    server: any,
+  async resolve<T extends SyncableRecord>(
+    local: T,
+    server: T,
     table: string
-  ): Promise<ConflictResolutionResult> {
+  ): Promise<ConflictResolutionResult<T>> {
  logger.log(`x Resolving conflict for ${table}/${local.id || server.id} using strategy: ${this.strategy}`);
 
-    const conflict: Conflict = {
+    const conflict: Conflict<T> = {
       id: this.generateConflictId(),
       table,
       itemId: local.id || server.id,
@@ -97,12 +98,12 @@ class ConflictResolver {
       detectedAt: new Date(),
     };
 
-    let result: ConflictResolutionResult;
+    let result: ConflictResolutionResult<T>;
 
     switch (this.strategy) {
       case 'server_wins':
         result = {
-          data: { ...server, _synced: true },
+          data: { ...server, _synced: true } as T,
           resolution: 'server',
         };
  logger.log('S& Server wins');
@@ -110,7 +111,7 @@ class ConflictResolver {
 
       case 'client_wins':
         result = {
-          data: { ...local, _synced: false }, // Keep as unsynced to push to server
+          data: { ...local, _synced: false } as T, // Keep as unsynced to push to server
           resolution: 'local',
         };
  logger.log('S& Client wins');
@@ -122,13 +123,13 @@ class ConflictResolver {
         
         if (localTime > serverTime) {
           result = {
-            data: { ...local, _synced: false },
+            data: { ...local, _synced: false } as T,
             resolution: 'local',
           };
  logger.log('S& Latest wins: Local (newer)');
         } else {
           result = {
-            data: { ...server, _synced: true },
+            data: { ...server, _synced: true } as T,
             resolution: 'server',
           };
  logger.log('S& Latest wins: Server (newer)');
@@ -142,7 +143,7 @@ class ConflictResolver {
         
         // Return server version temporarily (user will resolve later)
         result = {
-          data: { ...server, _synced: true },
+          data: { ...server, _synced: true } as T,
           resolution: 'deferred',
           conflict,
         };
@@ -152,7 +153,7 @@ class ConflictResolver {
       default:
         // Fallback to latest_wins
         result = {
-          data: new Date(local.updated_at) > new Date(server.updated_at) ? local : server,
+          data: (new Date(local.updated_at) > new Date(server.updated_at) ? local : server),
           resolution: new Date(local.updated_at) > new Date(server.updated_at) ? 'local' : 'server',
         };
     }
@@ -164,30 +165,30 @@ class ConflictResolver {
    * Smart merge for workouts (field-level merge)
    * Tries to merge compatible fields intelligently
    */
-  mergeWorkout(local: any, server: any): any {
+  mergeWorkout<T extends SyncableRecord>(local: T, server: T): T {
     const localTime = new Date(local.updated_at || 0).getTime();
     const serverTime = new Date(server.updated_at || 0).getTime();
 
     return {
       ...server,
       // Keep local name if user changed it and it's different
-      name: local.name !== server.name && localTime > serverTime 
-        ? local.name 
-        : server.name,
+      name: (local as Record<string, unknown>).name !== (server as Record<string, unknown>).name && localTime > serverTime 
+        ? (local as Record<string, unknown>).name 
+        : (server as Record<string, unknown>).name,
       
       // Keep local notes if newer
-      notes: localTime > serverTime ? local.notes : server.notes,
+      notes: localTime > serverTime ? (local as Record<string, unknown>).notes : (server as Record<string, unknown>).notes,
       
       // Keep local rating if set and newer
       rating: localTime > serverTime 
-        ? (local.rating || server.rating)
-        : server.rating,
+        ? ((local as Record<string, unknown>).rating || (server as Record<string, unknown>).rating)
+        : (server as Record<string, unknown>).rating,
       
       // Always use server for calculated fields (authoritative)
-      total_volume: server.total_volume,
-      total_sets: server.total_sets,
-      total_reps: server.total_reps,
-      duration_seconds: server.duration_seconds,
+      total_volume: (server as Record<string, unknown>).total_volume,
+      total_sets: (server as Record<string, unknown>).total_sets,
+      total_reps: (server as Record<string, unknown>).total_reps,
+      duration_seconds: (server as Record<string, unknown>).duration_seconds,
       
       // Use server timestamps (it's the source of truth)
       created_at: server.created_at,
@@ -195,33 +196,33 @@ class ConflictResolver {
       
       // Mark as synced
       _synced: true,
-    };
+    } as T;
   }
 
   /**
    * Smart merge for templates
    */
-  mergeTemplate(local: any, server: any): any {
+  mergeTemplate<T extends SyncableRecord>(local: T, server: T): T {
     const localTime = new Date(local.updated_at || 0).getTime();
     const serverTime = new Date(server.updated_at || 0).getTime();
 
     return {
       ...server,
-      name: localTime > serverTime ? local.name : server.name,
-      description: localTime > serverTime ? local.description : server.description,
-      notes: localTime > serverTime ? local.notes : server.notes,
+      name: localTime > serverTime ? (local as Record<string, unknown>).name : (server as Record<string, unknown>).name,
+      description: localTime > serverTime ? (local as Record<string, unknown>).description : (server as Record<string, unknown>).description,
+      notes: localTime > serverTime ? (local as Record<string, unknown>).notes : (server as Record<string, unknown>).notes,
       
       // Use server's structural data
-      template_exercises: server.template_exercises,
-      target_muscles: server.target_muscles,
-      estimated_duration: server.estimated_duration,
+      template_exercises: (server as Record<string, unknown>).template_exercises,
+      target_muscles: (server as Record<string, unknown>).target_muscles,
+      estimated_duration: (server as Record<string, unknown>).estimated_duration,
       
       // Server timestamps
       created_at: server.created_at,
       updated_at: server.updated_at,
       
       _synced: true,
-    };
+    } as T;
   }
 
   /**
@@ -248,19 +249,19 @@ class ConflictResolver {
   /**
    * Manually resolve a conflict
    */
-  async resolveManually(
+  async resolveManually<T extends SyncableRecord>(
     conflictId: string,
     resolution: 'local' | 'server' | 'merged',
-    mergedData?: any
+    mergedData?: T
   ): Promise<void> {
-    const conflict = this.conflicts.find(c => c.id === conflictId);
+    const conflict = this.conflicts.find(c => c.id === conflictId) as Conflict<T> | undefined;
     if (!conflict) {
       throw new Error(`Conflict ${conflictId} not found`);
     }
 
  logger.log(`x Manual resolution: ${resolution} for ${conflict.table}/${conflict.itemId}`);
 
-    let winner: any;
+    let winner: T;
 
     if (resolution === 'merged' && mergedData) {
       winner = mergedData;
@@ -272,11 +273,11 @@ class ConflictResolver {
 
     // Update local storage
     const storageKey = this.getStorageKeyForTable(conflict.table);
-    const items = await localDB.getLocal(storageKey);
-    const index = items.findIndex((item: any) => item.id === conflict.itemId);
+    const items = await localDB.getLocal<T>(storageKey);
+    const index = items.findIndex((item: T) => item.id === conflict.itemId);
     
     if (index >= 0) {
-      items[index] = { ...winner, _synced: false };
+      items[index] = { ...winner, _synced: false } as T;
       await localDB.saveLocally(storageKey, items);
     }
 
@@ -376,8 +377,8 @@ class ConflictResolver {
     try {
       const stored = await AsyncStorage.getItem(this.CONFLICTS_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored);
-        this.conflicts = parsed.map((c: any) => ({
+        const parsed = JSON.parse(stored) as Conflict[];
+        this.conflicts = parsed.map((c) => ({
           ...c,
           localUpdatedAt: new Date(c.localUpdatedAt),
           serverUpdatedAt: new Date(c.serverUpdatedAt),
@@ -402,4 +403,4 @@ class ConflictResolver {
 // Singleton instance
 export const conflictResolver = new ConflictResolver();
 export default conflictResolver;
-
+

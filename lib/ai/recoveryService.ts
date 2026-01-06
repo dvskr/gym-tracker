@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
+import { LocalWorkout } from '@/lib/types/common';
 
 export interface MuscleRecoveryStatus {
   muscle: string;
@@ -145,7 +146,11 @@ class RecoveryService {
    */
   private calculateMuscleDetails(
     muscleStatus: MuscleRecoveryStatus[],
-    fitnessPrefs?: any | null
+    fitnessPrefs?: {
+      fitness_goal?: string;
+      experience_level?: string;
+      [key: string]: unknown;
+    } | null
   ): MuscleRecoveryDetail[] {
     return muscleStatus.map(muscle => {
       const hoursSinceTraining = muscle.daysSinceTraining * 24;
@@ -220,7 +225,11 @@ class RecoveryService {
   /**
    * Calculate recovery status for each muscle group
    */
-  private calculateMuscleRecovery(workouts: any[], fitnessPrefs?: any | null): MuscleRecoveryStatus[] {
+  private calculateMuscleRecovery(workouts: LocalWorkout[], fitnessPrefs?: {
+    experience_level?: string;
+    fitness_goal?: string;
+    [key: string]: unknown;
+  } | null): MuscleRecoveryStatus[] {
     const muscleLastTrained = new Map<string, Date>();
     const now = new Date();
 
@@ -298,7 +307,12 @@ class RecoveryService {
     muscleStatus: MuscleRecoveryStatus[],
     workoutsThisWeek: number,
     consecutiveDays: number,
-    fitnessPrefs?: any | null
+    fitnessPrefs?: {
+      weekly_workout_target?: number;
+      fitness_goal?: string;
+      experience_level?: string;
+      [key: string]: unknown;
+    } | null
   ): number {
     let score = 100;
 
@@ -368,7 +382,11 @@ class RecoveryService {
     muscleStatus: MuscleRecoveryStatus[],
     consecutiveDays: number,
     workoutsThisWeek: number,
-    fitnessPrefs?: any | null
+    fitnessPrefs?: {
+      fitness_goal?: string;
+      preferred_rest_days?: string[];
+      [key: string]: unknown;
+    } | null
   ): {
     status: RecoveryStatus['overall'];
     recommendation: string;
@@ -484,7 +502,7 @@ class RecoveryService {
   /**
    * Count consecutive training days
    */
-  private getConsecutiveTrainingDays(workouts: any[]): number {
+  private getConsecutiveTrainingDays(workouts: LocalWorkout[]): number {
     if (workouts.length === 0) return 0;
 
     // Get unique training dates
@@ -527,7 +545,7 @@ class RecoveryService {
    * Count workouts from Monday of current week to today
    * Fixed: Was counting last 7 days instead of current calendar week
    */
-  private countWorkoutsThisWeek(workouts: any[]): number {
+  private countWorkoutsThisWeek(workouts: LocalWorkout[]): number {
     // Get start of current week (Monday)
     const now = new Date();
     const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
@@ -619,7 +637,14 @@ class RecoveryService {
   /**
    * Get user fitness preferences
    */
-  private async getFitnessPreferences(userId: string): Promise<any | null> {
+  private async getFitnessPreferences(userId: string): Promise<{
+    fitness_goal?: string;
+    weekly_workout_target?: number;
+    preferred_rest_days?: string[];
+    experience_level?: string;
+    training_split?: string;
+    [key: string]: unknown;
+  } | null> {
     try {
       const { data, error } = await supabase
         .from('profiles')

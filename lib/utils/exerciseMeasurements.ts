@@ -15,9 +15,18 @@ export type MeasurementType =
 export interface MeasurementConfig {
   type: MeasurementType;
   fields: string[];
-  displayFormat: (set: any) => string;
-  shortFormat: (set: any) => string;
+  displayFormat: (set: SetData) => string;
+  shortFormat: (set: SetData) => string;
   icon: string;
+}
+
+interface SetData {
+  weight?: number | null;
+  reps?: number | null;
+  duration_seconds?: number | null;
+  distance_meters?: number | null;
+  assistance_weight?: number | null;
+  [key: string]: unknown;
 }
 
 /**
@@ -103,7 +112,7 @@ export const getMeasurementConfig = (type: MeasurementType): MeasurementConfig =
 /**
  * Format a set for display based on measurement type
  */
-export const formatSet = (set: any, measurementType: MeasurementType): string => {
+export const formatSet = (set: SetData, measurementType: MeasurementType): string => {
   const config = getMeasurementConfig(measurementType);
   return config.displayFormat(set);
 };
@@ -111,7 +120,7 @@ export const formatSet = (set: any, measurementType: MeasurementType): string =>
 /**
  * Format a set for compact display (e.g., in lists)
  */
-export const formatSetShort = (set: any, measurementType: MeasurementType): string => {
+export const formatSetShort = (set: SetData, measurementType: MeasurementType): string => {
   const config = getMeasurementConfig(measurementType);
   return config.shortFormat(set);
 };
@@ -127,7 +136,7 @@ export const getMeasurementIcon = (measurementType: MeasurementType): string => 
 /**
  * Validate if a set has all required fields for its measurement type
  */
-export const validateSet = (set: any, measurementType: MeasurementType): boolean => {
+export const validateSet = (set: SetData, measurementType: MeasurementType): boolean => {
   const config = getMeasurementConfig(measurementType);
   
   return config.fields.every(field => {
@@ -139,8 +148,8 @@ export const validateSet = (set: any, measurementType: MeasurementType): boolean
 /**
  * Get placeholder values for a new set based on measurement type
  */
-export const getEmptySet = (measurementType: MeasurementType) => {
-  const emptySet: any = {
+export const getEmptySet = (measurementType: MeasurementType): Record<string, unknown> => {
+  const emptySet: Record<string, unknown> = {
     reps: undefined,
     weight: undefined,
     duration_seconds: undefined,
@@ -161,7 +170,7 @@ export const getEmptySet = (measurementType: MeasurementType) => {
 /**
  * Calculate volume for different exercise types
  */
-export const calculateVolume = (set: any, measurementType: MeasurementType): number => {
+export const calculateVolume = (set: SetData, measurementType: MeasurementType): number => {
   switch (measurementType) {
     case 'reps_weight':
       return (set.weight || 0) * (set.reps || 0);
@@ -217,4 +226,4 @@ export const getMeasurementTypeDescription = (type: MeasurementType): string => 
   };
 
   return descriptions[type] || 'Standard exercise tracking';
-};
+};

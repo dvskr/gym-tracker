@@ -136,7 +136,7 @@ export default function SyncSettingsScreen() {
     }
   };
 
-  const handleDiscardOperation = (operationId: string, operation: any) => {
+  const handleDiscardOperation = (operationId: string, operation: { operation: string; table: string }) => {
     Alert.alert(
       'Discard Operation?',
       `Discard ${operation.operation} on ${operation.table}?`,
@@ -154,7 +154,7 @@ export default function SyncSettingsScreen() {
     );
   };
 
-  const handleToggleSetting = async (key: keyof SyncSettings, value: any) => {
+  const handleToggleSetting = async (key: keyof SyncSettings, value: boolean | number | string) => {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     await manualSync.updateSettings({ [key]: value });
@@ -276,7 +276,7 @@ export default function SyncSettingsScreen() {
             <Text style={styles.sectionHeader}>FAILED CHANGES ({failedCount})</Text>
             
             <View style={styles.failedCard}>
-              {failedOperations.slice(0, 5).map((op: any) => (
+              {failedOperations.slice(0, 5).map((op: { id: string; operation: string; table: string; error?: string }) => (
                 <View key={op.id} style={styles.failedItem}>
                   <View style={styles.failedItemHeader}>
                     <AlertTriangle size={16} color="#ef4444" />

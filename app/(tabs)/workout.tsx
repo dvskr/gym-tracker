@@ -116,7 +116,16 @@ export default function WorkoutScreen() {
     setIsLoadingRecent(true); // Only show loading on cache miss
     try {
       const workoutsData = await getWorkoutHistory(user.id, 5);
-      const workouts = workoutsData.map((w: any) => ({
+      interface WorkoutData {
+        id: string;
+        name: string;
+        started_at: string;
+        ended_at?: string;
+        total_volume?: number;
+        total_sets?: number;
+        duration_seconds?: number;
+      }
+      const workouts = workoutsData.map((w: WorkoutData) => ({
         id: w.id,
         name: w.name,
         started_at: w.started_at,

@@ -211,7 +211,7 @@ export function DebugSyncPanel() {
       {status.operations.length > 0 && (
         <View style={styles.operationsList}>
           <Text style={styles.debugSubtitle}>Pending Operations:</Text>
-          {status.operations.slice(0, 5).map((op: any) => (
+          {status.operations.slice(0, 5).map((op: { id: string; operation: string; table: string; timestamp: number }) => (
             <View key={op.id} style={styles.operation}>
               <Text style={styles.operationText}>
                 {op.operation} • {op.table} • Attempts: {op.attempts}
@@ -352,4 +352,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
+

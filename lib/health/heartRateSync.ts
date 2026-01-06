@@ -188,4 +188,4 @@ export async function hasHeartRateData(startTime: Date, endTime: Date): Promise<
     return false;
   }
 }
-
+

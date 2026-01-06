@@ -20,7 +20,7 @@ describe('AI Coach', () => {
     jest.clearAllMocks();
   });
 
-  function mockAIResponse(data: any, error: any = null) {
+  function mockAIResponse(data: unknown, error: Error | null = null) {
     (supabase.functions.invoke as jest.Mock).mockResolvedValue({ data, error });
   }
 

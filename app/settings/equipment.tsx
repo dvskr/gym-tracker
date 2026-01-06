@@ -20,7 +20,9 @@ import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 
 type GymType = 'commercial_gym' | 'home_gym' | 'minimal' | 'bodyweight_only';
 
-const GYM_TYPES: { value: GymType; label: string; description: string; icon: any }[] = [
+type IconComponent = React.ComponentType<{ size?: number; color?: string }>;
+
+const GYM_TYPES: { value: GymType; label: string; description: string; icon: IconComponent }[] = [
   { value: 'commercial_gym', label: 'Commercial Gym', description: 'Full equipment access', icon: Building2 },
   { value: 'home_gym', label: 'Home Gym', description: 'Basic home setup', icon: Home },
   { value: 'minimal', label: 'Minimal Equipment', description: 'Dumbbells & bands', icon: Minimize2 },

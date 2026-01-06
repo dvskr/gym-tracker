@@ -117,16 +117,34 @@ export async function getWorkoutHistory(
 
   if (error) throw error;
 
+  interface WorkoutRow {
+    id: string;
+    name: string | null;
+    started_at: string;
+    ended_at: string;
+    duration_seconds: number;
+    total_volume: number | null;
+    total_sets: number | null;
+    total_reps: number | null;
+    rating: number | null;
+    workout_exercises: Array<{
+      exercise_id: string;
+      workout_sets: Array<{
+        is_pr: boolean;
+      }>;
+    }>;
+  }
+
   // Process data to check for PRs and count distinct exercises
-  const workouts: WorkoutHistoryItem[] = (data || []).map((workout: any) => {
+  const workouts: WorkoutHistoryItem[] = (data || []).map((workout: WorkoutRow) => {
     // Check if any set in this workout is a PR
-    const hasPR = workout.workout_exercises?.some((we: any) =>
-      we.workout_sets?.some((set: any) => set.is_pr === true)
+    const hasPR = workout.workout_exercises?.some((we) =>
+      we.workout_sets?.some((set) => set.is_pr === true)
     ) || false;
 
     // Count distinct exercises
     const uniqueExerciseIds = new Set(
-      (workout.workout_exercises || []).map((we: any) => we.exercise_id)
+      (workout.workout_exercises || []).map((we) => we.exercise_id)
     );
 
     return {
@@ -337,14 +355,14 @@ export async function getWorkoutsForDate(
 
   if (error) throw error;
 
-  return (data || []).map((workout: any) => {
-    const hasPR = workout.workout_exercises?.some((we: any) =>
-      we.workout_sets?.some((set: any) => set.is_pr === true)
+  return (data || []).map((workout: WorkoutRow) => {
+    const hasPR = workout.workout_exercises?.some((we) =>
+      we.workout_sets?.some((set) => set.is_pr === true)
     ) || false;
 
     // Count distinct exercises
     const uniqueExerciseIds = new Set(
-      (workout.workout_exercises || []).map((we: any) => we.exercise_id)
+      (workout.workout_exercises || []).map((we) => we.exercise_id)
     );
 
     return {
@@ -362,4 +380,4 @@ export async function getWorkoutsForDate(
     };
   });
 }
-
+

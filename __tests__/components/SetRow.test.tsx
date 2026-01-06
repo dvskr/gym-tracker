@@ -28,7 +28,7 @@ jest.mock('@/stores/settingsStore', () => ({
 // Mock Swipeable from react-native-gesture-handler
 jest.mock('react-native-gesture-handler/Swipeable', () => {
   const React = require('react');
-  return ({ children, renderRightActions }: any) => (
+  return ({ children, renderRightActions }: { children: React.ReactNode; renderRightActions?: () => React.ReactNode }) => (
     <React.Fragment>
       {children}
       {renderRightActions && renderRightActions()}

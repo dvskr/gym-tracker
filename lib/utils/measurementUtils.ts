@@ -23,8 +23,17 @@ export const getColumnHeaders = (measurementType: string): string[] => {
 /**
  * Format a set for display based on measurement type
  */
+
+interface SetData {
+  weight?: number | null;
+  reps?: number | null;
+  duration_seconds?: number | null;
+  distance_meters?: number | null;
+  assistance_weight?: number | null;
+}
+
 export const formatSetDisplay = (
-  set: any,
+  set: SetData,
   measurementType: string
 ): string => {
   switch (measurementType) {
@@ -67,7 +76,7 @@ export const formatSetDisplay = (
  * Validate a set based on measurement type
  */
 export const validateSet = (
-  set: any,
+  set: SetData,
   measurementType: string
 ): boolean => {
   switch (measurementType) {
@@ -132,4 +141,4 @@ export const getEmptySet = (measurementType: string) => {
       return { ...base, reps: null, weight: null };
   }
 };
-
+

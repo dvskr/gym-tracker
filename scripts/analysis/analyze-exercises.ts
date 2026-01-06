@@ -86,7 +86,12 @@ async function analyzeExercises() {
   console.log('\n\n= SAMPLE EXERCISES BY MUSCLE GROUP:\n');
   sortedMuscles.forEach(([muscle, exs]) => {
     console.log(`\n${muscle.toUpperCase()}:`);
-    exs.slice(0, 5).forEach((ex: any) => {
+    interface ExerciseItem {
+      name: string;
+      equipment?: string | null;
+      [key: string]: unknown;
+    }
+    exs.slice(0, 5).forEach((ex: ExerciseItem) => {
       const equip = ex.equipment || 'none';
       console.log(`  - ${ex.name} (${equip})`);
     });
@@ -103,7 +108,7 @@ async function analyzeExercises() {
         muscle,
         {
           count: exs.length,
-          exercises: exs.map((ex: any) => ({
+          exercises: exs.map((ex: { id: string; name: string; equipment?: string | null; secondary_muscles?: string[] }) => ({
             id: ex.id,
             name: ex.name,
             equipment: ex.equipment,
@@ -117,7 +122,7 @@ async function analyzeExercises() {
         equip,
         {
           count: exs.length,
-          exercises: exs.map((ex: any) => ({
+          exercises: exs.map((ex: { id: string; name: string; primary_muscles?: string[] }) => ({
             id: ex.id,
             name: ex.name,
             primary_muscles: ex.primary_muscles
@@ -137,4 +142,4 @@ async function analyzeExercises() {
 }
 
 analyzeExercises();
-
+

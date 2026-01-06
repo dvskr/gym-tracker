@@ -28,7 +28,7 @@ async function updateUrls() {
 
   let updated = 0;
   let failed = 0;
-  const failedUpdates: any[] = [];
+  const failedUpdates: Array<{ id: string; name: string; error: string }> = [];
 
   // Update in batches to avoid overwhelming the connection
   const BATCH_SIZE = 10;
@@ -37,7 +37,7 @@ async function updateUrls() {
     const batch = mappings.slice(i, i + BATCH_SIZE);
 
     await Promise.all(
-      batch.map(async (mapping: any) => {
+      batch.map(async (mapping: { id: string; name: string; url: string }) => {
         const { error } = await supabase
           .from('exercises')
           .update({ gif_url: mapping.url })
@@ -89,4 +89,4 @@ async function updateUrls() {
 }
 
 updateUrls();
-
+
