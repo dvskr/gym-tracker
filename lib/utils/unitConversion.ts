@@ -168,4 +168,4 @@ export function getConversionPreview(system: 'imperial' | 'metric'): string {
     return '150 lbs = 68 kg\n6\' 0" = 183 cm';
   }
 }
-
+

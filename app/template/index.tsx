@@ -85,7 +85,7 @@ export default function TemplatesScreen() {
       const data = await getTemplatesGroupedByFolder(user.id);
       setFolders(data.folders);
       setUncategorizedTemplates(data.uncategorized);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error fetching templates:', error);
     } finally {
       setIsLoading(false);
@@ -115,7 +115,7 @@ export default function TemplatesScreen() {
       setNewFolderName('');
       setSelectedColor(FOLDER_COLORS[0]);
       fetchData();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error creating folder:', error);
     }
   };
@@ -131,7 +131,7 @@ export default function TemplatesScreen() {
       setEditingFolder(null);
       setNewFolderName('');
       fetchData();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error updating folder:', error);
     }
   };
@@ -149,7 +149,7 @@ export default function TemplatesScreen() {
             try {
               await deleteFolder(folderId);
               fetchData();
-            } catch (error) {
+            } catch (error: unknown) {
               logger.error('Error deleting folder:', error);
             }
           },
@@ -165,7 +165,7 @@ export default function TemplatesScreen() {
       await moveTemplateToFolder(movingTemplate.id, folderId);
       setMovingTemplate(null);
       fetchData();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error moving template:', error);
     }
   };
@@ -244,7 +244,7 @@ export default function TemplatesScreen() {
       }
 
       router.push('/workout/active');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error starting workout:', error);
     }
   };
@@ -263,7 +263,7 @@ export default function TemplatesScreen() {
       const copy = await duplicateTemplate(template.id);
       successHaptic();
       router.push(`/template/${copy.id}`);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error duplicating template:', error);
       Alert.alert('Error', 'Failed to duplicate template');
     }
@@ -281,7 +281,7 @@ export default function TemplatesScreen() {
       await deleteTemplate(deleteConfirmId);
       setDeleteConfirmId(null);
       fetchData();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error deleting template:', error);
     }
   };
@@ -668,3 +668,5 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
 });
+
+

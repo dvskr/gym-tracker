@@ -27,7 +27,7 @@ export function useDefaultTemplates() {
             setTemplates(FALLBACK_TEMPLATES);
           }
         }
-      } catch (err) {
+      } catch (err: unknown) {
  logger.error('Error loading default templates:', err);
         setError('Failed to load templates');
         // Try to use enriched fallbacks even on error
@@ -51,4 +51,4 @@ export function useDefaultTemplates() {
 
   return { templates, isLoading, error };
 }
-
+

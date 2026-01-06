@@ -120,7 +120,7 @@ class EngagementNotificationService {
       );
 
  logger.log(`S& Scheduled streak reminder for ${time.toLocaleTimeString()}`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to schedule streak reminder:', error);
     }
   }
@@ -189,7 +189,7 @@ class EngagementNotificationService {
       }
 
  logger.log(`S& Scheduled ${scheduled} inactivity reminder(s)`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to schedule inactivity reminders:', error);
     }
   }
@@ -212,7 +212,7 @@ class EngagementNotificationService {
       if (cancelled > 0) {
  logger.log(`S& Cancelled ${cancelled} inactivity reminder(s)`);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to cancel inactivity reminders:', error);
     }
   }
@@ -261,7 +261,7 @@ class EngagementNotificationService {
       );
 
 logger.log(`Sent streak celebration for ${streak} days`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to send streak celebration:', error);
     }
   }
@@ -363,7 +363,7 @@ logger.log(`Sent streak celebration for ${streak} days`);
         currentStreak: streakData.currentStreak,
         totalPRs: prCount || 0,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[WeeklySummary] Error calculating stats:', error);
       return {
         workoutsThisWeek: 0,
@@ -433,7 +433,7 @@ logger.log(`Sent streak celebration for ${streak} days`);
       );
 
       logger.log(`[WeeklySummary] Scheduled for ${nextSunday.toLocaleDateString()}`);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[WeeklySummary] Failed to schedule:', error);
     }
   }
@@ -514,7 +514,7 @@ logger.log(`Sent streak celebration for ${streak} days`);
       );
 
       logger.log('[WeeklySummary] Sent with stats:', stats);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[WeeklySummary] Failed to send:', error);
     }
   }
@@ -530,11 +530,12 @@ logger.log(`Sent streak celebration for ${streak} days`);
           await notificationService.cancelNotification(notification.identifier);
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[WeeklySummary] Failed to cancel:', error);
     }
   }
 }
 
 export const engagementNotificationService = new EngagementNotificationService();
+
 

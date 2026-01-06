@@ -82,7 +82,7 @@ export default function AddExerciseToTemplateScreen() {
 
         successHaptic();
         router.push(getCurrentTab() || '/(tabs)');
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error('Error adding exercise to template:', error);
       }
     },
@@ -115,4 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
+
+
+

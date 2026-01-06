@@ -51,7 +51,7 @@ export function RecoveryStatus() {
       
       // Cache the result
       setCacheData(user.id, 'recovery', result);
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch recovery status';
       setError(errorMessage);
       setHasFetched(true);
@@ -563,4 +563,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+
 

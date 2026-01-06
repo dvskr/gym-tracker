@@ -103,7 +103,7 @@ class NotificationService {
 
  logger.log('x Push token:', token.data);
       return token.data;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get push token:', error);
       return null;
     }
@@ -291,4 +291,5 @@ class NotificationService {
 }
 
 export const notificationService = new NotificationService();
+
 

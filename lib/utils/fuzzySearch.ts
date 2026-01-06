@@ -74,4 +74,4 @@ export function clearFuseInstance(): void {
 export function isFuseInitialized(): boolean {
   return fuseInstance !== null;
 }
-
+

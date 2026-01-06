@@ -77,7 +77,7 @@ export function HealthDashboard() {
       });
 
       setLastUpdated(new Date());
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching health data:', error);
     } finally {
       setIsLoading(false);
@@ -507,4 +507,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
+
+
 

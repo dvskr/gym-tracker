@@ -222,8 +222,8 @@ export default function WorkoutDetailScreen() {
           setExpandedExercises(new Set([data.workout_exercises[0].id]));
         }
       }
-    } catch (error) {
- logger.error('Failed to fetch workout:', error);
+    } catch (error: unknown) {
+logger.error('Failed to fetch workout:', error);
       Alert.alert('Error', 'Failed to load workout');
     } finally {
       setIsLoading(false);
@@ -265,8 +265,8 @@ export default function WorkoutDetailScreen() {
       setWorkout({ ...workout, name: editedName.trim() });
       setIsEditingName(false);
       successHaptic();
-    } catch (error) {
- logger.error('Failed to update name:', error);
+    } catch (error: unknown) {
+logger.error('Failed to update name:', error);
       Alert.alert('Error', 'Failed to update workout name');
     }
   };
@@ -289,8 +289,8 @@ export default function WorkoutDetailScreen() {
               if (!id) return;
               await deleteWorkout(id);
               router.push(getCurrentTab() || '/(tabs)');
-            } catch (error) {
- logger.error('Failed to delete workout:', error);
+            } catch (error: unknown) {
+logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout');
             } finally {
               setIsDeleting(false);
@@ -347,8 +347,8 @@ export default function WorkoutDetailScreen() {
     try {
       const exportable = convertToExportable(workout);
       await shareWorkout(exportable, 'text');
-    } catch (error) {
- logger.error('Error sharing:', error);
+    } catch (error: unknown) {
+logger.error('Error sharing:', error);
       Alert.alert('Error', 'Failed to share workout');
     }
   };
@@ -361,8 +361,8 @@ export default function WorkoutDetailScreen() {
     try {
       const exportable = convertToExportable(workout);
       await exportWorkout(exportable, 'csv');
-    } catch (error) {
- logger.error('Error exporting CSV:', error);
+    } catch (error: unknown) {
+logger.error('Error exporting CSV:', error);
       Alert.alert('Error', 'Failed to export workout');
     }
   };

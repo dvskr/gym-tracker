@@ -88,7 +88,7 @@ export function SyncStatusSheet({ visible, onClose }: SyncStatusSheetProps) {
       await sync();
       await loadLastSync();
       Alert.alert('Success', 'Sync completed successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'Sync failed');
     } finally {
       setSyncing(false);
@@ -509,4 +509,6 @@ const styles = StyleSheet.create({
 });
 
 export default SyncStatusSheet;
+
+
 

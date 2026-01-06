@@ -219,7 +219,7 @@ export const useExerciseStore = create<ExerciseState>()(
           initializeFuseSearch(transformedExercises);
           
  logger.log(`[ExerciseStore] Loaded ${transformedExercises.length} exercises`);
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error('[ExerciseStore] Error fetching exercises:', error);
           set({
             isLoading: false,
@@ -414,7 +414,7 @@ export const useExerciseStore = create<ExerciseState>()(
           
           const favoriteIds = data?.map(f => f.exercise_id) || [];
           set({ favoriteIds });
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error('Failed to load favorites:', error);
         }
       },
@@ -460,7 +460,7 @@ export const useExerciseStore = create<ExerciseState>()(
             
             if (error) throw error;
           }
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error('Failed to toggle favorite:', error);
           // Revert optimistic update on error
           set({ favoriteIds });
@@ -522,3 +522,4 @@ export const useExerciseLoading = () => useExerciseStore((state) => state.isLoad
 export const useExerciseError = () => useExerciseStore((state) => state.error);
 export const useSearchQuery = () => useExerciseStore((state) => state.searchQuery);
 export const useSelectedBodyPart = () => useExerciseStore((state) => state.selectedBodyPart);
+

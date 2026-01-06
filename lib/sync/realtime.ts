@@ -4,7 +4,7 @@ import { supabase } from '../supabase';
 import { localDB } from '../storage/localDatabase';
 import { conflictResolver } from './conflictResolver';
 import { eventEmitter, Events } from '../utils/eventEmitter';
-import { LocalWorkout, LocalTemplate, SyncableRecord } from '@/lib/types/common';
+import { Workout, Template, SyncableRecord } from '@/lib/types/common';
 
 /**
  * Real-time Sync - Subscribes to Supabase real-time changes
@@ -46,7 +46,7 @@ class RealtimeSync {
       eventEmitter.emit(Events.REALTIME_CONNECTED);
       
  logger.log('S& Real-time sync initialized successfully');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to initialize real-time sync:', error);
       eventEmitter.emit(Events.REALTIME_ERROR, error);
       throw error;
@@ -65,7 +65,7 @@ class RealtimeSync {
       try {
         await supabase.removeChannel(channel);
  logger.log(`S& Removed channel: ${name}`);
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error(`R Error removing channel ${name}:`, error);
       }
     }
@@ -117,7 +117,7 @@ class RealtimeSync {
   }
 
   private async handleWorkoutChange(
-    payload: RealtimePostgresChangesPayload<LocalWorkout>
+    payload: RealtimePostgresChangesPayload<Workout>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -138,12 +138,12 @@ class RealtimeSync {
 
       // Notify UI to refresh
       eventEmitter.emit(Events.WORKOUTS_UPDATED, { eventType, data: newData || oldData });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error handling workout change:', error);
     }
   }
 
-  private async handleNewWorkout(workout: LocalWorkout): Promise<void> {
+  private async handleNewWorkout(workout: Workout): Promise<void> {
     const localWorkouts = await localDB.getLocalWorkouts();
     
     // Check if workout already exists locally
@@ -154,7 +154,7 @@ class RealtimeSync {
     }
   }
 
-  private async handleUpdatedWorkout(workout: LocalWorkout): Promise<void> {
+  private async handleUpdatedWorkout(workout: Workout): Promise<void> {
     const localWorkouts = await localDB.getLocalWorkouts();
     const index = localWorkouts.findIndex(w => w.id === workout.id);
 
@@ -191,7 +191,7 @@ class RealtimeSync {
     await localDB.saveLocally('@gym/workouts', localWorkouts);
   }
 
-  private async handleDeletedWorkout(workout: LocalWorkout): Promise<void> {
+  private async handleDeletedWorkout(workout: Workout): Promise<void> {
  logger.log('x Deleting workout from real-time:', workout.id);
     
     const localWorkouts = await localDB.getLocalWorkouts();
@@ -224,7 +224,7 @@ class RealtimeSync {
   }
 
   private async handleTemplateChange(
-    payload: RealtimePostgresChangesPayload<LocalTemplate>
+    payload: RealtimePostgresChangesPayload<Template>
   ): Promise<void> {
     const { eventType, new: newData, old: oldData } = payload;
 
@@ -267,7 +267,7 @@ class RealtimeSync {
 
       await localDB.saveLocally('@gym/templates', localTemplates);
       eventEmitter.emit(Events.TEMPLATES_UPDATED, { eventType, data: newData || oldData });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error handling template change:', error);
     }
   }
@@ -287,7 +287,7 @@ class RealtimeSync {
           table: 'body_weight_log',
           filter: `user_id=eq.${this.userId}`,
         },
-        (payload) => this.handleWeightChange(payload)
+        (payload: RealtimePostgresChangesPayload<SyncableRecord>) => this.handleWeightChange(payload)
       )
       .subscribe((status) => {
  logger.log('Weight log channel status:', status);
@@ -331,7 +331,7 @@ class RealtimeSync {
 
       await localDB.saveLocally('@gym/weight_log', localWeights);
       eventEmitter.emit(Events.WEIGHT_LOG_UPDATED, { eventType, data: newData || oldData });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error handling weight change:', error);
     }
   }
@@ -395,7 +395,7 @@ class RealtimeSync {
 
       await localDB.saveLocally('@gym/measurements', localMeasurements);
       eventEmitter.emit(Events.MEASUREMENTS_UPDATED, { eventType, data: newData || oldData });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error handling measurement change:', error);
     }
   }
@@ -459,7 +459,7 @@ class RealtimeSync {
 
       await localDB.saveLocally('@gym/personal_records', localPRs);
       eventEmitter.emit(Events.PERSONAL_RECORDS_UPDATED, { eventType, data: newData || oldData });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error handling PR change:', error);
     }
   }
@@ -492,4 +492,6 @@ class RealtimeSync {
 // Singleton instance
 export const realtimeSync = new RealtimeSync();
 export default realtimeSync;
+
+
 

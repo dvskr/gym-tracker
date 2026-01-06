@@ -120,7 +120,7 @@ class WorkoutSuggestionService {
         await this.cacheSuggestion(userId, validated);
         
         return validated;
-      } catch (aiError) {
+      } catch (aiError: unknown) {
  logger.warn('AI suggestion failed, falling back to rule-based:', aiError);
         const fallback = this.getRuleBasedSuggestion(recentWorkouts);
         const validatedFallback = validateWorkoutSuggestionAdvanced(
@@ -131,7 +131,7 @@ class WorkoutSuggestionService {
         await this.cacheSuggestion(userId, validatedFallback);
         return validatedFallback;
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get workout suggestion:', error);
       return this.getDefaultSuggestion([]);
     }
@@ -155,7 +155,7 @@ class WorkoutSuggestionService {
       }
       
       return parsed.suggestion;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error reading cache:', error);
       return null;
     }
@@ -172,7 +172,7 @@ class WorkoutSuggestionService {
         userId,
       };
       await AsyncStorage.setItem(SUGGESTION_CACHE_KEY, JSON.stringify(cacheData));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error caching suggestion:', error);
     }
   }
@@ -251,7 +251,7 @@ class WorkoutSuggestionService {
  logger.log('S& AI service responded successfully');
       return this.parseAISuggestion(response);
 
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('R AI service failed:', {
         message,
@@ -449,7 +449,7 @@ class WorkoutSuggestionService {
 
       // Fallback: parse text response (legacy format)
       return this.parseTextResponse(response);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to parse AI suggestion:', error);
  logger.error('Response was:', response);
       return this.getDefaultSuggestion([]);
@@ -648,4 +648,5 @@ class WorkoutSuggestionService {
 }
 
 export const workoutSuggestionService = new WorkoutSuggestionService();
+
 

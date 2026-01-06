@@ -162,7 +162,7 @@ export default function HealthSettingsScreen() {
           Alert.alert('Sync Complete', message);
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Sync Failed', 'An error occurred while syncing health data.');
     } finally {
       setIsSyncing(false);
@@ -737,3 +737,5 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
+
+

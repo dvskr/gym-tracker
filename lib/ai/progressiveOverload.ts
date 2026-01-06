@@ -49,7 +49,7 @@ class ProgressiveOverloadService {
 
       // Calculate recommendation using progressive overload principles
       return this.calculateRecommendation(history, setNumber, targetReps);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get recommendation:', error);
       return this.getDefaultRecommendation(targetReps);
     }
@@ -354,4 +354,5 @@ class ProgressiveOverloadService {
 }
 
 export const progressiveOverloadService = new ProgressiveOverloadService();
+
 

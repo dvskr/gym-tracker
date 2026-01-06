@@ -285,4 +285,4 @@ export function calculateWorkoutFrequency(
     percentage: Math.round(percentage),
   };
 }
-
+

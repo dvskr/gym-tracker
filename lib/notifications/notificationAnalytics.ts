@@ -48,7 +48,7 @@ class NotificationAnalyticsService {
       this.syncToServer(event).catch(error => {
  logger.warn('Failed to sync notification event:', error);
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to track notification event:', error);
     }
   }
@@ -214,7 +214,7 @@ class NotificationAnalyticsService {
     try {
       const data = await AsyncStorage.getItem(this.STORAGE_KEY);
       return data ? JSON.parse(data) : [];
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get notification events:', error);
       return [];
     }
@@ -241,7 +241,7 @@ class NotificationAnalyticsService {
       });
       
  logger.log('Synced notification event to server');
-    } catch (error) {
+    } catch (error: unknown) {
       // Silent fail - analytics shouldn't break the app
  logger.warn('Failed to sync notification event to server:', error);
     }
@@ -249,4 +249,4 @@ class NotificationAnalyticsService {
 }
 
 export const notificationAnalyticsService = new NotificationAnalyticsService();
-
+

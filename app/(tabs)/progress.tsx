@@ -257,7 +257,7 @@ export default function ProgressScreen() {
       });
       
  logger.log('[Progress] Data fetched successfully');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch progress stats:', error);
     } finally {
       setIsLoading(false);
@@ -926,3 +926,5 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
 });
+
+

@@ -107,7 +107,7 @@ export async function logMeasurementsAndSync(
     }
 
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error logging measurements:', error);
     return false;
   }
@@ -142,7 +142,7 @@ export async function importHeightFromHealth(userId: string): Promise<number | n
 
  logger.log('S& Profile updated with height from health');
     return height;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error importing height from health:', error);
     return null;
   }
@@ -191,4 +191,5 @@ do not support most body measurements beyond weight,
 body fat, and height.
   `.trim();
 }
+
 

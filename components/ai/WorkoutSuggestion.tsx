@@ -88,7 +88,7 @@ export function WorkoutSuggestion() {
         setSuggestedType('Full Body');
         setSelectedType('Full Body');
       }
-    } catch (err) {
+    } catch (err: unknown) {
       logger.error('Error getting recovery status:', err);
       // Default to Push
       setSuggestedType('Push');
@@ -106,7 +106,7 @@ export function WorkoutSuggestion() {
     try {
       const personalized = await getPersonalizedExercises(user.id, type);
       setExercises(personalized);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to load personalized exercises:', error);
     } finally {
       setIsLoadingExercises(false);
@@ -527,3 +527,5 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
+
+

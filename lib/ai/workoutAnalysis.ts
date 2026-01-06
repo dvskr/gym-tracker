@@ -120,7 +120,7 @@ class WorkoutAnalysisService {
         }
 
         return finalAnalysis;
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error('AI analysis failed, using rule-based:', error);
         const fallback = this.getRuleBasedAnalysis(
           workout,
@@ -138,7 +138,7 @@ class WorkoutAnalysisService {
 
         return fallback;
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Workout analysis failed:', error);
       return this.getDefaultAnalysis(workout);
     }
@@ -163,7 +163,7 @@ class WorkoutAnalysisService {
       }
       
       return parsed.analysis;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error reading cache:', error);
       return null;
     }
@@ -181,7 +181,7 @@ class WorkoutAnalysisService {
         workoutId,
       };
       await AsyncStorage.setItem(cacheKey, JSON.stringify(cacheData));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error caching analysis:', error);
     }
   }
@@ -267,7 +267,7 @@ Respond in this exact JSON format:
           nextWorkoutTip: parsed.nextWorkoutTip || 'Keep up the great work!',
         };
       }
-    } catch (parseError) {
+    } catch (parseError: unknown) {
  logger.error('Failed to parse AI analysis:', parseError);
     }
 
@@ -549,7 +549,7 @@ EXERCISES:`;
       }
 
       return null;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get previous workout:', error);
       return null;
     }
@@ -603,7 +603,7 @@ EXERCISES:`;
         totalWorkouts,
         streak,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to get user stats:', error);
       return { totalWorkouts: 0, streak: 0 };
     }
@@ -630,7 +630,7 @@ EXERCISES:`;
       }
 
       return data?.length || 0;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get PR count:', error);
       return 0;
     }
@@ -638,4 +638,5 @@ EXERCISES:`;
 }
 
 export const workoutAnalysisService = new WorkoutAnalysisService();
+
 

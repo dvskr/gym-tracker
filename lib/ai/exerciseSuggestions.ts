@@ -165,7 +165,7 @@ export async function getPersonalizedExercises(
     logger.log(`[ExerciseSuggestions] Found ${selectedExercises.length} personalized exercises for ${workoutType}`);
     return selectedExercises;
     
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Failed to get personalized exercises:', error);
     const targetMuscles = MUSCLE_GROUPS_MAP[workoutType] || MUSCLE_GROUPS_MAP['Push'];
     return await getDefaultExercisesFromLibrary(targetMuscles, workoutType);
@@ -245,7 +245,7 @@ async function getDefaultExercisesFromLibrary(
     logger.log(`[ExerciseSuggestions] Fetched ${selectedExercises.length} default exercises from library`);
     return selectedExercises;
     
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Failed to get default exercises from library:', error);
     return [];
   }
@@ -269,3 +269,4 @@ function getDefaultSetsReps(workoutType: string, muscle: string): { sets: number
   // Isolation movements = higher reps
   return { sets: 3, reps: '10-12' };
 }
+

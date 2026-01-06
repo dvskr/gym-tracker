@@ -40,7 +40,7 @@ export function WeightRecommendation({
         targetReps
       );
       setRecommendation(rec);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get recommendation:', error);
     } finally {
       setIsLoading(false);
@@ -158,7 +158,7 @@ export function WeightRecommendationBadge({
           targetReps
         );
         setRecommendation(rec);
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error('Failed to get recommendation:', error);
       } finally {
         setIsLoading(false);
@@ -278,4 +278,6 @@ const styles = StyleSheet.create({
     color: '#f59e0b',
   },
 });
-
+
+
+

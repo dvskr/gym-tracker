@@ -43,7 +43,7 @@ export function useImagePreload(options?: {
             });
           });
         }
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error('[useImagePreload] Error:', error);
       }
 
@@ -55,4 +55,4 @@ export function useImagePreload(options?: {
 
   return state;
 }
-
+

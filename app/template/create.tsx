@@ -555,7 +555,7 @@ export default function CreateTemplateScreen() {
 
       successHaptic();
       router.replace(`/template/${template.id}`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error creating template:', error);
       Alert.alert('Error', 'Failed to create template');
     } finally {
@@ -1141,4 +1141,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
-});
+});
+
+

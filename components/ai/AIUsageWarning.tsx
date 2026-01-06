@@ -17,7 +17,7 @@ export function AIUsageWarning() {
     try {
       const stats = await aiUsageTracker.getUsage();
       setUsage(stats);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to load AI usage:', error);
     }
   };
@@ -107,4 +107,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+
+
+

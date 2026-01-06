@@ -87,7 +87,7 @@ class ManualSync {
       result.success = true;
  logger.log('S& Manual sync completed successfully');
       
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Manual sync error:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
@@ -122,7 +122,7 @@ class ManualSync {
 
  logger.log(`S& Retry complete: ${retryResult.synced} synced, ${retryResult.failed} still failed`);
       
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Retry failed:', error);
       result.error = error instanceof Error ? error.message : 'Unknown error';
     }
@@ -141,7 +141,7 @@ class ManualSync {
       const count = await syncQueue.clearFailedOperations();
  logger.log(`S& Discarded ${count} failed operation(s)`);
       return count;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Discard failed:', error);
       return 0;
     }
@@ -168,7 +168,7 @@ class ManualSync {
 
       await syncQueue.syncAll();
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Retry operation failed:', error);
       return false;
     }
@@ -182,7 +182,7 @@ class ManualSync {
       await localDB.removeFromSyncQueue(operationId);
  logger.log('S& Operation discarded:', operationId);
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Discard operation failed:', error);
       return false;
     }
@@ -198,7 +198,7 @@ class ManualSync {
         return JSON.parse(stored);
       }
       return this.defaultSettings;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading sync settings:', error);
       return this.defaultSettings;
     }
@@ -228,7 +228,7 @@ class ManualSync {
       }
 
  logger.log('S& Sync settings updated:', updated);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating sync settings:', error);
     }
   }
@@ -240,7 +240,7 @@ class ManualSync {
     try {
       const time = await backgroundSync.getLastSyncTime();
       return time;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting last sync time:', error);
       return null;
     }
@@ -269,7 +269,7 @@ class ManualSync {
       };
 
       return counts;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting pending changes:', error);
       return { workouts: 0, templates: 0, weightLog: 0, measurements: 0, total: 0 };
     }
@@ -301,7 +301,7 @@ class ManualSync {
         bytes: data.bytes || 0,
         formatted: this.formatBytes(data.bytes || 0),
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting data usage:', error);
       return { bytes: 0, formatted: '0 B' };
     }
@@ -330,7 +330,7 @@ class ManualSync {
   private async updateLastSyncTime(): Promise<void> {
     try {
       await AsyncStorage.setItem(LAST_SYNC_KEY, Date.now().toString());
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating last sync time:', error);
     }
   }
@@ -355,7 +355,7 @@ class ManualSync {
       data.bytes += estimatedBytes;
       
       await AsyncStorage.setItem(DATA_USAGE_KEY, JSON.stringify(data));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error tracking data usage:', error);
     }
   }
@@ -378,4 +378,4 @@ class ManualSync {
 // Singleton instance
 export const manualSync = new ManualSync();
 export default manualSync;
-
+

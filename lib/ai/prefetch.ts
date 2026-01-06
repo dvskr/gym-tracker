@@ -173,4 +173,4 @@ export function clearAllCache(): void {
   prefetchCache.clear();
  logger.log(`[AI Cache] Cleared all ${count} entries`);
 }
-
+

@@ -183,4 +183,4 @@ export function formatUserQuestion(question: string, context?: Record<string, an
     .join('\n');
 
   return `${contextStr}\n\n${question}`;
-}
+}

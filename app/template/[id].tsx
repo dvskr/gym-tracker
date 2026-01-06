@@ -417,7 +417,7 @@ export default function TemplateDetailScreen() {
       setTemplate(data);
       setTempName(data.name);
       setTempDescription(data.description || '');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching template:', error);
       Alert.alert('Error', 'Failed to load template');
       router.push(getCurrentTab() || '/(tabs)');
@@ -438,7 +438,7 @@ export default function TemplateDetailScreen() {
     try {
       await updateTemplate(id, updates);
       setTemplate((prev) => prev ? { ...prev, ...updates } : prev);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving template:', error);
       Alert.alert('Error', 'Failed to save changes');
     } finally {
@@ -477,7 +477,7 @@ export default function TemplateDetailScreen() {
             try {
               await deleteTemplate(id);
               router.push(getCurrentTab() || '/(tabs)');
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error deleting template:', error);
               Alert.alert('Error', 'Failed to delete template');
             }
@@ -496,7 +496,7 @@ export default function TemplateDetailScreen() {
       successHaptic();
       // Navigate to the new template
       router.replace(`/template/${copy.id}`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error duplicating template:', error);
       Alert.alert('Error', 'Failed to duplicate template');
     }
@@ -556,7 +556,7 @@ export default function TemplateDetailScreen() {
           .update({ order_index: ex.order_index })
           .eq('id', ex.id);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving order:', error);
     }
   };
@@ -588,7 +588,7 @@ export default function TemplateDetailScreen() {
                     }
                   : prev
               );
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error deleting exercise:', error);
             }
           },
@@ -623,7 +623,7 @@ export default function TemplateDetailScreen() {
             }
           : prev
       );
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving exercise:', error);
     }
   };
@@ -724,7 +724,7 @@ export default function TemplateDetailScreen() {
       }
 
       router.push('/workout/active');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error starting workout:', error);
     }
   };
@@ -1645,4 +1645,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
+
 

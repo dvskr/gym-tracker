@@ -201,4 +201,4 @@ export const PHOTO_TYPES: { type: PhotoType; label: string; icon: string }[] = [
 export function getPhotoTypeLabel(type: PhotoType): string {
   return PHOTO_TYPE_LABELS[type] || type;
 }
-
+

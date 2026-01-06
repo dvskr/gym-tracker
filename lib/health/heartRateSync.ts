@@ -40,7 +40,7 @@ export async function saveWorkoutHeartRate(
 
  logger.log(`S& Heart rate data saved for workout ${workoutId}`);
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error saving workout heart rate:', error);
     return false;
   }
@@ -114,7 +114,7 @@ export async function getWorkoutsWithoutHeartRate(
     if (error) throw error;
 
     return data || [];
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error fetching workouts without heart rate:', error);
     return [];
   }
@@ -150,7 +150,7 @@ export async function calculateHeartRateRecovery(
       maxHR: workoutStats.max,
       recoveryHR: recoveryStats.min,
     };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error calculating heart rate recovery:', error);
     return null;
   }
@@ -184,8 +184,9 @@ export async function hasHeartRateData(startTime: Date, endTime: Date): Promise<
   try {
     const stats = await healthService.getHeartRate(startTime, endTime);
     return stats !== null && stats.readings.length > 0;
-  } catch (error) {
+  } catch (error: unknown) {
     return false;
   }
 }
+
 

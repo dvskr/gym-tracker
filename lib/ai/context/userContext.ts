@@ -128,9 +128,10 @@ export const buildFitnessProfileContext = async (userId: string): Promise<string
     }
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error building fitness profile context:', error);
     return '';
   }
 };
+
 

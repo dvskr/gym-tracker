@@ -125,7 +125,7 @@ class BackupService {
  logger.log(`S& Backup created: ${backup.id}, size: ${this.formatBytes(backup.size)}`);
 
       return { backup, data: backupData };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error creating backup:', error);
       throw error;
     }
@@ -172,7 +172,7 @@ class BackupService {
  logger.log(`S& Backup saved to cloud: ${fileName}`);
 
       return fileName;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error saving backup to cloud:', error);
       throw error;
     }
@@ -201,7 +201,7 @@ class BackupService {
  logger.log(`S& Backup saved locally: ${filePath}`);
 
       return filePath;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error saving backup locally:', error);
       throw error;
     }
@@ -231,7 +231,7 @@ class BackupService {
         tables: [], // Not stored in metadata
         isAutomatic: row.is_automatic,
       }));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error listing backups:', error);
       throw error;
     }
@@ -259,7 +259,7 @@ class BackupService {
  logger.log(`S& Backup downloaded: ${backupId}`);
 
       return backupData;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error downloading backup:', error);
       throw error;
     }
@@ -325,7 +325,7 @@ class BackupService {
         result.tablesRestored.push('profile');
         result.itemsRestored++;
         completeStep('S Profile restored');
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`Profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -346,7 +346,7 @@ class BackupService {
         result.tablesRestored.push('workouts');
         result.itemsRestored += count;
         completeStep(`S ${count} workouts restored`);
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`Workouts: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -366,7 +366,7 @@ class BackupService {
         result.tablesRestored.push('templates');
         result.itemsRestored += count;
         completeStep(`S ${count} templates restored`);
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`Templates: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -381,7 +381,7 @@ class BackupService {
         result.tablesRestored.push('bodyWeightLog');
         result.itemsRestored += count;
         completeStep(`S ${count} weight entries restored`);
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`Weight Log: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -396,7 +396,7 @@ class BackupService {
         result.tablesRestored.push('bodyMeasurements');
         result.itemsRestored += count;
         completeStep(`S ${count} measurements restored`);
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(
           `Measurements: ${error instanceof Error ? error.message : 'Unknown error'}`
         );
@@ -413,7 +413,7 @@ class BackupService {
         result.tablesRestored.push('personalRecords');
         result.itemsRestored += count;
         completeStep(`S ${count} personal records restored`);
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`PRs: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -429,7 +429,7 @@ class BackupService {
           result.tablesRestored.push('customExercises');
           result.itemsRestored += count;
           completeStep(`S ${count} custom exercises restored`);
-        } catch (error) {
+        } catch (error: unknown) {
           result.errors.push(
             `Custom Exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
           );
@@ -445,7 +445,7 @@ class BackupService {
         result.tablesRestored.push('settings');
         result.itemsRestored++;
         completeStep('S Settings restored');
-      } catch (error) {
+      } catch (error: unknown) {
         result.errors.push(`Settings: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -456,7 +456,7 @@ class BackupService {
       );
 
       return result;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error restoring backup:', error);
       result.errors.push(error instanceof Error ? error.message : 'Unknown error');
       return result;
@@ -489,7 +489,7 @@ class BackupService {
       if (metadataError) throw metadataError;
 
  logger.log(`S& Backup deleted: ${backupId}`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error deleting backup:', error);
       throw error;
     }
@@ -512,7 +512,7 @@ class BackupService {
  logger.log(`S& Deleted ${toDelete.length} old backup(s)`);
 
       return toDelete.length;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error cleaning up backups:', error);
       throw error;
     }
@@ -525,7 +525,7 @@ class BackupService {
     try {
       const time = await AsyncStorage.getItem(this.LAST_BACKUP_KEY);
       return time ? parseInt(time, 10) : null;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting last backup time:', error);
       return null;
     }
@@ -543,7 +543,7 @@ class BackupService {
       return settings
         ? JSON.parse(settings)
         : { enabled: false, frequency: 'weekly' };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting auto-backup settings:', error);
       return { enabled: false, frequency: 'weekly' };
     }
@@ -559,7 +559,7 @@ class BackupService {
     try {
       await AsyncStorage.setItem(this.AUTO_BACKUP_KEY, JSON.stringify(settings));
  logger.log('S& Auto-backup settings updated:', settings);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating auto-backup settings:', error);
       throw error;
     }
@@ -838,4 +838,5 @@ class BackupService {
 // Singleton instance
 export const backupService = new BackupService();
 export default backupService;
+
 

@@ -74,7 +74,7 @@ class AIService {
       logger.log('checkLimits SUCCESS (object):', data);
       return data;
 
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to check AI limits:', error);
       // Default to allowing (fail open for UX)
       return {
@@ -103,7 +103,7 @@ class AIService {
       if (error) throw error;
       return data;
 
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get AI usage stats:', error);
       return null;
     }
@@ -251,7 +251,7 @@ class AIService {
         }
       }
 
-    } catch (error) {
+    } catch (error: unknown) {
       // Re-throw limit errors
       if (error instanceof AILimitError) {
         throw error;
@@ -270,7 +270,7 @@ class AIService {
         // Yield the complete response at once
         yield fallbackResponse.content;
         return;
-      } catch (fallbackError) {
+      } catch (fallbackError: unknown) {
  logger.error('Fallback also failed:', fallbackError);
         throw error; // Throw the original error
       }
@@ -331,7 +331,7 @@ class AIService {
               errorData.message || 'Rate limit exceeded',
               errorData
             );
-          } catch (parseError) {
+          } catch (parseError: unknown) {
             throw new AILimitError('Rate limit exceeded', {
               allowed: false,
               used: limits.used,
@@ -366,7 +366,7 @@ class AIService {
         limits: data.limits,
       };
 
-    } catch (error) {
+    } catch (error: unknown) {
       // Re-throw limit errors
       if (error instanceof AILimitError) {
         throw error;
@@ -444,3 +444,4 @@ class AIService {
 }
 
 export const aiService = new AIService();
+

@@ -28,7 +28,7 @@ export function useHeartRate(startTime?: Date, endTime?: Date) {
         if (!cancelled) {
           setStats(data);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (!cancelled) {
           setError(err instanceof Error ? err : new Error('Failed to fetch heart rate'));
         }
@@ -55,7 +55,7 @@ export function useHeartRate(startTime?: Date, endTime?: Date) {
     try {
       const data = await healthService.getHeartRate(startTime, endTime);
       setStats(data);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err : new Error('Failed to fetch heart rate'));
     } finally {
       setIsLoading(false);
@@ -81,7 +81,7 @@ export function useRestingHeartRate() {
 
         const hr = await healthService.getRestingHeartRate();
         setRestingHR(hr);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err : new Error('Failed to fetch resting heart rate'));
       } finally {
         setIsLoading(false);
@@ -98,7 +98,7 @@ export function useRestingHeartRate() {
     try {
       const hr = await healthService.getRestingHeartRate();
       setRestingHR(hr);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err : new Error('Failed to fetch resting heart rate'));
     } finally {
       setIsLoading(false);
@@ -123,7 +123,7 @@ export function useTodayHeartRate() {
 
       const data = await healthService.getTodayHeartRate();
       setStats(data);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err : new Error('Failed to fetch today\'s heart rate'));
     } finally {
       setIsLoading(false);
@@ -158,4 +158,5 @@ export function useHeartRateZone(bpm?: number, age?: number) {
 
   return healthService.getHeartRateZone(bpm, age);
 }
+
 

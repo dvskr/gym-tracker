@@ -135,7 +135,7 @@ class LocalDatabase {
     try {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem(key, jsonValue);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error(`Error saving to ${key}:`, error);
       throw error;
     }
@@ -145,7 +145,7 @@ class LocalDatabase {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error(`Error reading from ${key}:`, error);
       return [];
     }
@@ -154,7 +154,7 @@ class LocalDatabase {
   async clearLocal(key: string): Promise<void> {
     try {
       await AsyncStorage.removeItem(key);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error(`Error clearing ${key}:`, error);
       throw error;
     }
@@ -163,7 +163,7 @@ class LocalDatabase {
   async clearAll(): Promise<void> {
     try {
       await AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error clearing all data:', error);
       throw error;
     }
@@ -355,7 +355,7 @@ class LocalDatabase {
       
       const cached = JSON.parse(jsonValue) as ExerciseCache;
       return cached.data || [];
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error reading cached exercises:', error);
       return [];
     }
@@ -368,7 +368,7 @@ class LocalDatabase {
       
       const cached = JSON.parse(jsonValue) as ExerciseCache;
       return cached.cachedAt ? Date.now() - cached.cachedAt : null;
-    } catch (error) {
+    } catch (error: unknown) {
       return null;
     }
   }
@@ -428,7 +428,7 @@ class LocalDatabase {
       const syncData: LastSyncData = jsonValue ? JSON.parse(jsonValue) : {};
       syncData[table] = timestamp;
       await this.saveLocally(STORAGE_KEYS.LAST_SYNC, syncData);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error setting last sync time:', error);
     }
   }
@@ -440,7 +440,7 @@ class LocalDatabase {
       
       const syncData: LastSyncData = JSON.parse(jsonValue);
       return syncData[table] || null;
-    } catch (error) {
+    } catch (error: unknown) {
       return null;
     }
   }
@@ -454,7 +454,7 @@ class LocalDatabase {
     try {
       const jsonValue = await AsyncStorage.getItem(STORAGE_KEYS.PROFILE);
       return jsonValue ? JSON.parse(jsonValue) : null;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error reading profile:', error);
       return null;
     }
@@ -486,4 +486,5 @@ class LocalDatabase {
 // Singleton instance
 export const localDB = new LocalDatabase();
 export default localDB;
+
 

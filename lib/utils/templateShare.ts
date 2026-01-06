@@ -151,7 +151,7 @@ export async function copyTemplateToClipboard(template: Template): Promise<boole
     const text = generateTemplateShareText(template);
     await Clipboard.setStringAsync(text);
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error copying to clipboard:', error);
     return false;
   }
@@ -176,7 +176,7 @@ export async function shareTemplate(template: Template): Promise<boolean> {
     );
 
     return result.action === Share.sharedAction;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error sharing template:', error);
     return false;
   }
@@ -201,7 +201,7 @@ export async function shareTemplateAsJSON(template: Template): Promise<boolean> 
     );
 
     return result.action === Share.sharedAction;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error exporting template:', error);
     return false;
   }
@@ -215,9 +215,10 @@ export async function copyTemplateJSONToClipboard(template: Template): Promise<b
     const json = generateTemplateJSON(template);
     await Clipboard.setStringAsync(json);
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error copying JSON to clipboard:', error);
     return false;
   }
 }
+
 

@@ -39,7 +39,7 @@ export async function requestPermissions(): Promise<boolean> {
     }
 
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error requesting notification permissions:', error);
     return false;
   }
@@ -83,7 +83,7 @@ export async function scheduleWorkoutReminders(
         },
       });
     }
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error scheduling workout reminders:', error);
     throw error;
   }
@@ -102,7 +102,7 @@ export async function cancelWorkoutReminders(): Promise<void> {
         await Notifications.cancelScheduledNotificationAsync(notification.identifier);
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error canceling workout reminders:', error);
   }
 }
@@ -125,7 +125,7 @@ export async function sendLocalNotification(
       },
       trigger: null, // Send immediately
     });
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error sending local notification:', error);
   }
 }
@@ -150,7 +150,7 @@ export async function scheduleStreakReminder(
       },
       trigger: tomorrow,
     });
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error scheduling streak reminder:', error);
   }
 }
@@ -169,7 +169,7 @@ export async function sendPRNotification(
       `You just hit a ${recordType} record on ${exerciseName}: ${value}!`,
       { type: 'pr', exerciseName, recordType, value }
     );
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error sending PR notification:', error);
   }
 }
@@ -186,7 +186,7 @@ export async function sendMilestoneNotification(
       `Congratulations on completing ${milestone} workouts!`,
       { type: 'milestone', count: milestone }
     );
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error sending milestone notification:', error);
   }
 }
@@ -210,7 +210,7 @@ export async function scheduleWeeklySummary(): Promise<void> {
         repeats: true,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error scheduling weekly summary:', error);
   }
 }
@@ -221,7 +221,7 @@ export async function scheduleWeeklySummary(): Promise<void> {
 export async function cancelAllNotifications(): Promise<void> {
   try {
     await Notifications.cancelAllScheduledNotificationsAsync();
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error canceling all notifications:', error);
   }
 }
@@ -233,9 +233,10 @@ export async function getScheduledNotificationCount(): Promise<number> {
   try {
     const notifications = await Notifications.getAllScheduledNotificationsAsync();
     return notifications.length;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error getting notification count:', error);
     return 0;
   }
 }
+
 

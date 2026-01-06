@@ -198,7 +198,7 @@ export default function WeightGoalScreen() {
         );
         setWeeklyRate(rate);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching goal data:', error);
     } finally {
       setIsLoading(false);
@@ -247,7 +247,7 @@ export default function WeightGoalScreen() {
 
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert('Goal Set', 'Your weight goal has been saved!');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving goal:', error);
       Alert.alert('Error', 'Failed to save goal');
     } finally {
@@ -276,7 +276,7 @@ export default function WeightGoalScreen() {
               setIsEditing(false);
               setTargetWeight(currentWeight?.toString() || '');
               setTargetDate('');
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error clearing goal:', error);
               Alert.alert('Error', 'Failed to clear goal');
             }
@@ -955,4 +955,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+
 

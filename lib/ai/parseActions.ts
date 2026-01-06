@@ -45,7 +45,7 @@ export function parseCoachResponse(response: string): ParsedResponse {
           },
         };
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.warn('Failed to parse workout action:', error);
       // Return original message if parsing fails
       return { message: response };
@@ -62,4 +62,4 @@ export function parseCoachResponse(response: string): ParsedResponse {
 export function hasWorkoutAction(response: string): boolean {
   return /```workout\s*\n[\s\S]*?\n```/.test(response);
 }
-
+

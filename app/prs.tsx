@@ -93,7 +93,7 @@ export default function PersonalRecordsScreen() {
       }));
 
       setPrs(formattedPRs);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to fetch PRs', error);
     } finally {
       setIsLoading(false);
@@ -458,4 +458,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
+
+
 

@@ -49,7 +49,7 @@ export function WorkoutAnalysis({ workout }: WorkoutAnalysisProps) {
 
       const result = await workoutAnalysisService.analyzeWorkout(workout, user.id, forceRefresh);
       setAnalysis(result);
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to analyze workout';
       setError(errorMessage);
  logger.error('Failed to analyze workout:', err);
@@ -481,4 +481,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
+
 

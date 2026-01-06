@@ -258,7 +258,7 @@ export async function safeAsync<T>(
   
   try {
     return await fn();
-  } catch (error) {
+  } catch (error: unknown) {
     const appError = parseError(error);
     
     if (logError) {
@@ -375,7 +375,7 @@ export async function tryCatch<T>(
   try {
     const data = await promise;
     return ok(data);
-  } catch (error) {
+  } catch (error: unknown) {
     const appError = parseError(error);
     if (context) {
       logger.error(`[${context}] ${appError.message}`, error);
@@ -408,7 +408,7 @@ export async function retryAsync<T>(
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error) {
+    } catch (error: unknown) {
       lastError = error;
       const appError = parseError(error);
       
@@ -432,4 +432,5 @@ export async function retryAsync<T>(
   
   throw lastError;
 }
+
 

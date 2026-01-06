@@ -33,13 +33,13 @@ interface WorkoutData {
 
 export interface WorkoutSummary {
   id: string;
-  name: string;
+  name: string | null;
   started_at: string;
-  ended_at: string;
-  duration_seconds: number;
-  total_volume: number;
-  total_sets: number;
-  total_reps: number;
+  ended_at: string | null;
+  duration_seconds: number | null;
+  total_volume: number | null;
+  total_sets: number | null;
+  total_reps: number | null;
   rating: number | null;
 }
 
@@ -52,18 +52,20 @@ export interface WorkoutDetail extends WorkoutSummary {
     exercises: {
       id: string;
       name: string;
-      equipment: string;
+      equipment: string | null;
       gif_url: string | null;
     };
     workout_sets: {
       id: string;
       set_number: number;
       weight: number | null;
-      weight_unit: string;
+      weight_unit: string | null;
       reps: number | null;
-      set_type: string;
+      set_type: string | null;
       rpe: number | null;
       is_completed: boolean;
+      is_pr: boolean;
+      pr_type: string | null;
     }[];
   }[];
 }
@@ -259,4 +261,5 @@ export async function getWorkoutCount(userId: string): Promise<number> {
   if (error) throw error;
   return count || 0;
 }
+
 

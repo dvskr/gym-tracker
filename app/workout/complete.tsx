@@ -86,7 +86,7 @@ export default function WorkoutCompleteScreen() {
       if (data) {
         setWorkoutName(data.name || 'Workout');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to fetch completed workout:', error);
       Alert.alert('Error', 'Failed to load workout details');
     } finally {
@@ -195,7 +195,7 @@ export default function WorkoutCompleteScreen() {
 
       // Navigate to history
       router.replace('/(tabs)');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to save workout metadata:', error);
       Alert.alert('Error', 'Failed to save changes');
     } finally {
@@ -222,7 +222,7 @@ export default function WorkoutCompleteScreen() {
 
               if (error) throw error;
               router.replace('/(tabs)');
-            } catch (error) {
+            } catch (error: unknown) {
               logger.error('Failed to delete workout:', error);
               Alert.alert('Error', 'Failed to delete workout');
             }
@@ -734,4 +734,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
+
+
 

@@ -110,7 +110,7 @@ export default function ChangeEmailScreen() {
       successHaptic();
       setEmailSent(true);
 
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error changing email', error);
       Alert.alert(
         'Error',
@@ -556,3 +556,5 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
+
+

@@ -27,7 +27,7 @@ export default function TestEdgeFunctions() {
     try {
       const success = await testFn();
       setResults(prev => [...prev, success ? `✅ ${testName}: PASSED` : `❌ ${testName}: FAILED`]);
-    } catch (error) {
+    } catch (error: unknown) {
       setResults(prev => [...prev, `❌ ${testName}: ERROR - ${error}`]);
     } finally {
       setLoading(false);
@@ -247,4 +247,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-
+
+
+

@@ -402,7 +402,7 @@ const HistoryEntryCard: React.FC<HistoryEntryCardProps> = ({ entry, index, isEdi
       await onUpdate(entry.id, editData);
       setIsEditing(false);
       setEditData({});
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to update measurement:', error);
       Alert.alert('Error', 'Failed to save changes');
     } finally {
@@ -633,7 +633,7 @@ export default function MeasurementsScreen() {
 
       const timeline = await getMeasurementTimeline(user.id, selectedMeasurement);
       setChartData(timeline);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error fetching measurements:', error);
     } finally {
       setIsLoading(false);
@@ -650,7 +650,7 @@ export default function MeasurementsScreen() {
       try {
         const timeline = await getMeasurementTimeline(user.id, selectedMeasurement);
         setChartData(timeline);
-      } catch (error) {
+      } catch (error: unknown) {
         logger.error('Error fetching chart data:', error);
       }
     };
@@ -687,7 +687,7 @@ export default function MeasurementsScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert('Saved!', 'Measurements saved successfully');
       fetchData();
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error saving measurements:', error);
       Alert.alert('Error', 'Failed to save measurements');
     } finally {
@@ -696,7 +696,7 @@ export default function MeasurementsScreen() {
   };
 
   const handleDelete = async (id: string) => {
-    try { await deleteMeasurementById(id); fetchData(); } catch (error) { logger.error('Error deleting measurement:', error); Alert.alert('Error', 'Failed to delete measurement'); }
+    try { await deleteMeasurementById(id); fetchData(); } catch (error: unknown) { logger.error('Error deleting measurement:', error); Alert.alert('Error', 'Failed to delete measurement'); }
   };
 
   const handleUpdate = async (id: string, data: Partial<MeasurementData>) => { await updateMeasurementById(id, data); await fetchData(); };
@@ -1092,3 +1092,5 @@ const styles = StyleSheet.create({
   emptyTitle: { fontSize: 20, fontWeight: 'bold', color: '#ffffff', marginBottom: 8 },
   emptySubtitle: { fontSize: 14, color: '#64748b', textAlign: 'center' },
 });
+
+

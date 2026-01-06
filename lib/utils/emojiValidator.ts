@@ -177,3 +177,4 @@ export function getSafePREmoji(prType: string): string {
   return SAFE_PR_EMOJIS[prType as keyof typeof SAFE_PR_EMOJIS] || SAFE_PR_EMOJIS.default;
 }
 
+

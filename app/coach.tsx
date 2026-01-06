@@ -100,7 +100,7 @@ export default function CoachScreen() {
         }));
         setMessages(loadedMessages);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to load chat history:', error);
     }
   };
@@ -121,7 +121,7 @@ export default function CoachScreen() {
 
       if (error) throw error;
       return data?.id;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to save message:', error);
       return null;
     }
@@ -161,7 +161,7 @@ export default function CoachScreen() {
       
       // Fetch contextual data for suggested questions
       await fetchContextData();
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to load user context:', error);
     } finally {
       setIsLoadingContext(false);
@@ -211,7 +211,7 @@ export default function CoachScreen() {
         isRestDay: !recentWorkout,
         lowEnergy: (checkin.data?.energy_level ?? 5) <= 2,
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch context data:', error);
     }
   };
@@ -295,7 +295,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    } catch (error) {
+    } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
  logger.error('Failed to send message:', error);
       const errorMsg: Message = {
@@ -347,7 +347,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
 
       // Clear local state
       setMessages([]);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to clear chat history:', error);
       // Still clear local state even if DB delete fails
       setMessages([]);
@@ -426,7 +426,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           } else {
  logger.warn(`a Exercise not found: ${exerciseData.name}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error(`Failed to add exercise ${exerciseData.name}:`, error);
         }
       }
@@ -437,7 +437,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       
       // Navigate to active workout
       router.push('/workout/active');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to start workout:', error);
       Alert.alert('Error', 'Failed to start workout. Please try again.');
     }
@@ -790,4 +790,6 @@ const styles = StyleSheet.create({
     borderColor: '#334155',
   },
 });
+
+
 

@@ -65,7 +65,7 @@ export const useCheckinStore = create<CheckinStore>((set, get) => ({
         hasCheckedInToday: !!data,
         loading: false 
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching check-in:', error);
       set({ 
         error: error.message || 'Failed to fetch check-in',
@@ -111,7 +111,7 @@ export const useCheckinStore = create<CheckinStore>((set, get) => ({
       invalidateCoachContextAfterCheckin(user.id);
 
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving check-in:', error);
       set({ 
         error: error.message || 'Failed to save check-in',
@@ -136,7 +136,7 @@ export async function getWellnessAverage(userId: string, days: number = 7) {
 
     if (error) throw error;
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error fetching wellness average:', error);
     return null;
   }
@@ -157,9 +157,10 @@ export async function getCheckinsForRange(userId: string, startDate: string, end
 
     if (error) throw error;
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error fetching check-ins range:', error);
     return [];
   }
 }
+
 

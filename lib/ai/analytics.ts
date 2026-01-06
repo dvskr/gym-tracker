@@ -161,7 +161,7 @@ export const logAIQuality = async (quality: AIResponseQuality): Promise<void> =>
         usedFallback: quality.usedFallback,
       });
     }
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Failed to log AI quality:', error);
   }
 };
@@ -357,7 +357,7 @@ export const getAIQualityStats = async (
       topFilterReasons,
       topWarnings,
     };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error calculating quality stats:', error);
     return null;
   }
@@ -519,4 +519,5 @@ async function getRecentAlerts(limit: number = 20): Promise<AIQualityAlert[]> {
     timestamp: new Date(d.timestamp),
   }));
 }
+
 

@@ -78,7 +78,7 @@ class DeviceManager {
       } else {
  logger.log('S& Device registered successfully');
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Error in registerDevice:', error);
     }
   }
@@ -98,7 +98,7 @@ class DeviceManager {
         .update({ last_active: new Date().toISOString() })
         .eq('id', deviceId)
         .eq('user_id', userId);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating last active:', error);
     }
   }
@@ -161,7 +161,7 @@ class DeviceManager {
         isCurrent: d.id === currentDeviceId,
         createdAt: new Date(d.created_at),
       }));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting devices:', error);
       return [];
     }
@@ -182,7 +182,7 @@ class DeviceManager {
       }
 
  logger.log('S& Device removed successfully');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error in removeDevice:', error);
       throw error;
     }
@@ -212,7 +212,7 @@ class DeviceManager {
       const count = data?.length || 0;
  logger.log(`S& Removed ${count} device(s)`);
       return count;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error removing other devices:', error);
       throw error;
     }
@@ -263,7 +263,7 @@ class DeviceManager {
         deviceName: device?.name || 'Another device',
         startedAt: new Date(workout.started_at),
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error checking active workout:', error);
       return null;
     }
@@ -287,7 +287,7 @@ class DeviceManager {
       if (error) throw error;
 
  logger.log('S& Workout ended on other device');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error ending workout on other device:', error);
       throw error;
     }
@@ -325,7 +325,7 @@ class DeviceManager {
       if (Platform.OS !== 'web') {
         appVersion = Application.nativeApplicationVersion || '1.0.0';
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting device info:', error);
     }
 
@@ -374,4 +374,4 @@ class DeviceManager {
 // Singleton instance
 export const deviceManager = new DeviceManager();
 export default deviceManager;
-
+

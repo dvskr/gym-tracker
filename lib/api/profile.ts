@@ -46,7 +46,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 
     if (error) throw error;
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error fetching profile:', error);
     throw error;
   }
@@ -72,7 +72,7 @@ export async function updateProfile(
 
     if (error) throw error;
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error updating profile:', error);
     throw error;
   }
@@ -119,7 +119,7 @@ export async function uploadAvatar(
       .getPublicUrl(filePath);
 
     return urlData.publicUrl;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error uploading avatar:', error);
     throw error;
   }
@@ -154,7 +154,7 @@ export async function deleteAvatar(userId: string): Promise<void> {
 
     // Update profile to remove avatar URL
     await updateProfile(userId, { avatar_url: null });
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error deleting avatar:', error);
     throw error;
   }
@@ -203,4 +203,4 @@ export function validateProfileData(data: UpdateProfileData): string[] {
 
   return errors;
 }
-
+

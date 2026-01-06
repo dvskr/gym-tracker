@@ -204,7 +204,7 @@ export default function CapturePhotoScreen() {
         setCapturedPhoto(result);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error taking photo:', error);
       Alert.alert(
         'Camera Error',
@@ -225,7 +225,7 @@ export default function CapturePhotoScreen() {
         setCapturedPhoto(result);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error picking photo:', error);
       Alert.alert(
         'Gallery Error',
@@ -271,7 +271,7 @@ export default function CapturePhotoScreen() {
         'Your progress photo has been saved successfully.',
         [{ text: 'OK', onPress: () => router.push('/body/photos') }]
       );
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error saving photo:', error);
       Alert.alert('Error', 'Failed to save photo. Please try again.');
     } finally {
@@ -877,3 +877,5 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
+
+

@@ -291,7 +291,7 @@ export async function seedDefaultTemplates(userId: string): Promise<void> {
     }
 
  logger.log('Finished seeding default templates');
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error seeding default templates:', error);
     // Don't throw - seeding failure shouldn't break the app
   }
@@ -433,7 +433,7 @@ export async function addNewDefaultTemplates(userId: string): Promise<void> {
           logger.log(
             `Updated template "${template.name}" with ${validExercises.length}/${template.exercises.length} exercises`
           );
-        } catch (templateError) {
+        } catch (templateError: unknown) {
           // Silently skip templates that fail to update (e.g., RLS policy violations)
           // This can happen if the template was created by a different process or has permission issues
           logger.warn(`Failed to update template "${template.name}":`, templateError);
@@ -444,9 +444,10 @@ export async function addNewDefaultTemplates(userId: string): Promise<void> {
     }
     */
     
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error adding/updating default templates:', error);
     // Don't throw - this shouldn't break the app
   }
 }
+
 

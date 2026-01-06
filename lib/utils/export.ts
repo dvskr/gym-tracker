@@ -1,4 +1,4 @@
-﻿import { Share, Platform } from 'react-native';
+import { Share, Platform } from 'react-native';
 import { logger } from '@/lib/utils/logger';
 import * as Clipboard from 'expo-clipboard';
 import * as Sharing from 'expo-sharing';
@@ -47,30 +47,30 @@ export interface ExportableWorkout {
 /**
  * Generate a plain text summary of a workout
  * Format:
- * 🏋️ Morning Workout
- * December 27, 2024 â€¢ 45 min
+ * ???� Morning Workout
+ * December 27, 2024 • 45 min
  * 
  * BENCH PRESS
- *   1. 135 lbs Ã— 10
- *   2. 185 lbs Ã— 8
- *   3. 205 lbs Ã— 6 —x— 
+ *   1. 135 lbs × 10
+ *   2. 185 lbs × 8
+ *   3. 205 lbs × 6 �x� 
  * 
  * SQUATS
- *   1. 225 lbs Ã— 8
+ *   1. 225 lbs × 8
  *   ...
  * 
  * Total Volume: 12,500 lbs
- * Rating: â­—————â­â­
+ * Rating: ⭐�����⭐⭐
  */
 export function generateWorkoutText(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
   // Header
-  lines.push(`🏋️ ${workout.name}`);
+  lines.push(`???� ${workout.name}`);
   
   const dateStr = format(new Date(workout.startedAt), 'MMMM d, yyyy');
   const durationStr = workout.duration ? `${workout.duration} min` : '';
-  lines.push(`${dateStr}${durationStr ? ` â€¢ ${durationStr}` : ''}`);
+  lines.push(`${dateStr}${durationStr ? ` • ${durationStr}` : ''}`);
   lines.push('');
 
   // Exercises
@@ -86,7 +86,7 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
     });
     
     if (exercise.notes) {
-      lines.push(`  —x ${exercise.notes}`);
+      lines.push(`  �x ${exercise.notes}`);
     }
     lines.push('');
   });
@@ -99,14 +99,14 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
     lines.push(`Total Sets: ${workout.totalSets}`);
   }
   if (workout.rating) {
-    lines.push(`Rating: ${'â­'.repeat(workout.rating)}`);
+    lines.push(`Rating: ${'⭐'.repeat(workout.rating)}`);
   }
   if (workout.notes) {
     lines.push(`Notes: ${workout.notes}`);
   }
 
   lines.push('');
-  lines.push('— Tracked with GymTracker —x');
+  lines.push('� Tracked with GymTracker �x');
 
   return lines.join('\n');
 }
@@ -117,7 +117,7 @@ export function generateWorkoutText(workout: ExportableWorkout): string {
 export function generateCompactWorkoutText(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
-  lines.push(`🏋️ ${workout.name}`);
+  lines.push(`???� ${workout.name}`);
   
   const dateStr = format(new Date(workout.startedAt), 'MMM d');
   lines.push(dateStr);
@@ -131,7 +131,7 @@ export function generateCompactWorkoutText(workout: ExportableWorkout): string {
       const bestSet = completedSets.reduce((best, current) => 
         (current.weight || 0) > (best.weight || 0) ? current : best
       );
-      lines.push(`â€¢ ${exercise.name}: ${bestSet.weight}  ${bestSet.reps}`);
+      lines.push(`• ${exercise.name}: ${bestSet.weight}  ${bestSet.reps}`);
     }
   });
 
@@ -291,7 +291,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
   const lines: string[] = [];
 
   // Header
-  lines.push(`# 🏋️ ${workout.name}`);
+  lines.push(`# ???� ${workout.name}`);
   lines.push('');
   
   const dateStr = format(new Date(workout.startedAt), 'MMMM d, yyyy');
@@ -303,7 +303,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     lines.push(`${workout.totalVolume.toLocaleString()} lbs`);
   }
   if (workout.rating) {
-    lines.push(`**Rating:** ${'â­'.repeat(workout.rating)}`);
+    lines.push(`**Rating:** ${'⭐'.repeat(workout.rating)}`);
   }
   lines.push('');
 
@@ -321,7 +321,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     lines.push('|-----|--------|------|------|');
     
     exercise.sets.forEach((set) => {
-      const weight = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '—';
+      const weight = set.weight !== null ? `${set.weight} ${set.weightUnit || 'lbs'}` : '�';
       const reps = set.reps !== null ? set.reps.toString() : '';
       const type = set.setType || 'normal';
       
@@ -330,7 +330,7 @@ export function generateWorkoutMarkdown(workout: ExportableWorkout): string {
     
     if (exercise.notes) {
       lines.push('');
-      lines.push(`> —x ${exercise.notes}`);
+      lines.push(`> �x ${exercise.notes}`);
     }
     lines.push('');
   });
@@ -397,7 +397,7 @@ export async function shareWorkout(
       message: content,
       title: `GymTracker: ${workout.name}`,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error sharing workout:', message);
     throw error;
@@ -422,7 +422,7 @@ export async function shareWorkoutData(
       message: `${workout.name} (${formatLabel})\n\n${content}`,
       title: `GymTracker Export: ${workout.name}`,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error sharing workout data:', message);
     throw error;
@@ -577,13 +577,14 @@ export function convertToExportable(workoutDetail: WorkoutWithExercises): Export
     id: workoutDetail.id,
     name: workoutDetail.name || 'Workout',
     startedAt: workoutDetail.started_at,
-    endedAt: workoutDetail.ended_at,
+    endedAt: workoutDetail.ended_at ?? undefined,
     duration: durationMinutes,
     totalVolume,
     totalSets,
-    rating: workoutDetail.rating,
-    notes: workoutDetail.notes,
+    rating: workoutDetail.rating ?? undefined,
+    notes: workoutDetail.notes ?? undefined,
     exercises,
   };
 }
+
 

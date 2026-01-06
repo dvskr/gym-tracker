@@ -47,7 +47,7 @@ class SmartTimingService {
       
  logger.log(`Recorded workout: ${this.getDayName(day)} at ${hour}:00`);
  logger.log(`x Total recorded workouts: ${activity.workoutTimes.length}`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to record workout time:', error);
     }
   }
@@ -245,7 +245,7 @@ class SmartTimingService {
         workoutDays: [],
         averageWorkoutDuration: 60,
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get activity:', error);
       return {
         workoutTimes: [],
@@ -261,7 +261,7 @@ class SmartTimingService {
   private async saveActivity(activity: UserActivity): Promise<void> {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(activity));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to save activity:', error);
     }
   }
@@ -285,4 +285,4 @@ class SmartTimingService {
 }
 
 export const smartTimingService = new SmartTimingService();
-
+

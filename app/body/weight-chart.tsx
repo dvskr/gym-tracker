@@ -175,7 +175,7 @@ export default function WeightChartScreen() {
       }
 
       setChartData(weights);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching weight data:', error);
     } finally {
       setIsLoading(false);
@@ -934,4 +934,6 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
   },
 });
+
+
 

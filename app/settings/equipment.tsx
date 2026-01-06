@@ -93,7 +93,7 @@ export default function EquipmentSettingsScreen() {
         if (data.gym_type) setGymType(data.gym_type);
         if (data.available_equipment) setAvailableEquipment(data.available_equipment);
       }
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error loading equipment:', error);
     } finally {
       setLoading(false);
@@ -119,7 +119,7 @@ logger.error('Error loading equipment:', error);
 
       successHaptic();
       router.push(getCurrentTab() || '/(tabs)');
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error saving equipment:', error);
     } finally {
       setSaving(false);
@@ -446,3 +446,5 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
+
+

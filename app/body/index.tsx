@@ -457,7 +457,7 @@ export default function BodyHubScreen() {
           setBicep(measurements.bicep_left ?? measurements.bicep_right ?? null);
           setMeasurementUnit(measurements.unit || 'in');
         }
-      } catch (e) {
+      } catch (e: unknown) {
         // No measurements yet
       }
 
@@ -468,7 +468,7 @@ export default function BodyHubScreen() {
         // Get total count
         const allPhotos = await getPhotos(user.id);
         setTotalPhotoCount(allPhotos.length);
-      } catch (e) {
+      } catch (e: unknown) {
         // No photos yet
       }
 
@@ -483,10 +483,10 @@ export default function BodyHubScreen() {
             goalType: weightGoal.goal_type,
           });
         }
-      } catch (e) {
+      } catch (e: unknown) {
         // No goal set
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching body data:', error);
     } finally {
       setIsLoading(false);
@@ -952,4 +952,6 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
+
+
 

@@ -31,7 +31,7 @@ class RestTimerNotificationService {
       try {
         await notificationService.cancelNotification(this.currentNotificationId);
         logger.log('[RestTimer] Cancelled notification');
-      } catch (error) {
+      } catch (error: unknown) {
         logger.error('[RestTimer] Failed to cancel notification:', error);
       }
       this.currentNotificationId = null;
@@ -97,7 +97,7 @@ class RestTimerNotificationService {
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       logger.log('[RestTimer] Warning haptic triggered');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[RestTimer] Failed to trigger warning haptic:', error);
     }
   }
@@ -116,7 +116,7 @@ class RestTimerNotificationService {
 
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    } catch (error) {
+    } catch (error: unknown) {
       // Silently fail - don't spam console for ticks
     }
   }
@@ -135,7 +135,7 @@ class RestTimerNotificationService {
       Vibration.vibrate([0, 400, 200, 400]);
       
       logger.log('[RestTimer] Vibration pattern triggered');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[RestTimer] Error triggering vibration:', error);
     }
   }
@@ -168,3 +168,4 @@ class RestTimerNotificationService {
 }
 
 export const restTimerNotificationService = new RestTimerNotificationService();
+

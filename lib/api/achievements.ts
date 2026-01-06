@@ -481,3 +481,4 @@ export async function getAchievementsByType(
   const achievements = await getAchievements(userId);
   return achievements.filter((a) => a.type === type);
 }
+

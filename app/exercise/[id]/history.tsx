@@ -557,7 +557,7 @@ export default function ExerciseHistoryScreen() {
       setExercise(exerciseData);
       setHistory(historyData);
       setStats(statsData);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch exercise history:', error);
     } finally {
       setIsLoading(false);
@@ -1174,3 +1174,4 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
+

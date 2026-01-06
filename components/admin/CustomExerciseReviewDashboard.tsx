@@ -87,7 +87,7 @@ export default function AdminReviewDashboard() {
         ...ex,
         user_email: ex.users?.email
       })) || []);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading exercises:', error);
     } finally {
       setLoading(false);
@@ -149,7 +149,7 @@ export default function AdminReviewDashboard() {
       alert(`S& "${exercise.name}" has been added to the library!`);
       setReviewNotes('');
       loadExercises();
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error approving exercise:', error);
       alert(`Error: ${message}`);
@@ -197,7 +197,7 @@ export default function AdminReviewDashboard() {
       setReviewNotes('');
       setSelectedExercise(null);
       loadExercises();
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error rejecting exercise:', error);
       alert(`Error: ${message}`);
@@ -216,7 +216,7 @@ export default function AdminReviewDashboard() {
         .eq('id', exerciseId);
 
       loadExercises();
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
  logger.error('Error deleting exercise:', error);
       alert(`Error: ${message}`);
@@ -479,4 +479,6 @@ export default function AdminReviewDashboard() {
     </div>
   );
 }
+
+
 

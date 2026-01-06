@@ -246,7 +246,7 @@ export default function ComparePhotosScreen() {
         setBeforePhoto(sortedByDate[0]);
         setAfterPhoto(sortedByDate[sortedByDate.length - 1]);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching photos:', error);
     } finally {
       setIsLoading(false);
@@ -270,7 +270,7 @@ export default function ComparePhotosScreen() {
         message: `Check out my progress! x ${timeDiff}`,
         // In a full implementation, we'd create a combined image and share its URI
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error sharing:', error);
     }
   };
@@ -285,7 +285,7 @@ export default function ComparePhotosScreen() {
     try {
       await saveComparisonImage(afterPhoto.local_uri);
       Alert.alert('Saved', 'Comparison saved to your device');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving comparison:', error);
       Alert.alert('Error', 'Failed to save comparison');
     } finally {
@@ -841,4 +841,6 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
-
+
+
+

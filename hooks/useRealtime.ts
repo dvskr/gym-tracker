@@ -174,3 +174,4 @@ export function useEvent<T = unknown>(event: string, callback: (data?: T) => voi
 
 export default useRealtimeWorkouts;
 
+

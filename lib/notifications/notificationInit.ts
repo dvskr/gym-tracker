@@ -33,7 +33,7 @@ export async function initializeNotifications(userId: string): Promise<void> {
     await workoutReminderService.scheduleAllReminders();
 
     logger.log('[NotificationInit] All notifications initialized successfully');
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('[NotificationInit] Error initializing notifications:', error);
   }
 }
@@ -52,7 +52,7 @@ async function checkAndScheduleStreakReminder(userId: string): Promise<void> {
 
     // Check if we need to send a streak reminder
     await engagementNotificationService.checkStreakReminder(streakData);
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('[NotificationInit] Error checking streak reminder:', error);
   }
 }
@@ -89,4 +89,5 @@ export async function refreshNotifications(userId: string): Promise<void> {
 
   logger.log('[NotificationInit] Notifications refreshed');
 }
+
 

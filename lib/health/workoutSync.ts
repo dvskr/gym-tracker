@@ -59,7 +59,7 @@ export async function syncWorkoutToHealth(workout: LocalWorkout): Promise<boolea
     }
 
     return synced;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error syncing workout to health:', error);
     return false;
   }
@@ -117,7 +117,7 @@ export async function getUnsyncedWorkouts(userId: string): Promise<LocalWorkout[
     if (error) throw error;
 
     return data || [];
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error fetching unsynced workouts:', error);
     return [];
   }
@@ -182,9 +182,10 @@ export async function updateWorkoutCalories(workoutId: string, calories: number)
 
  logger.log(`S& Updated workout ${workoutId} calories: ${calories}`);
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error updating workout calories:', error);
     return false;
   }
 }
+
 

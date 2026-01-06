@@ -215,4 +215,4 @@ export function getWorkoutTypeName(category: string): string {
 
   return nameMap[category.toLowerCase()] || 'Workout';
 }
-
+

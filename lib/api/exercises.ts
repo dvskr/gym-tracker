@@ -496,3 +496,4 @@ export async function getExercisesByMuscle(
   return data || [];
 }
 
+

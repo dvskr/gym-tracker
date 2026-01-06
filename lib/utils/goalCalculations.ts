@@ -255,4 +255,4 @@ export function formatTimeToGoal(weeksRemaining: number | null): string {
   const months = Math.round(weeksRemaining / 4.33);
   return `~${months} month${months !== 1 ? 's' : ''}`;
 }
-
+

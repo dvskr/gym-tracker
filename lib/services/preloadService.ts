@@ -58,7 +58,7 @@ export async function preloadAllAppData(
  logger.log('[Preload] Loading AI data...');
     try {
       await prefetchAIData(userId);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.warn('[Preload] AI data prefetch failed, continuing...', error);
     }
     updateProgress('ai');
@@ -68,14 +68,14 @@ export async function preloadAllAppData(
     try {
       const recentIds = useExerciseStore.getState().recentlyUsedIds.slice(0, 10);
       await preloadRecentThumbnails(recentIds);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.warn('[Preload] Image preload failed, continuing...', error);
     }
     updateProgress('images');
 
  logger.log(`[Preload] Complete in ${Date.now() - startTime}ms`);
 
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Preload] Error during preload:', error);
     // Don't throw - let app continue with partial data
   }
@@ -103,8 +103,8 @@ export async function refreshAIData(userId: string): Promise<void> {
   try {
     await prefetchAIData(userId);
  logger.log('[Preload] AI data refresh complete');
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Preload] AI data refresh failed:', error);
   }
 }
-
+

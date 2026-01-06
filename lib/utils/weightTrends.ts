@@ -182,4 +182,4 @@ export function formatWeeklyRate(weeklyChange: number, unit: string = 'lbs'): st
   const sign = weeklyChange >= 0 ? '+' : '';
   return `${sign}${weeklyChange} ${unit}/week`;
 }
-
+

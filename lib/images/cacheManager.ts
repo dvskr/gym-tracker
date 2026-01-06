@@ -31,7 +31,7 @@ export async function getCacheSize(): Promise<{
     }
     
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Cache] Error getting size:', error);
     return { sizeBytes: 0, sizeMB: '0 MB', sizeFormatted: '0 B' };
   }
@@ -52,7 +52,7 @@ export async function clearImageCache(): Promise<boolean> {
     
  logger.log('[Cache] Image cache cleared!');
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Cache] Error clearing cache:', error);
     return false;
   }
@@ -66,7 +66,7 @@ export async function clearMemoryCache(): Promise<void> {
   try {
     await Image.clearMemoryCache();
  logger.log('[Cache] Memory cache cleared');
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Cache] Error clearing memory cache:', error);
   }
 }
@@ -118,4 +118,4 @@ function formatBytes(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
-
+

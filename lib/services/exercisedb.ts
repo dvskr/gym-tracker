@@ -57,7 +57,7 @@ export const fetchAllExercises = async (
   try {
     const exercises = await exerciseApiService.getAll(limit, offset);
     return exercises.map(mapExercise);
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -81,7 +81,7 @@ export const searchExercisesByName = async (
   try {
     const exercises = await exerciseApiService.searchByName(name);
     return exercises.map(mapExercise);
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to search exercises: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -101,7 +101,7 @@ export const fetchExercisesByBodyPart = async (
   try {
     const exercises = await exerciseApiService.getByBodyPart(bodyPart);
     return exercises.map(mapExercise);
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch exercises by body part: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -121,7 +121,7 @@ export const fetchExercisesByEquipment = async (
   try {
     const exercises = await exerciseApiService.getByEquipment(equipment);
     return exercises.map(mapExercise);
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch exercises by equipment: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -141,7 +141,7 @@ export const fetchExercisesByTarget = async (
   try {
     const exercises = await exerciseApiService.getByTarget(target);
     return exercises.map(mapExercise);
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch exercises by target: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -159,7 +159,7 @@ export const fetchExerciseById = async (
   try {
     const exercise = await exerciseApiService.getById(id);
     return exercise ? mapExercise(exercise) : null;
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch exercise: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -173,7 +173,7 @@ export const fetchExerciseById = async (
 export const fetchBodyPartList = async (): Promise<string[]> => {
   try {
     return await exerciseApiService.getBodyPartList();
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch body part list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -187,7 +187,7 @@ export const fetchBodyPartList = async (): Promise<string[]> => {
 export const fetchEquipmentList = async (): Promise<string[]> => {
   try {
     return await exerciseApiService.getEquipmentList();
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch equipment list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
@@ -201,9 +201,9 @@ export const fetchEquipmentList = async (): Promise<string[]> => {
 export const fetchTargetList = async (): Promise<string[]> => {
   try {
     return await exerciseApiService.getTargetList();
-  } catch (error) {
+  } catch (error: unknown) {
     throw new ExerciseDBError(
       `Failed to fetch target list: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
-};
+};

@@ -478,7 +478,7 @@ export const useSettingsStore = create<SettingsState>()(
           } else {
  logger.log('[Settings] S& Settings synced to database successfully');
           }
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error('[Settings] R Error syncing settings:', error);
         }
       },
@@ -514,7 +514,7 @@ function debounceSyncToProfile() {
       if (user) {
         await useSettingsStore.getState().syncToProfile(user.id);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error in debounced sync:', error);
     }
   }, 500);
@@ -550,7 +550,8 @@ export async function initializeSettings(userId: string) {
     } else {
  logger.log('[Settings] a No profile found in database');
     }
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Settings] R Error initializing settings:', error);
   }
 }
+

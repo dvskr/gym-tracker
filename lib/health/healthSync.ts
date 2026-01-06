@@ -98,7 +98,7 @@ class HealthSyncService {
       }
 
       return result;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Health sync failed:', error);
       result.errors.push(error instanceof Error ? error.message : 'Unknown error');
       return result;
@@ -182,7 +182,7 @@ class HealthSyncService {
           } else {
             result.errors.push(`Failed to sync workout ${workout.id}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
           result.errors.push(
             `Error syncing workout ${workout.id}: ${error instanceof Error ? error.message : 'Unknown'}`
           );
@@ -190,7 +190,7 @@ class HealthSyncService {
       }
 
  logger.log(`S& Synced ${result.synced}/${unsynced.length} workout(s)`);
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(
         `Workout sync error: ${error instanceof Error ? error.message : 'Unknown'}`
       );
@@ -271,7 +271,7 @@ class HealthSyncService {
           } else {
             result.errors.push(`Failed to sync weight ${entry.id}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
           result.errors.push(
             `Error syncing weight ${entry.id}: ${error instanceof Error ? error.message : 'Unknown'}`
           );
@@ -279,7 +279,7 @@ class HealthSyncService {
       }
 
  logger.log(`S& Synced ${result.synced}/${unsynced.length} weight entry(s)`);
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(
         `Weight sync error: ${error instanceof Error ? error.message : 'Unknown'}`
       );
@@ -367,7 +367,7 @@ class HealthSyncService {
             result.imported++;
  logger.log(`S& Imported weight for ${dateStr}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
           result.errors.push(
             `Error importing weight: ${error instanceof Error ? error.message : 'Unknown'}`
           );
@@ -375,7 +375,7 @@ class HealthSyncService {
       }
 
  logger.log(`S& Imported ${result.imported} weight entry(s)`);
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(
         `Weight import error: ${error instanceof Error ? error.message : 'Unknown'}`
       );
@@ -411,4 +411,5 @@ class HealthSyncService {
 }
 
 export const healthSyncService = new HealthSyncService();
+
 

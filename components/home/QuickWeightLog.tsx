@@ -52,7 +52,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
           setWeight(latest.weight.toString());
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching weight:', error);
     }
   }, [userId]);
@@ -95,7 +95,7 @@ export const QuickWeightLog: React.FC<QuickWeightLogProps> = ({
       }, 2000);
       
       onWeightLogged?.();
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error logging weight:', error);
     } finally {
       setIsSaving(false);
@@ -283,4 +283,6 @@ const styles = StyleSheet.create({
 });
 
 export default QuickWeightLog;
+
+
 

@@ -31,7 +31,7 @@ export default function DevicesScreen() {
     try {
       const devicesData = await deviceManager.getDevices();
       setDevices(devicesData);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading devices:', error);
       Alert.alert('Error', 'Failed to load devices');
     } finally {
@@ -54,7 +54,7 @@ export default function DevicesScreen() {
               await deviceManager.removeDevice(device.id);
               await loadDevices();
               Alert.alert('Removed', 'Device removed successfully');
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error removing device:', error);
               Alert.alert('Error', 'Failed to remove device');
             } finally {
@@ -88,7 +88,7 @@ export default function DevicesScreen() {
               const count = await deviceManager.removeAllOtherDevices();
               await loadDevices();
               Alert.alert('Success', `Signed out from ${count} device(s)`);
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error removing devices:', error);
               Alert.alert('Error', 'Failed to sign out from other devices');
             } finally {
@@ -408,4 +408,6 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+
 

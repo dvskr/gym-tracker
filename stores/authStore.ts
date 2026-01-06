@@ -36,7 +36,7 @@ async function seedTemplatesInBackground(userId: string) {
       
       // Then add any new templates (for existing users)
       await addNewDefaultTemplates(userId);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Background template seeding failed:', error);
     }
   }, 1000); // Small delay to let app settle
@@ -85,7 +85,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           set({ hasSeededTemplates: false });
         }
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error initializing auth:', error);
       set({ isInitialized: true, isLoading: false });
     }
@@ -138,7 +138,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (result.error) {
         logger.error('Sign out error:', result.error);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Sign out exception:', error);
     }
     
@@ -158,5 +158,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return { error };
   },
 }));
+
 
 

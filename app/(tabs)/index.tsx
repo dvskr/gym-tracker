@@ -271,7 +271,7 @@ export default function HomeScreen() {
           measurementDate = latestMeasurement.measured_at;
           setLastMeasurementDate(measurementDate);
         }
-      } catch (e) {
+      } catch (e: unknown) {
         // Silently ignore if no measurements
       }
       
@@ -283,7 +283,7 @@ export default function HomeScreen() {
       
       setHasCheckedCache(true); // Mark cache as checked
  logger.log('[Home] Data fetched successfully');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching home data:', error);
       setHasCheckedCache(true);
     } finally {
@@ -376,7 +376,7 @@ export default function HomeScreen() {
       }
 
       router.push('/workout/active');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error starting template:', error);
     }
   };
@@ -423,7 +423,7 @@ export default function HomeScreen() {
       }
 
       router.push('/workout/active');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error starting default template:', error);
     }
   };
@@ -1005,3 +1005,5 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 });
+
+

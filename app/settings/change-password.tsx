@@ -132,7 +132,7 @@ export default function ChangePasswordScreen() {
         'Your password has been updated successfully. You will remain logged in on this device.',
         [{ text: 'OK', onPress: () => router.back() }]
       );
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Error changing password', error);
       Alert.alert(
         'Error',
@@ -519,3 +519,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 });
+
+

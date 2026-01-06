@@ -113,7 +113,7 @@ export async function mergeWorkouts(serverWorkouts: LocalWorkout[]): Promise<voi
     await localDB.saveLocally('@gym/workouts', merged);
 
  logger.log(`S& Merged workouts: ${merged.length} total`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error merging workouts:', error);
     throw error;
   }
@@ -131,7 +131,7 @@ export async function mergeTemplates(serverTemplates: LocalTemplate[]): Promise<
     await localDB.saveLocally('@gym/templates', merged);
 
  logger.log(`S& Merged templates: ${merged.length} total`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error merging templates:', error);
     throw error;
   }
@@ -149,7 +149,7 @@ export async function mergeWeightLog(serverWeightLog: WeightEntry[]): Promise<vo
     await localDB.saveLocally('@gym/weight_log', merged);
 
  logger.log(`S& Merged weight log: ${merged.length} total`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error merging weight log:', error);
     throw error;
   }
@@ -167,7 +167,7 @@ export async function mergeMeasurements(serverMeasurements: Measurement[]): Prom
     await localDB.saveLocally('@gym/measurements', merged);
 
  logger.log(`S& Merged measurements: ${merged.length} total`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error merging measurements:', error);
     throw error;
   }
@@ -185,7 +185,7 @@ export async function mergePersonalRecords(serverRecords: PersonalRecord[]): Pro
     await localDB.saveLocally('@gym/personal_records', merged);
 
  logger.log(`S& Merged personal records: ${merged.length} total`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error merging personal records:', error);
     throw error;
   }
@@ -200,7 +200,7 @@ export async function mergeExercises(serverExercises: Exercise[]): Promise<void>
   try {
     await localDB.cacheExercises(serverExercises);
  logger.log(`S& Cached ${serverExercises.length} exercises`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error caching exercises:', error);
     throw error;
   }
@@ -245,7 +245,7 @@ export async function mergeWithConflictResolution<T extends TimestampedItem>(
     });
 
     await localDB.saveLocally(storageKey, Array.from(merged.values()));
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error(`Error merging ${storageKey}:`, error);
     throw error;
   }
@@ -352,7 +352,7 @@ export async function batchMerge(data: {
     try {
       await mergeWorkouts(data.workouts);
       result.workouts = data.workouts.length;
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(`Workouts: ${error}`);
     }
   }
@@ -362,7 +362,7 @@ export async function batchMerge(data: {
     try {
       await mergeTemplates(data.templates);
       result.templates = data.templates.length;
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(`Templates: ${error}`);
     }
   }
@@ -372,7 +372,7 @@ export async function batchMerge(data: {
     try {
       await mergeWeightLog(data.weightLog);
       result.weightLog = data.weightLog.length;
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(`Weight Log: ${error}`);
     }
   }
@@ -382,7 +382,7 @@ export async function batchMerge(data: {
     try {
       await mergeMeasurements(data.measurements);
       result.measurements = data.measurements.length;
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(`Measurements: ${error}`);
     }
   }
@@ -392,11 +392,12 @@ export async function batchMerge(data: {
     try {
       await mergePersonalRecords(data.personalRecords);
       result.personalRecords = data.personalRecords.length;
-    } catch (error) {
+    } catch (error: unknown) {
       result.errors.push(`Personal Records: ${error}`);
     }
   }
 
   return result;
 }
+
 

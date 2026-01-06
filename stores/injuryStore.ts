@@ -68,7 +68,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
         activeInjuries,
         loading: false 
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching injuries:', error);
       set({ 
         error: error.message || 'Failed to fetch injuries',
@@ -113,7 +113,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       
       set({ loading: false });
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error adding injury:', error);
       set({ 
         error: error.message || 'Failed to add injury',
@@ -148,7 +148,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       
       set({ loading: false });
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating injury:', error);
       set({ 
         error: error.message || 'Failed to update injury',
@@ -194,7 +194,7 @@ export const useInjuryStore = create<InjuryStore>((set, get) => ({
       
       set({ loading: false });
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error deleting injury:', error);
       set({ 
         error: error.message || 'Failed to delete injury',
@@ -283,4 +283,5 @@ export const getExerciseWarnings = (
 
   return { level: 'none', message: '' };
 };
+
 

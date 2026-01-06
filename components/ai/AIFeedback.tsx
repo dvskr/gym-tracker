@@ -31,7 +31,7 @@ export function AIFeedback({ feature, aiUsageId, context }: AIFeedbackProps) {
         rating,
         context: context || null,
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to submit AI feedback:', error);
       // Reset on error so user can try again
       setSubmitted(null);
@@ -103,4 +103,6 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
-
+
+
+

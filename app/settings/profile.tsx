@@ -104,7 +104,7 @@ export default function EditProfileScreen() {
         });
         setAvatarUrl(profile.avatar_url);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'Failed to load profile');
     } finally {
       setLoading(false);
@@ -186,7 +186,7 @@ export default function EditProfileScreen() {
       // Update profile with new avatar URL
       await updateProfile(user.id, { avatar_url: url });
       Alert.alert('Success', 'Avatar updated successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'Failed to upload avatar');
     } finally {
       setUploadingAvatar(false);
@@ -201,7 +201,7 @@ export default function EditProfileScreen() {
       await deleteAvatar(user.id);
       setAvatarUrl(null);
       Alert.alert('Success', 'Avatar removed successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'Failed to remove avatar');
     } finally {
       setUploadingAvatar(false);
@@ -236,7 +236,7 @@ export default function EditProfileScreen() {
       Alert.alert('Success', 'Profile updated successfully', [
         { text: 'OK', onPress: () => router.push(getCurrentTab() || '/(tabs)') },
       ]);
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'Failed to update profile');
     } finally {
       setSaving(false);
@@ -588,4 +588,6 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+
 

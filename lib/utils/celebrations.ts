@@ -77,7 +77,7 @@ export async function celebratePR(): Promise<void> {
   try {
     successHaptic();
     logger.log('[Celebrations] Haptic feedback triggered');
-  } catch (error) {
+  } catch (error: unknown) {
     logger.warn('[Celebrations] Haptic not available:', error);
   }
 
@@ -87,7 +87,7 @@ export async function celebratePR(): Promise<void> {
     try {
       await playPRSound();
       logger.log('[Celebrations] PR sound played successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[Celebrations] Error playing sound:', error);
     }
   } else {
@@ -102,7 +102,7 @@ export async function celebratePR(): Promise<void> {
         logger.log('[Celebrations] Firing confetti animation!');
         triggerConfetti();
         logger.log('[Celebrations] Confetti triggered successfully');
-      } catch (error) {
+      } catch (error: unknown) {
         logger.error('[Celebrations] Error triggering confetti:', error);
       }
     } else {
@@ -139,3 +139,4 @@ export function getCelebrationSettings() {
     haptic: prCelebrations,
   };
 }
+

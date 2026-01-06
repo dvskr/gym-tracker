@@ -115,7 +115,7 @@ export const initExerciseValidator = async () => {
       
  logger.log(`S& Exercise validator initialized with ${exerciseNames.length} exercises`);
     }
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Failed to initialize exercise validator:', error);
   }
 };
@@ -709,4 +709,5 @@ export const validateResponseQuality = (
     feedback,
   };
 };
+
 

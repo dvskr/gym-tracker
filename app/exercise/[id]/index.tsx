@@ -602,7 +602,7 @@ export default function ExerciseDetailScreen() {
     try {
       const data = await getExerciseById(id);
       setExercise(data);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch exercise:', error);
     } finally {
       setIsLoading(false);
@@ -620,7 +620,7 @@ export default function ExerciseDetailScreen() {
       ]);
       setHistory(historyData);
       setStats(statsData);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch history:', error);
     } finally {
       setIsHistoryLoading(false);
@@ -664,7 +664,7 @@ export default function ExerciseDetailScreen() {
         setPersonalNotes(data.notes || '');
         setNotesId(data.id);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading notes:', error);
     }
   };
@@ -716,7 +716,7 @@ export default function ExerciseDetailScreen() {
 
       setIsNotesModalOpen(false);
       lightHaptic();
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving notes:', error);
       Alert.alert('Error', 'Failed to save notes. Please try again.');
     } finally {
@@ -1655,4 +1655,5 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
 });
+
 

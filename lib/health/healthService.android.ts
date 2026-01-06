@@ -162,7 +162,7 @@ class HealthService {
       this.isAvailable = available;
  logger.log(`x Health Connect available: ${available}`);
       return available;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Health not available:', error);
       return false;
     }
@@ -201,7 +201,7 @@ class HealthService {
       this.hasPermissions = granted;
  logger.log(`S& Health permissions granted: ${granted}`);
       return granted;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Permission request failed:', error);
       return false;
     }
@@ -234,7 +234,7 @@ class HealthService {
       }
 
  logger.log('x9 Current permissions:', permissions);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Check permissions failed:', error);
     }
 
@@ -266,7 +266,7 @@ class HealthService {
         value: record.beatsPerMinute,
         time: new Date(record.time),
       }));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read heart rate:', error);
       return [];
     }
@@ -290,7 +290,7 @@ class HealthService {
       }
 
       return data.reduce((total: number, record: StepsRecord) => total + record.count, 0);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read steps:', error);
       return 0;
     }
@@ -327,7 +327,7 @@ class HealthService {
         endTime: new Date(record.endTime),
         duration: record.endTime - record.startTime, // milliseconds
       }));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read sleep:', error);
       return [];
     }
@@ -361,7 +361,7 @@ class HealthService {
         time: new Date(record.time),
         unit: 'kg',
       }));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read weight:', error);
       return [];
     }
@@ -400,7 +400,7 @@ class HealthService {
 
  logger.log('S& Workout saved to health platform successfully');
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to save workout to health:', error);
       return false;
     }
@@ -576,7 +576,7 @@ class HealthService {
 
  logger.log('S& Weight data saved to health platform successfully');
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to save weight to health:', error);
       return false;
     }
@@ -623,7 +623,7 @@ class HealthService {
           },
         });
  logger.log(`S& Retrieved ${bodyFatRecords.length} body fat records`);
-      } catch (error) {
+      } catch (error: unknown) {
  logger.warn('a Could not read body fat data:', error);
       }
 
@@ -647,7 +647,7 @@ class HealthService {
       });
 
       return weightData;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read weight history from health:', error);
       return [];
     }
@@ -670,7 +670,7 @@ class HealthService {
       // Sort by date descending and return most recent
       weights.sort((a, b) => b.date.getTime() - a.date.getTime());
       return weights[0];
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get latest weight:', error);
       return null;
     }
@@ -754,7 +754,7 @@ class HealthService {
  logger.log(' No supported measurements to sync');
         return false;
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to save body measurements to health:', error);
       return false;
     }
@@ -792,7 +792,7 @@ class HealthService {
 
  logger.log(`x Retrieved height: ${heightCm} cm`);
       return heightCm;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read height from health:', error);
       return null;
     }
@@ -990,7 +990,7 @@ class HealthService {
       let resting: number | undefined;
       try {
         resting = (await this.getRestingHeartRate()) || undefined;
-      } catch (error) {
+      } catch (error: unknown) {
  logger.warn('a Could not fetch resting heart rate');
       }
 
@@ -1005,7 +1005,7 @@ class HealthService {
  logger.log(`S& Heart rate stats: Avg ${average}, Min ${min}, Max ${max}`);
 
       return stats;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read heart rate:', error);
       return null;
     }
@@ -1045,7 +1045,7 @@ class HealthService {
  logger.log(`x Resting heart rate: ${resting} bpm`);
 
       return resting;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read resting heart rate:', error);
       return null;
     }
@@ -1185,7 +1185,7 @@ class HealthService {
       );
 
       return stepData;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read steps:', error);
       return [];
     }
@@ -1208,7 +1208,7 @@ class HealthService {
  logger.log(`x Today's steps: ${todaySteps.toLocaleString()}`);
 
       return todaySteps;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get today\'s steps:', error);
       return 0;
     }
@@ -1236,7 +1236,7 @@ class HealthService {
         goal: dailyGoal,
         goalProgress,
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get weekly steps:', error);
       return {
         totalSteps: 0,
@@ -1259,7 +1259,7 @@ class HealthService {
 
       const steps = await this.getSteps(startOfDay, endOfDay);
       return steps[0]?.steps || 0;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get steps for date:', error);
       return 0;
     }
@@ -1348,7 +1348,7 @@ class HealthService {
       );
 
       return sleepData;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read sleep data:', error);
       return null;
     }
@@ -1419,7 +1419,7 @@ class HealthService {
  logger.log(`S& Retrieved ${sleepArray.length} nights of sleep data`);
 
       return sleepArray;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to read sleep history:', error);
       return [];
     }
@@ -1458,7 +1458,7 @@ class HealthService {
         dailySleep: sleepData,
         averageScore,
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to get weekly sleep summary:', error);
       return {
         averageMinutes: 0,
@@ -1647,7 +1647,7 @@ class HealthService {
 
  logger.log('S& Weight written to health platform');
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to write weight:', error);
       return false;
     }
@@ -1670,7 +1670,7 @@ class HealthService {
 
  logger.log('S& Body fat written to health platform');
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to write body fat:', error);
       return false;
     }
@@ -1682,7 +1682,7 @@ class HealthService {
   async openHealthSettings(): Promise<void> {
     try {
       await openHealthConnectSettings();
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Failed to open health settings:', error);
     }
   }
@@ -1705,4 +1705,5 @@ class HealthService {
 // Singleton instance
 export const healthService = new HealthService();
 export default healthService;
+
 

@@ -171,3 +171,4 @@ export async function getWorkoutReminderCount(): Promise<number> {
   return scheduled.filter(n => n.content.data?.type === 'workout-reminder').length;
 }
 
+

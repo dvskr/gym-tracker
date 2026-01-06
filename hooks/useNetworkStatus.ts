@@ -72,4 +72,4 @@ export function useIsWifi(): boolean {
 }
 
 export default useNetworkStatus;
-
+

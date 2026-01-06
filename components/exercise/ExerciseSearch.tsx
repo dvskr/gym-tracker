@@ -517,7 +517,7 @@ export const ExerciseSearch: React.FC<ExerciseSearchProps> = ({
 
       {/* Exercise List - FlashList for better performance with large lists */}
       <FlashList
-        data={exercises}
+        data={exercises as ExerciseDBExercise[]}
         renderItem={renderExerciseItem}
         keyExtractor={keyExtractor}
         ListEmptyComponent={ListEmptyComponent}
@@ -876,4 +876,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+
 

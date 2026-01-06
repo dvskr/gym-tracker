@@ -59,7 +59,7 @@ export async function preloadRecentThumbnails(
               loaded,
               percentage: Math.round((loaded / total) * 100),
             });
-          } catch (err) {
+          } catch (err: unknown) {
             loaded++;
           }
         })
@@ -67,7 +67,7 @@ export async function preloadRecentThumbnails(
     }
 
  logger.log(`[Image Preload] Smart preload complete in ${Date.now() - startTime}ms`);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('[Image Preload] Failed:', error);
   }
 }
@@ -151,4 +151,4 @@ export async function preloadAllImages(
   onProgress?: ProgressCallback
 ): Promise<void> {
  logger.warn('[Image Preload] preloadAllImages is deprecated - images load on demand with expo-image caching');
-}
+}

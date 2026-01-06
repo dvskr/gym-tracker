@@ -39,7 +39,7 @@ export async function getRecentWorkouts(userId: string, limit = 14): Promise<Wor
     
     if (error) throw error;
     return (data as unknown as WorkoutWithExercises[]) || [];
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error fetching recent workouts:', error);
     return [];
   }
@@ -59,7 +59,7 @@ export async function getPersonalRecords(userId: string, limit = 10): Promise<Pe
     
     if (error) throw error;
     return (data as unknown as PersonalRecordWithExercise[]) || [];
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error fetching personal records:', error);
     return [];
   }
@@ -78,7 +78,7 @@ export async function getUserProfile(userId: string): Promise<DbProfile | null> 
     
     if (error) throw error;
     return data;
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error fetching user profile:', error);
     return null;
   }
@@ -97,7 +97,7 @@ export async function getActiveInjuries(userId: string): Promise<DbUserInjury[]>
     
     if (error) throw error;
     return data || [];
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error fetching active injuries:', error);
     return [];
   }
@@ -118,7 +118,7 @@ export async function getTodayCheckin(userId: string): Promise<DbDailyCheckin | 
     
     if (error && error.code !== 'PGRST116') throw error;
     return data || null;
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error fetching today checkin:', error);
     return null;
   }
@@ -285,7 +285,7 @@ export async function getMainLiftHistory(userId: string): Promise<MainLiftData[]
     }
 
     return Array.from(liftData.values());
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error getting main lift history:', error);
     return [];
   }
@@ -341,4 +341,5 @@ function analyzeTrend(sessions: LiftSession[]): 'improving' | 'declining' | 'pla
 
   return 'maintaining';
 }
+
 

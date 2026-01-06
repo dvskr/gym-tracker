@@ -38,7 +38,7 @@ export default function AchievementsScreen() {
       setIsLoading(true);
       const data = await getAchievements(user.id);
       setAchievements(data);
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to fetch achievements', error);
     } finally {
       setIsLoading(false);
@@ -329,4 +329,6 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
 });
+
+
 

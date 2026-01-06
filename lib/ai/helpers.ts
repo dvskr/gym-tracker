@@ -61,7 +61,7 @@ export function safeJSONParse<T>(response: string, fallback: T): T {
   try {
     const cleaned = cleanAIResponse(response);
     return JSON.parse(cleaned) as T;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Failed to parse AI JSON response:', error);
  logger.error('Response was:', response);
     return fallback;
@@ -296,4 +296,5 @@ Include:
     { temperature: 0.5, maxTokens: 600 }
   );
 }
+
 

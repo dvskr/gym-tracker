@@ -231,4 +231,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ComparisonSlider;
+export default ComparisonSlider;
+
+

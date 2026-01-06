@@ -127,7 +127,7 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
         message: `Progress photo - ${PHOTO_TYPE_LABELS[currentPhoto.photo_type as PhotoType]} (${format(parseISO(currentPhoto.taken_at), 'MMM d, yyyy')})`,
         url: currentPhoto.local_uri,
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error sharing photo:', error);
     }
   };
@@ -384,4 +384,6 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoViewer;
+
+
 

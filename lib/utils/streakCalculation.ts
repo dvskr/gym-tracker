@@ -73,7 +73,7 @@ export async function calculateStreak(userId: string): Promise<StreakData> {
       lastWorkoutDate: workouts[0].ended_at,
       longestStreak,
     };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error calculating streak:', error);
     return {
       currentStreak: 0,
@@ -100,7 +100,7 @@ export async function getWorkoutCount(userId: string): Promise<number> {
     }
 
     return count || 0;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error getting workout count:', error);
     return 0;
   }
@@ -129,9 +129,9 @@ export async function getDaysSinceLastWorkout(userId: string): Promise<number> {
     const daysDiff = Math.floor((today.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60 * 24));
 
     return daysDiff;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error getting days since last workout:', error);
     return -1;
   }
 }
-
+

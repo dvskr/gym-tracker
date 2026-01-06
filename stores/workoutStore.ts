@@ -471,7 +471,7 @@ export const useWorkoutStore = create<WorkoutState>()(
           invalidateCoachContextAfterWorkout(user.id);
 
           return { success: true, workoutId: workout.id };
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error('Failed to save workout:', error);
           return {
             success: false,
@@ -1160,9 +1160,10 @@ async function triggerEngagementNotifications(userId: string, workoutEndedAt: st
       );
       
 logger.log('S& Engagement notifications triggered');
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Failed to trigger engagement notifications:', error);
     }
   }, 1000); // Small delay to let workout save settle
 }
+
 

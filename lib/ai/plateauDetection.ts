@@ -48,7 +48,7 @@ class PlateauDetectionService {
         if (severityDiff !== 0) return severityDiff;
         return b.weeksStalled - a.weeksStalled;
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to detect plateaus:', error);
       return [];
     }
@@ -319,7 +319,7 @@ class PlateauDetectionService {
       // Filter exercises with enough data
       return Array.from(exerciseMap.values())
         .filter(ex => ex.history.length >= this.MIN_DATA_POINTS);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get exercise progress:', error);
       return [];
     }
@@ -358,7 +358,7 @@ class PlateauDetectionService {
         plateau,
         weeklyProgress,
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get progress report:', error);
       return { exercise: null, plateau: null, weeklyProgress: [] };
     }
@@ -366,4 +366,5 @@ class PlateauDetectionService {
 }
 
 export const plateauDetectionService = new PlateauDetectionService();
+
 

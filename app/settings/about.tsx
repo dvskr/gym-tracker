@@ -109,7 +109,7 @@ export default function AboutScreen() {
         message: 'Check out GymTracker - the best workout tracking app! ' + getAppStoreUrl(),
         title: 'GymTracker',
       });
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error sharing:', error);
     }
   };
@@ -440,4 +440,6 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+
 

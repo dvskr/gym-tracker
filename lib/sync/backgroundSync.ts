@@ -107,7 +107,7 @@ class BackgroundSync {
         const pushResult = await syncQueue.syncAll();
         stats.itemsSynced = pushResult.synced;
  logger.log(`S& Pushed ${pushResult.synced} local change(s)`);
-      } catch (error) {
+      } catch (error: unknown) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`Push failed: ${errorMsg}`);
  logger.error('R Push failed:', error);
@@ -118,7 +118,7 @@ class BackgroundSync {
         const pullCount = await this.pullLatestData();
         stats.itemsPulled = pullCount;
  logger.log(`S& Pulled ${pullCount} update(s) from server`);
-      } catch (error) {
+      } catch (error: unknown) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`Pull failed: ${errorMsg}`);
  logger.error('R Pull failed:', error);
@@ -128,7 +128,7 @@ class BackgroundSync {
       await this.updateLastSyncTime(stats.lastSyncTime);
 
  logger.log('S& Sync complete:', stats);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('R Sync error:', error);
       stats.errors.push(error instanceof Error ? error.message : String(error));
     } finally {
@@ -247,7 +247,7 @@ class BackgroundSync {
  logger.log(`x Pulled ${prs.length} PR(s)`);
       }
 
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error pulling data:', error);
       throw error;
     }
@@ -269,7 +269,7 @@ class BackgroundSync {
     try {
       const lastSync = await AsyncStorage.getItem(this.LAST_SYNC_KEY);
       return lastSync ? parseInt(lastSync, 10) : null;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error getting last sync time:', error);
       return null;
     }
@@ -281,7 +281,7 @@ class BackgroundSync {
   private async updateLastSyncTime(timestamp: number): Promise<void> {
     try {
       await AsyncStorage.setItem(this.LAST_SYNC_KEY, timestamp.toString());
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error updating last sync time:', error);
     }
   }
@@ -326,4 +326,4 @@ class BackgroundSync {
 // Singleton instance
 export const backgroundSync = new BackgroundSync();
 export default backgroundSync;
-
+

@@ -85,7 +85,7 @@ function AIUsageStats() {
       if (data) {
         setStats(JSON.parse(data));
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to load AI usage stats:', error);
     }
   };
@@ -100,7 +100,7 @@ function AIUsageStats() {
       await AsyncStorage.setItem('@gym/ai_usage', JSON.stringify(newStats));
       setStats(newStats);
       Alert.alert('Reset', 'Usage statistics have been reset');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to reset stats:', error);
     }
   };
@@ -670,4 +670,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+
+
+

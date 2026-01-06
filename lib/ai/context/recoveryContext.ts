@@ -80,7 +80,7 @@ export const buildRecoveryContext = async (userId: string): Promise<string> => {
     }
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error building recovery context:', error);
     return '';
   }
@@ -130,9 +130,10 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
     context += '- Prioritize injury-safe exercises even if suboptimal\n';
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
     logger.error('Error building injury context:', error);
     return '';
   }
 };
+
 

@@ -98,7 +98,7 @@ class AchievementNotificationService {
       } else {
         logger.log(`[PRNotification] Push skipped - notifications: ${notificationsEnabled}, prNotifications: ${prNotifications}`);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to notify PR:', error);
     }
   }
@@ -121,7 +121,7 @@ class AchievementNotificationService {
       if (hapticEnabled !== false) {
         try {
           successHaptic();
-        } catch (error) {
+        } catch (error: unknown) {
           logger.log('[AchievementNotifications] Haptic not available');
         }
       }
@@ -164,7 +164,7 @@ class AchievementNotificationService {
       } else {
         logger.log('[AchievementNotifications] Push notification skipped (disabled in settings)');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('Failed to notify achievement:', error);
     }
   }
@@ -288,7 +288,7 @@ class AchievementNotificationService {
           await this.notifyAchievement(achievement);
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Failed to check workout achievements:', error);
     }
   }
@@ -311,7 +311,7 @@ logger.error('Error checking achievement:', error);
       }
 
       return !!data;
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error checking achievement:', error);
       return false;
     }
@@ -333,7 +333,7 @@ logger.error('Error checking achievement:', error);
       if (error) {
 logger.error('Error saving achievement:', error);
       }
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error saving achievement:', error);
     }
   }
@@ -354,7 +354,7 @@ logger.error('Error getting achievements:', error);
       }
 
       return data.map(a => a.achievement_id);
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error getting achievements:', error);
       return [];
     }
@@ -376,7 +376,7 @@ logger.error('Error counting achievements:', error);
       }
 
       return count || 0;
-    } catch (error) {
+    } catch (error: unknown) {
 logger.error('Error counting achievements:', error);
       return 0;
     }
@@ -384,3 +384,4 @@ logger.error('Error counting achievements:', error);
 }
 
 export const achievementNotificationService = new AchievementNotificationService();
+

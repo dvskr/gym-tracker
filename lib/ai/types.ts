@@ -130,3 +130,4 @@ export interface SettingsSnapshot {
   restTimerDefault?: number;
   [key: string]: unknown;
 }
+

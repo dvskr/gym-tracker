@@ -42,7 +42,7 @@ class SoundManager {
         );
         this.prCelebrationSound = sound;
         logger.log('[SoundManager] PR celebration sound loaded (using achievement.mp3)');
-      } catch (soundError) {
+      } catch (soundError: unknown) {
         logger.warn('[SoundManager] PR sound file not found');
       }
 
@@ -54,7 +54,7 @@ class SoundManager {
         );
         this.achievementSound = achieveSound;
         logger.log('[SoundManager] Achievement sound loaded');
-      } catch (soundError) {
+      } catch (soundError: unknown) {
         logger.warn('[SoundManager] Achievement sound file not found - add assets/sounds/achievement.mp3');
       }
 
@@ -66,14 +66,14 @@ class SoundManager {
         );
         this.restCompleteSound = restSound;
         logger.log('[SoundManager] Rest complete sound loaded');
-      } catch (soundError) {
+      } catch (soundError: unknown) {
         logger.warn('[SoundManager] Rest complete sound file not found (optional)');
       }
 
       this.isLoaded = true;
       this.isLoading = false;
       logger.log('[SoundManager] Sound manager initialized');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[SoundManager] Error initializing audio:', error);
       this.isLoading = false;
     }
@@ -102,7 +102,7 @@ class SoundManager {
       }
       this.isLoaded = false;
       logger.log('[SoundManager] Sounds unloaded');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[SoundManager] Error unloading sounds:', error);
     }
   }
@@ -130,7 +130,7 @@ class SoundManager {
       await this.prCelebrationSound.setPositionAsync(0);
       await this.prCelebrationSound.playAsync();
       logger.log('[SoundManager] PR celebration sound played');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[SoundManager] Error playing PR sound:', error);
     }
   }
@@ -158,7 +158,7 @@ class SoundManager {
       await this.achievementSound.setPositionAsync(0);
       await this.achievementSound.playAsync();
       logger.log('[SoundManager] Achievement sound played');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[SoundManager] Error playing achievement sound:', error);
     }
   }
@@ -186,7 +186,7 @@ class SoundManager {
       await this.restCompleteSound.setPositionAsync(0);
       await this.restCompleteSound.playAsync();
       logger.log('[SoundManager] Rest complete sound played');
-    } catch (error) {
+    } catch (error: unknown) {
       logger.error('[SoundManager] Error playing rest complete sound:', error);
     }
   }
@@ -209,4 +209,5 @@ export const playPRSound = () => soundManager.playPRCelebration();
 export const playAchievementSound = () => soundManager.playAchievementSound();
 export const playRestCompleteSound = () => soundManager.playRestCompleteSound();
 export const areSoundsLoaded = () => soundManager.loaded;
+
 

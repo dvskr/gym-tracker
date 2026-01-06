@@ -69,7 +69,7 @@ export async function logWeightAndSync(
     }
 
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error logging weight:', error);
     return false;
   }
@@ -148,7 +148,7 @@ export async function importWeightFromHealth(
         } else {
           imported++;
         }
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error(`R Error processing weight entry for ${dateStr}:`, error);
         errors++;
       }
@@ -157,7 +157,7 @@ export async function importWeightFromHealth(
  logger.log(`S& Import complete: ${imported} imported, ${skipped} skipped, ${errors} errors`);
 
     return { imported, skipped, errors };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error importing weight from health:', error);
     return { imported: 0, skipped: 0, errors: 0 };
   }
@@ -222,7 +222,7 @@ export async function syncUnsyncedWeights(userId: string): Promise<{
         } else {
           failed++;
         }
-      } catch (error) {
+      } catch (error: unknown) {
  logger.error(`R Failed to sync weight for ${entry.logged_at}:`, error);
         failed++;
       }
@@ -231,7 +231,7 @@ export async function syncUnsyncedWeights(userId: string): Promise<{
  logger.log(`S& Sync complete: ${synced} synced, ${failed} failed`);
 
     return { synced, failed };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error syncing unsynced weights:', error);
     return { synced: 0, failed: 0 };
   }
@@ -265,7 +265,7 @@ export async function getLatestHealthWeight(): Promise<{
       date: latest.date,
       bodyFatPercent: latest.bodyFatPercent,
     };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('R Error getting latest health weight:', error);
     return null;
   }
@@ -280,4 +280,5 @@ export function shouldSyncWeight(): boolean {
 
   return healthSyncEnabled && syncWeight && hasPermissions;
 }
+
 

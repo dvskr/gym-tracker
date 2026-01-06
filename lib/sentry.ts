@@ -20,7 +20,7 @@ let Sentry: typeof import('sentry-expo') | null = null;
 if (SENTRY_DSN) {
   try {
     Sentry = require('sentry-expo');
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('[Sentry] Failed to load sentry-expo package:', error);
   }
 }
@@ -89,7 +89,7 @@ export function captureException(
     Sentry.Native.captureException(error, {
       extra: context,
     });
-  } catch (e) {
+  } catch (e: unknown) {
     // Silently fail if Sentry has issues
     console.error('[Sentry] Failed to capture exception:', e);
   }
@@ -112,7 +112,7 @@ export function captureMessage(
       level: level as 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug',
       extra: context,
     });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to capture message:', e);
   }
 }
@@ -136,7 +136,7 @@ export function setUser(user: {
       email: user.email,
       username: user.username,
     });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to set user:', e);
   }
 }
@@ -152,7 +152,7 @@ export function clearUser(): void {
 
   try {
     Sentry.Native.setUser(null);
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to clear user:', e);
   }
 }
@@ -179,7 +179,7 @@ export function addBreadcrumb(
       level: level as 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug',
       timestamp: Date.now() / 1000,
     });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to add breadcrumb:', e);
   }
 }
@@ -194,7 +194,7 @@ export function setTag(key: string, value: string): void {
 
   try {
     Sentry.Native.setTag(key, value);
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to set tag:', e);
   }
 }
@@ -209,7 +209,7 @@ export function setExtra(key: string, value: unknown): void {
 
   try {
     Sentry.Native.setExtra(key, value);
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to set extra:', e);
   }
 }
@@ -223,7 +223,7 @@ export async function withSentry<T>(
 ): Promise<T> {
   try {
     return await fn();
-  } catch (error) {
+  } catch (error: unknown) {
     captureException(error, {
       operation: context?.operation,
       ...context?.extra,
@@ -253,14 +253,15 @@ export function startTransaction(
       finish: () => {
         try {
           transaction.finish();
-        } catch (e) {
+        } catch (e: unknown) {
           console.error('[Sentry] Failed to finish transaction:', e);
         }
       },
     };
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[Sentry] Failed to start transaction:', e);
     return null;
   }
 }
+
 

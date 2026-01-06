@@ -48,7 +48,7 @@ export function useFormTips(exerciseId: string | undefined) {
         } else {
           setTips(data);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (isMounted) {
           setError(err instanceof Error ? err.message : 'Failed to fetch form tips');
         }
@@ -67,4 +67,5 @@ export function useFormTips(exerciseId: string | undefined) {
 
   return { tips, isLoading, error };
 }
+
 

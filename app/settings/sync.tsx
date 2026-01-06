@@ -52,7 +52,7 @@ export default function SyncSettingsScreen() {
       setPendingChanges(pending);
       setDataUsage(usage.formatted);
       setSettings(syncSettings);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading sync data:', error);
     }
   };
@@ -657,4 +657,6 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+
 

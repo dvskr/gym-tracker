@@ -28,7 +28,7 @@ export function useAIRequest() {
 
       return response;
 
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof AILimitError) {
         setLimits(err.limits);
         setShowLimitModal(true);
@@ -56,4 +56,4 @@ export function useAIRequest() {
     limits,
   };
 }
-
+

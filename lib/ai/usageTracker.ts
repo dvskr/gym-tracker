@@ -207,7 +207,7 @@ class AIUsageTracker {
       if (data) {
         this.usage = JSON.parse(data);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to load AI usage data:', error);
       // Keep defaults
     }
@@ -219,7 +219,7 @@ class AIUsageTracker {
   private async saveUsage(): Promise<void> {
     try {
       await AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.usage));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to save AI usage data:', error);
     }
   }
@@ -236,4 +236,4 @@ class AIUsageTracker {
 }
 
 export const aiUsageTracker = new AIUsageTracker();
-
+

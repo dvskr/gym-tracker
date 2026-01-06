@@ -90,7 +90,7 @@ export default function FitnessPreferencesScreen() {
         if (data.experience_level) setExperienceLevel(data.experience_level);
         if (data.training_split) setTrainingSplit(data.training_split);
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading preferences:', error);
     } finally {
       setLoading(false);
@@ -119,7 +119,7 @@ export default function FitnessPreferencesScreen() {
 
       successHaptic();
       router.push(getCurrentTab() || '/(tabs)');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving preferences:', error);
     } finally {
       setSaving(false);
@@ -553,4 +553,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 });
-
+
+
+

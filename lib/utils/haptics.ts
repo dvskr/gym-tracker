@@ -18,7 +18,7 @@ export function successHaptic() {
   
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -34,7 +34,7 @@ export function warningHaptic() {
   
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -50,7 +50,7 @@ export function errorHaptic() {
   
   try {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -66,7 +66,7 @@ export function lightHaptic() {
   
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -82,7 +82,7 @@ export function mediumHaptic() {
   
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -98,7 +98,7 @@ export function heavyHaptic() {
   
   try {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
@@ -114,8 +114,9 @@ export function selectionHaptic() {
   
   try {
     Haptics.selectionAsync();
-  } catch (error) {
+  } catch (error: unknown) {
     // Fail silently
   }
 }
+
 

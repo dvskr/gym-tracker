@@ -73,7 +73,7 @@ export default function BackupScreen() {
       setTotalBackupSize(backupsList.reduce((sum, b) => sum + b.size, 0));
       setAutoBackupEnabled(autoSettings.enabled);
       setAutoBackupFrequency(autoSettings.frequency);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading backup data:', error);
       Alert.alert('Error', 'Failed to load backup data');
     }
@@ -97,7 +97,7 @@ export default function BackupScreen() {
                 'Backup Created',
                 `Backup saved successfully!\nSize: ${formatBytes(backup.size)}`
               );
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error creating backup:', error);
               Alert.alert('Error', 'Failed to create backup: ' + (error as Error).message);
             } finally {
@@ -126,7 +126,7 @@ export default function BackupScreen() {
           },
         },
       ]);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
@@ -144,7 +144,7 @@ export default function BackupScreen() {
       setSelectedBackup(backup);
       setSelectedBackupData(backupData);
       setShowRestoreConfirm(true);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error downloading backup:', error);
       Alert.alert('Error', 'Failed to download backup');
     } finally {
@@ -207,7 +207,7 @@ export default function BackupScreen() {
           ]
         );
       }
-    } catch (error) {
+    } catch (error: unknown) {
       setShowRestoreProgress(false);
  logger.error('Error restoring backup:', error);
       Alert.alert('Error', 'Failed to restore backup: ' + (error as Error).message);
@@ -228,7 +228,7 @@ export default function BackupScreen() {
               await backupService.deleteBackup(backup.id);
               await loadData();
               Alert.alert('Deleted', 'Backup deleted successfully');
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error deleting backup:', error);
               Alert.alert('Error', 'Failed to delete backup');
             }
@@ -252,7 +252,7 @@ export default function BackupScreen() {
               const count = await backupService.cleanupOldBackups(5);
               await loadData();
               Alert.alert('Cleanup Complete', `Deleted ${count} old backup(s)`);
-            } catch (error) {
+            } catch (error: unknown) {
  logger.error('Error cleaning up backups:', error);
               Alert.alert('Error', 'Failed to cleanup backups');
             } finally {
@@ -771,4 +771,6 @@ const styles = StyleSheet.create({
     height: 32,
   },
 });
+
+
 

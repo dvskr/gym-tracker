@@ -128,7 +128,7 @@ class RecoveryService {
         consecutiveDays,
         workoutsThisWeek,
       };
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to get recovery status:', error);
       return this.getDefaultStatus();
     }
@@ -606,7 +606,7 @@ class RecoveryService {
       }
 
       return data || [];
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch recent workouts:', error);
       return [];
     }
@@ -658,7 +658,7 @@ class RecoveryService {
       }
 
       return data || null;
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error fetching fitness preferences:', error);
       return null;
     }
@@ -666,4 +666,5 @@ class RecoveryService {
 }
 
 export const recoveryService = new RecoveryService();
+
 

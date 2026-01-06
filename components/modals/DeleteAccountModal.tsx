@@ -62,7 +62,7 @@ export default function DeleteAccountModal({
       } else {
         Alert.alert('Error', result.error || 'Failed to delete account');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       Alert.alert('Error', 'An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -276,4 +276,6 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
   },
 });
-
+
+
+

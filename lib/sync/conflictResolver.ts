@@ -368,7 +368,7 @@ class ConflictResolver {
       if (stored) {
         this.strategy = stored as ConflictStrategy;
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading conflict strategy:', error);
     }
   }
@@ -386,7 +386,7 @@ class ConflictResolver {
           resolvedAt: c.resolvedAt ? new Date(c.resolvedAt) : undefined,
         }));
       }
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error loading conflicts:', error);
     }
   }
@@ -394,7 +394,7 @@ class ConflictResolver {
   private async saveConflicts(): Promise<void> {
     try {
       await AsyncStorage.setItem(this.CONFLICTS_KEY, JSON.stringify(this.conflicts));
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error saving conflicts:', error);
     }
   }
@@ -403,4 +403,5 @@ class ConflictResolver {
 // Singleton instance
 export const conflictResolver = new ConflictResolver();
 export default conflictResolver;
+
 

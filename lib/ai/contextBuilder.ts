@@ -1,4 +1,4 @@
-﻿import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 import { LocalWorkout } from '@/lib/types/common';
 import type {
@@ -135,7 +135,7 @@ export const buildFitnessProfileContext = async (userId: string): Promise<string
     }
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error building fitness profile context:', error);
     return '';
   }
@@ -199,7 +199,7 @@ export const buildRecoveryContext = async (userId: string): Promise<string> => {
     }
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error building recovery context:', error);
     return '';
   }
@@ -295,7 +295,7 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
       getMainLiftHistory(userId) // Get detailed history for main lifts
     ]);
 
-    let context = '=== USE❌ PROFILE ===\n';
+    let context = '=== USE? PROFILE ===\n';
 
     // Profile information
     if (profile.data) {
@@ -341,7 +341,7 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
 
     // Active injuries
     if (injuries.data && injuries.data.length > 0) {
-      context += `\n⚠️ ACTIVE INJURIES (CRITICAL - DO NOT suggest exercises that aggravate these):\n`;
+      context += `\n?? ACTIVE INJURIES (CRITICAL - DO NOT suggest exercises that aggravate these):\n`;
       interface InjuryRecord {
         body_part: string;
         severity?: string;
@@ -357,11 +357,11 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
         context += ` - ${injury.severity} severity\n`;
         
         if (injury.avoid_movements && injury.avoid_movements.length > 0) {
-          context += `  ❌ Avoid: ${injury.avoid_movements.join(', ')}\n`;
+          context += `  ? Avoid: ${injury.avoid_movements.join(', ')}\n`;
         }
         
         if (injury.avoid_exercises && injury.avoid_exercises.length > 0) {
-          context += `  ❌ Avoid exercises: ${injury.avoid_exercises.join(', ')}\n`;
+          context += `  ? Avoid exercises: ${injury.avoid_exercises.join(', ')}\n`;
         }
       });
     }
@@ -447,11 +447,11 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
           
           // Detect trends
           if (lift.trend === 'plateau') {
-            context += ` ⚠️ PLATEAU (no progress in ${lift.weeksSinceImprovement} weeks)`;
+            context += ` ?? PLATEAU (no progress in ${lift.weeksSinceImprovement} weeks)`;
           } else if (lift.trend === 'improving') {
-            context += ` ✅ IMPROVING`;
+            context += ` ? IMPROVING`;
           } else if (lift.trend === 'declining') {
-            context += ` ⚠️ DECLINING`;
+            context += ` ?? DECLINING`;
           }
           
           context += '\n';
@@ -534,19 +534,19 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
 
       // Add wellness-based recommendations
       if (c.sleep_quality && c.sleep_quality <= 2) {
-        context += '\n⚠️ Note: Poor sleep - consider lighter training\n';
+        context += '\n?? Note: Poor sleep - consider lighter training\n';
       }
       if (c.energy_level && c.energy_level <= 2) {
-        context += '⚠️ Note: Low energy - may need active recovery\n';
+        context += '?? Note: Low energy - may need active recovery\n';
       }
       if (c.soreness_level && c.soreness_level >= 4) {
-        context += '⚠️ Note: High soreness - focus on unaffected muscle groups\n';
+        context += '?? Note: High soreness - focus on unaffected muscle groups\n';
       }
     }
 
     context += '\n=== CRITICAL INSTRUCTIONS ===\n';
     context += '1. ALWAYS reference SPECIFIC numbers from their data (weights, reps, dates)\n';
-    context += '2. NEVE❌ give generic advice when you have specific data available\n';
+    context += '2. NEVE? give generic advice when you have specific data available\n';
     context += '3. If they ask about an exercise, find it in their history and reference ACTUAL weights\n';
     context += '4. If they have a plateau, mention the SPECIFIC duration and weights\n';
     context += '5. Compare to their PREVIOUS performance, not generic standards\n';
@@ -555,12 +555,12 @@ export const buildCoachContextLegacy = async (userId: string): Promise<string> =
     context += '8. Consider their wellness data when giving recommendations\n';
     context += '\nEXAMPLES:\n';
     context += 'BAD: "Try increasing weight by 5 lbs"\n';
-    context += 'GOOD: "Your last bench was 185Ã—8. Try 190Ã—6 or go for 18510"\n\n';
+    context += 'GOOD: "Your last bench was 185×8. Try 190×6 or go for 18510"\n\n';
     context += 'BAD: "You might be overtraining"\n';
     context += 'GOOD: "You\'ve trained 6 times in the last 7 days. Your average is 4. Take a rest day."\n';
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error building coach context:', error);
     return 'Unable to load full user context. Providing general advice.';
   }
@@ -695,7 +695,7 @@ async function getMainLiftHistory(userId: string) {
         } else if (recentAvgVolume < olderAvgVolume * 0.95) {
           lift.trend = 'declining';
         } else {
-          // Check for plateau (no P❌ in last 4 weeks)
+          // Check for plateau (no P? in last 4 weeks)
           const fourWeeksAgo = new Date();
           fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
           
@@ -730,7 +730,7 @@ async function getMainLiftHistory(userId: string) {
     
     // Return only lifts with at least 2 sessions
     return results.filter(lift => lift.sessions.length >= 2);
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error getting main lift history:', error);
     return [];
   }
@@ -789,7 +789,7 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
       return '';
     }
 
-    let context = '\n⚠️ IMPORTANT - Active Injuries/Limitations:\n';
+    let context = '\n?? IMPORTANT - Active Injuries/Limitations:\n';
     
     for (const injury of data) {
       context += `\n${injury.body_part.replace('_', ' ').toUpperCase()}`;
@@ -799,11 +799,11 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
       context += ` - Severity: ${injury.severity}\n`;
       
       if (injury.avoid_movements && injury.avoid_movements.length > 0) {
-        context += `  ❌ Avoid movements: ${injury.avoid_movements.join(', ')}\n`;
+        context += `  ? Avoid movements: ${injury.avoid_movements.join(', ')}\n`;
       }
       
       if (injury.avoid_exercises && injury.avoid_exercises.length > 0) {
-        context += `  ❌ Avoid exercises: ${injury.avoid_exercises.join(', ')}\n`;
+        context += `  ? Avoid exercises: ${injury.avoid_exercises.join(', ')}\n`;
       }
       
       if (injury.notes) {
@@ -818,7 +818,7 @@ export const buildInjuryContext = async (userId: string): Promise<string> => {
     context += '- Prioritize injury-safe exercises even if suboptimal\n';
 
     return context;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error building injury context:', error);
     return '';
   }
@@ -884,11 +884,11 @@ export const buildCoachContext = async (userId: string): Promise<CoachContext> =
     let contextText = '';
 
     // ==========================================
-    // NEW USE❌ WARNING (Critical!)
+    // NEW USE? WARNING (Critical!)
     // ==========================================
     if (dataState.isNewUser) {
       contextText += `
-⚠️aï¸⚠️ NEW USE❌ - ZERO WORKOUT DATA ⚠️aï¸⚠️
+??a️?? NEW USE? - ZERO WORKOUT DATA ??a️??
 
 CRITICAL INSTRUCTIONS:
 - This user has NO workout history in the system
@@ -918,21 +918,21 @@ YOU MUST BE HONEST: "I don't have any workout history for you yet. Let's start f
     if (dataState.hasInjuries && injuries.length > 0) {
       contextText += `
 
-🚨🚨🚨 ACTIVE INJURIES - CRITICAL 🚨🚨xa
+?????? ACTIVE INJURIES - CRITICAL ????xa
 
 `;
       for (const injury of injuries) {
         contextText += `
 x ${injury.bodyPart.toUpperCase()} - ${injury.type || 'Injury'} (Severity: ${injury.severity})
-   ❌ NEVE❌ suggest: ${(injury.avoidExercises || []).join(', ') || 'N/A'}
-   ❌ NEVE❌ suggest movements: ${(injury.avoidMovements || []).join(', ') || 'N/A'}
+   ? NEVE? suggest: ${(injury.avoidExercises || []).join(', ') || 'N/A'}
+   ? NEVE? suggest movements: ${(injury.avoidMovements || []).join(', ') || 'N/A'}
    ${injury.notes ? `x Note: ${injury.notes}` : ''}
 `;
       }
 
       contextText += `
 x MANDATORY RULES:
-- NEVE❌ suggest avoided exercises/movements (list above)
+- NEVE? suggest avoided exercises/movements (list above)
 - Always suggest safe alternatives
 - Consider injury severity in programming
 - Prioritize safety over optimization
@@ -944,7 +944,7 @@ x MANDATORY RULES:
     // PROFILE DATA (If available)
     // ==========================================
     if (profile) {
-      contextText += '\nx` USE❌ PROFILE:\n';
+      contextText += '\nx` USE? PROFILE:\n';
       
       if (profile.fitness_goal) {
         contextText += `- Primary Goal: ${profile.fitness_goal}\n`;
@@ -956,7 +956,7 @@ x MANDATORY RULES:
       
       if (profile.available_equipment && profile.available_equipment.length > 0) {
         contextText += `- Available Equipment: ${profile.available_equipment.join(', ')}\n`;
-        contextText += `  ⚠️ ONLY suggest exercises using this equipment!\n`;
+        contextText += `  ?? ONLY suggest exercises using this equipment!\n`;
       } else {
         warnings.push('NO_EQUIPMENT_SPECIFIED');
       }
@@ -1017,14 +1017,14 @@ x MANDATORY RULES:
     // ==========================================
     contextText += `\n
 x9 DATA AVAILABILITY SUMMARY:
-- Workout History: ${dataState.hasWorkouts ? `✅ Yes (${dataState.workoutCount} recent)` : '❌ None'}
-- Personal Records: ${dataState.hasPRs ? '✅ Yes' : '❌ None'}
-- Active Injuries: ${dataState.hasInjuries ? '🚨 Yes (see above)' : '✅ None'}
-- Today's Check-in: ${dataState.hasCheckin ? '✅ Yes (see above)' : '❌ None'}
-- Equipment Info: ${dataState.hasEquipment ? '✅ Yes (see above)' : '❌ Not specified'}
-- Goals Set: ${dataState.hasGoals ? '✅ Yes' : '❌ Not specified'}
+- Workout History: ${dataState.hasWorkouts ? `? Yes (${dataState.workoutCount} recent)` : '? None'}
+- Personal Records: ${dataState.hasPRs ? '? Yes' : '? None'}
+- Active Injuries: ${dataState.hasInjuries ? '?? Yes (see above)' : '? None'}
+- Today's Check-in: ${dataState.hasCheckin ? '? Yes (see above)' : '? None'}
+- Equipment Info: ${dataState.hasEquipment ? '? Yes (see above)' : '? Not specified'}
+- Goals Set: ${dataState.hasGoals ? '? Yes' : '? Not specified'}
 
-⚠️ IMPORTANT: Base your responses ONLY on the data marked with ✅ above.
+?? IMPORTANT: Base your responses ONLY on the data marked with ? above.
 DO NOT make claims about data marked with R.
 `;
 
@@ -1033,12 +1033,12 @@ DO NOT make claims about data marked with R.
       flags: dataState,
       warnings,
     };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error building coach context:', error);
     
     // Return minimal safe context on error
     return {
-      text: '⚠️ Error loading user data. Provide general guidance only.',
+      text: '?? Error loading user data. Provide general guidance only.',
       flags: {
         hasWorkouts: false,
         hasPRs: false,
@@ -1055,7 +1055,7 @@ DO NOT make claims about data marked with R.
 };
 
 // ==========================================
-// HELPE❌ FUNCTIONS
+// HELPE? FUNCTIONS
 // ==========================================
 
 /**
@@ -1220,12 +1220,13 @@ function buildWorkoutHistoryContext(workouts: WorkoutWithExercises[]): string {
 function buildPRContext(prs: PersonalRecordWithExercise[]): string {
   if (prs.length === 0) return '';
 
-  let context = '📝  PERSONAL RECORDS:\n';
+  let context = '??  PERSONAL RECORDS:\n';
 
   for (const pr of prs.slice(0, 5)) {
     const exerciseName = pr.exercises?.name || 'Unknown';
-    context += `  - ${exerciseName}: ${pr.weight} lbs Ã— ${pr.reps} reps\n`;
+    context += `  - ${exerciseName}: ${pr.weight} lbs × ${pr.reps} reps\n`;
   }
 
   return context;
 }
+

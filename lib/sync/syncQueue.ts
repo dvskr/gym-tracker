@@ -78,7 +78,7 @@ class SyncQueue {
           await this.syncOperation(operation);
           await localDB.removeFromSyncQueue(operation.id);
           result.synced++;
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error(`Failed to sync operation ${operation.id}:`, error);
           
           // Increment attempt counter
@@ -105,7 +105,7 @@ class SyncQueue {
       }
 
  logger.log(`S& Sync complete: ${result.synced} synced, ${result.failed} failed`);
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Error during sync:', error);
       result.success = false;
     } finally {
@@ -145,7 +145,7 @@ class SyncQueue {
     // Remove local-only metadata before uploading
     const { _synced, _local_only, ...cleanData } = data;
 
-    const { error } = await supabase.from(table).insert(cleanData);
+    const { error } = await supabase.from(table as any).insert(cleanData);
 
     if (error) {
       throw new Error(`Failed to create in ${table}: ${error.message}`);
@@ -161,7 +161,7 @@ class SyncQueue {
     const { id, _synced, _local_only, ...updates } = data;
 
     const { error } = await supabase
-      .from(table)
+      .from(table as any)
       .update(updates)
       .eq('id', id);
 
@@ -176,7 +176,7 @@ class SyncQueue {
    * Sync delete operation
    */
   private async syncDelete(table: string, id: string): Promise<void> {
-    const { error } = await supabase.from(table).delete().eq('id', id);
+    const { error } = await supabase.from(table as any).delete().eq('id', id);
 
     if (error) {
       throw new Error(`Failed to delete from ${table}: ${error.message}`);
@@ -208,7 +208,7 @@ class SyncQueue {
         await this.syncOperation(operation);
         await localDB.removeFromSyncQueue(operation.id);
         result.synced++;
-      } catch (error) {
+      } catch (error: unknown) {
         result.failed++;
         result.errors.push({
           operation,
@@ -275,7 +275,7 @@ class SyncQueue {
         await this.syncOperation(operation);
         await localDB.removeFromSyncQueue(operation.id);
         result.synced++;
-      } catch (error) {
+      } catch (error: unknown) {
         result.failed++;
         result.errors.push({
           operation,
@@ -291,4 +291,5 @@ class SyncQueue {
 // Singleton instance
 export const syncQueue = new SyncQueue();
 export default syncQueue;
+
 

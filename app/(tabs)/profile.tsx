@@ -41,7 +41,7 @@ export default function ProfileScreen() {
           full_name: profile.full_name ?? undefined,
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       // Silent fail - fallback to user metadata
     }
   }, [user?.id]);
@@ -419,3 +419,5 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+

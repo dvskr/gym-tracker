@@ -125,7 +125,7 @@ export async function checkForPR(
     }
 
     return results;
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error checking for PR:', error);
     return results;
   }
@@ -169,7 +169,7 @@ export async function savePR(
     }
 
     return { success: true };
-  } catch (error) {
+  } catch (error: unknown) {
  logger.error('Error saving PR:', error);
     return {
       success: false,
@@ -243,7 +243,7 @@ export async function getUserPRs(
     }));
 
     return { data: records };
-  } catch (error) {
+  } catch (error: unknown) {
     return {
       data: null,
       error: error instanceof Error ? error.message : 'Failed to fetch PRs',
@@ -282,7 +282,7 @@ export async function getExercisePRs(
     }));
 
     return { data: records };
-  } catch (error) {
+  } catch (error: unknown) {
     return {
       data: null,
       error: error instanceof Error ? error.message : 'Failed to fetch PRs',
@@ -328,4 +328,5 @@ export function formatPRValue(prType: PRType, value: number, weight?: number, re
 export function celebratePR() {
   successHaptic();
 }
+
 

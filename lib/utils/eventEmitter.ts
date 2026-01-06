@@ -70,7 +70,7 @@ class EventEmitter {
       [...callbacks].forEach(cb => {
         try {
           cb(data);
-        } catch (error) {
+        } catch (error: unknown) {
  logger.error(`Error in event callback for ${event}:`, error);
         }
       });
@@ -138,4 +138,5 @@ export const Events = {
 } as const;
 
 export default eventEmitter;
+
 

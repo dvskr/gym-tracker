@@ -139,7 +139,7 @@ export default function WorkoutScreen() {
       tabDataCache.set(CACHE_KEY, workouts);
       
  logger.log('[Workout] Recent workouts fetched successfully');
-    } catch (error) {
+    } catch (error: unknown) {
  logger.error('Failed to fetch recent workouts:', error);
     } finally {
       setIsLoadingRecent(false);
@@ -666,3 +666,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+

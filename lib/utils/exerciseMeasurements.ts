@@ -141,7 +141,7 @@ export const validateSet = (set: SetData, measurementType: MeasurementType): boo
   
   return config.fields.every(field => {
     const value = set[field];
-    return value !== undefined && value !== null && value > 0;
+    return value !== undefined && value !== null && typeof value === 'number' && value > 0;
   });
 };
 
@@ -227,3 +227,4 @@ export const getMeasurementTypeDescription = (type: MeasurementType): string => 
 
   return descriptions[type] || 'Standard exercise tracking';
 };
+
