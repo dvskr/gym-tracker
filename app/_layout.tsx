@@ -12,6 +12,7 @@ import { loadSounds, unloadSounds } from '@/lib/utils/sounds';
 import { initializeNotifications } from '@/lib/notifications';
 import { initializePurchases, identifyUser, logoutUser } from '@/lib/services/revenuecat';
 import { initSentry, setUser, clearUser } from '@/lib/sentry';
+import { logger } from '@/lib/utils/logger';
 
 // Initialize Sentry before any component renders
 initSentry();
@@ -37,7 +38,7 @@ export default function RootLayout() {
         try {
           await initializePurchases(user?.id);
         } catch (error) {
-          console.error('Failed to initialize purchases:', error);
+          logger.error('Failed to initialize purchases:', error);
         }
       };
       initPurchases();
@@ -54,7 +55,7 @@ export default function RootLayout() {
           await checkStatus();
           previousUserId.current = user.id; // Update previous user ID
         } catch (error) {
-          console.error('Error identifying user:', error);
+          logger.error('Error identifying user:', error);
         }
       } 
       // User logged out (only if there was a previous user)
@@ -64,7 +65,7 @@ export default function RootLayout() {
           resetProStore();
           previousUserId.current = undefined; // Clear previous user ID
         } catch (error) {
-          console.error('Error logging out user:', error);
+          logger.error('Error logging out user:', error);
         }
       }
     };

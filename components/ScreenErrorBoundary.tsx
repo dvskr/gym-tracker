@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { AlertCircle, RefreshCw } from 'lucide-react-native';
+import { logger } from '@/lib/utils/logger';
 
 interface Props {
   children: ReactNode;
@@ -31,7 +32,7 @@ export class ScreenErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    console.error(`Error in ${this.props.screenName || 'screen'}:`, error);
+    logger.error(`Error in ${this.props.screenName || 'screen'}:`, error);
   }
 
   resetError = () => {

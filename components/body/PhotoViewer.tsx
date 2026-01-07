@@ -9,9 +9,9 @@ import {
   Modal,
   Dimensions,
   FlatList,
-  Share,
   Alert,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { format, parseISO } from 'date-fns';
 import {
@@ -22,6 +22,7 @@ import {
   Share2,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
+import * as Sharing from 'expo-sharing';
 import { ProgressPhoto } from '@/lib/api/photos';
 import { PHOTO_TYPE_LABELS, PhotoType } from '@/lib/services/photoService';
 
@@ -123,12 +124,24 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
 
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      await Share.share({
-        message: `Progress photo - ${PHOTO_TYPE_LABELS[currentPhoto.photo_type as PhotoType]} (${format(parseISO(currentPhoto.taken_at), 'MMM d, yyyy')})`,
-        url: currentPhoto.local_uri,
+      
+      // Check if sharing is available on this device
+      const isAvailable = await Sharing.isAvailableAsync();
+      
+      if (!isAvailable) {
+        Alert.alert('Sharing not available', 'Sharing is not available on this device.');
+        return;
+      }
+      
+      // Share the photo file directly using expo-sharing
+      await Sharing.shareAsync(currentPhoto.local_uri, {
+        mimeType: 'image/jpeg',
+        dialogTitle: `Progress photo - ${PHOTO_TYPE_LABELS[currentPhoto.photo_type as PhotoType]} (${format(parseISO(currentPhoto.taken_at), 'MMM d, yyyy')})`,
+        UTI: 'public.jpeg',
       });
     } catch (error: unknown) {
  logger.error('Error sharing photo:', error);
+      Alert.alert('Share failed', 'Unable to share photo. Please try again.');
     }
   };
 

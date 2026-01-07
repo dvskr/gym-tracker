@@ -51,6 +51,7 @@ import {
   getMeasurementHistory,
   getMeasurementTimeline,
   getFirstMeasurements,
+  getPreviousMeasurements,
   compareMeasurements,
   deleteMeasurementById,
   updateMeasurementById,
@@ -171,7 +172,80 @@ const MainTabSelector: React.FC<MainTabSelectorProps> = ({ selected, onSelect })
 };
 
 // ============================================
-// Time Range Selector
+// Measurement Filter Panel
+// ============================================
+
+interface MeasurementFilterProps {
+  selected: (keyof MeasurementData)[];
+  onToggle: (key: keyof MeasurementData) => void;
+}
+
+const MeasurementFilter: React.FC<MeasurementFilterProps> = ({ selected, onToggle }) => {
+  const allSelected = selected.length === CHARTABLE_FIELDS.length;
+  
+  return (
+    <View style={styles.filterPanel}>
+      <View style={styles.filterHeader}>
+        <BarChart3 size={16} color="#94a3b8" />
+        <Text style={styles.filterTitle}>Measurements</Text>
+        <Text style={styles.filterSubtitle}>({selected.length} selected)</Text>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScrollContent}>
+        <View style={styles.filterChips}>
+          {/* All chip */}
+          <TouchableOpacity
+            style={[
+              styles.filterChip,
+              allSelected && styles.filterChipActive,
+              allSelected && { borderColor: '#3b82f6' }
+            ]}
+            onPress={() => {
+              Haptics.selectionAsync();
+              // If all selected, keep all selected. If not all, select all.
+              if (!allSelected) {
+                CHARTABLE_FIELDS.forEach(field => {
+                  if (!selected.includes(field.key)) {
+                    onToggle(field.key);
+                  }
+                });
+              }
+            }}
+          >
+            <Text style={[styles.filterChipText, allSelected && { color: '#3b82f6' }]}>All</Text>
+            {allSelected && <Check size={14} color="#3b82f6" style={styles.filterCheckIcon} />}
+          </TouchableOpacity>
+          
+          {/* Individual measurement chips */}
+          {CHARTABLE_FIELDS.map((field) => {
+            const isSelected = selected.includes(field.key);
+            const color = getMeasurementColor(field.key);
+            return (
+              <TouchableOpacity
+                key={field.key}
+                style={[
+                  styles.filterChip,
+                  isSelected && styles.filterChipActive,
+                  isSelected && { borderColor: color }
+                ]}
+                onPress={() => {
+                  Haptics.selectionAsync();
+                  onToggle(field.key);
+                }}
+              >
+                <View style={[styles.measurementChipDot, { backgroundColor: color }]} />
+                <Text style={[styles.filterChipText, isSelected && { color }]}>{field.label}</Text>
+                {isSelected && <Check size={14} color={color} style={styles.filterCheckIcon} />}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+// ============================================
+// Time Range Filter Panel
 // ============================================
 
 interface TimeRangeSelectorProps {
@@ -180,21 +254,28 @@ interface TimeRangeSelectorProps {
 }
 
 const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ selected, onSelect }) => (
-  <View style={styles.timeRangeContainer}>
-    {timeRanges.map((range) => (
-      <TouchableOpacity
-        key={range}
-        style={[styles.timeRangeButton, selected === range && styles.timeRangeButtonActive]}
-        onPress={() => {
-          Haptics.selectionAsync();
-          onSelect(range);
-        }}
-      >
-        <Text style={[styles.timeRangeText, selected === range && styles.timeRangeTextActive]}>
-          {range}
-        </Text>
-      </TouchableOpacity>
-    ))}
+  <View style={styles.filterPanel}>
+    <View style={styles.filterHeader}>
+      <Activity size={16} color="#94a3b8" />
+      <Text style={styles.filterTitle}>Time Range</Text>
+    </View>
+    <View style={styles.filterChips}>
+      {timeRanges.map((range) => (
+        <TouchableOpacity
+          key={range}
+          style={[styles.filterChip, selected === range && styles.filterChipActive]}
+          onPress={() => {
+            Haptics.selectionAsync();
+            onSelect(range);
+          }}
+        >
+          <Text style={[styles.filterChipText, selected === range && styles.filterChipTextActive]}>
+            {range}
+          </Text>
+          {selected === range && <Check size={14} color="#3b82f6" style={styles.filterCheckIcon} />}
+        </TouchableOpacity>
+      ))}
+    </View>
   </View>
 );
 
@@ -206,9 +287,10 @@ interface ComparisonCardProps {
   comparisons: MeasurementComparison[];
   timeSpan: string;
   unit: string;
+  weightUnit: string;
 }
 
-const ComparisonCard: React.FC<ComparisonCardProps> = ({ comparisons, timeSpan, unit }) => {
+const ComparisonCard: React.FC<ComparisonCardProps> = ({ comparisons, timeSpan, unit, weightUnit }) => {
   const validComparisons = comparisons.filter(
     c => c.firstValue !== null && c.latestValue !== null && c.change !== null
   );
@@ -230,10 +312,18 @@ const ComparisonCard: React.FC<ComparisonCardProps> = ({ comparisons, timeSpan, 
       </View>
 
       <View style={styles.comparisonGrid}>
-        {validComparisons.slice(0, 6).map((comp) => {
+        {validComparisons.map((comp) => {
           const isPositive = (comp.change || 0) > 0;
           const isGood = comp.isLossGood ? !isPositive : isPositive;
           const color = comp.change === 0 ? '#64748b' : isGood ? '#22c55e' : '#ef4444';
+          
+          // Determine the correct unit for this measurement
+          let displayUnit = unit;
+          if (comp.key === 'body_fat_percentage') {
+            displayUnit = '%';
+          } else if (comp.key === 'weight') {
+            displayUnit = weightUnit;
+          }
 
           return (
             <View key={comp.key} style={styles.comparisonItem}>
@@ -247,7 +337,7 @@ const ComparisonCard: React.FC<ComparisonCardProps> = ({ comparisons, timeSpan, 
                 {comp.change === 0 ? <Minus size={12} color={color} /> : isPositive ? <TrendingUp size={12} color={color} /> : <TrendingDown size={12} color={color} />}
                 <Text style={[styles.comparisonChangeText, { color }]}>
                   {comp.change !== null && comp.change > 0 ? '+' : ''}{comp.change}
-                  {comp.key === 'body_fat_percentage' ? '%' : unit}
+                  {displayUnit}
                 </Text>
               </View>
             </View>
@@ -552,7 +642,11 @@ export default function MeasurementsScreen() {
   const [history, setHistory] = useState<MeasurementEntry[]>([]);
   const [comparisons, setComparisons] = useState<MeasurementComparison[]>([]);
   const [timeSpan, setTimeSpan] = useState('');
+  const [allChartsData, setAllChartsData] = useState<Record<keyof MeasurementData, MeasurementTimelinePoint[]>>({} as Record<keyof MeasurementData, MeasurementTimelinePoint[]>);
   const [chartData, setChartData] = useState<MeasurementTimelinePoint[]>([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState<(keyof MeasurementData)[]>(
+    CHARTABLE_FIELDS.map(f => f.key) // Select ALL measurements by default
+  );
   const [selectedMeasurement, setSelectedMeasurement] = useState<keyof MeasurementData>('waist');
   const [timeRange, setTimeRange] = useState<TimeRange>('All');
   const [latestMeasurements, setLatestMeasurements] = useState<MeasurementEntry | null>(null);
@@ -590,8 +684,10 @@ export default function MeasurementsScreen() {
 
       // Fetch form data for selected date
       const measurements = await getMeasurements(user.id, dateString);
-      const latest = await getLatestMeasurements(user.id);
-      if (latest && latest.measured_at !== dateString) setPreviousData(latest); else setPreviousData(null);
+      
+      // Get the previous measurement (chronologically before selected date)
+      const previous = await getPreviousMeasurements(user.id, dateString);
+      setPreviousData(previous);
 
       if (measurements) {
         setFormData({
@@ -618,10 +714,14 @@ export default function MeasurementsScreen() {
       // Fetch history data
       const historyData = await getMeasurementHistory(user.id);
       setHistory(historyData);
+
       if (historyData.length > 0 && historyData[0].unit) setUnit(historyData[0].unit as 'in' | 'cm');
 
+      // Get latest measurements for summary tab
+      const latest = await getLatestMeasurements(user.id);
       setLatestMeasurements(latest);
       const first = await getFirstMeasurements(user.id);
+
       const comparisonData = compareMeasurements(first, latest);
       setComparisons(comparisonData);
 
@@ -631,6 +731,22 @@ export default function MeasurementsScreen() {
         setTimeSpan(months > 0 ? `Over ${months} month${months > 1 ? 's' : ''}` : `Over ${days} day${days > 1 ? 's' : ''}`);
       }
 
+      // Fetch timeline data for all chartable fields
+      const chartsDataMap: Record<keyof MeasurementData, MeasurementTimelinePoint[]> = {} as Record<keyof MeasurementData, MeasurementTimelinePoint[]>;
+      
+      await Promise.all(
+        CHARTABLE_FIELDS.map(async (field) => {
+          try {
+            const timeline = await getMeasurementTimeline(user.id, field.key);
+            chartsDataMap[field.key] = timeline;
+          } catch (error) {
+            chartsDataMap[field.key] = [];
+          }
+        })
+      );
+      
+      setAllChartsData(chartsDataMap);
+      
       const timeline = await getMeasurementTimeline(user.id, selectedMeasurement);
       setChartData(timeline);
     } catch (error: unknown) {
@@ -658,6 +774,21 @@ export default function MeasurementsScreen() {
   }, [user?.id, selectedMeasurement]);
 
   const handleRefresh = useCallback(() => { setIsRefreshing(true); fetchData(); }, [fetchData]);
+
+  const toggleMeasurementSelection = (key: keyof MeasurementData) => {
+    setSelectedMeasurements(prev => {
+      if (prev.includes(key)) {
+        // Deselect - but keep at least one selected
+        if (prev.length > 1) {
+          return prev.filter(k => k !== key);
+        }
+        return prev;
+      } else {
+        // Select
+        return [...prev, key];
+      }
+    });
+  };
 
   const updateField = (field: keyof FormData, value: string) => setFormData(prev => ({ ...prev, [field]: value }));
 
@@ -717,6 +848,15 @@ export default function MeasurementsScreen() {
     const labels = filteredData.filter((_, i) => i % step === 0 || i === filteredData.length - 1).map(d => format(parseISO(d.date), 'M/d'));
     const color = getMeasurementColor(selectedMeasurement);
     return { labels, datasets: [{ data: filteredData.map(d => d.value), color: (opacity = 1) => color, strokeWidth: 3 }] };
+  };
+
+  const prepareChartDataForField = (data: MeasurementTimelinePoint[], fieldKey: keyof MeasurementData) => {
+    if (data.length === 0) return { labels: [], datasets: [{ data: [0] }] };
+    const maxLabels = 6;
+    const step = Math.max(1, Math.floor(data.length / maxLabels));
+    const labels = data.filter((_, i) => i % step === 0 || i === data.length - 1).map(d => format(parseISO(d.date), 'M/d'));
+    const color = getMeasurementColor(fieldKey);
+    return { labels, datasets: [{ data: data.map(d => d.value), color: (opacity = 1) => color, strokeWidth: 3 }] };
   };
 
   if (isLoading) {
@@ -833,7 +973,7 @@ export default function MeasurementsScreen() {
           {activeTab === 'summary' && (
             history.length > 0 ? (
               <>
-                <ComparisonCard comparisons={comparisons} timeSpan={timeSpan} unit={unit} />
+                <ComparisonCard comparisons={comparisons} timeSpan={timeSpan} unit={unit} weightUnit={weightUnit} />
                 <RatiosCard measurements={latestMeasurements} gender={gender} />
                 <BodyCompositionCard weight={latestMeasurements?.weight ?? null} bodyFatPercent={latestMeasurements?.body_fat_percentage ?? null} gender={gender} />
                 <View style={styles.quickStats}>
@@ -853,42 +993,102 @@ export default function MeasurementsScreen() {
 
           {/* CHARTS TAB */}
           {activeTab === 'charts' && (
-            history.length > 0 ? (
-              <>
-                <ChartSelector selected={selectedMeasurement} onSelect={setSelectedMeasurement} />
-                <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
-                {filteredChartData.length >= 2 ? (
-                  <View style={styles.chartCard}>
-                    <View style={styles.chartHeader}>
-                      <Text style={styles.chartTitle}>{selectedField?.label}</Text>
-                      {filteredChartData.length > 0 && (
-                        <View style={styles.chartStats}>
-                          <Text style={styles.chartStatLabel}>Current:</Text>
-                          <Text style={[styles.chartStatValue, { color: getMeasurementColor(selectedMeasurement) }]}>{filteredChartData[filteredChartData.length - 1].value}{selectedMeasurement === 'body_fat_percentage' ? '%' : ` ${unit}`}</Text>
+            <>
+              {history.length > 0 ? (
+                <>
+                  <MeasurementFilter 
+                    selected={selectedMeasurements} 
+                    onToggle={toggleMeasurementSelection} 
+                  />
+                  <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
+                  
+                  {CHARTABLE_FIELDS.filter(field => selectedMeasurements.includes(field.key)).map((field) => {
+                    const fieldData = allChartsData[field.key] || [];
+                    const filteredData = filterByTimeRange(fieldData);
+                    
+                    if (filteredData.length < 2) {
+                      return (
+                        <View key={field.key} style={styles.noChartData}>
+                          <BarChart3 size={32} color="#334155" />
+                          <Text style={styles.noChartTitle}>{field.label}</Text>
+                          <Text style={styles.noChartText}>Need at least 2 entries to show chart</Text>
                         </View>
-                      )}
+                      );
+                    }
+
+                    const chartDataForField = prepareChartDataForField(filteredData, field.key);
+                    const color = getMeasurementColor(field.key);
+                    const displayUnit = field.key === 'body_fat_percentage' ? '%' : field.key === 'weight' ? ` ${weightUnit}` : ` ${unit}`;
+
+                    return (
+                      <View key={field.key} style={styles.chartCard}>
+                        <View style={styles.chartHeader}>
+                          <View style={styles.chartTitleRow}>
+                            <View style={[styles.chartColorDot, { backgroundColor: color }]} />
+                            <Text style={styles.chartTitle}>{field.label}</Text>
+                          </View>
+                          {filteredData.length > 0 && (
+                            <View style={styles.chartStats}>
+                              <Text style={styles.chartStatLabel}>Current:</Text>
+                              <Text style={[styles.chartStatValue, { color }]}>
+                                {filteredData[filteredData.length - 1].value}{displayUnit}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                        <LineChart
+                          data={chartDataForField}
+                          width={screenWidth - 48}
+                          height={200}
+                          chartConfig={{
+                            backgroundColor: '#1e293b',
+                            backgroundGradientFrom: '#1e293b',
+                            backgroundGradientTo: '#1e293b',
+                            decimalPlaces: 1,
+                            color: (opacity = 1) => color,
+                            labelColor: (opacity = 1) => `rgba(148, 163, 184, ${opacity})`,
+                            style: { borderRadius: 12 },
+                            propsForDots: { r: '4', strokeWidth: '2', stroke: color },
+                            propsForBackgroundLines: { strokeDasharray: '', stroke: '#334155', strokeWidth: 1 }
+                          }}
+                          bezier
+                          style={styles.chart}
+                          withInnerLines
+                          withOuterLines={false}
+                          withVerticalLines={false}
+                          withHorizontalLines
+                          fromZero={false}
+                        />
+                        <View style={styles.chartMinMax}>
+                          <View style={styles.chartStatBadge}>
+                            <TrendingDown size={12} color="#64748b" />
+                            <Text style={styles.chartMinMaxText}>Min: {Math.min(...filteredData.map(d => d.value)).toFixed(1)}</Text>
+                          </View>
+                          <View style={styles.chartStatBadge}>
+                            <TrendingUp size={12} color="#64748b" />
+                            <Text style={styles.chartMinMaxText}>Max: {Math.max(...filteredData.map(d => d.value)).toFixed(1)}</Text>
+                          </View>
+                        </View>
+                      </View>
+                    );
+                  })}
+                  
+                  {selectedMeasurements.length === 0 && (
+                    <View style={styles.noChartData}>
+                      <BarChart3 size={48} color="#334155" />
+                      <Text style={styles.noChartTitle}>No Measurements Selected</Text>
+                      <Text style={styles.noChartText}>Select measurements above to view charts</Text>
                     </View>
-                    <LineChart data={chartDataPrepared} width={screenWidth - 48} height={220} chartConfig={{ backgroundColor: '#1e293b', backgroundGradientFrom: '#1e293b', backgroundGradientTo: '#1e293b', decimalPlaces: 1, color: (opacity = 1) => getMeasurementColor(selectedMeasurement), labelColor: (opacity = 1) => `rgba(148, 163, 184, ${opacity})`, style: { borderRadius: 12 }, propsForDots: { r: '5', strokeWidth: '2', stroke: getMeasurementColor(selectedMeasurement) }, propsForBackgroundLines: { strokeDasharray: '', stroke: '#334155', strokeWidth: 1 } }} bezier style={styles.chart} withInnerLines withOuterLines={false} withVerticalLines={false} withHorizontalLines fromZero={false} />
-                    <View style={styles.chartMinMax}>
-                      <Text style={styles.chartMinMaxText}>Min: {Math.min(...filteredChartData.map(d => d.value)).toFixed(1)}</Text>
-                      <Text style={styles.chartMinMaxText}>Max: {Math.max(...filteredChartData.map(d => d.value)).toFixed(1)}</Text>
-                    </View>
-                  </View>
-                ) : (
-                  <View style={styles.noChartData}>
-                    <BarChart3 size={48} color="#334155" />
-                    <Text style={styles.noChartTitle}>Not Enough Data</Text>
-                    <Text style={styles.noChartText}>Need at least 2 entries for {selectedField?.label || 'this measurement'}</Text>
-                  </View>
-                )}
-              </>
-            ) : (
-              <View style={styles.emptyState}>
-                <Text style={styles.emptyEmoji}>📈</Text>
-                <Text style={styles.emptyTitle}>No Data to Chart</Text>
-                <Text style={styles.emptySubtitle}>Add measurements to see trends</Text>
-              </View>
-            )
+                  )}
+                </>
+              ) : (
+                <View style={styles.emptyState}>
+                  <Text style={styles.emptyEmoji}>📈</Text>
+                  <Text style={styles.emptyTitle}>No Data to Chart</Text>
+                  <Text style={styles.emptySubtitle}>Add measurements to see trends</Text>
+                </View>
+              )}
+            </>
           )}
 
           {/* HISTORY TAB */}
@@ -977,6 +1177,21 @@ const styles = StyleSheet.create({
   saveButtonText: { fontSize: 17, fontWeight: 'bold', color: '#ffffff' },
 
   // Time Range
+  // Time Range Filter (new design)
+  filterPanel: { backgroundColor: '#1e293b', borderRadius: 16, padding: 16, marginBottom: 16 },
+  filterHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
+  filterTitle: { fontSize: 14, fontWeight: '600', color: '#cbd5e1' },
+  filterSubtitle: { fontSize: 12, color: '#64748b', marginLeft: 4 },
+  filterScrollContent: { paddingRight: 16 },
+  filterChips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  filterChip: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 14, borderRadius: 20, backgroundColor: '#0f172a', borderWidth: 1.5, borderColor: '#334155', gap: 6 },
+  filterChipActive: { backgroundColor: '#1e3a8a' },
+  filterChipText: { fontSize: 13, fontWeight: '600', color: '#94a3b8' },
+  filterChipTextActive: { color: '#3b82f6' },
+  filterCheckIcon: { marginLeft: 2 },
+  measurementChipDot: { width: 8, height: 8, borderRadius: 4 },
+
+  // Old time range styles (can be removed if not used elsewhere)
   timeRangeContainer: { flexDirection: 'row', gap: 8, marginBottom: 16 },
   timeRangeButton: { flex: 1, paddingVertical: 10, borderRadius: 8, backgroundColor: '#1e293b', alignItems: 'center' },
   timeRangeButtonActive: { backgroundColor: '#3b82f6' },
@@ -1035,12 +1250,15 @@ const styles = StyleSheet.create({
   // Chart Card
   chartCard: { backgroundColor: '#1e293b', borderRadius: 16, padding: 16, marginBottom: 16 },
   chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  chartTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  chartColorDot: { width: 10, height: 10, borderRadius: 5 },
   chartTitle: { fontSize: 16, fontWeight: 'bold', color: '#ffffff' },
   chartStats: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   chartStatLabel: { fontSize: 12, color: '#64748b' },
   chartStatValue: { fontSize: 14, fontWeight: 'bold' },
   chart: { marginLeft: -16, borderRadius: 12 },
   chartMinMax: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#334155' },
+  chartStatBadge: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   chartMinMaxText: { fontSize: 12, color: '#64748b' },
   noChartData: { backgroundColor: '#1e293b', borderRadius: 16, padding: 32, alignItems: 'center', marginBottom: 16 },
   noChartTitle: { fontSize: 16, fontWeight: 'bold', color: '#94a3b8', marginTop: 12 },

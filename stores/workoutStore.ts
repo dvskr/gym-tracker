@@ -379,17 +379,17 @@ export const useWorkoutStore = create<WorkoutState>()(
               
               // Fallback if not in map
               if (!dbExerciseId) {
-                const exercise = activeWorkout.exercises.find(e => e.id === pr.exerciseId);
-                if (exercise) {
-                  if (exercise.exercise.dbId) {
-                    dbExerciseId = exercise.exercise.dbId;
-                  } else {
-                    const { data: dbExercise } = await supabase
-                      .from('exercises')
-                      .select('id')
-                      .eq('external_id', exercise.exercise.id)
-                      .single();
-                    dbExerciseId = dbExercise?.id || null;
+              const exercise = activeWorkout.exercises.find(e => e.id === pr.exerciseId);
+              if (exercise) {
+                if (exercise.exercise.dbId) {
+                  dbExerciseId = exercise.exercise.dbId;
+                } else {
+                  const { data: dbExercise } = await supabase
+                    .from('exercises')
+                    .select('id')
+                    .eq('external_id', exercise.exercise.id)
+                    .single();
+                  dbExerciseId = dbExercise?.id || null;
                   }
                 }
               }
@@ -472,13 +472,13 @@ export const useWorkoutStore = create<WorkoutState>()(
           logger.log('[WorkoutStore] Workout saved with PRs - celebration will happen on complete screen');
 
           // Clear active workout
-logger.log('[WorkoutStore] endWorkout: clearing state...');
+ logger.log('[WorkoutStore] endWorkout: clearing state...');
           set({
             activeWorkout: null,
             isWorkoutActive: false,
             restTimer: { exerciseId: null, isRunning: false, remainingSeconds: 0, totalSeconds: 0 },
           });
-logger.log('[WorkoutStore] State after endWorkout:', {
+ logger.log('[WorkoutStore] State after endWorkout:', {
             activeWorkout: get().activeWorkout,
             isWorkoutActive: get().isWorkoutActive,
           });
@@ -491,7 +491,7 @@ logger.log('[WorkoutStore] State after endWorkout:', {
 
           return { success: true, workoutId: workout.id };
         } catch (error: unknown) {
-logger.error('Failed to save workout:', error);
+ logger.error('Failed to save workout:', error);
           return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to save workout',

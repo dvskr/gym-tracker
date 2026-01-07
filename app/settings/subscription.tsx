@@ -17,6 +17,7 @@ import {
 } from '@/lib/services/revenuecat';
 import { Crown, ExternalLink, RefreshCw } from 'lucide-react-native';
 import type { PurchasesPackage } from 'react-native-purchases';
+import { logger } from '@/lib/utils/logger';
 
 export default function SubscriptionScreen() {
   const { isPro, expirationDate, checkStatus, setCustomerInfo } = useProStore();
@@ -35,7 +36,7 @@ export default function SubscriptionScreen() {
         setPackages(offering.availablePackages);
       }
     } catch (error) {
-      console.error('Failed to load offerings:', error);
+      logger.error('Failed to load offerings:', error);
     } finally {
       setLoadingOfferings(false);
     }

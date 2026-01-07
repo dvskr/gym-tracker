@@ -4,6 +4,7 @@ import Purchases, {
   PurchasesPackage,
   LOG_LEVEL,
 } from 'react-native-purchases';
+import { logger } from '@/lib/utils/logger';
 
 // Environment variables
 const API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY!;
@@ -32,7 +33,7 @@ export const checkProStatus = async (): Promise<boolean> => {
     const customerInfo = await Purchases.getCustomerInfo();
     return customerInfo.entitlements.active[ENTITLEMENT_ID] !== undefined;
   } catch (error) {
-    console.error('Error checking pro status:', error);
+    logger.error('Error checking pro status:', error);
     return false;
   }
 };
@@ -44,7 +45,7 @@ export const getCustomerInfo = async (): Promise<CustomerInfo | null> => {
   try {
     return await Purchases.getCustomerInfo();
   } catch (error) {
-    console.error('Error getting customer info:', error);
+    logger.error('Error getting customer info:', error);
     return null;
   }
 };
@@ -57,7 +58,7 @@ export const getOfferings = async (): Promise<PurchasesOffering | null> => {
     const offerings = await Purchases.getOfferings();
     return offerings.current;
   } catch (error) {
-    console.error('Error getting offerings:', error);
+    logger.error('Error getting offerings:', error);
     return null;
   }
 };
@@ -76,7 +77,7 @@ export const purchasePackage = async (
     if (error.userCancelled) {
       return { success: false, error: 'cancelled' };
     }
-    console.error('Error purchasing:', error);
+    logger.error('Error purchasing:', error);
     return { success: false, error: error.message };
   }
 };
@@ -94,7 +95,7 @@ export const restorePurchases = async (): Promise<{
     const isPro = customerInfo.entitlements.active[ENTITLEMENT_ID] !== undefined;
     return { success: isPro, customerInfo };
   } catch (error: any) {
-    console.error('Error restoring purchases:', error);
+    logger.error('Error restoring purchases:', error);
     return { success: false, error: error.message };
   }
 };
@@ -107,7 +108,7 @@ export const getManagementURL = async (): Promise<string | null> => {
     const customerInfo = await Purchases.getCustomerInfo();
     return customerInfo.managementURL;
   } catch (error) {
-    console.error('Error getting management URL:', error);
+    logger.error('Error getting management URL:', error);
     return null;
   }
 };
@@ -119,7 +120,7 @@ export const identifyUser = async (userId: string): Promise<void> => {
   try {
     await Purchases.logIn(userId);
   } catch (error) {
-    console.error('Error identifying user:', error);
+    logger.error('Error identifying user:', error);
   }
 };
 
@@ -130,7 +131,7 @@ export const logoutUser = async (): Promise<void> => {
   try {
     await Purchases.logOut();
   } catch (error) {
-    console.error('Error logging out user:', error);
+    logger.error('Error logging out user:', error);
   }
 };
 

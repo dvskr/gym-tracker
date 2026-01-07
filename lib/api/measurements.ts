@@ -171,8 +171,10 @@ export const MEASUREMENT_FIELDS: { key: keyof MeasurementData; label: string; se
   { key: 'calf_right', label: 'Calf (R)', section: 'Lower Body' },
 ];
 
-// Chartable measurement fields (excluding weight which has its own chart)
+// Chartable measurement fields
 export const CHARTABLE_FIELDS: { key: keyof MeasurementData; label: string; isLossGood?: boolean }[] = [
+  { key: 'weight', label: 'Weight', isLossGood: true },
+  { key: 'body_fat_percentage', label: 'Body Fat %', isLossGood: true },
   { key: 'chest', label: 'Chest' },
   { key: 'shoulders', label: 'Shoulders' },
   { key: 'waist', label: 'Waist', isLossGood: true },
@@ -186,7 +188,6 @@ export const CHARTABLE_FIELDS: { key: keyof MeasurementData; label: string; isLo
   { key: 'calf_left', label: 'Calf (L)' },
   { key: 'calf_right', label: 'Calf (R)' },
   { key: 'neck', label: 'Neck' },
-  { key: 'body_fat_percentage', label: 'Body Fat %', isLossGood: true },
 ];
 
 // Timeline data point
@@ -209,12 +210,14 @@ export async function getMeasurementTimeline(
 
   if (error) throw error;
 
-  return (data || [])
+  const result = (data || [])
     .filter(d => d[measurementType] !== null && d[measurementType] !== undefined)
     .map(d => ({
       date: d.measured_at,
       value: d[measurementType] as number,
     }));
+
+  return result;
 }
 
 // Comparison result for a measurement
@@ -235,15 +238,21 @@ export function compareMeasurements(
   const comparisons: MeasurementComparison[] = [];
 
   const fieldsToCompare: { key: keyof MeasurementData; label: string; isLossGood?: boolean }[] = [
+    { key: 'weight', label: 'Weight', isLossGood: true },
+    { key: 'body_fat_percentage', label: 'Body Fat %', isLossGood: true },
     { key: 'chest', label: 'Chest' },
-    { key: 'waist', label: 'Waist', isLossGood: true },
-    { key: 'hips', label: 'Hips', isLossGood: true },
+    { key: 'shoulders', label: 'Shoulders' },
+    { key: 'neck', label: 'Neck' },
     { key: 'bicep_left', label: 'Bicep (L)' },
     { key: 'bicep_right', label: 'Bicep (R)' },
-    { key: 'shoulders', label: 'Shoulders' },
+    { key: 'forearm_left', label: 'Forearm (L)' },
+    { key: 'forearm_right', label: 'Forearm (R)' },
+    { key: 'waist', label: 'Waist', isLossGood: true },
+    { key: 'hips', label: 'Hips', isLossGood: true },
     { key: 'thigh_left', label: 'Thigh (L)' },
     { key: 'thigh_right', label: 'Thigh (R)' },
-    { key: 'body_fat_percentage', label: 'Body Fat %', isLossGood: true },
+    { key: 'calf_left', label: 'Calf (L)' },
+    { key: 'calf_right', label: 'Calf (R)' },
   ];
 
   for (const field of fieldsToCompare) {
@@ -265,6 +274,27 @@ export function compareMeasurements(
   }
 
   return comparisons;
+}
+
+// Get the most recent measurement BEFORE a specific date
+export async function getPreviousMeasurements(
+  userId: string,
+  beforeDate: string
+): Promise<MeasurementEntry | null> {
+  const { data, error } = await supabase
+    .from('body_measurements')
+    .select('*')
+    .eq('user_id', userId)
+    .lt('measured_at', beforeDate)
+    .order('measured_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error && error.code !== 'PGRST116') {
+    throw error;
+  }
+
+  return data || null;
 }
 
 // Get first measurement entry
