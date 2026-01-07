@@ -264,17 +264,11 @@ const EditExerciseModal: React.FC<EditExerciseModalProps> = ({
   onSave,
 }) => {
   const [targetSets, setTargetSets] = useState('3');
-  const [repsMin, setRepsMin] = useState('8');
-  const [repsMax, setRepsMax] = useState('12');
-  const [restSeconds, setRestSeconds] = useState('90');
   const [notes, setNotes] = useState('');
 
   useEffect(() => {
     if (exercise) {
       setTargetSets(exercise.target_sets?.toString() || '3');
-      setRepsMin(exercise.target_reps_min?.toString() || '8');
-      setRepsMax(exercise.target_reps_max?.toString() || '12');
-      setRestSeconds(exercise.rest_seconds?.toString() || '90');
       setNotes(exercise.notes || '');
     }
   }, [exercise]);
@@ -282,9 +276,6 @@ const EditExerciseModal: React.FC<EditExerciseModalProps> = ({
   const handleSave = () => {
     onSave({
       target_sets: parseInt(targetSets) || 3,
-      target_reps_min: parseInt(repsMin) || undefined,
-      target_reps_max: parseInt(repsMax) || undefined,
-      rest_seconds: parseInt(restSeconds) || 90,
       notes: notes.trim() || undefined,
     });
     onClose();
@@ -324,43 +315,6 @@ const EditExerciseModal: React.FC<EditExerciseModalProps> = ({
                 onChangeText={setTargetSets}
                 keyboardType="number-pad"
                 placeholder="3"
-                placeholderTextColor="#64748b"
-              />
-            </View>
-
-            {/* Rep Range */}
-            <View style={styles.editField}>
-              <Text style={styles.editLabel}>Rep Range</Text>
-              <View style={styles.repRangeRow}>
-                <TextInput
-                  style={[styles.editInput, styles.repInput]}
-                  value={repsMin}
-                  onChangeText={setRepsMin}
-                  keyboardType="number-pad"
-                  placeholder="8"
-                  placeholderTextColor="#64748b"
-                />
-                <Text style={styles.repDash}>–</Text>
-                <TextInput
-                  style={[styles.editInput, styles.repInput]}
-                  value={repsMax}
-                  onChangeText={setRepsMax}
-                  keyboardType="number-pad"
-                  placeholder="12"
-                  placeholderTextColor="#64748b"
-                />
-              </View>
-            </View>
-
-            {/* Rest Time */}
-            <View style={styles.editField}>
-              <Text style={styles.editLabel}>Rest Time (seconds)</Text>
-              <TextInput
-                style={styles.editInput}
-                value={restSeconds}
-                onChangeText={setRestSeconds}
-                keyboardType="number-pad"
-                placeholder="90"
                 placeholderTextColor="#64748b"
               />
             </View>
@@ -665,14 +619,18 @@ export default function TemplateDetailScreen() {
         // Check if auto-fill is enabled
         const { autoFillSets } = useSettingsStore.getState();
         
-        for (const templateExercise of template.exercises) {
+        // Fetch ALL previous workout data in parallel (much faster!)
+        const previousDataPromises = template.exercises.map(templateExercise =>
+          templateExercise.exercise 
+            ? fetchPreviousWorkoutData(user.id, templateExercise.exercise.external_id)
+            : Promise.resolve(null)
+        );
+        const allPreviousData = await Promise.all(previousDataPromises);
+        
+        // Now add all exercises with their pre-fetched data
+        template.exercises.forEach((templateExercise, index) => {
           if (templateExercise.exercise) {
-            // Fetch previous workout data for this exercise
-            const previousData = await fetchPreviousWorkoutData(
-              user.id,
-              templateExercise.exercise.external_id
-            );
-
+            const previousData = allPreviousData[index];
             let prefillSets: Array<{ weight?: number; reps?: number }> = [];
 
             // Only auto-fill if setting is enabled
@@ -720,12 +678,12 @@ export default function TemplateDetailScreen() {
               targetSets
             );
           }
-        }
+        });
       }
 
       router.push('/workout/active');
     } catch (error: unknown) {
- logger.error('Error starting workout:', error);
+logger.error('Error starting workout:', error);
     }
   };
 

@@ -268,19 +268,18 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           if (workoutError) throw workoutError;
 
-          // Insert workout exercises
-          for (const exercise of activeWorkout.exercises) {
+          // OPTIMIZATION: Process all exercises in parallel
+          const exercisePromises = activeWorkout.exercises.map(async (exercise) => {
             // Skip exercises with no completed sets
             const completedSets = exercise.sets.filter((s) => s.isCompleted);
             if (completedSets.length === 0) {
-              continue; // Don't save this exercise at all
+              return null;
             }
 
             // Use dbId if available (already exists in DB), otherwise look up by external_id
             let exerciseId: string;
             
             if (exercise.exercise.dbId) {
-              // Exercise already has database UUID - use it directly
               exerciseId = exercise.exercise.dbId;
             } else {
               // Legacy path: look up by external_id
@@ -305,8 +304,8 @@ export const useWorkoutStore = create<WorkoutState>()(
                     category: exercise.exercise.bodyPart,
                     gif_url: exercise.exercise.gifUrl,
                     instructions: exercise.exercise.instructions,
-                    is_custom: true, // Mark as custom since it wasn't found
-                    created_by: user.id, // Required by RLS policy
+                    is_custom: true,
+                    created_by: user.id,
                   })
                   .select()
                   .single();
@@ -330,13 +329,13 @@ export const useWorkoutStore = create<WorkoutState>()(
 
             if (weError) throw weError;
 
-            // Insert sets (we already checked completedSets.length > 0 above)
+            // Insert sets
             const setsToInsert = completedSets.map((s) => ({
               workout_exercise_id: workoutExercise.id,
               set_number: s.setNumber,
-              weight: Math.min(s.weight || 0, 99999.99), // Cap at max database value
+              weight: Math.min(s.weight || 0, 99999.99),
               weight_unit: s.weightUnit,
-              reps: Math.min(s.reps || 0, 9999), // Cap at reasonable max
+              reps: Math.min(s.reps || 0, 9999),
               set_type: s.setType,
               is_completed: true,
               completed_at: s.completedAt,
@@ -351,36 +350,53 @@ export const useWorkoutStore = create<WorkoutState>()(
               .insert(setsToInsert);
 
             if (setsError) throw setsError;
-          }
+            
+            return { exerciseId: exercise.id, dbExerciseId: exerciseId };
+          });
 
-          // Save PRs to personal_records table - MUST DO THIS BEFORE CLEARING STATE
+          // Wait for all exercises to be saved in parallel
+          const exerciseResults = await Promise.all(exercisePromises);
+          
+          // Create a map of exercise IDs to database IDs for PR saving
+          const exerciseIdMap = new Map<string, string>();
+          exerciseResults.forEach(result => {
+            if (result) {
+              exerciseIdMap.set(result.exerciseId, result.dbExerciseId);
+            }
+          });
+
+          // Save PRs to personal_records table
           const workoutPRs = get().getWorkoutPRs();
           logger.log(`[WorkoutStore] Found ${workoutPRs.length} PRs before clearing state`);
           
           if (workoutPRs.length > 0) {
             logger.log(`[WorkoutStore] Saving ${workoutPRs.length} PR(s) to personal_records table`);
             
-            for (const pr of workoutPRs) {
+            // OPTIMIZATION: Process all PRs in parallel
+            const prPromises = workoutPRs.map(async (pr) => {
               // Get the database UUID for the exercise
-              let dbExerciseId: string | null = null;
+              let dbExerciseId: string | null = exerciseIdMap.get(pr.exerciseId) || null;
               
-              const exercise = activeWorkout.exercises.find(e => e.id === pr.exerciseId);
-              if (exercise) {
-                if (exercise.exercise.dbId) {
-                  dbExerciseId = exercise.exercise.dbId;
-                } else {
-                  const { data: dbExercise } = await supabase
-                    .from('exercises')
-                    .select('id')
-                    .eq('external_id', exercise.exercise.id)
-                    .single();
-                  dbExerciseId = dbExercise?.id || null;
+              // Fallback if not in map
+              if (!dbExerciseId) {
+                const exercise = activeWorkout.exercises.find(e => e.id === pr.exerciseId);
+                if (exercise) {
+                  if (exercise.exercise.dbId) {
+                    dbExerciseId = exercise.exercise.dbId;
+                  } else {
+                    const { data: dbExercise } = await supabase
+                      .from('exercises')
+                      .select('id')
+                      .eq('external_id', exercise.exercise.id)
+                      .single();
+                    dbExerciseId = dbExercise?.id || null;
+                  }
                 }
               }
               
               if (!dbExerciseId) {
                 logger.warn(`[WorkoutStore] Could not find database ID for PR exercise: ${pr.exerciseName}`);
-                continue;
+                return;
               }
               
               // Calculate the PR value based on type
@@ -445,7 +461,10 @@ export const useWorkoutStore = create<WorkoutState>()(
                   logger.log(`[WorkoutStore] Inserted PR: ${pr.exerciseName} - ${pr.prType} = ${value}`);
                 }
               }
-            }
+            });
+            
+            // Wait for all PRs to be saved in parallel
+            await Promise.all(prPromises);
           }
 
           // Don't celebrate here - celebration will happen on the complete screen
@@ -453,13 +472,13 @@ export const useWorkoutStore = create<WorkoutState>()(
           logger.log('[WorkoutStore] Workout saved with PRs - celebration will happen on complete screen');
 
           // Clear active workout
- logger.log('[WorkoutStore] endWorkout: clearing state...');
+logger.log('[WorkoutStore] endWorkout: clearing state...');
           set({
             activeWorkout: null,
             isWorkoutActive: false,
             restTimer: { exerciseId: null, isRunning: false, remainingSeconds: 0, totalSeconds: 0 },
           });
- logger.log('[WorkoutStore] State after endWorkout:', {
+logger.log('[WorkoutStore] State after endWorkout:', {
             activeWorkout: get().activeWorkout,
             isWorkoutActive: get().isWorkoutActive,
           });
@@ -472,7 +491,7 @@ export const useWorkoutStore = create<WorkoutState>()(
 
           return { success: true, workoutId: workout.id };
         } catch (error: unknown) {
- logger.error('Failed to save workout:', error);
+logger.error('Failed to save workout:', error);
           return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to save workout',

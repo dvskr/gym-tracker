@@ -84,22 +84,13 @@ class RestTimerNotificationService {
 
   /**
    * Trigger warning haptics (10 seconds remaining)
-   * Note: This uses the global hapticEnabled setting, not restTimerVibration
-   * Warning haptics are subtle and separate from completion vibration
+   * NOTE: This is intentionally disabled. Users want vibration ONLY on completion, not at 10s warning.
+   * The 10-second warning is visual only (timer display changes color).
    */
   async triggerWarning(): Promise<void> {
-    const { hapticEnabled } = useSettingsStore.getState();
-    
-    if (!hapticEnabled) {
-      return;
-    }
-
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      logger.log('[RestTimer] Warning haptic triggered');
-    } catch (error: unknown) {
-      logger.error('[RestTimer] Failed to trigger warning haptic:', error);
-    }
+    // 10-second warning vibration disabled by design
+    // Users expect vibration only on completion, not during countdown
+    logger.log('[RestTimer] 10s warning (vibration disabled by design)');
   }
 
   /**

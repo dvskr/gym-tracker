@@ -204,13 +204,18 @@ export default function TemplatesScreen() {
       startWorkout(template.name, template.id);
 
       if (template.exercises && template.exercises.length > 0) {
-        for (const templateExercise of template.exercises) {
+        // Fetch ALL previous workout data in parallel (much faster!)
+        const previousDataPromises = template.exercises.map(templateExercise =>
+          templateExercise.exercise 
+            ? fetchPreviousWorkoutData(user.id, templateExercise.exercise.external_id)
+            : Promise.resolve(null)
+        );
+        const allPreviousData = await Promise.all(previousDataPromises);
+        
+        // Now add all exercises with their pre-fetched data
+        template.exercises.forEach((templateExercise, index) => {
           if (templateExercise.exercise) {
-            const previousData = await fetchPreviousWorkoutData(
-              user.id,
-              templateExercise.exercise.external_id
-            );
-
+            const previousData = allPreviousData[index];
             let prefillSets: Array<{ weight?: number; reps?: number }> = [];
 
             if (previousData && previousData.sets.length > 0) {
@@ -240,7 +245,7 @@ export default function TemplatesScreen() {
               targetSets
             );
           }
-        }
+        });
       }
 
       router.push('/workout/active');

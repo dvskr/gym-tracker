@@ -55,7 +55,6 @@ export default function ActiveWorkoutScreen() {
     completeSet,
     deleteSet,
     startRestTimer,
-    tickRestTimer,
     getTotalVolume,
     getTotalSets,
     getWorkoutDuration,
@@ -92,18 +91,10 @@ export default function ActiveWorkoutScreen() {
     return () => clearInterval(interval);
   }, [activeWorkout, getWorkoutDuration]);
 
-  // Rest timer countdown
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (restTimer.isRunning) {
-      interval = setInterval(() => {
-        tickRestTimer();
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [restTimer.isRunning, tickRestTimer]);
+  // NOTE: Rest timer countdown removed - handled by InlineRestTimer component
+  // Previously this screen had its own interval calling tickRestTimer(),
+  // which caused the timer to run 2x speed because InlineRestTimer also has an interval.
+  // The InlineRestTimer component is the single source of truth for rest timer ticking.
 
   // Format time (seconds to MM:SS or HH:MM:SS)
   const formatTime = useCallback((seconds: number): string => {

@@ -35,9 +35,13 @@ interface MonthGroup {
 // ============================================
 
 const screenWidth = Dimensions.get('window').width;
-const GRID_GAP = 2;
+const GRID_GAP = 4;
 const NUM_COLUMNS = 3;
-const PHOTO_SIZE = (screenWidth - GRID_GAP * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
+// Calculate photo size accounting for gaps and padding
+// Total gaps = (NUM_COLUMNS - 1) gaps between photos + 2 * side padding
+const TOTAL_HORIZONTAL_PADDING = GRID_GAP * 2; // Left and right padding
+const TOTAL_GAPS = GRID_GAP * (NUM_COLUMNS - 1); // Gaps between photos
+const PHOTO_SIZE = (screenWidth - TOTAL_HORIZONTAL_PADDING - TOTAL_GAPS) / NUM_COLUMNS;
 
 // ============================================
 // Helper Functions
@@ -75,18 +79,10 @@ interface PhotoThumbnailProps {
 const PhotoThumbnailInner: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) => {
   const dateObj = parseISO(photo.taken_at);
   const dateText = format(dateObj, 'MMM d');
-  
+
   return (
-    <TouchableOpacity
-      style={styles.thumbnailContainer}
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <Image
-        source={{ uri: photo.local_uri }}
-        style={styles.thumbnail}
-        resizeMode="cover"
-      />
+    <TouchableOpacity style={styles.thumbnailContainer} onPress={onPress} activeOpacity={0.8}>
+      <Image source={{ uri: photo.local_uri }} style={styles.thumbnail} resizeMode="cover" />
       {/* Date badge at top */}
       <View style={styles.thumbnailDateBadge}>
         <Text style={styles.thumbnailDate}>{dateText}</Text>
@@ -102,6 +98,7 @@ const PhotoThumbnailInner: React.FC<PhotoThumbnailProps> = ({ photo, onPress }) 
 };
 
 const PhotoThumbnail = memo(PhotoThumbnailInner);
+PhotoThumbnail.displayName = 'PhotoThumbnail';
 
 // ============================================
 // Month Section Component
@@ -150,13 +147,14 @@ const MonthSectionInner: React.FC<MonthSectionProps> = ({ group, onPhotoPress, s
 };
 
 const MonthSection = memo(MonthSectionInner);
+MonthSection.displayName = 'MonthSection';
 
 // ============================================
 // Main Component
 // ============================================
 
-export const PhotoGrid: React.FC<PhotoGridProps> = ({ 
-  photos, 
+export const PhotoGrid: React.FC<PhotoGridProps> = ({
+  photos,
   onPhotoPress,
   refreshing = false,
   onRefresh,
@@ -165,7 +163,7 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
 
   // Calculate global indices for each photo
   let currentIndex = 0;
-  const groupsWithIndices = groups.map(group => {
+  const groupsWithIndices = groups.map((group) => {
     const startIndex = currentIndex;
     currentIndex += group.photos.length;
     return { ...group, startIndex };
@@ -180,11 +178,7 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
       data={groupsWithIndices}
       keyExtractor={(item) => item.key}
       renderItem={({ item }) => (
-        <MonthSection
-          group={item}
-          onPhotoPress={onPhotoPress}
-          startIndex={item.startIndex}
-        />
+        <MonthSection group={item} onPhotoPress={onPhotoPress} startIndex={item.startIndex} />
       )}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.listContent}
@@ -209,10 +203,11 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
 const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 100,
+    paddingTop: 8,
   },
 
   monthSection: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
 
   monthHeader: {
@@ -220,18 +215,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 8,
     backgroundColor: 'rgba(2, 6, 23, 0.9)',
+    marginBottom: 4,
   },
 
   monthTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#ffffff',
   },
 
   monthCount: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#64748b',
   },
 
@@ -239,12 +235,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: GRID_GAP,
+    gap: GRID_GAP,
   },
 
   thumbnailContainer: {
     width: PHOTO_SIZE,
     height: PHOTO_SIZE,
-    margin: GRID_GAP / 2,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 
   thumbnail: {
@@ -265,7 +263,7 @@ const styles = StyleSheet.create({
 
   thumbnailDate: {
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#ffffff',
   },
 
@@ -280,7 +278,7 @@ const styles = StyleSheet.create({
 
   thumbnailType: {
     fontSize: 9,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#ffffff',
     textAlign: 'center',
   },
@@ -288,12 +286,8 @@ const styles = StyleSheet.create({
   emptyThumbnail: {
     width: PHOTO_SIZE,
     height: PHOTO_SIZE,
-    margin: GRID_GAP / 2,
     backgroundColor: 'transparent',
   },
 });
 
 export default PhotoGrid;
-
-
-

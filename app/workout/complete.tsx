@@ -171,7 +171,6 @@ export default function WorkoutCompleteScreen() {
           .insert({
             user_id: user.id,
             name: workoutName,
-            is_custom: true,
           })
           .select()
           .single();
@@ -184,7 +183,7 @@ export default function WorkoutCompleteScreen() {
             .from('template_exercises')
             .insert({
               template_id: template.id,
-              exercise_id: workoutExercise.exercise_id,
+              exercise_id: workoutExercise.exercises?.id,
               order_index: workoutExercise.order_index,
               target_sets: workoutExercise.workout_sets?.length || 3,
             });

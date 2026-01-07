@@ -20,6 +20,8 @@ export default function RootLayout() {
   const { user, initialize, isInitialized } = useAuthStore();
   const { checkStatus, reset: resetProStore } = useProStore();
   const hasInitializedNotifications = useRef(false);
+  const hasInitializedPurchases = useRef(false);
+  const previousUserId = useRef<string | undefined>(undefined); // Track previous user ID
   const settingsHydrated = useSettingsStore((s) => s._hasHydrated);
 
   useEffect(() => {
@@ -28,19 +30,46 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    // Initialize RevenueCat
-    const initPurchases = async () => {
-      try {
-        await initializePurchases(user?.id);
-        if (user) {
-          await checkStatus();
+    // Initialize RevenueCat once on app startup
+    if (!hasInitializedPurchases.current) {
+      hasInitializedPurchases.current = true;
+      const initPurchases = async () => {
+        try {
+          await initializePurchases(user?.id);
+        } catch (error) {
+          console.error('Failed to initialize purchases:', error);
         }
-      } catch (error) {
-        console.error('Failed to initialize purchases:', error);
+      };
+      initPurchases();
+    }
+  }, []);
+
+  useEffect(() => {
+    // Handle user login/logout for purchases
+    const handleUserChange = async () => {
+      // User logged in
+      if (user?.id && hasInitializedPurchases.current) {
+        try {
+          await identifyUser(user.id);
+          await checkStatus();
+          previousUserId.current = user.id; // Update previous user ID
+        } catch (error) {
+          console.error('Error identifying user:', error);
+        }
+      } 
+      // User logged out (only if there was a previous user)
+      else if (!user?.id && previousUserId.current && hasInitializedPurchases.current) {
+        try {
+          await logoutUser();
+          resetProStore();
+          previousUserId.current = undefined; // Clear previous user ID
+        } catch (error) {
+          console.error('Error logging out user:', error);
+        }
       }
     };
-    initPurchases();
-  }, []);
+    handleUserChange();
+  }, [user?.id]);
 
   useEffect(() => {
     // Initialize settings from profile when user logs in
@@ -48,20 +77,6 @@ export default function RootLayout() {
       initializeSettings(user.id);
     }
   }, [user?.id, isInitialized]);
-
-  useEffect(() => {
-    // Handle user login/logout for purchases
-    const handleUserChange = async () => {
-      if (user?.id) {
-        await identifyUser(user.id);
-        await checkStatus();
-      } else {
-        await logoutUser();
-        resetProStore();
-      }
-    };
-    handleUserChange();
-  }, [user?.id]);
 
   useEffect(() => {
     // Set/clear Sentry user for error context

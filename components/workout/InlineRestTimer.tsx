@@ -84,7 +84,7 @@ export function InlineRestTimer({ exerciseId, onTimerEnd }: InlineRestTimerProps
         intervalRef.current = null;
       }
     };
-  }, [isRunning, tickRestTimer]);
+  }, [isRunning]); // Removed tickRestTimer from dependencies to prevent multiple intervals
 
   // Progress bar animation
   useEffect(() => {
@@ -104,10 +104,8 @@ export function InlineRestTimer({ exerciseId, onTimerEnd }: InlineRestTimerProps
   useEffect(() => {
     if (isFinished && !hasNotifiedRef.current) {
       hasNotifiedRef.current = true;
-      // UI haptic feedback (controlled by global hapticEnabled setting)
-      warningHaptic();
-      // Note: Rest timer vibration/sound are handled by restTimerNotificationService
-      // based on restTimerSound and restTimerVibration settings
+      // Note: Haptic feedback removed - rest timer vibration/sound are handled by restTimerNotificationService
+      // based on restTimerSound and restTimerVibration settings. No duplicate haptics needed here.
       onTimerEnd?.();
 
       // Pulse animation

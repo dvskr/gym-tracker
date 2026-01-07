@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -99,6 +99,8 @@ interface HistoryEntryProps {
   isExpanded: boolean;
   onToggle: () => void;
   onNavigateWorkout: () => void;
+  weightUnit: string;
+  convertWeight: (weight: number, dbUnit?: string) => number;
 }
 
 const HistoryEntry: React.FC<HistoryEntryProps> = ({
@@ -106,6 +108,8 @@ const HistoryEntry: React.FC<HistoryEntryProps> = ({
   isExpanded,
   onToggle,
   onNavigateWorkout,
+  weightUnit,
+  convertWeight,
 }) => {
   const handleToggle = () => {
     lightHaptic();
@@ -268,12 +272,16 @@ interface ChartsTabProps {
   history: ExerciseHistoryEntry[];
   timeRange: TimeRange;
   onTimeRangeChange: (range: TimeRange) => void;
+  weightUnit: string;
+  convertWeight: (weight: number, dbUnit?: string) => number;
 }
 
 const ChartsTab: React.FC<ChartsTabProps> = ({
   history,
   timeRange,
   onTimeRangeChange,
+  weightUnit,
+  convertWeight,
 }) => {
   const [touchedPoint, setTouchedPoint] = useState<{
     chart: string;
@@ -745,6 +753,8 @@ export default function ExerciseHistoryScreen() {
                   isExpanded={expandedSets[item.workoutId] || false}
                   onToggle={() => toggleExpanded(item.workoutId)}
                   onNavigateWorkout={() => router.push(`/workout/${item.workoutId}`)}
+                  weightUnit={weightUnit}
+                  convertWeight={convertWeight}
                 />
               )}
               ListFooterComponent={<View style={styles.listFooter} />}
@@ -756,6 +766,8 @@ export default function ExerciseHistoryScreen() {
           history={history}
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
+          weightUnit={weightUnit}
+          convertWeight={convertWeight}
         />
       )}
     </SafeAreaView>

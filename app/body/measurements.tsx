@@ -283,7 +283,7 @@ const RatiosCard: React.FC<RatiosCardProps> = ({ measurements, gender }) => {
       <Text style={styles.ratiosTitle}>📐 Body Ratios</Text>
       <View style={styles.ratiosGrid}>
         {validRatios.map(([key, ratio]) => {
-          if (!ratio) return null;
+          if (!ratio || ratio.value === null || ratio.value === undefined) return null;
           return (
             <View key={key} style={styles.ratioItem}>
               <Text style={styles.ratioValue}>{ratio.value.toFixed(2)}</Text>

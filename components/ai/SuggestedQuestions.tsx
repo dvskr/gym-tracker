@@ -49,7 +49,7 @@ export function SuggestedQuestions({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        =K Hey! I'm your AI coach.
+        Hey! I'm your AI coach.
       </Text>
       <Text style={styles.subtitle}>
         Ask me anything about training, nutrition, or recovery.

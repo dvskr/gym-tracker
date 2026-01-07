@@ -25,6 +25,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { supabase } from '@/lib/supabase';
 import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
+import { plateauDetectionService } from '@/lib/ai/plateauDetection';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
@@ -44,17 +46,21 @@ export default function CoachScreen() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userContext, setUserContext] = useState(''); // FIX: Store context.text (string), not the object
-  const [isLoadingContext, setIsLoadingContext] = useState(true);
+  const [isLoadingContext, setIsLoadingContext] = useState(false); // Changed to false, only set to true if cache miss
+  const [isLoadingContextData, setIsLoadingContextData] = useState(false); // Changed to false, only set to true if cache miss
+  
   const [contextData, setContextData] = useState<{
     hasWorkouts: boolean;
     hasInjuries: boolean;
     isRestDay: boolean;
     lowEnergy: boolean;
+    hasPlateaus: boolean;
   }>({
     hasWorkouts: false,
     hasInjuries: false,
     isRestDay: false,
     lowEnergy: false,
+    hasPlateaus: false,
   });
   const flatListRef = useRef<FlatList>(null);
   const { user } = useAuthStore();
@@ -68,15 +74,6 @@ export default function CoachScreen() {
     loadUserContext();
     loadChatHistory();
   }, [user]);
-  
-  // FORCE CLEAR coachContext cache on component mount (to fix any old cached objects)
-  useEffect(() => {
-    if (user) {
-      // Invalidate any potentially corrupted cache from before the fix
-      invalidateCacheKey(user.id, 'coachContext');
- logger.log('[Coach] Cache cleared on mount');
-    }
-  }, []);  // Only on mount
 
   const loadChatHistory = async () => {
     if (!user) return;
@@ -129,18 +126,32 @@ export default function CoachScreen() {
 
   const loadUserContext = async () => {
     if (!user) {
-      setIsLoadingContext(false);
       return;
     }
 
+    const CACHE_KEY = `coach-context-${user.id}`;
+    
+    // Check global cache first (survives component unmount)
+    const cachedContext = tabDataCache.get<string>(CACHE_KEY);
+    if (cachedContext) {
+ logger.log('[Coach] Using cached context from tabDataCache');
+      setUserContext(cachedContext);
+      // Still fetch contextual data for suggested questions (it has its own cache)
+      await fetchContextData();
+      return;
+    }
+
+    setIsLoadingContext(true);
+
     try {
-      // Try to get cached context first (cache for 5 minutes)
+      // Try to get cached context from AI cache (5 minutes)
       const cached = getCachedData<string>(user.id, 'coachContext', 5 * 60 * 1000);
       
       if (cached) {
- logger.log('[Coach] Using cached context');
+ logger.log('[Coach] Using cached context from AI cache');
         setUserContext(cached);
-        setIsLoadingContext(false);
+        // Store in tabDataCache for next time
+        tabDataCache.set(CACHE_KEY, cached);
         
         // Still fetch contextual data for suggested questions
         await fetchContextData();
@@ -154,8 +165,9 @@ export default function CoachScreen() {
       // Extract .text from CoachContext object
       const contextText = typeof context === 'string' ? context : context.text;
       
-      // Cache the text for future use
+      // Cache the text for future use (both caches)
       setCacheData(user.id, 'coachContext', contextText);
+      tabDataCache.set(CACHE_KEY, contextText);
       
       setUserContext(contextText);
       
@@ -170,6 +182,18 @@ export default function CoachScreen() {
 
   const fetchContextData = async () => {
     if (!user) return;
+    
+    const CACHE_KEY = `coach-contextData-${user.id}`;
+    
+    // Check global cache first (survives component unmount)
+    const cachedData = tabDataCache.get<typeof contextData>(CACHE_KEY, 2 * 60 * 1000); // 2 minutes
+    if (cachedData) {
+ logger.log('[Coach] Using cached context data from tabDataCache');
+      setContextData(cachedData);
+      return;
+    }
+    
+    setIsLoadingContextData(true);
     
     try {
       const today = new Date().toISOString().split('T')[0];
@@ -205,14 +229,25 @@ export default function CoachScreen() {
         .limit(1)
         .single();
       
-      setContextData({
+      // Check for plateaus using PlateauDetectionService
+      const plateaus = await plateauDetectionService.detectPlateaus(user.id);
+      
+      const newContextData = {
         hasWorkouts: (workouts.data?.length ?? 0) > 0,
         hasInjuries: (injuries.data?.length ?? 0) > 0,
         isRestDay: !recentWorkout,
         lowEnergy: (checkin.data?.energy_level ?? 5) <= 2,
-      });
+        hasPlateaus: plateaus.length > 0,
+      };
+      
+      setContextData(newContextData);
+      
+      // Store in tabDataCache
+      tabDataCache.set(CACHE_KEY, newContextData);
     } catch (error: unknown) {
  logger.error('Failed to fetch context data:', error);
+    } finally {
+      setIsLoadingContextData(false);
     }
   };
 
@@ -511,7 +546,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
       </View>
 
       {/* Messages */}
-      {isLoadingContext ? (
+      {isLoadingContext || isLoadingContextData ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3b82f6" />
           <Text style={styles.loadingText}>Loading your training data...</Text>
@@ -526,7 +561,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
             <SuggestedQuestions
               onSelect={(question) => sendMessage(question)}
               hasWorkouts={contextData.hasWorkouts}
-              hasPlateaus={false}
+              hasPlateaus={contextData.hasPlateaus}
               hasInjuries={contextData.hasInjuries}
               isRestDay={contextData.isRestDay}
               lowEnergy={contextData.lowEnergy}

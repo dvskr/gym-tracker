@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { logger } from '@/lib/utils/logger';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -8,11 +8,12 @@ import { ExerciseSearch } from '@/components/exercise/ExerciseSearch';
 import { ExerciseDBExercise } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { successHaptic } from '@/lib/utils/haptics';
-import { getCurrentTab } from '@/lib/navigation/navigationState';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function AddExerciseToTemplateScreen() {
   useBackNavigation(); // Enable Android back gesture support
+  const { user } = useAuthStore();
 
   const { templateId } = useLocalSearchParams<{ templateId: string; returnTo?: string }>();
 
@@ -21,19 +22,28 @@ export default function AddExerciseToTemplateScreen() {
       if (!templateId) return;
 
       try {
-        // First, find or create the exercise in our database
-        let exerciseId: string;
-
-        const { data: existingExercise } = await supabase
+        // First, find the exercise in our database
+        const { data: existingExercise, error: searchError } = await supabase
           .from('exercises')
           .select('id')
           .eq('external_id', exercise.id)
           .single();
 
+        let exerciseId: string;
+
         if (existingExercise) {
           exerciseId = existingExercise.id;
         } else {
-          // Create exercise in DB
+          // Exercise doesn't exist, need to create it
+          if (!user) {
+            Alert.alert(
+              'Exercise Not Available',
+              'This exercise is not yet in your library. Please log in and use it in a workout first to add it.'
+            );
+            return;
+          }
+
+          // Create exercise in DB with user as creator
           const { data: newExercise, error: exerciseError } = await supabase
             .from('exercises')
             .insert({
@@ -46,11 +56,16 @@ export default function AddExerciseToTemplateScreen() {
               gif_url: exercise.gifUrl,
               instructions: exercise.instructions || [],
               is_custom: false,
+              created_by: user.id,
             })
             .select()
             .single();
 
-          if (exerciseError) throw exerciseError;
+          if (exerciseError) {
+            logger.error('Error creating exercise:', exerciseError);
+            Alert.alert('Error', 'Failed to add exercise to your library.');
+            return;
+          }
           exerciseId = newExercise.id;
         }
 
@@ -81,16 +96,17 @@ export default function AddExerciseToTemplateScreen() {
         if (insertError) throw insertError;
 
         successHaptic();
-        router.push(getCurrentTab() || '/(tabs)');
+        // Navigate back to the template detail screen
+        router.back();
       } catch (error: unknown) {
- logger.error('Error adding exercise to template:', error);
+        logger.error('Error adding exercise to template:', error);
       }
     },
-    [templateId]
+    [templateId, user]
   );
 
   const handleClose = useCallback(() => {
-    router.push(getCurrentTab() || '/(tabs)');
+    router.back();
   }, []);
 
   return (

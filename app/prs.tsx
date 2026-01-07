@@ -300,7 +300,7 @@ export default function PersonalRecordsScreen() {
           filteredPRs.length === 0 && styles.listContentEmpty,
         ]}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
       />
     </SafeAreaView>
   );
@@ -379,8 +379,8 @@ const styles = StyleSheet.create({
   },
 
   // PR Card
-  separator: {
-    height: 12,
+  cardSeparator: {
+    height: 16,
   },
   prCard: {
     flexDirection: 'row',

@@ -273,7 +273,8 @@ const HistoryTab: React.FC<{
   history: ExerciseHistoryEntry[];
   isLoading: boolean;
   exerciseId: string;
-}> = ({ history, isLoading, exerciseId }) => {
+  weightUnit: string;
+}> = ({ history, isLoading, exerciseId, weightUnit }) => {
   if (isLoading) {
     return (
       <View style={styles.tabContent}>
@@ -344,7 +345,7 @@ const HistoryTab: React.FC<{
   );
 };
 
-const ChartsTab: React.FC<{ history: ExerciseHistoryEntry[] }> = ({ history }) => {
+const ChartsTab: React.FC<{ history: ExerciseHistoryEntry[]; weightUnit: string }> = ({ history, weightUnit }) => {
   if (history.length < 2) {
     return (
       <View style={styles.emptyState}>
@@ -439,7 +440,8 @@ const ChartsTab: React.FC<{ history: ExerciseHistoryEntry[] }> = ({ history }) =
 const RecordsTab: React.FC<{
   stats: ExerciseStats;
   isLoading: boolean;
-}> = ({ stats, isLoading }) => {
+  weightUnit: string;
+}> = ({ stats, isLoading, weightUnit }) => {
   if (isLoading) {
     return (
       <View style={styles.tabContent}>
@@ -855,13 +857,15 @@ export default function ExerciseDetailScreen() {
             history={history} 
             isLoading={isHistoryLoading} 
             exerciseId={id!}
+            weightUnit={weightUnit}
           />
         )}
-        {activeTab === 'charts' && <ChartsTab history={history} />}
+        {activeTab === 'charts' && <ChartsTab history={history} weightUnit={weightUnit} />}
         {activeTab === 'records' && (
           <RecordsTab 
             stats={stats || { totalTimesPerformed: 0, lastPerformed: null, bestWeight: null, bestVolume: null, bestReps: null, estimated1RM: null, totalVolume: 0, averageSetsPerSession: 0 }} 
-            isLoading={isHistoryLoading} 
+            isLoading={isHistoryLoading}
+            weightUnit={weightUnit}
           />
         )}
       </View>

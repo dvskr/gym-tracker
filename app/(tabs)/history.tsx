@@ -40,6 +40,7 @@ import { lightHaptic } from '@/lib/utils/haptics';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { useUnits } from '@/hooks/useUnits';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
 
 // ============================================
 // Constants
@@ -185,9 +186,6 @@ const WorkoutCard = React.memo(function WorkoutCard({ item, onPress, showDate = 
         </View>
 
         <View style={styles.statsRow}>
-          {!showDate && (
-            <Text style={styles.timeText}>{formatWorkoutTime(item.started_at)}</Text>
-          )}
           <View style={styles.statItem}>
             <Clock size={12} color="#94a3b8" />
             <Text style={styles.statText}>{formatDuration(item.duration_seconds)}</Text>
@@ -234,7 +232,7 @@ export default function HistoryScreen() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start false - only set true when actually loading
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showLoadingSkeleton, setShowLoadingSkeleton] = useState(false); // Start false - only show if fetch > 300ms
@@ -267,6 +265,25 @@ export default function HistoryScreen() {
       
       if (!user?.id) return;
 
+      // Check cache for initial load (page 0, not refresh)
+      if (pageNum === 0 && !refresh) {
+        const CACHE_KEY = `history-${filter}-${user.id}`;
+        const cachedData = tabDataCache.get<{
+          workouts: WorkoutHistoryItem[];
+          hasMore: boolean;
+          totalCount: number;
+        }>(CACHE_KEY, 2 * 60 * 1000); // 2 minutes
+        
+        if (cachedData) {
+          logger.log('[History] Using cached data from tabDataCache');
+          setWorkouts(cachedData.workouts);
+          setHasMore(cachedData.hasMore);
+          setTotalCount(cachedData.totalCount);
+          setPage(0);
+          return;
+        }
+      }
+
       if (refresh) {
         setIsRefreshing(true);
       } else if (pageNum === 0) {
@@ -293,6 +310,16 @@ export default function HistoryScreen() {
         // This prevents flicker by keeping old data visible until new data arrives
         if (pageNum === 0 || refresh) {
           setWorkouts(result.workouts);
+          
+          // Cache the first page data
+          if (pageNum === 0) {
+            const CACHE_KEY = `history-${filter}-${user.id}`;
+            tabDataCache.set(CACHE_KEY, {
+              workouts: result.workouts,
+              hasMore: result.hasMore,
+              totalCount: result.totalCount,
+            });
+          }
         } else {
           // For pagination, append to existing
           setWorkouts((prev) => [...prev, ...result.workouts]);
@@ -302,7 +329,7 @@ export default function HistoryScreen() {
         setTotalCount(result.totalCount);
         setPage(pageNum);
       } catch (err: unknown) {
- logger.error('Failed to fetch workouts:', err);
+        logger.error('Failed to fetch workouts:', err);
         setError('Failed to load workout history');
       } finally {
         // Clear the timeout if fetch completed before 300ms
@@ -317,7 +344,7 @@ export default function HistoryScreen() {
         setShowLoadingSkeleton(false);
       }
     },
-    [user?.id, filter, session, workouts.length, showLoadingSkeleton]
+    [user?.id, filter, session]
   );
 
   // Fetch workout dates for calendar
@@ -326,6 +353,16 @@ export default function HistoryScreen() {
       // KEY FIX: If no session, return early
       if (!session) return;
       if (!user?.id) return;
+
+      // Check cache first
+      const CACHE_KEY = `history-dates-${year}-${month}-${user.id}`;
+      const cachedDates = tabDataCache.get<MarkedDates>(CACHE_KEY, 5 * 60 * 1000); // 5 minutes
+      
+      if (cachedDates) {
+        logger.log('[History] Using cached workout dates from tabDataCache');
+        setMarkedDates(cachedDates);
+        return;
+      }
 
       try {
         const dates = await getWorkoutDates(user.id, month, year);
@@ -340,11 +377,14 @@ export default function HistoryScreen() {
         });
 
         setMarkedDates(marked);
+        
+        // Cache the dates
+        tabDataCache.set(CACHE_KEY, marked);
       } catch (err: unknown) {
  logger.error('Failed to fetch workout dates:', err);
       }
     },
-    [user?.id]
+    [user?.id, session]
   );
 
   // Fetch workouts for selected date
@@ -468,6 +508,16 @@ export default function HistoryScreen() {
       router.push(`/workout/${workoutId}`);
     }, 'Sign in to view your workout history and details.');
   }, [requireAuth]);
+
+  // Format selected date for sheet header
+  const formatSheetHeaderDate = useCallback((dateString: string | null): string => {
+    if (!dateString) return 'Workouts';
+    
+    // Parse date string (YYYY-MM-DD) in local timezone
+    const [year, month, day] = dateString.split('-').map(Number);
+    const localDate = new Date(year, month - 1, day);
+    return format(localDate, 'EEEE, MMMM d, yyyy');
+  }, []);
 
   // Close date sheet - memoized
   const handleCloseDateSheet = useCallback(() => {
@@ -604,7 +654,7 @@ export default function HistoryScreen() {
       {/* Content */}
       {viewMode === 'list' ? (
         // List View
-        showLoadingSkeleton ? (
+        showLoadingSkeleton && workouts.length === 0 ? (
           <LoadingSkeletons />
         ) : error ? (
           <ErrorState />
@@ -647,6 +697,16 @@ export default function HistoryScreen() {
             enableSwipeMonths
             hideExtraDays
             style={styles.calendar}
+            renderHeader={(date) => {
+              // Custom header to avoid GMT display
+              const headerDate = new Date(date);
+              const monthYear = format(headerDate, 'MMMM yyyy');
+              return (
+                <View style={styles.calendarHeader}>
+                  <Text style={styles.calendarHeaderText}>{monthYear}</Text>
+                </View>
+              );
+            }}
           />
 
           {/* Legend */}
@@ -685,9 +745,7 @@ export default function HistoryScreen() {
             <View style={styles.sheetHeader}>
               <View>
                 <Text style={styles.sheetTitle}>
-                  {selectedDate
-                    ? format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')
-                    : 'Workouts'}
+                  {formatSheetHeaderDate(selectedDate)}
                 </Text>
                 <Text style={styles.sheetSubtitle}>
                   {dateWorkouts.length} workout{dateWorkouts.length !== 1 ? 's' : ''}
@@ -1001,6 +1059,17 @@ const styles = StyleSheet.create({
   calendar: {
     borderRadius: 16,
     overflow: 'hidden',
+  },
+
+  calendarHeader: {
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+
+  calendarHeaderText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 
   calendarLegend: {

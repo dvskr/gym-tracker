@@ -316,14 +316,18 @@ export default function HomeScreen() {
         // Check if auto-fill is enabled
         const { autoFillSets } = useSettingsStore.getState();
         
-        for (const templateExercise of template.exercises) {
+        // Fetch ALL previous workout data in parallel (much faster!)
+        const previousDataPromises = template.exercises.map(templateExercise =>
+          templateExercise.exercise 
+            ? fetchPreviousWorkoutData(user.id, templateExercise.exercise.external_id)
+            : Promise.resolve(null)
+        );
+        const allPreviousData = await Promise.all(previousDataPromises);
+        
+        // Now add all exercises with their pre-fetched data
+        template.exercises.forEach((templateExercise, index) => {
           if (templateExercise.exercise) {
-            // Fetch previous workout data for this exercise
-            const previousData = await fetchPreviousWorkoutData(
-              user.id,
-              templateExercise.exercise.external_id
-            );
-
+            const previousData = allPreviousData[index];
             let prefillSets: Array<{ weight?: number; reps?: number }> = [];
 
             // Only auto-fill if setting is enabled
@@ -372,12 +376,12 @@ export default function HomeScreen() {
               targetSets
             );
           }
-        }
+        });
       }
 
       router.push('/workout/active');
     } catch (error: unknown) {
- logger.error('Error starting template:', error);
+logger.error('Error starting template:', error);
     }
   };
 

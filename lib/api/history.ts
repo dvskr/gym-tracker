@@ -242,7 +242,13 @@ export async function getWorkoutDates(
   const dateCountMap = new Map<string, number>();
 
   (data || []).forEach((workout) => {
-    const date = workout.started_at.split('T')[0]; // Extract YYYY-MM-DD
+    // Convert UTC timestamp to local date
+    const localDate = new Date(workout.started_at);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`; // YYYY-MM-DD in local timezone
+    
     dateCountMap.set(date, (dateCountMap.get(date) || 0) + 1);
   });
 
@@ -286,7 +292,13 @@ export async function getWorkoutCountsByDate(
   const dateCountMap = new Map<string, number>();
 
   (data || []).forEach((workout) => {
-    const date = workout.started_at.split('T')[0]; // Extract YYYY-MM-DD
+    // Convert UTC timestamp to local date
+    const localDate = new Date(workout.started_at);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`; // YYYY-MM-DD in local timezone
+    
     dateCountMap.set(date, (dateCountMap.get(date) || 0) + 1);
   });
 
@@ -312,7 +324,14 @@ export async function getAllWorkoutDates(userId: string): Promise<string[]> {
   // Return unique dates
   const uniqueDates = new Set<string>();
   (data || []).forEach((workout) => {
-    uniqueDates.add(workout.started_at.split('T')[0]);
+    // Convert UTC timestamp to local date
+    const localDate = new Date(workout.started_at);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`; // YYYY-MM-DD in local timezone
+    
+    uniqueDates.add(date);
   });
 
   return Array.from(uniqueDates).sort((a, b) => b.localeCompare(a)); // Most recent first
@@ -323,10 +342,16 @@ export async function getAllWorkoutDates(userId: string): Promise<string[]> {
  */
 export async function getWorkoutsForDate(
   userId: string,
-  date: string // YYYY-MM-DD format
+  date: string // YYYY-MM-DD format in local timezone
 ): Promise<WorkoutHistoryItem[]> {
-  const startOfDay = `${date}T00:00:00.000Z`;
-  const endOfDay = `${date}T23:59:59.999Z`;
+  // Parse the local date and create start/end of day in local timezone
+  const [year, month, day] = date.split('-').map(Number);
+  const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
+  const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  
+  // Convert to ISO strings (which will include timezone offset)
+  const startOfDayISO = startOfDay.toISOString();
+  const endOfDayISO = endOfDay.toISOString();
 
   const { data, error } = await supabase
     .from('workouts')
@@ -349,11 +374,29 @@ export async function getWorkoutsForDate(
     `)
     .eq('user_id', userId)
     .not('ended_at', 'is', null)
-    .gte('started_at', startOfDay)
-    .lte('started_at', endOfDay)
+    .gte('started_at', startOfDayISO)
+    .lte('started_at', endOfDayISO)
     .order('started_at', { ascending: false });
 
   if (error) throw error;
+
+  interface WorkoutRow {
+    id: string;
+    name: string | null;
+    started_at: string;
+    ended_at: string;
+    duration_seconds: number;
+    total_volume: number | null;
+    total_sets: number | null;
+    total_reps: number | null;
+    rating: number | null;
+    workout_exercises: Array<{
+      exercise_id: string;
+      workout_sets: Array<{
+        is_pr: boolean;
+      }>;
+    }>;
+  }
 
   return (data || []).map((workout: WorkoutRow) => {
     const hasPR = workout.workout_exercises?.some((we) =>
