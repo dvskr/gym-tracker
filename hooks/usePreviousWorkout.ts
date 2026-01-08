@@ -42,7 +42,7 @@ function getDaysAgo(dateString: string): number {
 // Hook
 // ============================================
 
-export function usePreviousWorkout(exerciseExternalId: string | undefined): UsePreviousWorkoutReturn {
+export function usePreviousWorkout(exerciseExternalId: string | null | undefined): UsePreviousWorkoutReturn {
   const { user } = useAuthStore();
   const [data, setData] = useState<PreviousWorkoutData | null>(null);
   const [isLoading, setIsLoading] = useState(false);

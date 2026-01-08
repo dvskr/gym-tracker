@@ -326,7 +326,9 @@ export default function ActiveWorkoutScreen() {
         </TouchableOpacity>
 
         <View style={styles.headerCenter}>
-          <Text style={styles.workoutName}>{activeWorkout.name}</Text>
+          <Text style={styles.workoutName} numberOfLines={2}>
+            {activeWorkout.name}
+          </Text>
           <View style={styles.timerRow}>
             <Clock size={16} color="#3b82f6" />
             <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
@@ -446,12 +448,17 @@ const styles = StyleSheet.create({
   headerCenter: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 8, // Add padding to prevent overflow
+    minWidth: 0, // Allow content to shrink
   },
 
   workoutName: {
     color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    flexWrap: 'wrap', // Allow text to wrap
+    maxWidth: '100%', // Prevent overflow
   },
 
   timerRow: {

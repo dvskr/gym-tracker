@@ -25,6 +25,9 @@ export interface PlateauAlert {
   suggestions: string[];
   severity: 'mild' | 'moderate' | 'significant';
   percentageStalled?: number;
+  attempts: number; // NEW: How many workouts stuck
+  duration: string; // NEW: Human-readable duration like "3 weeks"
+  lastAttempt: string; // NEW: Date of last attempt
 }
 
 interface ExerciseHistory {
@@ -108,6 +111,11 @@ class PlateauDetectionService {
     // Generate suggestions
     const suggestions = this.generateSuggestions(name, weeksStalled, recentBest.weight);
 
+    // NEW: Calculate duration string and attempts
+    const duration = weeksStalled === 1 ? '1 week' : `${weeksStalled} weeks`;
+    const attempts = weeklyMaxVolume.slice(0, weeksStalled).length;
+    const lastAttempt = sortedHistory[0].date;
+
     return {
       exerciseId: id,
       exerciseName: name,
@@ -117,6 +125,9 @@ class PlateauDetectionService {
       suggestions,
       severity,
       percentageStalled: Math.round((weeksStalled / 12) * 100), // % of quarter year
+      attempts, // NEW
+      duration, // NEW
+      lastAttempt, // NEW
     };
   }
 

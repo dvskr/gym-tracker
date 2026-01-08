@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { MessageSquare, TrendingUp, Calendar, AlertCircle, Dumbbell } from 'lucide-react-native';
+import { PlateauAlert } from '@/lib/ai/plateauDetection';
 
 interface SuggestedQuestionsProps {
   onSelect: (question: string) => void;
   hasWorkouts: boolean;
   hasPlateaus: boolean;
+  plateaus?: PlateauAlert[]; // NEW: Full plateau data
   hasInjuries: boolean;
   isRestDay: boolean;
   lowEnergy: boolean;
@@ -21,6 +23,7 @@ export function SuggestedQuestions({
   onSelect, 
   hasWorkouts,
   hasPlateaus,
+  plateaus = [],
   hasInjuries,
   isRestDay,
   lowEnergy
@@ -28,9 +31,15 @@ export function SuggestedQuestions({
   
   const contextualQuestions = [];
   
-  if (hasPlateaus) {
-    contextualQuestions.push({ icon: AlertCircle, text: "How do I break my plateau?" });
+  // NEW: Specific plateau question using actual data
+  if (hasPlateaus && plateaus.length > 0) {
+    const topPlateau = plateaus[0]; // Most severe (already sorted)
+    contextualQuestions.push({ 
+      icon: AlertCircle, 
+      text: `Help me break through my ${topPlateau.lastWeight} lb ${topPlateau.exerciseName} plateau`
+    });
   }
+  
   if (hasInjuries) {
     contextualQuestions.push({ icon: AlertCircle, text: "Safe exercises for my injury" });
   }

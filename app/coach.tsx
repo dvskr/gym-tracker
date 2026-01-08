@@ -25,7 +25,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import { supabase } from '@/lib/supabase';
 import { SuggestedQuestions } from '@/components/ai/SuggestedQuestions';
-import { plateauDetectionService } from '@/lib/ai/plateauDetection';
+import { MessageWithLinks } from '@/components/ai/MessageWithLinks';
+import { plateauDetectionService, PlateauAlert } from '@/lib/ai/plateauDetection';
 import { tabDataCache } from '@/lib/cache/tabDataCache';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
@@ -55,12 +56,14 @@ export default function CoachScreen() {
     isRestDay: boolean;
     lowEnergy: boolean;
     hasPlateaus: boolean;
+    plateaus: PlateauAlert[]; // NEW: Store full plateau data
   }>({
     hasWorkouts: false,
     hasInjuries: false,
     isRestDay: false,
     lowEnergy: false,
     hasPlateaus: false,
+    plateaus: [], // NEW
   });
   const flatListRef = useRef<FlatList>(null);
   const { user } = useAuthStore();
@@ -238,6 +241,7 @@ export default function CoachScreen() {
         isRestDay: !recentWorkout,
         lowEnergy: (checkin.data?.energy_level ?? 5) <= 2,
         hasPlateaus: plateaus.length > 0,
+        plateaus: plateaus, // NEW: Store full array
       };
       
       setContextData(newContextData);
@@ -292,7 +296,47 @@ export default function CoachScreen() {
 
 ${userContext ? `\n${userContext}\n` : ''}
 
-REMINDER: You are chatting with a human user. Write naturally and conversationally. If you're suggesting a workout, explain it in friendly language BEFORE including the workout block. Keep responses concise (2-3 paragraphs max).`;
+🎯 WORKOUT BUTTON FEATURE - IMPORTANT:
+When the user asks ANY of these questions, you MUST include a structured workout block:
+- "suggest a workout" / "suggest me a workout"
+- "what should I train" / "what should I do today"
+- "create a workout" / "give me a workout"
+- "workout for [muscle]" (e.g., "workout for chest")
+- "push/pull/legs day" / "upper/lower body"
+- "beginner/intermediate/advanced workout"
+- ANY question about getting a workout plan/routine
+
+MANDATORY FORMAT:
+1. Write 2-3 friendly sentences explaining the workout
+2. Then add this EXACT structure:
+
+\`\`\`workout
+{
+  "name": "Descriptive Workout Name",
+  "exercises": [
+    {"name": "Exercise Name", "sets": 3, "reps": "8-10"},
+    {"name": "Another Exercise", "sets": 4, "reps": "6-8"}
+  ]
+}
+\`\`\`
+
+✅ EXAMPLE RESPONSE:
+"Perfect! Here's a solid push day to build chest and shoulders. Focus on controlled reps and full range of motion!
+
+\`\`\`workout
+{
+  "name": "Push Day",
+  "exercises": [
+    {"name": "Bench Press", "sets": 4, "reps": "8-10"},
+    {"name": "Overhead Press", "sets": 3, "reps": "8-12"},
+    {"name": "Tricep Dips", "sets": 3, "reps": "10-12"}
+  ]
+}
+\`\`\`"
+
+This creates a button that lets them START the workout immediately! Always include this when suggesting workouts.
+
+REMINDER: Write naturally and conversationally. Keep responses concise (2-3 paragraphs max).`;
 
       let fullResponse = '';
 
@@ -390,6 +434,8 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
   };
 
   const handleStartWorkout = async (workoutName: string, exercises: Array<{ name: string; sets?: number; reps?: string }>) => {
+    logger.log('[Coach] handleStartWorkout called:', { workoutName, exerciseCount: exercises.length });
+    
     if (!exercises || exercises.length === 0) {
       Alert.alert('No Exercises', 'This workout plan has no exercises.');
       return;
@@ -397,16 +443,20 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
     
     try {
       // Start a new workout with the AI-suggested name
+      logger.log('[Coach] Starting workout:', workoutName);
       startWorkout(workoutName);
       
       // Search for exercises using the API
       const { searchExercises } = await import('@/lib/api/exercises');
       
       let successCount = 0;
+      const failedExercises: string[] = [];
       
       // Add each exercise from the AI suggestion
       for (const exerciseData of exercises) {
         try {
+          logger.log('[Coach] Searching for exercise:', exerciseData.name);
+          
           // Normalize the exercise name for better matching
           let searchTerm = exerciseData.name
             .replace(/s$/i, '')  // Remove trailing 's' (Squats -> Squat)
@@ -418,6 +468,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           
           // If no results, try normalized name
           if (!results || results.length === 0) {
+            logger.log('[Coach] Original name failed, trying normalized:', searchTerm);
             results = await searchExercises(searchTerm, 5);
           }
           
@@ -425,16 +476,19 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           if (!results || results.length === 0) {
             const words = exerciseData.name.split(' ');
             const mainWord = words[words.length - 1].replace(/s$/i, '');
+            logger.log('[Coach] Normalized failed, trying main word:', mainWord);
             results = await searchExercises(mainWord, 5);
           }
           
           if (results && results.length > 0) {
-            // Use the first match - convert to ExerciseDBExercise format
+            // Use the first match
             const dbExercise = results[0];
+            logger.log('[Coach] Found exercise:', dbExercise.name);
             
-            // Use Supabase UUID
+            // Create exercise object with all required fields
             const exercise = {
-              id: dbExercise.id,
+              id: dbExercise.external_id || dbExercise.id, // Use external_id for ExerciseDB compatibility
+              dbId: dbExercise.id, // UUID for database operations
               name: dbExercise.name,
               gifUrl: dbExercise.gif_url || '',
               target: dbExercise.primary_muscles?.[0] || 'unknown',
@@ -444,36 +498,68 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
               instructions: dbExercise.instructions || [],
             };
             
-            // Parse reps to get a number (handle ranges like "8-10")
-            const repsValue = String(exerciseData.reps || '10');
-            const repsNum = parseInt(repsValue.split('-')[0]) || 10;
-            
-            // Add exercise with prefilled sets based on AI suggestion
-            const prefillSets = Array(exerciseData.sets || 3).fill({
-              weight: undefined,
-              reps: repsNum,
+            logger.log('[Coach] Exercise object created:', {
+              id: exercise.id,
+              dbId: exercise.dbId,
+              external_id: dbExercise.external_id,
+              name: exercise.name,
             });
             
-            addExerciseWithSets(exercise, prefillSets);
-            successCount++;
+            // Add exercise with empty sets (no pre-filled weight/reps)
+            // User will fill in their own values like templates
+            // Always default to 3 sets
+            const targetSets = 3;
             
- logger.log(`S& Added exercise: ${exercise.name} (${exerciseData.sets} sets ${repsNum} reps)`);
+            logger.log('[Coach] Adding exercise to workout:', {
+              name: exercise.name,
+              sets: targetSets,
+            });
+            
+            addExerciseWithSets(exercise, [], targetSets);
+            successCount++;
           } else {
- logger.warn(`a Exercise not found: ${exerciseData.name}`);
+            logger.warn('[Coach] Exercise not found:', exerciseData.name);
+            failedExercises.push(exerciseData.name);
           }
         } catch (error: unknown) {
- logger.error(`Failed to add exercise ${exerciseData.name}:`, error);
+          logger.error(`[Coach] Failed to add exercise ${exerciseData.name}:`, error);
+          failedExercises.push(exerciseData.name);
         }
       }
       
+      logger.log('[Coach] Workout setup complete:', {
+        successCount,
+        failedCount: failedExercises.length,
+        failed: failedExercises,
+      });
+      
       if (successCount === 0) {
-        Alert.alert('No Exercises Added', 'Could not find any of the suggested exercises in the database. Please add exercises manually.');
+        Alert.alert(
+          'No Exercises Added',
+          'Could not find any of the suggested exercises in the database. Please add exercises manually.',
+          [{ text: 'OK' }]
+        );
+        return;
       }
       
-      // Navigate to active workout
-      router.push('/workout/active');
+      if (failedExercises.length > 0 && successCount > 0) {
+        Alert.alert(
+          'Partial Success',
+          `Added ${successCount} exercise(s). Could not find: ${failedExercises.join(', ')}`,
+          [
+            {
+              text: 'Continue Anyway',
+              onPress: () => router.push('/workout/active'),
+            },
+          ]
+        );
+      } else {
+        // Navigate to active workout
+        logger.log('[Coach] Navigating to active workout...');
+        router.push('/workout/active');
+      }
     } catch (error: unknown) {
- logger.error('Failed to start workout:', error);
+      logger.error('[Coach] Failed to start workout:', error);
       Alert.alert('Error', 'Failed to start workout. Please try again.');
     }
   };
@@ -483,6 +569,28 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
     const parsed = item.role === 'assistant' 
       ? parseCoachResponse(item.content)
       : { message: item.content };
+
+    // DEBUG: Log parsed result
+    if (item.role === 'assistant') {
+      logger.log('[Coach] Parsed message:', {
+        hasAction: !!parsed.action,
+        actionType: parsed.action?.type,
+        exerciseCount: parsed.action?.exercises?.length || 0,
+        workoutName: parsed.action?.name,
+      });
+      
+      // Log button render status
+      if (parsed.action?.type === 'workout' && parsed.action.name && parsed.action.exercises) {
+        logger.log('[Coach] ✅ RENDERING WORKOUT BUTTON');
+      } else if (parsed.action) {
+        logger.log('[Coach] ❌ NOT rendering button:', {
+          hasType: !!parsed.action?.type,
+          type: parsed.action?.type,
+          hasName: !!parsed.action?.name,
+          hasExercises: !!parsed.action?.exercises,
+        });
+      }
+    }
 
     return (
       <View
@@ -502,7 +610,12 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
             item.role === 'user' ? styles.userBubble : styles.assistantBubble,
           ]}
         >
-          <Text style={styles.messageText}>{parsed.message}</Text>
+          {/* NEW: Render with exercise links for assistant messages */}
+          {item.role === 'assistant' ? (
+            <MessageWithLinks content={parsed.message} style={styles.messageText} />
+          ) : (
+            <Text style={styles.messageText}>{parsed.message}</Text>
+          )}
           <Text style={styles.timestamp}>
             {item.timestamp.toLocaleTimeString([], {
               hour: '2-digit',
@@ -513,8 +626,15 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           {/* Action Button for Workout */}
           {parsed.action?.type === 'workout' && parsed.action.name && parsed.action.exercises && (
             <Pressable
-              style={styles.actionButton}
-              onPress={() => handleStartWorkout(parsed.action?.name ?? '', parsed.action?.exercises ?? [])}
+              style={({ pressed }) => [
+                styles.actionButton,
+                { opacity: pressed ? 0.7 : 1 }
+              ]}
+              onPress={() => {
+                logger.log('[Coach] Button pressed! Action:', parsed.action);
+                handleStartWorkout(parsed.action?.name ?? '', parsed.action?.exercises ?? []);
+              }}
+              android_ripple={{ color: 'rgba(255,255,255,0.2)' }}
             >
               <Play size={18} color="#ffffff" />
               <Text style={styles.actionButtonText}>Start This Workout</Text>
@@ -539,7 +659,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
           <Text style={styles.headerTitle}>AI Coach</Text>
         </View>
         <View style={styles.headerActions}>
-          <Pressable onPress={confirmClearChat} style={styles.actionButton}>
+          <Pressable onPress={confirmClearChat} style={styles.headerActionButton}>
             <RefreshCw size={18} color="#94a3b8" />
           </Pressable>
         </View>
@@ -562,6 +682,7 @@ REMINDER: You are chatting with a human user. Write naturally and conversational
               onSelect={(question) => sendMessage(question)}
               hasWorkouts={contextData.hasWorkouts}
               hasPlateaus={contextData.hasPlateaus}
+              plateaus={contextData.plateaus}
               hasInjuries={contextData.hasInjuries}
               isRestDay={contextData.isRestDay}
               lowEnergy={contextData.lowEnergy}
@@ -673,7 +794,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  actionButton: {
+  headerActionButton: {
     padding: 4,
   },
   loadingContainer: {

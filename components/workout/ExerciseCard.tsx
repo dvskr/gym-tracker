@@ -247,16 +247,6 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
             </Text>
           </View>
 
-          {/* Previous Workout Hint */}
-          {showPreviousWorkout && previousWorkout && previousWorkout.sets.length > 0 && (
-            <View style={styles.previousHintRow}>
-              <Text style={styles.previousHintText}>
-                Last: {previousWorkout.sets[0].weight} {weightUnit}  {previousWorkout.sets[0].reps} reps
-                {daysAgo !== null && ` (${getDaysAgoText()})`}
-              </Text>
-            </View>
-          )}
-
           <View style={styles.progressRow}>
             <Text style={styles.progressText}>
               {completedSets}/{totalSets} sets
@@ -469,7 +459,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* GIF */}
+            {/* GIF - Full Screen, No Instructions */}
             {exercise.gifUrl && (
               <Image
                 source={{ uri: exercise.gifUrl }}
@@ -477,25 +467,6 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
                 contentFit="contain"
                 cachePolicy="memory-disk"
               />
-            )}
-
-            {/* Meta Info */}
-            <View style={styles.detailModalMeta}>
-              <Text style={styles.detailModalMetaText}>
-                {exercise.bodyPart} • {exercise.target} • {exercise.equipment}
-              </Text>
-            </View>
-
-            {/* Instructions */}
-            {exercise.instructions && exercise.instructions.length > 0 && (
-              <View style={styles.detailModalInstructions}>
-                <Text style={styles.detailModalInstructionsTitle}>Instructions</Text>
-                {exercise.instructions.map((instruction, idx) => (
-                  <Text key={idx} style={styles.detailModalInstructionText}>
-                    {idx + 1}. {instruction}
-                  </Text>
-                ))}
-              </View>
             )}
           </View>
         </View>
@@ -651,8 +622,8 @@ const styles = StyleSheet.create({
   },
 
   gif: {
-    width: 56,
-    height: 56,
+    width: 72,
+    height: 72,
     borderRadius: 8,
     backgroundColor: '#0f172a',
   },
@@ -661,6 +632,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 12,
     justifyContent: 'center',
+    minWidth: 0, // Allow text to shrink and wrap
   },
 
   exerciseName: {
@@ -669,6 +641,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'capitalize',
     marginBottom: 2,
+    flexWrap: 'wrap', // Allow wrapping
   },
 
   metaRow: {

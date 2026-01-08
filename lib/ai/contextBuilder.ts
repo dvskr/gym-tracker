@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { logger } from '@/lib/utils/logger';
 import { LocalWorkout } from '@/lib/types/common';
+import { plateauDetectionService, PlateauAlert } from '@/lib/ai/plateauDetection';
 import type {
   UserContextData,
   RecentWorkoutContext,
@@ -859,12 +860,13 @@ export interface CoachContext {
 export const buildCoachContext = async (userId: string): Promise<CoachContext> => {
   try {
     // Fetch all relevant data in parallel
-    const [workouts, prs, profile, injuries, checkin] = await Promise.all([
+    const [workouts, prs, profile, injuries, checkin, plateaus] = await Promise.all([
       getRecentWorkouts(userId, 14),
       getPersonalRecords(userId, 10),
       getUserProfile(userId),
       getActiveInjuries(userId),
       getTodayCheckin(userId),
+      plateauDetectionService.detectPlateaus(userId), // NEW: Fetch detailed plateau data
     ]);
 
     // Build explicit state flags
@@ -938,6 +940,37 @@ x MANDATORY RULES:
 - Prioritize safety over optimization
 `;
       warnings.push('ACTIVE_INJURIES');
+    }
+
+    // ==========================================
+    // PLATEAU DETECTION (Detailed)
+    // ==========================================
+    if (plateaus.length > 0) {
+      contextText += `
+📉 CURRENT PLATEAUS (${plateaus.length}):
+
+`;
+      for (const plateau of plateaus) {
+        const severityEmoji = {
+          'mild': '⚠️',
+          'moderate': '🟠',
+          'significant': '🔴'
+        }[plateau.severity];
+        
+        contextText += `${severityEmoji} ${plateau.exerciseName.toUpperCase()}
+   • Stuck at: ${plateau.lastWeight} lbs × ${plateau.lastReps} reps
+   • Duration: ${plateau.duration} (${plateau.attempts} attempts)
+   • Severity: ${plateau.severity}
+   • Last attempt: ${new Date(plateau.lastAttempt).toLocaleDateString()}
+
+`;
+      }
+
+      contextText += `
+🎯 IMPORTANT: When user asks about plateaus, reference these SPECIFIC numbers.
+Suggest targeted strategies for THESE exercises with THESE weights.
+`;
+      warnings.push('HAS_PLATEAUS');
     }
 
     // ==========================================
