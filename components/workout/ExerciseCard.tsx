@@ -203,7 +203,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
         </TouchableOpacity>
 
         {/* Exercise Thumbnail (PNG, not GIF) - Tappable */}
-        {exercise.gifUrl && (
+        {exercise.gifUrl && exercise.gifUrl.length > 0 && (
           <TouchableOpacity 
             onPress={handleExercisePress} 
             activeOpacity={0.7}
@@ -212,7 +212,7 @@ const ExerciseCardComponent: React.FC<ExerciseCardProps> = ({
             accessibilityRole="button"
           >
             <Image
-              source={{ uri: getThumbnailUrl(exercise.gifUrl) }}
+              source={{ uri: getThumbnailUrl(exercise.gifUrl) ?? exercise.gifUrl }}
               style={styles.gif}
               contentFit="cover"
               cachePolicy="memory-disk"

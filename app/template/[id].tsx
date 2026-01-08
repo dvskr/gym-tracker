@@ -668,11 +668,14 @@ export default function TemplateDetailScreen() {
             addExerciseWithSets(
               {
                 id: templateExercise.exercise.external_id,
+                dbId: templateExercise.exercise.id, // Database UUID
                 name: templateExercise.exercise.name,
                 bodyPart: templateExercise.exercise.primary_muscles?.[0] || '',
                 equipment: templateExercise.exercise.equipment || '',
-                gifUrl: templateExercise.exercise.gif_url || undefined,
+                gifUrl: templateExercise.exercise.gif_url || '', // Pass GIF URL or empty string
                 target: templateExercise.exercise.primary_muscles?.[0] || '',
+                secondaryMuscles: templateExercise.exercise.secondary_muscles || [],
+                instructions: templateExercise.exercise.instructions || [],
               },
               prefillSets,
               targetSets

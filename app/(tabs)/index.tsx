@@ -369,8 +369,10 @@ export default function HomeScreen() {
                 name: templateExercise.exercise.name,
                 bodyPart: templateExercise.exercise.primary_muscles?.[0] || '',
                 equipment: templateExercise.exercise.equipment || '',
-                gifUrl: templateExercise.exercise.gif_url || undefined,
+                gifUrl: templateExercise.exercise.gif_url || '', // Pass GIF URL or empty string
                 target: templateExercise.exercise.primary_muscles?.[0] || '',
+                secondaryMuscles: templateExercise.exercise.secondary_muscles || [],
+                instructions: templateExercise.exercise.instructions || [],
               },
               prefillSets,
               targetSets
@@ -415,11 +417,14 @@ logger.error('Error starting template:', error);
         addExerciseWithSets(
           {
             id: exercise.id,
+            dbId: exercise.id, // Database UUID
             name: exercise.name,
             bodyPart: '',
             equipment: '',
             target: '',
-            gifUrl: exercise.gif_url,
+            gifUrl: exercise.gif_url || '', // Pass GIF URL or empty string
+            secondaryMuscles: [],
+            instructions: [],
           },
           prefillSets,
           exercise.sets

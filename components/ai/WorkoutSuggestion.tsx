@@ -7,15 +7,29 @@ import {
   Pressable,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { RefreshCw, Check, Star, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { RefreshCw, Check, Star, ChevronDown, ChevronUp, Play, Info, TrendingUp } from 'lucide-react-native';
 import { recoveryService, RecoveryStatus, MuscleRecoveryDetail } from '@/lib/ai/recoveryService';
 import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useWorkoutStore } from '@/stores/workoutStore';
 import { getPersonalizedExercises, PersonalizedExercise } from '@/lib/ai/exerciseSuggestions';
 import { WorkoutSuggestionSkeleton } from './WorkoutSuggestionSkeleton';
-import { lightHaptic } from '@/lib/utils/haptics';
+import { lightHaptic, successHaptic } from '@/lib/utils/haptics';
+import { router } from 'expo-router';
+import { supabase } from '@/lib/supabase';
+
+// Goal labels for display
+const GOAL_LABELS: Record<string, string> = {
+  strength: 'Strength Training',
+  build_muscle: 'Muscle Building',
+  lose_fat: 'Fat Loss',
+  endurance: 'Endurance',
+  general_fitness: 'General Fitness',
+  maintain: 'Maintenance',
+};
 
 // Workout type definitions
 const WORKOUT_TYPES = {
@@ -46,6 +60,7 @@ type WorkoutType = keyof typeof WORKOUT_TYPES;
 export function WorkoutSuggestion() {
   const { user } = useAuthStore();
   const { preferredSplit } = useSettingsStore();
+  const { startWorkout, addExerciseWithSets } = useWorkoutStore();
   
   const [selectedType, setSelectedType] = useState<WorkoutType | null>(null);
   const [suggestedType, setSuggestedType] = useState<WorkoutType>('Push');
@@ -54,6 +69,9 @@ export function WorkoutSuggestion() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingExercises, setIsLoadingExercises] = useState(false);
   const [showRecovery, setShowRecovery] = useState(false);
+  const [showExplanations, setShowExplanations] = useState(false);
+  const [noEquipmentWarning, setNoEquipmentWarning] = useState(false);
+  const [userGoal, setUserGoal] = useState<string>('build_muscle');
 
   // Get suggestion based on recovery status
   const getSuggestionFromRecovery = useCallback(async () => {
@@ -104,14 +122,89 @@ export function WorkoutSuggestion() {
     
     setIsLoadingExercises(true);
     try {
-      const personalized = await getPersonalizedExercises(user.id, type);
+      // Pass recovery data for enhanced explanations
+      const personalized = await getPersonalizedExercises(
+        user.id, 
+        type,
+        recoveryStatus || undefined
+      );
       setExercises(personalized);
+      
+      // Check if user has equipment set
+      if (personalized.length === 0) {
+        setNoEquipmentWarning(true);
+      } else {
+        setNoEquipmentWarning(false);
+      }
+      
+      // Get user's fitness goal for display
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('fitness_goal')
+        .eq('id', user.id)
+        .single();
+      
+      if (profile?.fitness_goal) {
+        setUserGoal(profile.fitness_goal);
+      }
     } catch (error: unknown) {
       logger.error('Failed to load personalized exercises:', error);
     } finally {
       setIsLoadingExercises(false);
     }
-  }, [user]);
+  }, [user, recoveryStatus]);
+
+  // OPTIMIZATION C: Start workout with suggested exercises
+  const handleStartWorkout = useCallback(() => {
+    if (!currentWorkout || exercises.length === 0) return;
+    
+    successHaptic();
+    
+    try {
+      // Start workout with current workout type name
+      startWorkout(currentWorkout.name);
+      
+      // Add all suggested exercises
+      exercises.forEach((ex) => {
+        // Prepare pre-fill sets
+        const prefillSets: Array<{ weight?: number; reps?: number }> = [];
+        
+        // Use suggested weight if available (progressive overload)
+        const weight = ex.suggestedWeight || ex.lastWeight;
+        
+        if (weight && weight > 0) {
+          // Pre-fill with suggested weight for all sets
+          for (let i = 0; i < ex.sets; i++) {
+            prefillSets.push({ weight, reps: undefined });
+          }
+        }
+        
+        // Add exercise with pre-filled sets
+        addExerciseWithSets(
+          {
+            id: ex.exerciseId,      // External ID (for compatibility)
+            dbId: ex.exerciseId,    // Database UUID (needed for GIF fetching)
+            name: ex.name,
+            bodyPart: '',
+            equipment: ex.equipment || '',
+            target: '',
+            gifUrl: ex.gifUrl || '',  // Pass the actual GIF URL from database (required field)
+            secondaryMuscles: [],
+            instructions: [],
+          },
+          prefillSets,
+          ex.sets
+        );
+      });
+      
+      // Navigate to active workout
+      router.push('/workout/active');
+      
+    } catch (error: unknown) {
+      logger.error('Error starting suggested workout:', error);
+      Alert.alert('Error', 'Failed to start workout. Please try again.');
+    }
+  }, [currentWorkout, exercises, startWorkout, addExerciseWithSets]);
 
   useEffect(() => {
     getSuggestionFromRecovery();
@@ -219,6 +312,15 @@ export function WorkoutSuggestion() {
               {currentWorkout.muscles.join(' • ')}
             </Text>
           </View>
+          
+          {/* Goal Context Banner */}
+          {userGoal && (
+            <View style={styles.goalBanner}>
+              <Text style={styles.goalText}>
+                🎯 {GOAL_LABELS[userGoal] || userGoal} • Sets/reps optimized for your goal
+              </Text>
+            </View>
+          )}
 
           {/* Exercise list */}
           {isLoadingExercises ? (
@@ -226,23 +328,103 @@ export function WorkoutSuggestion() {
               <ActivityIndicator size="small" color="#3b82f6" />
             </View>
           ) : exercises.length > 0 ? (
-            <View style={styles.exercises}>
-              {exercises.map((ex, i) => (
-                <View key={i} style={styles.exerciseRow}>
-                  <Text style={styles.exerciseName} numberOfLines={1}>
-                    {ex.name}
-                  </Text>
-                  <View style={styles.exerciseDetail}>
-                    <Text style={styles.exerciseSets}>
-                      {ex.sets} × {ex.reps}
-                    </Text>
-                    {ex.lastWeight && ex.lastWeight > 0 && (
-                      <Text style={styles.lastWeight}> • {ex.lastWeight}lbs</Text>
+            <>
+              <View style={styles.exercises}>
+                {exercises.map((ex, i) => (
+                  <View key={i} style={styles.exerciseCard}>
+                    {/* Exercise Name with Compound Badge */}
+                    <View style={styles.exerciseHeader}>
+                      <View style={styles.exerciseNameRow}>
+                        <Text style={styles.exerciseName} numberOfLines={1}>
+                          {ex.name}
+                        </Text>
+                        {ex.isCompound && (
+                          <View style={styles.compoundBadge}>
+                            <Text style={styles.compoundText}>C</Text>
+                          </View>
+                        )}
+                      </View>
+                      {ex.progressionNote && (
+                        <View style={[
+                          styles.progressionBadge,
+                          ex.progressionNote.startsWith('↑') && styles.progressionUp,
+                          ex.progressionNote.startsWith('↓') && styles.progressionDown,
+                        ]}>
+                          <TrendingUp size={10} color="#fff" />
+                          <Text style={styles.progressionText}>{ex.progressionNote}</Text>
+                        </View>
+                      )}
+                    </View>
+                    
+                    {/* Sets/Reps and Weight */}
+                    <View style={styles.exerciseDetails}>
+                      <View style={styles.setsRepsRow}>
+                        <Text style={styles.exerciseSets}>
+                          {ex.sets} × {ex.reps}
+                        </Text>
+                        {ex.restTime && (
+                          <>
+                            <Text style={styles.restSeparator}> • </Text>
+                            <Text style={styles.restTime}>Rest: {ex.restTime}</Text>
+                          </>
+                        )}
+                      </View>
+                      {ex.suggestedWeight && ex.suggestedWeight > 0 ? (
+                        <Text style={[
+                          styles.suggestedWeight,
+                          ex.progressionNote?.startsWith('↑') && styles.weightUp,
+                          ex.progressionNote?.startsWith('↓') && styles.weightDown,
+                        ]}>
+                          {ex.suggestedWeight} lbs
+                        </Text>
+                      ) : ex.lastWeight && ex.lastWeight > 0 ? (
+                        <Text style={styles.lastWeight}>{ex.lastWeight} lbs</Text>
+                      ) : null}
+                    </View>
+                    
+                    {/* Explanation (if enabled) */}
+                    {showExplanations && ex.explanation && (
+                      <Text style={styles.explanation}>{ex.explanation}</Text>
                     )}
                   </View>
-                </View>
-              ))}
-              <Text style={styles.libraryNote}>From your exercise library</Text>
+                ))}
+              </View>
+              
+              {/* Toggle Explanations */}
+              <TouchableOpacity
+                style={styles.toggleButton}
+                onPress={() => {
+                  lightHaptic();
+                  setShowExplanations(!showExplanations);
+                }}
+              >
+                <Info size={14} color="#64748b" />
+                <Text style={styles.toggleText}>
+                  {showExplanations ? 'Hide' : 'Show'} Exercise Info
+                </Text>
+              </TouchableOpacity>
+              
+              {/* OPTIMIZATION C: Start Workout Button */}
+              <TouchableOpacity
+                style={styles.startWorkoutButton}
+                onPress={handleStartWorkout}
+                activeOpacity={0.8}
+              >
+                <Play size={18} color="#ffffff" fill="#ffffff" />
+                <Text style={styles.startWorkoutText}>Start This Workout</Text>
+              </TouchableOpacity>
+            </>
+          ) : noEquipmentWarning ? (
+            <View style={styles.noEquipmentWarning}>
+              <Text style={styles.noEquipmentText}>
+                No exercises found. Set your available equipment in Settings for better recommendations.
+              </Text>
+              <TouchableOpacity
+                style={styles.settingsButton}
+                onPress={() => router.push('/settings/profile')}
+              >
+                <Text style={styles.settingsButtonText}>Go to Settings</Text>
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.noExercises}>
@@ -421,48 +603,182 @@ const styles = StyleSheet.create({
     color: '#64748b',
     marginTop: 2,
   },
+  goalBanner: {
+    backgroundColor: '#1e3a5f',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#3b82f6',
+  },
+  goalText: {
+    fontSize: 12,
+    color: '#93c5fd',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
   loadingExercises: {
     alignItems: 'center',
     paddingVertical: 24,
   },
   exercises: {
-    gap: 10,
+    gap: 12,
     marginBottom: 12,
+  },
+  exerciseCard: {
     backgroundColor: '#0f172a',
     borderRadius: 8,
     padding: 12,
   },
-  exerciseRow: {
+  exerciseHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  exerciseNameRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   exerciseName: {
     flex: 1,
     fontSize: 14,
-    color: '#cbd5e1',
-    fontWeight: '500',
+    color: '#f1f5f9',
+    fontWeight: '600',
   },
-  exerciseDetail: {
+  compoundBadge: {
+    backgroundColor: '#3b82f6',
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  compoundText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  progressionBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#64748b',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    gap: 4,
+  },
+  progressionUp: {
+    backgroundColor: '#10b981',
+  },
+  progressionDown: {
+    backgroundColor: '#f59e0b',
+  },
+  progressionText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  exerciseDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  setsRepsRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   exerciseSets: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#94a3b8',
     fontWeight: '600',
   },
-  lastWeight: {
-    fontSize: 12,
-    color: '#22c55e',
-    fontWeight: '600',
+  restSeparator: {
+    fontSize: 13,
+    color: '#475569',
   },
-  libraryNote: {
+  restTime: {
     fontSize: 11,
     color: '#64748b',
-    textAlign: 'center',
-    marginTop: 8,
     fontStyle: 'italic',
+  },
+  suggestedWeight: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#3b82f6',
+  },
+  weightUp: {
+    color: '#10b981',
+  },
+  weightDown: {
+    color: '#f59e0b',
+  },
+  lastWeight: {
+    fontSize: 13,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  explanation: {
+    fontSize: 11,
+    color: '#64748b',
+    marginTop: 6,
+    fontStyle: 'italic',
+  },
+  toggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    marginBottom: 12,
+  },
+  toggleText: {
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  startWorkoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3b82f6',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+    marginTop: 4,
+  },
+  startWorkoutText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  noEquipmentWarning: {
+    backgroundColor: '#451a1a',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    gap: 12,
+  },
+  noEquipmentText: {
+    fontSize: 13,
+    color: '#fca5a5',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  settingsButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  settingsButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#ffffff',
   },
   noExercises: {
     backgroundColor: '#0f172a',

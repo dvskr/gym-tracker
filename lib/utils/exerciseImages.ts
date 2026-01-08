@@ -27,8 +27,16 @@ export function getThumbnailUrl(gifUrl: string | null | undefined): string | nul
     const filename = gifUrl.split('/').pop();
     if (!filename) return null;
 
-    // Convert .gif to .png
-    const thumbnailFilename = filename.replace('.gif', '.png');
+    // Convert filename to thumbnail format
+    // Handle both:
+    // - "8ada58c2-f509-42aa-b57a-e7850d90f9e7.gif" -> "8ada58c2-f509-42aa-b57a-e7850d90f9e7.png"
+    // - "1271" -> "1271.png"
+    let thumbnailFilename: string;
+    if (filename.endsWith('.gif')) {
+      thumbnailFilename = filename.replace('.gif', '.png');
+    } else {
+      thumbnailFilename = filename + '.png';
+    }
 
     // Build full thumbnail URL
     return `${SUPABASE_URL}/storage/v1/object/public/${THUMBNAIL_BUCKET}/${thumbnailFilename}?v=${THUMBNAIL_VERSION}`;
@@ -66,4 +74,5 @@ export function getFilenameFromUrl(url: string | null | undefined): string | nul
     return null;
   }
 }
+
 
