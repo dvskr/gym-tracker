@@ -1,29 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Trophy, Lock, Check } from 'lucide-react-native';
+import { Trophy, Lock, Filter } from 'lucide-react-native';
 import { SettingsHeader } from '../components/SettingsHeader';
 import { useAuthStore } from '../stores/authStore';
-import { getAchievements, Achievement } from '../lib/api/achievements';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
 import { lightHaptic } from '@/lib/utils/haptics';
 import { logger } from '@/lib/utils/logger';
+import { AchievementCardV2 } from '@/components/AchievementCard';
+import { 
+  getAchievementsWithStatus, 
+  getAchievementStats 
+} from '@/lib/achievements/achievementService';
+import { AchievementWithStatus } from '@/types/achievements';
+import { 
+  AchievementCategory, 
+  AchievementTier,
+  CATEGORY_LABELS,
+  TIER_CONFIG 
+} from '@/constants/achievements';
+
+type FilterType = 'all' | 'unlocked' | 'locked';
 
 export default function AchievementsScreen() {
   useBackNavigation();
 
   const router = useRouter();
   const { user } = useAuthStore();
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [achievements, setAchievements] = useState<AchievementWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
+  const [filter, setFilter] = useState<FilterType>('all');
+  const [categoryFilter, setCategoryFilter] = useState<AchievementCategory | 'all'>('all');
+  const [tierFilter, setTierFilter] = useState<AchievementTier | 'all'>('all');
+  const [stats, setStats] = useState({ unlocked: 0, total: 0, percent: 0, byTier: {} as any });
 
   useEffect(() => {
     if (user?.id) {
@@ -36,8 +52,12 @@ export default function AchievementsScreen() {
     
     try {
       setIsLoading(true);
-      const data = await getAchievements(user.id);
+      const [data, statsData] = await Promise.all([
+        getAchievementsWithStatus(user.id),
+        getAchievementStats(user.id),
+      ]);
       setAchievements(data);
+      setStats(statsData);
     } catch (error: unknown) {
       logger.error('Failed to fetch achievements', error);
     } finally {
@@ -45,142 +65,151 @@ export default function AchievementsScreen() {
     }
   };
 
-  const filteredAchievements = achievements.filter((achievement) => {
-    if (filter === 'unlocked') return !!achievement.unlockedAt;
-    if (filter === 'locked') return !achievement.unlockedAt;
-    return true;
-  });
+  const filteredAchievements = useMemo(() => {
+    return achievements.filter((item) => {
+      // Status filter
+      if (filter === 'unlocked' && !item.unlocked) return false;
+      if (filter === 'locked' && item.unlocked) return false;
+      
+      // Category filter
+      if (categoryFilter !== 'all' && item.achievement.category !== categoryFilter) return false;
+      
+      // Tier filter
+      if (tierFilter !== 'all' && item.achievement.tier !== tierFilter) return false;
+      
+      return true;
+    });
+  }, [achievements, filter, categoryFilter, tierFilter]);
 
-  const unlockedCount = achievements.filter((a) => a.unlockedAt).length;
-  const totalCount = achievements.length;
+  // Group by category
+  const achievementsByCategory = useMemo(() => {
+    const grouped: Record<string, AchievementWithStatus[]> = {};
+    
+    filteredAchievements.forEach((item) => {
+      const category = item.achievement.category;
+      if (!grouped[category]) {
+        grouped[category] = [];
+      }
+      grouped[category].push(item);
+    });
+    
+    return grouped;
+  }, [filteredAchievements]);
 
-  const renderAchievement = ({ item }: { item: Achievement }) => {
-    const isUnlocked = !!item.unlockedAt;
-    const progress = item.progress || 0;
-    const percentComplete = Math.min(100, Math.round((progress / item.requirement) * 100));
-
+  if (isLoading) {
     return (
-      <TouchableOpacity
-        style={[styles.achievementCard, !isUnlocked && styles.achievementCardLocked]}
-        onPress={() => lightHaptic()}
-        activeOpacity={0.7}
-      >
-        {/* Icon */}
-        <View
-          style={[
-            styles.iconContainer,
-            isUnlocked ? styles.iconUnlocked : styles.iconLocked,
-          ]}
-        >
-          {isUnlocked ? (
-            <Text style={styles.iconText}>{item.icon}</Text>
-          ) : (
-            <Lock size={20} color="#475569" />
-          )}
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <SettingsHeader title="Achievements" />
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading achievements...</Text>
         </View>
-
-        {/* Content */}
-        <View style={styles.contentContainer}>
-          <View style={styles.titleRow}>
-            <Text style={[styles.title, !isUnlocked && styles.titleLocked]} numberOfLines={1}>
-              {item.title}
-            </Text>
-            {isUnlocked && <Check size={18} color="#22c55e" strokeWidth={3} />}
-          </View>
-
-          <Text style={[styles.description, !isUnlocked && styles.descriptionLocked]} numberOfLines={2}>
-            {item.description}
-          </Text>
-
-          {/* Progress Bar (for locked achievements) */}
-          {!isUnlocked && (
-            <View style={styles.progressContainer}>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${percentComplete}%` }]} />
-              </View>
-              <Text style={styles.progressText}>
-                {progress.toLocaleString()} / {item.requirement.toLocaleString()}
-              </Text>
-            </View>
-          )}
-        </View>
-      </TouchableOpacity>
+      </SafeAreaView>
     );
-  };
-
-  const renderHeader = () => (
-    <View>
-      {/* Stats */}
-      <View style={styles.statsContainer}>
-        <View style={styles.statCard}>
-          <Trophy size={24} color="#fbbf24" />
-          <Text style={styles.statValue}>{unlockedCount}</Text>
-          <Text style={styles.statLabel}>Unlocked</Text>
-        </View>
-        <View style={styles.statCard}>
-          <Lock size={24} color="#64748b" />
-          <Text style={styles.statValue}>{totalCount - unlockedCount}</Text>
-          <Text style={styles.statLabel}>Locked</Text>
-        </View>
-        <View style={styles.statCard}>
-          <Trophy size={24} color="#3b82f6" />
-          <Text style={styles.statValue}>{Math.round((unlockedCount / totalCount) * 100)}%</Text>
-          <Text style={styles.statLabel}>Complete</Text>
-        </View>
-      </View>
-
-      {/* Filter Tabs */}
-      <View style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'all' && styles.filterTabActive]}
-          onPress={() => {
-            lightHaptic();
-            setFilter('all');
-          }}
-        >
-          <Text style={[styles.filterTabText, filter === 'all' && styles.filterTabTextActive]}>
-            All ({totalCount})
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'unlocked' && styles.filterTabActive]}
-          onPress={() => {
-            lightHaptic();
-            setFilter('unlocked');
-          }}
-        >
-          <Text style={[styles.filterTabText, filter === 'unlocked' && styles.filterTabTextActive]}>
-            Unlocked ({unlockedCount})
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'locked' && styles.filterTabActive]}
-          onPress={() => {
-            lightHaptic();
-            setFilter('locked');
-          }}
-        >
-          <Text style={[styles.filterTabText, filter === 'locked' && styles.filterTabTextActive]}>
-            Locked ({totalCount - unlockedCount})
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <SettingsHeader title="Achievements" />
 
-      <FlashList
-        data={filteredAchievements}
-        keyExtractor={(item) => item.id}
-        renderItem={renderAchievement}
-        ListHeaderComponent={renderHeader}
-        contentContainerStyle={styles.listContent}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      >
+        {/* Stats Overview */}
+        <View style={styles.statsContainer}>
+          <View style={styles.statCard}>
+            <Trophy size={24} color="#fbbf24" />
+            <Text style={styles.statValue}>{stats.unlocked}</Text>
+            <Text style={styles.statLabel}>Unlocked</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Lock size={24} color="#64748b" />
+            <Text style={styles.statValue}>{stats.locked}</Text>
+            <Text style={styles.statLabel}>Locked</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Trophy size={24} color="#3b82f6" />
+            <Text style={styles.statValue}>{stats.percent}%</Text>
+            <Text style={styles.statLabel}>Complete</Text>
+          </View>
+        </View>
+
+        {/* Tier Stats */}
+        <View style={styles.tierStatsContainer}>
+          {Object.entries(stats.byTier).map(([tier, data]: [string, any]) => (
+            <View key={tier} style={styles.tierStatCard}>
+              <View style={[styles.tierDot, { backgroundColor: TIER_CONFIG[tier as AchievementTier].color }]} />
+              <Text style={styles.tierStatLabel}>{TIER_CONFIG[tier as AchievementTier].label}</Text>
+              <Text style={styles.tierStatValue}>{data.unlocked}/{data.total}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Status Filter */}
+        <View style={styles.filterContainer}>
+          <TouchableOpacity
+            style={[styles.filterTab, filter === 'all' && styles.filterTabActive]}
+            onPress={() => {
+              lightHaptic();
+              setFilter('all');
+            }}
+          >
+            <Text style={[styles.filterTabText, filter === 'all' && styles.filterTabTextActive]}>
+              All
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterTab, filter === 'unlocked' && styles.filterTabActive]}
+            onPress={() => {
+              lightHaptic();
+              setFilter('unlocked');
+            }}
+          >
+            <Text style={[styles.filterTabText, filter === 'unlocked' && styles.filterTabTextActive]}>
+              Unlocked
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterTab, filter === 'locked' && styles.filterTabActive]}
+            onPress={() => {
+              lightHaptic();
+              setFilter('locked');
+            }}
+          >
+            <Text style={[styles.filterTabText, filter === 'locked' && styles.filterTabTextActive]}>
+              Locked
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Achievements by Category */}
+        {Object.entries(achievementsByCategory).map(([category, items]) => (
+          <View key={category} style={styles.categorySection}>
+            <Text style={styles.categoryTitle}>
+              {CATEGORY_LABELS[category as AchievementCategory]}
+            </Text>
+            {items.map((item) => (
+              <AchievementCardV2
+                key={item.achievement.id}
+                data={item}
+                compact={true}
+                onPress={() => lightHaptic()}
+              />
+            ))}
+          </View>
+        ))}
+
+        {filteredAchievements.length === 0 && (
+          <View style={styles.emptyState}>
+            <Trophy size={48} color="#334155" />
+            <Text style={styles.emptyText}>No achievements found</Text>
+            <Text style={styles.emptySubtext}>Try adjusting your filters</Text>
+          </View>
+        )}
+
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -190,15 +219,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0f172a',
   },
-  listContent: {
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#94a3b8',
+    fontSize: 14,
   },
 
   // Stats
   statsContainer: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   statCard: {
     flex: 1,
@@ -216,6 +257,36 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: '#94a3b8',
+  },
+
+  // Tier Stats
+  tierStatsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  tierStatCard: {
+    flex: 1,
+    backgroundColor: '#1e293b',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
+    gap: 4,
+  },
+  tierDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  tierStatLabel: {
+    fontSize: 10,
+    color: '#94a3b8',
+    textTransform: 'uppercase',
+  },
+  tierStatValue: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#f1f5f9',
   },
 
   // Filter Tabs
@@ -244,91 +315,37 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 
-  // Achievement Card
-  separator: {
-    height: 12,
+  // Category Section
+  categorySection: {
+    marginBottom: 24,
   },
-  achievementCard: {
-    flexDirection: 'row',
-    backgroundColor: '#1e293b',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  achievementCardLocked: {
-    opacity: 0.7,
-  },
-
-  // Icon
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 14,
-  },
-  iconUnlocked: {
-    backgroundColor: '#78350f',
-  },
-  iconLocked: {
-    backgroundColor: '#334155',
-  },
-  iconText: {
-    fontSize: 30,
-  },
-
-  // Content
-  contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#f1f5f9',
-    flex: 1,
-  },
-  titleLocked: {
-    color: '#94a3b8',
-  },
-  description: {
+  categoryTitle: {
     fontSize: 14,
+    fontWeight: 'bold',
     color: '#94a3b8',
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-  descriptionLocked: {
-    color: '#64748b',
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 
-  // Progress
-  progressContainer: {
-    gap: 6,
+  // Empty State
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 60,
   },
-  progressBar: {
-    height: 6,
-    backgroundColor: '#334155',
-    borderRadius: 3,
-    overflow: 'hidden',
+  emptyText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#94a3b8',
+    marginTop: 16,
   },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#3b82f6',
-    borderRadius: 3,
-  },
-  progressText: {
-    fontSize: 12,
+  emptySubtext: {
+    fontSize: 14,
     color: '#64748b',
+    marginTop: 4,
+  },
+
+  bottomSpacer: {
+    height: 40,
   },
 });
-
-
-

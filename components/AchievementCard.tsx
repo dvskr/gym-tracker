@@ -1,27 +1,168 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Lock, Check } from 'lucide-react-native';
-import { Achievement } from '@/lib/api/achievements';
+import * as Haptics from 'expo-haptics';
+import { Lock, Check, Share2 } from 'lucide-react-native';
+import { Achievement as OldAchievement } from '@/lib/api/achievements';
+import { 
+  TIER_CONFIG, 
+  getAchievementIcon 
+} from '@/constants/achievements';
+import { AchievementWithStatus } from '@/types/achievements';
+import { formatEarnedAt } from '@/lib/achievements/achievementService';
 
 // ============================================
-// Types
+// NEW Achievement Card (for new system)
 // ============================================
 
-interface AchievementCardProps {
-  achievement: Achievement;
+interface NewAchievementCardProps {
+  data: AchievementWithStatus;
+  onPress?: () => void;
+  onShare?: () => void;
+  compact?: boolean;
+}
+
+function NewAchievementCard({ 
+  data, 
+  onPress, 
+  onShare,
+  compact = false 
+}: NewAchievementCardProps) {
+  const { achievement, unlocked, earnedAt, progress, progressPercent } = data;
+  const tier = TIER_CONFIG[achievement.tier];
+  const icon = getAchievementIcon(achievement.iconKey);
+
+  const handleShare = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onShare?.();
+  };
+
+  // Compact variant for lists
+  if (compact) {
+    return (
+      <TouchableOpacity 
+        style={[
+          styles.compactCard,
+          { borderColor: unlocked ? tier.color : '#334155' }
+        ]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        <View style={[
+          styles.compactIcon,
+          { backgroundColor: unlocked ? tier.backgroundColor : '#1e293b' }
+        ]}>
+          {unlocked ? (
+            <Text style={styles.compactIconText}>{icon}</Text>
+          ) : (
+            <Lock size={16} color="#64748b" />
+          )}
+        </View>
+        <View style={styles.compactContent}>
+          <Text 
+            style={[styles.compactName, !unlocked && styles.lockedText]} 
+            numberOfLines={1}
+          >
+            {achievement.name}
+          </Text>
+          {unlocked && earnedAt && (
+            <Text style={[styles.compactEarned, { color: tier.color }]}>
+              {formatEarnedAt(earnedAt)}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.compactTierDot, { backgroundColor: tier.color }]} />
+      </TouchableOpacity>
+    );
+  }
+
+  // Full card variant
+  return (
+    <TouchableOpacity 
+      style={[
+        styles.card,
+        { 
+          borderColor: unlocked ? tier.color : '#334155',
+          borderWidth: tier.borderWidth,
+        }
+      ]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      {/* Tier Badge */}
+      <View style={[styles.tierBadge, { backgroundColor: tier.color }]}>
+        <Text style={styles.tierText}>{tier.label}</Text>
+      </View>
+
+      {/* Share Button (only for unlocked) */}
+      {unlocked && onShare && (
+        <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
+          <Share2 size={16} color="#64748b" />
+        </TouchableOpacity>
+      )}
+
+      {/* Icon */}
+      <View style={[
+        styles.iconContainer,
+        { 
+          backgroundColor: unlocked ? tier.backgroundColor : '#1e293b',
+          shadowColor: unlocked ? tier.color : 'transparent',
+          shadowOpacity: tier.glowOpacity,
+          shadowRadius: 12,
+          shadowOffset: { width: 0, height: 0 },
+        }
+      ]}>
+        {unlocked ? (
+          <Text style={styles.iconText}>{icon}</Text>
+        ) : (
+          <Lock size={32} color="#64748b" />
+        )}
+      </View>
+
+      {/* Name & Description */}
+      <Text style={[styles.name, !unlocked && styles.lockedText]}>
+        {achievement.name}
+      </Text>
+      <Text style={styles.description}>{achievement.description}</Text>
+
+      {/* Progress or Earned Date */}
+      {unlocked ? (
+        <View style={styles.earnedContainer}>
+          <Text style={[styles.earnedText, { color: tier.color }]}>
+            Earned {formatEarnedAt(earnedAt!)}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBarBg}>
+            <View 
+              style={[
+                styles.progressBarFill, 
+                { 
+                  width: `${Math.min(100, progressPercent)}%`, 
+                  backgroundColor: tier.color 
+                }
+              ]} 
+            />
+          </View>
+          <Text style={styles.progressText}>
+            {progress.toLocaleString()} / {achievement.requirement.toLocaleString()}
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+}
+
+// ============================================
+// OLD Achievement Card (for backward compatibility)
+// ============================================
+
+interface OldAchievementCardProps {
+  achievement: OldAchievement;
   size?: 'small' | 'medium' | 'large';
   showProgress?: boolean;
   onPress?: () => void;
 }
-
-interface AchievementBadgeProps {
-  achievement: Achievement;
-  size?: 'small' | 'medium';
-}
-
-// ============================================
-// Size Configurations
-// ============================================
 
 const SIZES = {
   small: {
@@ -50,16 +191,12 @@ const SIZES = {
   },
 };
 
-// ============================================
-// Achievement Card Component
-// ============================================
-
-function AchievementCardComponent({
+function OldAchievementCardComponent({
   achievement,
   size = 'medium',
   showProgress = true,
   onPress,
-}: AchievementCardProps) {
+}: OldAchievementCardProps) {
   const isUnlocked = !!achievement.unlockedAt;
   const sizeConfig = SIZES[size];
   const progress = achievement.progress || 0;
@@ -74,9 +211,9 @@ function AchievementCardComponent({
   return (
     <Container
       style={[
-        styles.card,
+        styles.oldCard,
         sizeConfig.container,
-        isUnlocked ? styles.cardUnlocked : styles.cardLocked,
+        isUnlocked ? styles.oldCardUnlocked : styles.oldCardLocked,
       ]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -87,9 +224,9 @@ function AchievementCardComponent({
       {/* Icon */}
       <View
         style={[
-          styles.iconContainer,
+          styles.oldIconContainer,
           { width: sizeConfig.icon, height: sizeConfig.icon },
-          isUnlocked ? styles.iconUnlocked : styles.iconLocked,
+          isUnlocked ? styles.oldIconUnlocked : styles.oldIconLocked,
         ]}
       >
         {isUnlocked ? (
@@ -100,12 +237,12 @@ function AchievementCardComponent({
       </View>
 
       {/* Content */}
-      <View style={styles.content}>
+      <View style={styles.oldContent}>
         <Text
           style={[
-            styles.title,
+            styles.oldTitle,
             { fontSize: sizeConfig.title },
-            !isUnlocked && styles.titleLocked,
+            !isUnlocked && styles.oldTitleLocked,
           ]}
           numberOfLines={1}
         >
@@ -113,9 +250,9 @@ function AchievementCardComponent({
         </Text>
         <Text
           style={[
-            styles.description,
+            styles.oldDescription,
             { fontSize: sizeConfig.description },
-            !isUnlocked && styles.descriptionLocked,
+            !isUnlocked && styles.oldDescriptionLocked,
           ]}
           numberOfLines={2}
         >
@@ -124,16 +261,16 @@ function AchievementCardComponent({
 
         {/* Progress Bar (for locked achievements) */}
         {showProgress && !isUnlocked && (
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBar}>
+          <View style={styles.oldProgressContainer}>
+            <View style={styles.oldProgressBar}>
               <View
                 style={[
-                  styles.progressFill,
+                  styles.oldProgressFill,
                   { width: `${percentComplete}%` },
                 ]}
               />
             </View>
-            <Text style={[styles.progressText, { fontSize: sizeConfig.progress }]}>
+            <Text style={[styles.oldProgressText, { fontSize: sizeConfig.progress }]}>
               {progress.toLocaleString()} / {achievement.requirement.toLocaleString()}
             </Text>
           </View>
@@ -142,7 +279,7 @@ function AchievementCardComponent({
 
       {/* Unlocked Check */}
       {isUnlocked && (
-        <View style={styles.checkContainer}>
+        <View style={styles.oldCheckContainer}>
           <Check size={18} color="#22c55e" strokeWidth={3} />
         </View>
       )}
@@ -150,135 +287,136 @@ function AchievementCardComponent({
   );
 }
 
-// ============================================
-// Achievement Badge Component (Compact)
-// ============================================
-
-function AchievementBadgeComponent({ achievement, size = 'medium' }: AchievementBadgeProps) {
-  const isUnlocked = !!achievement.unlockedAt;
-  const iconSize = size === 'small' ? 36 : 48;
-  const fontSize = size === 'small' ? 18 : 24;
-
-  return (
-    <View
-      style={[
-        styles.badge,
-        { width: iconSize, height: iconSize },
-        isUnlocked ? styles.badgeUnlocked : styles.badgeLocked,
-      ]}
-    >
-      {isUnlocked ? (
-        <Text style={{ fontSize }}>{achievement.icon}</Text>
-      ) : (
-        <Lock size={fontSize * 0.5} color="#475569" />
-      )}
-    </View>
-  );
-}
-
-// ============================================
-// Achievement List Item (Compact row)
-// ============================================
-
-interface AchievementListItemProps {
-  achievement: Achievement;
-  onPress?: () => void;
-}
-
-function AchievementListItemInner({ achievement, onPress }: AchievementListItemProps) {
-  const isUnlocked = !!achievement.unlockedAt;
-  const progress = achievement.progress || 0;
-  const percentComplete = Math.min(100, Math.round((progress / achievement.requirement) * 100));
-  
-  const a11yLabel = isUnlocked 
-    ? `${achievement.title}, unlocked`
-    : `${achievement.title}, ${percentComplete}% complete`;
-
-  return (
-    <TouchableOpacity
-      style={[styles.listItem, !isUnlocked && styles.listItemLocked]}
-      onPress={onPress}
-      activeOpacity={0.7}
-      accessible={true}
-      accessibilityLabel={a11yLabel}
-      accessibilityRole="button"
-    >
-      <View
-        style={[
-          styles.listItemIcon,
-          isUnlocked ? styles.listItemIconUnlocked : styles.listItemIconLocked,
-        ]}
-      >
-        {isUnlocked ? (
-          <Text style={styles.listItemIconText}>{achievement.icon}</Text>
-        ) : (
-          <Lock size={14} color="#475569" />
-        )}
-      </View>
-
-      <View style={styles.listItemContent}>
-        <Text
-          style={[styles.listItemTitle, !isUnlocked && styles.listItemTitleLocked]}
-          numberOfLines={1}
-        >
-          {achievement.title}
-        </Text>
-        {!isUnlocked && (
-          <View style={styles.listItemProgressBar}>
-            <View
-              style={[styles.listItemProgressFill, { width: `${percentComplete}%` }]}
-            />
-          </View>
-        )}
-      </View>
-
-      {isUnlocked && (
-        <Check size={16} color="#22c55e" strokeWidth={3} />
-      )}
-    </TouchableOpacity>
-  );
-}
-
-export const AchievementListItem = memo(AchievementListItemInner);
-
-// ============================================
-// Recent Achievement Toast
-// ============================================
-
-interface AchievementToastProps {
-  achievement: Achievement;
-}
-
-export function AchievementToast({ achievement }: AchievementToastProps) {
-  return (
-    <View style={styles.toast}>
-      <View style={styles.toastIcon}>
-        <Text style={styles.toastIconText}>{achievement.icon}</Text>
-      </View>
-      <View style={styles.toastContent}>
-        <Text style={styles.toastLabel}> Achievement Unlocked!</Text>
-        <Text style={styles.toastTitle}>{achievement.title}</Text>
-        <Text style={styles.toastDescription}>{achievement.description}</Text>
-      </View>
-    </View>
-  );
-}
-
-// ============================================
-// Exports
-// ============================================
-
-export const AchievementCard = memo(AchievementCardComponent);
-export const AchievementBadge = memo(AchievementBadgeComponent);
+// Export both versions
+export const AchievementCard = memo(OldAchievementCardComponent);
+export const AchievementCardV2 = NewAchievementCard;
 export default AchievementCard;
 
-// ============================================
-// Styles
-// ============================================
-
 const styles = StyleSheet.create({
-  // Card Styles
+  // NEW Card styles
   card: {
+    backgroundColor: '#1e293b',
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    marginBottom: 12,
+    position: 'relative',
+  },
+  tierBadge: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  tierText: {
+    color: '#000',
+    fontSize: 10,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  shareBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    padding: 8,
+  },
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  iconText: {
+    fontSize: 40,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#f1f5f9',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#94a3b8',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  earnedContainer: {
+    alignItems: 'center',
+  },
+  earnedText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  progressContainer: {
+    width: '100%',
+  },
+  progressBarBg: {
+    height: 8,
+    backgroundColor: '#334155',
+    borderRadius: 4,
+    overflow: 'hidden',
+    marginBottom: 6,
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  progressText: {
+    fontSize: 12,
+    color: '#64748b',
+    textAlign: 'center',
+  },
+  lockedText: {
+    color: '#64748b',
+  },
+  compactCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 12,
+    marginBottom: 8,
+  },
+  compactIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  compactIconText: {
+    fontSize: 22,
+  },
+  compactContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  compactName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#f1f5f9',
+  },
+  compactEarned: {
+    fontSize: 11,
+    marginTop: 2,
+  },
+  compactTierDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 8,
+  },
+
+  // OLD Card styles
+  oldCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1e293b',
@@ -286,208 +424,64 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#334155',
   },
-
-  cardUnlocked: {
+  oldCardUnlocked: {
     backgroundColor: '#1e293b',
     borderColor: '#fbbf24',
   },
-
-  cardLocked: {
+  oldCardLocked: {
     backgroundColor: '#0f172a',
     borderColor: '#1e293b',
     opacity: 0.8,
   },
-
-  iconContainer: {
+  oldIconContainer: {
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
   },
-
-  iconUnlocked: {
+  oldIconUnlocked: {
     backgroundColor: '#422006',
   },
-
-  iconLocked: {
+  oldIconLocked: {
     backgroundColor: '#1e293b',
   },
-
-  content: {
+  oldContent: {
     flex: 1,
   },
-
-  title: {
+  oldTitle: {
     color: '#ffffff',
     fontWeight: 'bold',
     marginBottom: 2,
   },
-
-  titleLocked: {
+  oldTitleLocked: {
     color: '#94a3b8',
   },
-
-  description: {
+  oldDescription: {
     color: '#94a3b8',
     lineHeight: 16,
   },
-
-  descriptionLocked: {
+  oldDescriptionLocked: {
     color: '#64748b',
   },
-
-  progressContainer: {
+  oldProgressContainer: {
     marginTop: 8,
   },
-
-  progressBar: {
+  oldProgressBar: {
     height: 4,
     backgroundColor: '#334155',
     borderRadius: 2,
     overflow: 'hidden',
   },
-
-  progressFill: {
+  oldProgressFill: {
     height: '100%',
     backgroundColor: '#3b82f6',
     borderRadius: 2,
   },
-
-  progressText: {
+  oldProgressText: {
     color: '#64748b',
     marginTop: 4,
   },
-
-  checkContainer: {
+  oldCheckContainer: {
     marginLeft: 8,
   },
-
-  // Badge Styles
-  badge: {
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  badgeUnlocked: {
-    backgroundColor: '#422006',
-  },
-
-  badgeLocked: {
-    backgroundColor: '#1e293b',
-    opacity: 0.5,
-  },
-
-  // List Item Styles
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
-  },
-
-  listItemLocked: {
-    opacity: 0.7,
-  },
-
-  listItemIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-
-  listItemIconUnlocked: {
-    backgroundColor: '#422006',
-  },
-
-  listItemIconLocked: {
-    backgroundColor: '#1e293b',
-  },
-
-  listItemIconText: {
-    fontSize: 16,
-  },
-
-  listItemContent: {
-    flex: 1,
-  },
-
-  listItemTitle: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-
-  listItemTitleLocked: {
-    color: '#94a3b8',
-  },
-
-  listItemProgressBar: {
-    height: 3,
-    backgroundColor: '#334155',
-    borderRadius: 2,
-    marginTop: 4,
-    overflow: 'hidden',
-  },
-
-  listItemProgressFill: {
-    height: '100%',
-    backgroundColor: '#3b82f6',
-  },
-
-  // Toast Styles
-  toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#422006',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 2,
-    borderColor: '#fbbf24',
-  },
-
-  toastIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#78350f',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 16,
-  },
-
-  toastIconText: {
-    fontSize: 28,
-  },
-
-  toastContent: {
-    flex: 1,
-  },
-
-  toastLabel: {
-    color: '#fbbf24',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-
-  toastTitle: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 2,
-  },
-
-  toastDescription: {
-    color: '#fcd34d',
-    fontSize: 13,
-  },
 });
-
-
-

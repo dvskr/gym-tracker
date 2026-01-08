@@ -8,6 +8,9 @@ import { getCachedData, setCacheData } from '@/lib/ai/prefetch';
 import { useAuthStore } from '@/stores/authStore';
 import { RecoveryStatusSkeleton } from './RecoveryStatusSkeleton';
 import { AIFeedback } from './AIFeedback';
+import { getNextAchievement } from '@/lib/achievements/achievementService';
+import { AchievementWithStatus } from '@/types/achievements';
+import { TIER_CONFIG, getAchievementIcon } from '@/constants/achievements';
 
 export function RecoveryStatus() {
   const { user } = useAuthStore();
@@ -29,6 +32,7 @@ export function RecoveryStatus() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [nextAchievement, setNextAchievement] = useState<AchievementWithStatus | null>(null);
 
   const fetchStatus = useCallback(async (forceRefresh = false) => {
     if (!user) {
@@ -51,6 +55,14 @@ export function RecoveryStatus() {
       
       // Cache the result
       setCacheData(user.id, 'recovery', result);
+      
+      // Load next achievement
+      try {
+        const next = await getNextAchievement(user.id);
+        setNextAchievement(next);
+      } catch (error) {
+        logger.error('Failed to load next achievement:', error);
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch recovery status';
       setError(errorMessage);
@@ -293,6 +305,61 @@ export function RecoveryStatus() {
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: '#ef4444' }]} />
               <Text style={styles.legendText}>Fatigued</Text>
+            </View>
+          </View>
+        </View>
+      )}
+
+      {/* Next Achievement */}
+      {expanded && nextAchievement && (
+        <View style={styles.nextAchievementSection}>
+          <View style={styles.nextAchievementHeader}>
+            <Text style={styles.sectionTitle}>Next Achievement</Text>
+            <View style={styles.remainingBadge}>
+              <Text style={styles.remainingText}>
+                {nextAchievement.remaining.toLocaleString()} away!
+              </Text>
+            </View>
+          </View>
+          
+          <View style={styles.nextAchievementCard}>
+            <View style={[
+              styles.achievementIcon,
+              { backgroundColor: TIER_CONFIG[nextAchievement.achievement.tier].backgroundColor }
+            ]}>
+              <Text style={styles.achievementIconText}>
+                {getAchievementIcon(nextAchievement.achievement.iconKey)}
+              </Text>
+              <View style={[
+                styles.tierDot,
+                { backgroundColor: TIER_CONFIG[nextAchievement.achievement.tier].color }
+              ]} />
+            </View>
+            
+            <View style={styles.achievementInfo}>
+              <Text style={styles.achievementName}>
+                {nextAchievement.achievement.name}
+              </Text>
+              <Text style={styles.achievementDesc} numberOfLines={1}>
+                {nextAchievement.achievement.description}
+              </Text>
+              
+              <View style={styles.achievementProgress}>
+                <View style={styles.progressBar}>
+                  <View 
+                    style={[
+                      styles.progressFill, 
+                      { 
+                        width: `${nextAchievement.progressPercent}%`,
+                        backgroundColor: TIER_CONFIG[nextAchievement.achievement.tier].color
+                      }
+                    ]} 
+                  />
+                </View>
+                <Text style={styles.progressLabel}>
+                  {nextAchievement.progress.toLocaleString()} / {nextAchievement.achievement.requirement.toLocaleString()}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -561,6 +628,93 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#334155',
     alignItems: 'center',
+  },
+  nextAchievementSection: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#334155',
+  },
+  nextAchievementHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6b7280',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  remainingBadge: {
+    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  remainingText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#22c55e',
+  },
+  nextAchievementCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  achievementIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  achievementIconText: {
+    fontSize: 28,
+  },
+  tierDot: {
+    position: 'absolute',
+    bottom: -3,
+    right: -3,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#1e293b',
+  },
+  achievementInfo: {
+    flex: 1,
+  },
+  achievementName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#f1f5f9',
+  },
+  achievementDesc: {
+    fontSize: 12,
+    color: '#94a3b8',
+    marginTop: 2,
+    marginBottom: 8,
+  },
+  achievementProgress: {
+    gap: 4,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: '#334155',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  progressLabel: {
+    fontSize: 11,
+    color: '#64748b',
   },
 });
 

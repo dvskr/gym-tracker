@@ -12,6 +12,11 @@ import { calculateStreak } from '@/lib/utils/streakCalculation';
 import { getWorkoutCount } from '@/lib/utils/streakCalculation';
 import { invalidateCoachContextAfterWorkout, invalidateCoachContextAfterPR } from '@/lib/ai/cacheInvalidation';
 import { useSettingsStore } from './settingsStore';
+import { 
+  updateAchievementStats, 
+  checkAndUnlockAchievements,
+  getAchievementProgress 
+} from '@/lib/achievements/achievementService';
 
 /*
 =============================================================================
@@ -470,6 +475,113 @@ export const useWorkoutStore = create<WorkoutState>()(
           // Don't celebrate here - celebration will happen on the complete screen
           // The complete screen will check for PRs and trigger celebration when mounted
           logger.log('[WorkoutStore] Workout saved with PRs - celebration will happen on complete screen');
+
+          // ============================================
+          // Achievement System Integration
+          // ============================================
+          
+          const startedAt = new Date(activeWorkout.startedAt);
+          const endedAt = new Date();
+          
+          // Calculate workout metrics
+          const completedSets = activeWorkout.exercises.flatMap(ex => 
+            ex.sets.filter(s => s.isCompleted)
+          );
+          const workoutVolume = completedSets.reduce(
+            (sum, s) => sum + ((s.weight || 0) * (s.reps || 0)), 
+            0
+          );
+          const workoutReps = completedSets.reduce(
+            (sum, s) => sum + (s.reps || 0), 
+            0
+          );
+          const workoutDuration = (endedAt.getTime() - startedAt.getTime()) / 60000;
+
+          // Determine workout characteristics
+          const isWeekend = [0, 6].includes(startedAt.getDay());
+          const isEarly = startedAt.getHours() < 6;
+          const isLate = startedAt.getHours() >= 22;
+
+          // Determine workout type by muscles hit
+          const musclesHit = new Set<string>();
+          activeWorkout.exercises.forEach(ex => {
+            ex.exercise?.primary_muscles?.forEach((m: string) => musclesHit.add(m.toLowerCase()));
+          });
+
+          const legMuscles = ['quadriceps', 'hamstrings', 'glutes', 'calves'];
+          const pushMuscles = ['chest', 'shoulders', 'triceps'];
+          const pullMuscles = ['back', 'biceps', 'lats'];
+
+          const isLegWorkout = legMuscles.some(m => musclesHit.has(m));
+          const isPushWorkout = pushMuscles.some(m => musclesHit.has(m));
+          const isPullWorkout = pullMuscles.some(m => musclesHit.has(m));
+          const isFullBody = isLegWorkout && (isPushWorkout || isPullWorkout);
+
+          // Get current cached stats
+          const currentStats = await getAchievementProgress(user.id);
+          
+          // Calculate streak
+          const streakData = await calculateStreak(user.id);
+          
+          // Count unique exercises
+          const { data: exerciseData } = await supabase
+            .from('workout_exercises')
+            .select('exercise_id')
+            .eq('user_id', user.id);
+          const uniqueExercises = new Set(exerciseData?.map(e => e.exercise_id) || []).size;
+          
+          // Count total PRs
+          const { count: totalPRs } = await supabase
+            .from('personal_records')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id);
+
+          // Calculate new stats
+          const newStats = {
+            totalWorkouts: (currentStats?.totalWorkouts || 0) + 1,
+            totalVolume: (currentStats?.totalVolume || 0) + workoutVolume,
+            currentStreak: streakData.currentStreak,
+            longestStreak: Math.max(currentStats?.longestStreak || 0, streakData.currentStreak),
+            uniqueExercises: uniqueExercises,
+            totalPRs: totalPRs || 0,
+            weekendWorkouts: (currentStats?.weekendWorkouts || 0) + (isWeekend ? 1 : 0),
+            earlyWorkouts: (currentStats?.earlyWorkouts || 0) + (isEarly ? 1 : 0),
+            lateWorkouts: (currentStats?.lateWorkouts || 0) + (isLate ? 1 : 0),
+            legWorkouts: (currentStats?.legWorkouts || 0) + (isLegWorkout ? 1 : 0),
+            pushWorkouts: (currentStats?.pushWorkouts || 0) + (isPushWorkout ? 1 : 0),
+            pullWorkouts: (currentStats?.pullWorkouts || 0) + (isPullWorkout ? 1 : 0),
+            fullBodyWorkouts: (currentStats?.fullBodyWorkouts || 0) + (isFullBody ? 1 : 0),
+            perfectWeeks: currentStats?.perfectWeeks || 0,
+            consecutiveWeeksWithWorkout: currentStats?.consecutiveWeeksWithWorkout || 0,
+            consecutiveMonthsWithWorkout: currentStats?.consecutiveMonthsWithWorkout || 0,
+            maxWorkoutVolume: Math.max(currentStats?.maxWorkoutVolume || 0, workoutVolume),
+            maxWorkoutReps: Math.max(currentStats?.maxWorkoutReps || 0, workoutReps),
+            maxWorkoutDuration: Math.max(currentStats?.maxWorkoutDuration || 0, workoutDuration),
+            minWorkoutDuration: Math.min(currentStats?.minWorkoutDuration || 999999, workoutDuration),
+          };
+
+          // Update cached stats
+          await updateAchievementStats(user.id, newStats);
+
+          // Check for newly unlocked achievements
+          const newlyUnlocked = await checkAndUnlockAchievements(
+            user.id, 
+            newStats,
+            {
+              startedAt,
+              endedAt,
+              volume: workoutVolume,
+              reps: workoutReps,
+              muscles: Array.from(musclesHit),
+            }
+          );
+
+          // Notify for each new achievement
+          for (const achievement of newlyUnlocked) {
+            await achievementNotificationService.notifyAchievement(achievement);
+          }
+
+          logger.log(`[WorkoutStore] Achievement system: ${newlyUnlocked.length} new achievements unlocked`);
 
           // Clear active workout
  logger.log('[WorkoutStore] endWorkout: clearing state...');
