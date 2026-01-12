@@ -32,6 +32,7 @@ import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';
 import { getCurrentTab } from '@/lib/navigation/navigationState';
 import { useBackNavigation } from '@/lib/hooks/useBackNavigation';
+import { getExercisePromptList } from '@/lib/ai/exerciseMenu';
 
 interface Message {
   id: string;
@@ -296,6 +297,8 @@ export default function CoachScreen() {
 
 ${userContext ? `\n${userContext}\n` : ''}
 
+${getExercisePromptList()}
+
 🎯 WORKOUT BUTTON FEATURE - IMPORTANT:
 When the user asks ANY of these questions, you MUST include a structured workout block:
 - "suggest a workout" / "suggest me a workout"
@@ -320,19 +323,22 @@ MANDATORY FORMAT:
 }
 \`\`\`
 
-✅ EXAMPLE RESPONSE:
-"Perfect! Here's a solid push day to build chest and shoulders. Focus on controlled reps and full range of motion!
+✅ CRITICAL EXERCISE NAME RULES:
+1. COPY exercise names EXACTLY from the list above
+2. DO NOT abbreviate (e.g., use "dumbbell seated shoulder press", NOT "dumbbell shoulder press")
+3. DO NOT use generic names (e.g., use "front plank with twist", NOT just "plank")
+4. If unsure, pick a different exercise from the list
+5. Double-check each name against the list before responding
 
-\`\`\`workout
-{
-  "name": "Push Day",
-  "exercises": [
-    {"name": "Bench Press", "sets": 4, "reps": "8-10"},
-    {"name": "Overhead Press", "sets": 3, "reps": "8-12"},
-    {"name": "Tricep Dips", "sets": 3, "reps": "10-12"}
-  ]
-}
-\`\`\`"
+❌ WRONG:
+{"name": "dumbbell shoulder press"} ← Missing "seated"
+{"name": "plank"} ← Too generic
+{"name": "barbell row"} ← Missing "bent over"
+
+✅ CORRECT:
+{"name": "dumbbell seated shoulder press"} ← Exact match
+{"name": "front plank with twist"} ← Specific plank exercise  
+{"name": "barbell bent over row"} ← Complete name
 
 This creates a button that lets them START the workout immediately! Always include this when suggesting workouts.
 
@@ -434,8 +440,6 @@ REMINDER: Write naturally and conversationally. Keep responses concise (2-3 para
   };
 
   const handleStartWorkout = async (workoutName: string, exercises: Array<{ name: string; sets?: number; reps?: string }>) => {
-    logger.log('[Coach] handleStartWorkout called:', { workoutName, exerciseCount: exercises.length });
-    
     if (!exercises || exercises.length === 0) {
       Alert.alert('No Exercises', 'This workout plan has no exercises.');
       return;
@@ -443,141 +447,64 @@ REMINDER: Write naturally and conversationally. Keep responses concise (2-3 para
     
     try {
       // Start a new workout with the AI-suggested name
-      logger.log('[Coach] Starting workout:', workoutName);
       startWorkout(workoutName);
       
-      // Search for exercises using the API
-      const { searchExercises } = await import('@/lib/api/exercises');
+      // Fetch all exercises from database in ONE query using exact name matching
+      const exerciseNames = exercises.map(e => e.name.toLowerCase().trim());
+      
+      // Use OR conditions for case-insensitive exact matching
+      const orConditions = exerciseNames.map(name => `name.ilike.${name}`).join(',');
+      
+      const { data: dbExercises, error } = await supabase
+        .from('exercises')
+        .select('*')
+        .or(orConditions);
+      
+      if (error) {
+        logger.error('[Coach] Database query error:', error);
+        throw error;
+      }
+      
+      // Create a map for instant lookup (case-insensitive)
+      const exerciseMap = new Map(
+        (dbExercises || []).map(e => [e.name.toLowerCase(), e])
+      );
       
       let successCount = 0;
       const failedExercises: string[] = [];
       
-      // Helper function to find best matching exercise
-      const findBestMatch = (exerciseName: string, results: any[]): any | null => {
-        if (!results || results.length === 0) return null;
-        
-        const nameLower = exerciseName.toLowerCase().trim();
-        
-        // 1. Try exact match (case-insensitive)
-        const exactMatch = results.find(r => r.name.toLowerCase() === nameLower);
-        if (exactMatch) {
-          return exactMatch;
-        }
-        
-        // 2. Try exact match after removing trailing 's'
-        const singularName = nameLower.replace(/s$/i, '');
-        const singularMatch = results.find(r => 
-          r.name.toLowerCase() === singularName || 
-          r.name.toLowerCase().replace(/s$/i, '') === singularName
-        );
-        if (singularMatch) {
-          return singularMatch;
-        }
-        
-        // 3. Score each result based on word overlap
-        const exerciseWords = nameLower.split(/\s+/).filter(w => w.length > 2);
-        const scored = results.map(r => {
-          const resultWords = r.name.toLowerCase().split(/\s+/);
-          const matchedWords = exerciseWords.filter(ew => 
-            resultWords.some(rw => rw.includes(ew) || ew.includes(rw))
-          );
-          const score = matchedWords.length / exerciseWords.length;
-          return { exercise: r, score };
-        });
-        
-        // Sort by score descending
-        scored.sort((a, b) => b.score - a.score);
-        
-        // Return best match if score is at least 50%
-        if (scored[0].score >= 0.5) {
-          return scored[0].exercise;
-        }
-        
-        return null;
-      };
-      
       // Add each exercise from the AI suggestion
       for (const exerciseData of exercises) {
-        try {
-          logger.log('[Coach] Searching for exercise:', exerciseData.name);
+        const exerciseName = exerciseData.name.toLowerCase().trim();
+        const dbExercise = exerciseMap.get(exerciseName);
+        
+        if (dbExercise) {
+          // Create properly structured exercise object
+          const exercise = {
+            id: dbExercise.external_id, // ExerciseDB ID
+            dbId: dbExercise.id, // Database UUID
+            name: dbExercise.name,
+            gifUrl: dbExercise.gif_url || '',
+            target: dbExercise.primary_muscles?.[0] || 'unknown',
+            bodyPart: dbExercise.category || 'other',
+            equipment: dbExercise.equipment || 'bodyweight',
+            secondaryMuscles: dbExercise.secondary_muscles || [],
+            instructions: dbExercise.instructions || [],
+          };
           
-          // Try original name first
-          let results = await searchExercises(exerciseData.name, 10);
-          let bestMatch = findBestMatch(exerciseData.name, results);
-          
-          // If no good match, try without trailing 's'
-          if (!bestMatch) {
-            const singularName = exerciseData.name.replace(/s$/i, '').trim();
-            logger.log('[Coach] Trying singular form:', singularName);
-            results = await searchExercises(singularName, 10);
-            bestMatch = findBestMatch(singularName, results);
-          }
-          
-          // If still no match, try normalized name (DB -> Dumbbell)
-          if (!bestMatch) {
-            const normalizedName = exerciseData.name
-              .replace(/\bDB\b/gi, 'Dumbbell')
-              .replace(/\bBB\b/gi, 'Barbell')
-              .trim();
-            logger.log('[Coach] Trying normalized name:', normalizedName);
-            results = await searchExercises(normalizedName, 10);
-            bestMatch = findBestMatch(normalizedName, results);
-          }
-          
-          if (bestMatch) {
-            logger.log('[Coach] Found exercise:', bestMatch.name);
-            
-            // Create exercise object with all required fields
-            const exercise = {
-              id: bestMatch.id, // Use database UUID as primary ID
-              dbId: bestMatch.id, // UUID for database operations
-              name: bestMatch.name,
-              gifUrl: bestMatch.gif_url || '',
-              target: bestMatch.primary_muscles?.[0] || 'unknown',
-              bodyPart: bestMatch.category || 'other',
-              equipment: bestMatch.equipment || 'bodyweight',
-              secondaryMuscles: bestMatch.secondary_muscles || [],
-              instructions: bestMatch.instructions || [],
-            };
-            
-            logger.log('[Coach] Exercise object created:', {
-              id: exercise.id,
-              dbId: exercise.dbId,
-              name: exercise.name,
-            });
-            
-            // Add exercise with empty sets (no pre-filled weight/reps)
-            // User will fill in their own values like templates
-            // Always default to 3 sets
-            const targetSets = 3;
-            
-            logger.log('[Coach] Adding exercise to workout:', {
-              name: exercise.name,
-              sets: targetSets,
-            });
-            
-            addExerciseWithSets(exercise, [], targetSets);
-            successCount++;
-          } else {
-            logger.warn('[Coach] Exercise not found:', exerciseData.name);
-            failedExercises.push(exerciseData.name);
-          }
-        } catch (error: unknown) {
-          logger.error(`[Coach] Failed to add exercise ${exerciseData.name}:`, error);
+          // Add exercise with 3 empty sets
+          addExerciseWithSets(exercise, [], 3);
+          successCount++;
+        } else {
+          logger.warn('[Coach] Exercise not found:', exerciseData.name);
           failedExercises.push(exerciseData.name);
         }
       }
       
-      logger.log('[Coach] Workout setup complete:', {
-        successCount,
-        failedCount: failedExercises.length,
-        failed: failedExercises,
-      });
-      
       if (successCount === 0) {
         Alert.alert(
           'No Exercises Added',
-          'Could not find any of the suggested exercises in the database. Please add exercises manually.',
+          'Could not find any of the suggested exercises in the database. Please try asking again or add exercises manually.',
           [{ text: 'OK' }]
         );
         return;
@@ -586,7 +513,7 @@ REMINDER: Write naturally and conversationally. Keep responses concise (2-3 para
       if (failedExercises.length > 0 && successCount > 0) {
         Alert.alert(
           'Partial Success',
-          `Added ${successCount} exercise(s). Could not find: ${failedExercises.join(', ')}`,
+          `Added ${successCount} exercise(s). Could not find: ${failedExercises.join(', ')}. You can add more exercises manually.`,
           [
             {
               text: 'Continue Anyway',
@@ -596,7 +523,6 @@ REMINDER: Write naturally and conversationally. Keep responses concise (2-3 para
         );
       } else {
         // Navigate to active workout
-        logger.log('[Coach] Navigating to active workout...');
         router.push('/workout/active');
       }
     } catch (error: unknown) {

@@ -29,10 +29,10 @@ export function useDefaultTemplates() {
           }
         }
       } catch (err: unknown) {
-        logger.error('Error loading default templates:', err);
+ logger.error('Error loading default templates:', err);
         setError('Failed to load templates');
         // Use raw fallback templates on error
-        setTemplates(FALLBACK_TEMPLATES);
+          setTemplates(FALLBACK_TEMPLATES);
       } finally {
         setIsLoading(false);
       }
