@@ -74,8 +74,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     // Initialize settings from profile when user logs in
+    // Add a small delay for new signups to allow profile creation trigger to complete
     if (user?.id && isInitialized) {
-      initializeSettings(user.id);
+      const timer = setTimeout(() => {
+        initializeSettings(user.id);
+      }, 500); // Small delay to let database trigger complete
+      
+      return () => clearTimeout(timer);
     }
   }, [user?.id, isInitialized]);
 

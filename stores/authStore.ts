@@ -3,6 +3,8 @@ import { logger } from '@/lib/utils/logger';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { seedDefaultTemplates, addNewDefaultTemplates } from '@/lib/data/defaultTemplates';
+import { tabDataCache } from '@/lib/cache/tabDataCache';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthState {
   user: User | null;
@@ -18,28 +20,63 @@ interface AuthState {
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
 }
 
-// Track if we've already attempted to seed for this session
-let seedingAttempted = false;
+// Track if we've already attempted to seed for this user in this session
+const seedingAttemptedForUsers = new Set<string>();
+
+/**
+ * Clear all app caches - use when switching users or signing in
+ */
+async function clearAllCaches() {
+  try {
+    logger.log('[Auth] Clearing all app caches...');
+    
+    // Clear memory cache
+    tabDataCache.clear();
+    
+    // Clear specific AsyncStorage cache keys (but preserve user preferences)
+    const keysToRemove = [
+      'workout-history-cache',
+      'exercise-cache', 
+      'template-cache',
+      'progress-cache',
+      'stats-cache',
+    ];
+    
+    await AsyncStorage.multiRemove(keysToRemove);
+    logger.log('[Auth] All caches cleared successfully');
+  } catch (error) {
+    logger.error('[Auth] Error clearing caches:', error);
+  }
+}
 
 /**
  * Seed default templates in background (non-blocking)
+ * Only runs once per user per app session
  */
 async function seedTemplatesInBackground(userId: string) {
-  if (seedingAttempted) return;
-  seedingAttempted = true;
+  // Check if we've already attempted for this user
+  if (seedingAttemptedForUsers.has(userId)) {
+    logger.log('[Auth] Skipping template seed - already attempted for this user');
+    return;
+  }
+  
+  seedingAttemptedForUsers.add(userId);
   
   // Run in background - don't await
   setTimeout(async () => {
     try {
-      // First try to seed (for new users)
+      // First try to seed (for new users) - AWAIT to complete before next step
       await seedDefaultTemplates(userId);
+      
+      // Add a small delay to ensure the seeded templates are committed and visible
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Then add any new templates (for existing users)
       await addNewDefaultTemplates(userId);
     } catch (error: unknown) {
- logger.error('Background template seeding failed:', error);
+      logger.error('Background template seeding failed:', error);
     }
-  }, 1000); // Small delay to let app settle
+  }, 2000);
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -68,21 +105,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
       
       // Listen for auth changes
-      supabase.auth.onAuthStateChange((event, session) => {
+      supabase.auth.onAuthStateChange(async (event, session) => {
         set({ 
           session, 
           user: session?.user ?? null 
         });
         
-        // Seed templates on sign in (for new or returning users)
+        // Clear caches and seed templates on sign in
         if (event === 'SIGNED_IN' && session?.user?.id) {
+          // Clear all caches to prevent showing stale data from previous user
+          await clearAllCaches();
+          
+          // Seed templates for this user
           seedTemplatesInBackground(session.user.id);
         }
         
-        // Reset seeding flag on sign out
+        // Clear caches and reset on sign out
         if (event === 'SIGNED_OUT') {
-          seedingAttempted = false;
+          // Clear ALL users from seeding set (session is null on sign out)
+          seedingAttemptedForUsers.clear();
           set({ hasSeededTemplates: false });
+          
+          // Clear all caches
+          await clearAllCaches();
         }
       });
     } catch (error: unknown) {
@@ -104,10 +149,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       },
     });
     
-    // Seed templates for new user (will also be triggered by auth state change)
-    if (!error && data.user?.id) {
-      seedTemplatesInBackground(data.user.id);
-    }
+    // DON'T seed here - user doesn't have a valid session until email is confirmed
+    // Seeding will happen in onAuthStateChange when SIGNED_IN fires after confirmation
     
     set({ isLoading: false });
     return { error };

@@ -526,7 +526,7 @@ function debounceSyncToProfile() {
  */
 export async function initializeSettings(userId: string) {
   try {
- logger.log('[Settings] x Initializing settings from DB for user:', userId);
+    logger.log('[Settings] x Initializing settings from DB for user:', userId);
     
     const { data: profile, error } = await supabase
       .from('profiles')
@@ -534,24 +534,31 @@ export async function initializeSettings(userId: string) {
       .eq('id', userId)
       .single();
 
+    // If profile doesn't exist yet (e.g., during signup), silently return
+    // The profile will be created by the trigger and settings will sync later
     if (error) {
- logger.error('[Settings] R Error loading profile settings:', error);
+      // Only log as warning if it's not a "no rows" error (expected during signup)
+      if (error.code === 'PGRST116') {
+        logger.log('[Settings] Profile not found yet (likely new user) - will sync after creation');
+      } else {
+        logger.error('[Settings] R Error loading profile settings:', error);
+      }
       return;
     }
 
     if (profile) {
- logger.log('[Settings] S& Profile loaded from DB:', {
+      logger.log('[Settings] S& Profile loaded from DB:', {
         unit_system: profile.unit_system,
         theme: profile.theme,
         rest_timer_default: profile.rest_timer_default,
       });
       useSettingsStore.getState().syncFromProfile(profile);
- logger.log('[Settings] S& Settings synced from DB to store');
+      logger.log('[Settings] S& Settings synced from DB to store');
     } else {
- logger.log('[Settings] a No profile found in database');
+      logger.log('[Settings] a No profile found in database');
     }
   } catch (error: unknown) {
- logger.error('[Settings] R Error initializing settings:', error);
+    logger.error('[Settings] R Error initializing settings:', error);
   }
 }
 

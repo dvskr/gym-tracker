@@ -72,6 +72,7 @@ export function WorkoutSuggestion() {
   const [showExplanations, setShowExplanations] = useState(false);
   const [noEquipmentWarning, setNoEquipmentWarning] = useState(false);
   const [userGoal, setUserGoal] = useState<string>('build_muscle');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Get suggestion based on recovery status
   const getSuggestionFromRecovery = useCallback(async () => {
@@ -242,246 +243,279 @@ export function WorkoutSuggestion() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+      {/* Header - Always Visible */}
+      <Pressable 
+        style={styles.header}
+        onPress={() => {
+          lightHaptic();
+          setIsExpanded(!isExpanded);
+        }}
+      >
         <Text style={styles.label}>TODAY'S SUGGESTION</Text>
-        <TouchableOpacity 
-          onPress={getSuggestionFromRecovery}
-          style={styles.refreshButton}
-        >
-          <RefreshCw size={16} color="#60a5fa" />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            onPress={(e) => {
+              e.stopPropagation();
+              getSuggestionFromRecovery();
+            }}
+            style={styles.refreshButton}
+          >
+            <RefreshCw size={16} color="#60a5fa" />
+          </TouchableOpacity>
+          {isExpanded ? (
+            <ChevronUp size={20} color="#94a3b8" style={styles.chevron} />
+          ) : (
+            <ChevronDown size={20} color="#94a3b8" style={styles.chevron} />
+          )}
+        </View>
+      </Pressable>
 
-      {/* Rest day warning */}
-      {isRestDay && (
-        <View style={styles.restWarning}>
-          <Text style={styles.restWarningText}>
-            💤 Rest day recommended, but you can still train
+      {/* Collapsed Preview */}
+      {!isExpanded && selectedType && (
+        <View style={styles.collapsedPreview}>
+          <Text style={styles.collapsedText}>
+            {WORKOUT_TYPES[selectedType].emoji} {WORKOUT_TYPES[selectedType].name}
+          </Text>
+          <Text style={styles.collapsedSubtext}>
+            Tap to see {exercises.length} exercises
           </Text>
         </View>
       )}
-      
-      {/* Workout Type Selector - User picks */}
-      <View style={styles.typeSelector}>
-        {(Object.keys(WORKOUT_TYPES) as WorkoutType[]).map((type) => {
-          const workout = WORKOUT_TYPES[type];
-          const isSelected = selectedType === type;
-          const isSuggested = suggestedType === type && !isRestDay;
-          const isPreferred = preferredSplit === type && !isSuggested;
-          
-          return (
-            <Pressable
-              key={type}
-              style={[
-                styles.typeButton,
-                isSelected && styles.typeButtonSelected,
-                isSuggested && !isSelected && styles.typeButtonSuggested,
-              ]}
-              onPress={() => handleTypeSelect(type)}
-            >
-              {isSuggested && !isSelected && (
-                <View style={styles.suggestedBadge}>
-                  <Check size={10} color="#10b981" strokeWidth={3} />
-                </View>
-              )}
-              {isPreferred && (
-                <View style={styles.preferredBadge}>
-                  <Star size={8} color="#eab308" fill="#eab308" />
-                </View>
-              )}
-              <Text style={styles.typeEmoji}>{workout.emoji}</Text>
-              <Text style={[
-                styles.typeName,
-                isSelected && styles.typeNameSelected,
-              ]}>
-                {type}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
 
-
-      {/* Selected workout preview */}
-      {currentWorkout && (
+      {/* Expanded Content */}
+      {isExpanded && (
         <>
-          <View style={styles.workoutPreview}>
-            <Text style={styles.previewTitle}>{currentWorkout.name}</Text>
-            <Text style={styles.previewMuscles}>
-              {currentWorkout.muscles.join(' • ')}
-            </Text>
-          </View>
-          
-          {/* Goal Context Banner */}
-          {userGoal && (
-            <View style={styles.goalBanner}>
-              <Text style={styles.goalText}>
-                🎯 {GOAL_LABELS[userGoal] || userGoal} • Sets/reps optimized for your goal
+          {/* Rest day warning */}
+          {isRestDay && (
+            <View style={styles.restWarning}>
+              <Text style={styles.restWarningText}>
+                💤 Rest day recommended, but you can still train
               </Text>
             </View>
           )}
+      
+          {/* Workout Type Selector - User picks */}
+          <View style={styles.typeSelector}>
+            {(Object.keys(WORKOUT_TYPES) as WorkoutType[]).map((type) => {
+              const workout = WORKOUT_TYPES[type];
+              const isSelected = selectedType === type;
+              const isSuggested = suggestedType === type && !isRestDay;
+              const isPreferred = preferredSplit === type && !isSuggested;
+              
+              return (
+                <Pressable
+                  key={type}
+                  style={[
+                    styles.typeButton,
+                    isSelected && styles.typeButtonSelected,
+                    isSuggested && !isSelected && styles.typeButtonSuggested,
+                  ]}
+                  onPress={() => handleTypeSelect(type)}
+                >
+                  {isSuggested && !isSelected && (
+                    <View style={styles.suggestedBadge}>
+                      <Check size={10} color="#10b981" strokeWidth={3} />
+                    </View>
+                  )}
+                  {isPreferred && (
+                    <View style={styles.preferredBadge}>
+                      <Star size={8} color="#eab308" fill="#eab308" />
+                    </View>
+                  )}
+                  <Text style={styles.typeEmoji}>{workout.emoji}</Text>
+                  <Text style={[
+                    styles.typeName,
+                    isSelected && styles.typeNameSelected,
+                  ]}>
+                    {type}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
 
-          {/* Exercise list */}
-          {isLoadingExercises ? (
-            <View style={styles.loadingExercises}>
-              <ActivityIndicator size="small" color="#3b82f6" />
-            </View>
-          ) : exercises.length > 0 ? (
+
+          {/* Selected workout preview */}
+          {currentWorkout && (
             <>
-              <View style={styles.exercises}>
-                {exercises.map((ex, i) => (
-                  <View key={i} style={styles.exerciseCard}>
-                    {/* Exercise Name with Compound Badge */}
-                    <View style={styles.exerciseHeader}>
-                      <View style={styles.exerciseNameRow}>
-                        <Text style={styles.exerciseName} numberOfLines={1}>
-                          {ex.name}
-                        </Text>
-                        {ex.isCompound && (
-                          <View style={styles.compoundBadge}>
-                            <Text style={styles.compoundText}>C</Text>
-                          </View>
-                        )}
-                      </View>
-                      {ex.progressionNote && (
-                        <View style={[
-                          styles.progressionBadge,
-                          ex.progressionNote.startsWith('↑') && styles.progressionUp,
-                          ex.progressionNote.startsWith('↓') && styles.progressionDown,
-                        ]}>
-                          <TrendingUp size={10} color="#fff" />
-                          <Text style={styles.progressionText}>{ex.progressionNote}</Text>
-                        </View>
-                      )}
-                    </View>
-                    
-                    {/* Sets/Reps and Weight */}
-                    <View style={styles.exerciseDetails}>
-                      <View style={styles.setsRepsRow}>
-                        <Text style={styles.exerciseSets}>
-                          {ex.sets} × {ex.reps}
-                        </Text>
-                        {ex.restTime && (
-                          <>
-                            <Text style={styles.restSeparator}> • </Text>
-                            <Text style={styles.restTime}>Rest: {ex.restTime}</Text>
-                          </>
-                        )}
-                      </View>
-                      {ex.suggestedWeight && ex.suggestedWeight > 0 ? (
-                        <Text style={[
-                          styles.suggestedWeight,
-                          ex.progressionNote?.startsWith('↑') && styles.weightUp,
-                          ex.progressionNote?.startsWith('↓') && styles.weightDown,
-                        ]}>
-                          {ex.suggestedWeight} lbs
-                        </Text>
-                      ) : ex.lastWeight && ex.lastWeight > 0 ? (
-                        <Text style={styles.lastWeight}>{ex.lastWeight} lbs</Text>
-                      ) : null}
-                    </View>
-                    
-                    {/* Explanation (if enabled) */}
-                    {showExplanations && ex.explanation && (
-                      <Text style={styles.explanation}>{ex.explanation}</Text>
-                    )}
-                  </View>
-                ))}
+              <View style={styles.workoutPreview}>
+                <Text style={styles.previewTitle}>{currentWorkout.name}</Text>
+                <Text style={styles.previewMuscles}>
+                  {currentWorkout.muscles.join(' • ')}
+                </Text>
               </View>
               
-              {/* Toggle Explanations */}
-              <TouchableOpacity
-                style={styles.toggleButton}
-                onPress={() => {
-                  lightHaptic();
-                  setShowExplanations(!showExplanations);
-                }}
-              >
-                <Info size={14} color="#64748b" />
-                <Text style={styles.toggleText}>
-                  {showExplanations ? 'Hide' : 'Show'} Exercise Info
-                </Text>
-              </TouchableOpacity>
-              
-              {/* OPTIMIZATION C: Start Workout Button */}
-              <TouchableOpacity
-                style={styles.startWorkoutButton}
-                onPress={handleStartWorkout}
-                activeOpacity={0.8}
-              >
-                <Play size={18} color="#ffffff" fill="#ffffff" />
-                <Text style={styles.startWorkoutText}>Start This Workout</Text>
-              </TouchableOpacity>
-            </>
-          ) : noEquipmentWarning ? (
-            <View style={styles.noEquipmentWarning}>
-              <Text style={styles.noEquipmentText}>
-                No exercises found. Set your available equipment in Settings for better recommendations.
-              </Text>
-              <TouchableOpacity
-                style={styles.settingsButton}
-                onPress={() => router.push('/settings/profile')}
-              >
-                <Text style={styles.settingsButtonText}>Go to Settings</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.noExercises}>
-              <Text style={styles.noExercisesText}>
-                No exercises found for this workout type
-              </Text>
-            </View>
-          )}
-
-          {/* Muscle Recovery (Expandable) */}
-          {recoveryStatus?.muscleDetails && recoveryStatus.muscleDetails.length > 0 && (
-            <>
-              <TouchableOpacity
-                style={styles.recoveryToggle}
-                onPress={() => {
-                  lightHaptic();
-                  setShowRecovery(!showRecovery);
-                }}
-              >
-                <Text style={styles.recoveryToggleText}>Muscle Recovery</Text>
-                {showRecovery ? (
-                  <ChevronUp size={16} color="#64748b" />
-                ) : (
-                  <ChevronDown size={16} color="#64748b" />
-                )}
-              </TouchableOpacity>
-
-              {showRecovery && (
-                <View style={styles.recoverySection}>
-                  {getRelevantMuscles().map(muscle => (
-                    <View key={muscle.name} style={styles.muscleRow}>
-                      <Text style={styles.muscleName}>{muscle.name}</Text>
-                      <View style={styles.barContainer}>
-                        <View
-                          style={[
-                            styles.barFill,
-                            {
-                              width: `${muscle.recoveryPercent}%`,
-                              backgroundColor: getRecoveryColor(muscle.recoveryPercent),
-                            },
-                          ]}
-                        />
-                      </View>
-                      <Text style={styles.percentText}>
-                        {muscle.recoveryPercent >= 100 ? '✓' : `${muscle.recoveryPercent}%`}
-                      </Text>
-                    </View>
-                  ))}
+              {/* Goal Context Banner */}
+              {userGoal && (
+                <View style={styles.goalBanner}>
+                  <Text style={styles.goalText}>
+                    🎯 {GOAL_LABELS[userGoal] || userGoal} • Sets/reps optimized for your goal
+                  </Text>
                 </View>
+              )}
+
+              {/* Exercise list */}
+              {isLoadingExercises ? (
+                <View style={styles.loadingExercises}>
+                  <ActivityIndicator size="small" color="#3b82f6" />
+                </View>
+              ) : exercises.length > 0 ? (
+                <>
+                  <View style={styles.exercises}>
+                    {exercises.map((ex, i) => (
+                      <View key={i} style={styles.exerciseCard}>
+                        {/* Exercise Name with Compound Badge */}
+                        <View style={styles.exerciseHeader}>
+                          <View style={styles.exerciseNameRow}>
+                            <Text style={styles.exerciseName} numberOfLines={1}>
+                              {ex.name}
+                            </Text>
+                            {ex.isCompound && (
+                              <View style={styles.compoundBadge}>
+                                <Text style={styles.compoundText}>C</Text>
+                              </View>
+                            )}
+                          </View>
+                          {ex.progressionNote && (
+                            <View style={[
+                              styles.progressionBadge,
+                              ex.progressionNote.startsWith('↑') && styles.progressionUp,
+                              ex.progressionNote.startsWith('↓') && styles.progressionDown,
+                            ]}>
+                              <TrendingUp size={10} color="#fff" />
+                              <Text style={styles.progressionText}>{ex.progressionNote}</Text>
+                            </View>
+                          )}
+                        </View>
+                        
+                        {/* Sets/Reps and Weight */}
+                        <View style={styles.exerciseDetails}>
+                          <View style={styles.setsRepsRow}>
+                            <Text style={styles.exerciseSets}>
+                              {ex.sets} × {ex.reps}
+                            </Text>
+                            {ex.restTime && (
+                              <>
+                                <Text style={styles.restSeparator}> • </Text>
+                                <Text style={styles.restTime}>Rest: {ex.restTime}</Text>
+                              </>
+                            )}
+                          </View>
+                          {ex.suggestedWeight && ex.suggestedWeight > 0 ? (
+                            <Text style={[
+                              styles.suggestedWeight,
+                              ex.progressionNote?.startsWith('↑') && styles.weightUp,
+                              ex.progressionNote?.startsWith('↓') && styles.weightDown,
+                            ]}>
+                              {ex.suggestedWeight} lbs
+                            </Text>
+                          ) : ex.lastWeight && ex.lastWeight > 0 ? (
+                            <Text style={styles.lastWeight}>{ex.lastWeight} lbs</Text>
+                          ) : null}
+                        </View>
+                        
+                        {/* Explanation (if enabled) */}
+                        {showExplanations && ex.explanation && (
+                          <Text style={styles.explanation}>{ex.explanation}</Text>
+                        )}
+                      </View>
+                    ))}
+                  </View>
+                  
+                  {/* Toggle Explanations */}
+                  <TouchableOpacity
+                    style={styles.toggleButton}
+                    onPress={() => {
+                      lightHaptic();
+                      setShowExplanations(!showExplanations);
+                    }}
+                  >
+                    <Info size={14} color="#64748b" />
+                    <Text style={styles.toggleText}>
+                      {showExplanations ? 'Hide' : 'Show'} Exercise Info
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  {/* OPTIMIZATION C: Start Workout Button */}
+                  <TouchableOpacity
+                    style={styles.startWorkoutButton}
+                    onPress={handleStartWorkout}
+                    activeOpacity={0.8}
+                  >
+                    <Play size={18} color="#ffffff" fill="#ffffff" />
+                    <Text style={styles.startWorkoutText}>Start This Workout</Text>
+                  </TouchableOpacity>
+                </>
+              ) : noEquipmentWarning ? (
+                <View style={styles.noEquipmentWarning}>
+                  <Text style={styles.noEquipmentText}>
+                    No exercises found. Set your available equipment in Settings for better recommendations.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.settingsButton}
+                    onPress={() => router.push('/settings/profile')}
+                  >
+                    <Text style={styles.settingsButtonText}>Go to Settings</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.noExercises}>
+                  <Text style={styles.noExercisesText}>
+                    No exercises found for this workout type
+                  </Text>
+                </View>
+              )}
+
+              {/* Muscle Recovery (Expandable) */}
+              {recoveryStatus?.muscleDetails && recoveryStatus.muscleDetails.length > 0 && (
+                <>
+                  <TouchableOpacity
+                    style={styles.recoveryToggle}
+                    onPress={() => {
+                      lightHaptic();
+                      setShowRecovery(!showRecovery);
+                    }}
+                  >
+                    <Text style={styles.recoveryToggleText}>Muscle Recovery</Text>
+                    {showRecovery ? (
+                      <ChevronUp size={16} color="#64748b" />
+                    ) : (
+                      <ChevronDown size={16} color="#64748b" />
+                    )}
+                  </TouchableOpacity>
+
+                  {showRecovery && (
+                    <View style={styles.recoverySection}>
+                      {getRelevantMuscles().map(muscle => (
+                        <View key={muscle.name} style={styles.muscleRow}>
+                          <Text style={styles.muscleName}>{muscle.name}</Text>
+                          <View style={styles.barContainer}>
+                            <View
+                              style={[
+                                styles.barFill,
+                                {
+                                  width: `${muscle.recoveryPercent}%`,
+                                  backgroundColor: getRecoveryColor(muscle.recoveryPercent),
+                                },
+                              ]}
+                            />
+                          </View>
+                          <Text style={styles.percentText}>
+                            {muscle.recoveryPercent >= 100 ? '✓' : `${muscle.recoveryPercent}%`}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </>
               )}
             </>
           )}
         </>
       )}
 
-      {/* No selection prompt */}
-      {!selectedType && (
+      {/* No selection prompt - Only show when expanded */}
+      {isExpanded && !selectedType && (
         <View style={styles.noSelectionPrompt}>
           <Text style={styles.noSelectionText}>
             Pick a workout type above to get started
@@ -512,8 +546,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  chevron: {
+    marginLeft: 4,
+  },
   refreshButton: {
     padding: 6,
+  },
+  collapsedPreview: {
+    backgroundColor: '#0f172a',
+    borderRadius: 12,
+    padding: 14,
+    alignItems: 'center',
+  },
+  collapsedText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#f1f5f9',
+    marginBottom: 4,
+  },
+  collapsedSubtext: {
+    fontSize: 12,
+    color: '#64748b',
   },
   label: {
     fontSize: 11,

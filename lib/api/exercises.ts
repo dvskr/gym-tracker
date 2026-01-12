@@ -109,7 +109,7 @@ export async function getExerciseById(exerciseId: string): Promise<Exercise | nu
     throw error;
   }
 
-  return data;
+  return data as Exercise | null;
 }
 
 /**
@@ -156,12 +156,12 @@ export async function getExerciseHistory(
     workout_id: string;
     workouts: {
       id: string;
-      name: string;
+      name: string | null;
       started_at: string;
       user_id: string;
     } | Array<{
       id: string;
-      name: string;
+      name: string | null;
       started_at: string;
       user_id: string;
     }>;
@@ -172,7 +172,7 @@ export async function getExerciseHistory(
       reps: number | null;
       rpe: number | null;
       set_type: string | null;
-      is_completed: boolean;
+      is_completed: boolean | null;
     }>;
   }
 
@@ -186,8 +186,8 @@ export async function getExerciseHistory(
         weight: s.weight || 0,
         weight_unit: s.weight_unit || 'lbs',
         reps: s.reps || 0,
-        rpe: s.rpe,
-        set_type: s.set_type,
+        rpe: s.rpe ?? undefined,
+        set_type: s.set_type ?? undefined,
       }));
 
     const bestSet = findBestSet(completedSets);
@@ -353,7 +353,7 @@ export async function getExerciseSetRecords(
     weight: number | null;
     reps: number | null;
     set_number: number;
-    is_completed: boolean;
+    is_completed: boolean | null;
     workout_exercises: {
       exercise_id: string;
       workouts: {
@@ -476,7 +476,7 @@ export async function searchExercises(
     .limit(limit);
 
   if (error) throw error;
-  return data || [];
+  return (data || []) as unknown as Exercise[];
 }
 
 /**
@@ -493,7 +493,7 @@ export async function getExercisesByMuscle(
     .limit(limit);
 
   if (error) throw error;
-  return data || [];
+  return (data || []) as unknown as Exercise[];
 }
 
 

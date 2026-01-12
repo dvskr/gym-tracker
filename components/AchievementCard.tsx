@@ -51,11 +51,9 @@ function NewAchievementCard({
           styles.compactIcon,
           { backgroundColor: unlocked ? tier.backgroundColor : '#1e293b' }
         ]}>
-          {unlocked ? (
-            <Text style={styles.compactIconText}>{icon}</Text>
-          ) : (
-            <Lock size={16} color="#64748b" />
-          )}
+          <Text style={[styles.compactIconText, !unlocked && styles.lockedIcon]}>
+            {icon}
+          </Text>
         </View>
         <View style={styles.compactContent}>
           <Text 
@@ -111,11 +109,9 @@ function NewAchievementCard({
           shadowOffset: { width: 0, height: 0 },
         }
       ]}>
-        {unlocked ? (
-          <Text style={styles.iconText}>{icon}</Text>
-        ) : (
-          <Lock size={32} color="#64748b" />
-        )}
+        <Text style={[styles.iconText, !unlocked && styles.lockedIcon]}>
+          {icon}
+        </Text>
       </View>
 
       {/* Name & Description */}
@@ -229,11 +225,12 @@ function OldAchievementCardComponent({
           isUnlocked ? styles.oldIconUnlocked : styles.oldIconLocked,
         ]}
       >
-        {isUnlocked ? (
-          <Text style={{ fontSize: sizeConfig.iconFontSize }}>{achievement.icon}</Text>
-        ) : (
-          <Lock size={sizeConfig.iconFontSize * 0.6} color="#475569" />
-        )}
+        <Text style={[
+          { fontSize: sizeConfig.iconFontSize },
+          !isUnlocked && styles.lockedIcon
+        ]}>
+          {achievement.icon}
+        </Text>
       </View>
 
       {/* Content */}
@@ -375,6 +372,9 @@ const styles = StyleSheet.create({
   },
   lockedText: {
     color: '#64748b',
+  },
+  lockedIcon: {
+    opacity: 0.4,
   },
   compactCard: {
     flexDirection: 'row',

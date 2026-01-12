@@ -242,11 +242,11 @@ export async function seedDefaultTemplates(userId: string): Promise<void> {
     const existing = await getTemplates(userId);
     
     if (existing.length > 0) {
- logger.log('User already has templates, skipping seed');
+      logger.log('User already has templates, skipping seed');
       return;
     }
 
- logger.log('Seeding default templates for user...');
+    logger.log('Seeding default templates for user...');
 
     for (const template of DEFAULT_TEMPLATES) {
       // Look up exercise IDs by name

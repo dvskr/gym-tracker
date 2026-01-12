@@ -155,12 +155,12 @@ export async function createTemplateFromWorkout(
 
 // Get all templates for user
 export async function getTemplates(userId: string): Promise<Template[]> {
-  // Query without template_sets (table may not exist yet)
+  // Query with explicit limit to ensure all exercises are fetched
   const { data, error } = await supabase
     .from('workout_templates')
     .select(`
       *,
-      template_exercises (
+      template_exercises!template_exercises_template_id_fkey (
         *,
         exercises (*)
       )

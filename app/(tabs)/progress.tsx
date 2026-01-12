@@ -43,9 +43,9 @@ import {
 } from '@/lib/api/stats';
 import {
   getRecentAchievements,
-  getAchievementStats,
   Achievement,
 } from '@/lib/api/achievements';
+import { getAchievementStats } from '@/lib/achievements/achievementService';
 import { AchievementCard } from '@/components/AchievementCard';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { AuthPromptModal } from '@/components/modals/AuthPromptModal';

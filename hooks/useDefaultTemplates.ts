@@ -11,36 +11,28 @@ export function useDefaultTemplates() {
     async function loadTemplates() {
       setIsLoading(true);
       try {
-        const dbTemplates = await fetchDefaultTemplates();
+        // Use enriched fallback templates as primary source - they have curated exercise names
+        // that match exactly with database entries, avoiding fuzzy matching issues
+        const enrichedFallbacks = await getEnrichedFallbackTemplates();
         
-        // Only use DB templates if we got valid results
-        if (dbTemplates.length > 0 && dbTemplates.every(t => t.exercises.length >= 3)) {
-          setTemplates(dbTemplates);
+        if (enrichedFallbacks.length > 0 && enrichedFallbacks.every(t => t.exercises.length >= 3)) {
+          setTemplates(enrichedFallbacks);
         } else {
- logger.log('Using enriched fallback templates - DB templates incomplete');
-          // Use enriched fallback templates that match exercise names to database
-          const enrichedFallbacks = await getEnrichedFallbackTemplates();
-          if (enrichedFallbacks.length > 0) {
-            setTemplates(enrichedFallbacks);
+          // Fallback to dynamically fetched templates if enrichment fails
+          logger.log('Enriched fallbacks incomplete, trying dynamic fetch');
+          const dbTemplates = await fetchDefaultTemplates();
+          if (dbTemplates.length > 0 && dbTemplates.every(t => t.exercises.length >= 3)) {
+            setTemplates(dbTemplates);
           } else {
             // Last resort: use raw fallback templates
             setTemplates(FALLBACK_TEMPLATES);
           }
         }
       } catch (err: unknown) {
- logger.error('Error loading default templates:', err);
+        logger.error('Error loading default templates:', err);
         setError('Failed to load templates');
-        // Try to use enriched fallbacks even on error
-        try {
-          const enrichedFallbacks = await getEnrichedFallbackTemplates();
-          if (enrichedFallbacks.length > 0) {
-            setTemplates(enrichedFallbacks);
-          } else {
-            setTemplates(FALLBACK_TEMPLATES);
-          }
-        } catch {
-          setTemplates(FALLBACK_TEMPLATES);
-        }
+        // Use raw fallback templates on error
+        setTemplates(FALLBACK_TEMPLATES);
       } finally {
         setIsLoading(false);
       }
@@ -51,4 +43,5 @@ export function useDefaultTemplates() {
 
   return { templates, isLoading, error };
 }
+
 

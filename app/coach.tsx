@@ -452,56 +452,97 @@ REMINDER: Write naturally and conversationally. Keep responses concise (2-3 para
       let successCount = 0;
       const failedExercises: string[] = [];
       
+      // Helper function to find best matching exercise
+      const findBestMatch = (exerciseName: string, results: any[]): any | null => {
+        if (!results || results.length === 0) return null;
+        
+        const nameLower = exerciseName.toLowerCase().trim();
+        
+        // 1. Try exact match (case-insensitive)
+        const exactMatch = results.find(r => r.name.toLowerCase() === nameLower);
+        if (exactMatch) {
+          return exactMatch;
+        }
+        
+        // 2. Try exact match after removing trailing 's'
+        const singularName = nameLower.replace(/s$/i, '');
+        const singularMatch = results.find(r => 
+          r.name.toLowerCase() === singularName || 
+          r.name.toLowerCase().replace(/s$/i, '') === singularName
+        );
+        if (singularMatch) {
+          return singularMatch;
+        }
+        
+        // 3. Score each result based on word overlap
+        const exerciseWords = nameLower.split(/\s+/).filter(w => w.length > 2);
+        const scored = results.map(r => {
+          const resultWords = r.name.toLowerCase().split(/\s+/);
+          const matchedWords = exerciseWords.filter(ew => 
+            resultWords.some(rw => rw.includes(ew) || ew.includes(rw))
+          );
+          const score = matchedWords.length / exerciseWords.length;
+          return { exercise: r, score };
+        });
+        
+        // Sort by score descending
+        scored.sort((a, b) => b.score - a.score);
+        
+        // Return best match if score is at least 50%
+        if (scored[0].score >= 0.5) {
+          return scored[0].exercise;
+        }
+        
+        return null;
+      };
+      
       // Add each exercise from the AI suggestion
       for (const exerciseData of exercises) {
         try {
           logger.log('[Coach] Searching for exercise:', exerciseData.name);
           
-          // Normalize the exercise name for better matching
-          let searchTerm = exerciseData.name
-            .replace(/s$/i, '')  // Remove trailing 's' (Squats -> Squat)
-            .replace(/Dumbbell/i, 'DB')  // Try DB abbreviation
-            .trim();
-          
           // Try original name first
-          let results = await searchExercises(exerciseData.name, 5);
+          let results = await searchExercises(exerciseData.name, 10);
+          let bestMatch = findBestMatch(exerciseData.name, results);
           
-          // If no results, try normalized name
-          if (!results || results.length === 0) {
-            logger.log('[Coach] Original name failed, trying normalized:', searchTerm);
-            results = await searchExercises(searchTerm, 5);
+          // If no good match, try without trailing 's'
+          if (!bestMatch) {
+            const singularName = exerciseData.name.replace(/s$/i, '').trim();
+            logger.log('[Coach] Trying singular form:', singularName);
+            results = await searchExercises(singularName, 10);
+            bestMatch = findBestMatch(singularName, results);
           }
           
-          // If still no results, try just the main word (last word usually)
-          if (!results || results.length === 0) {
-            const words = exerciseData.name.split(' ');
-            const mainWord = words[words.length - 1].replace(/s$/i, '');
-            logger.log('[Coach] Normalized failed, trying main word:', mainWord);
-            results = await searchExercises(mainWord, 5);
+          // If still no match, try normalized name (DB -> Dumbbell)
+          if (!bestMatch) {
+            const normalizedName = exerciseData.name
+              .replace(/\bDB\b/gi, 'Dumbbell')
+              .replace(/\bBB\b/gi, 'Barbell')
+              .trim();
+            logger.log('[Coach] Trying normalized name:', normalizedName);
+            results = await searchExercises(normalizedName, 10);
+            bestMatch = findBestMatch(normalizedName, results);
           }
           
-          if (results && results.length > 0) {
-            // Use the first match
-            const dbExercise = results[0];
-            logger.log('[Coach] Found exercise:', dbExercise.name);
+          if (bestMatch) {
+            logger.log('[Coach] Found exercise:', bestMatch.name);
             
             // Create exercise object with all required fields
             const exercise = {
-              id: dbExercise.external_id || dbExercise.id, // Use external_id for ExerciseDB compatibility
-              dbId: dbExercise.id, // UUID for database operations
-              name: dbExercise.name,
-              gifUrl: dbExercise.gif_url || '',
-              target: dbExercise.primary_muscles?.[0] || 'unknown',
-              bodyPart: dbExercise.category || 'other',
-              equipment: dbExercise.equipment || 'bodyweight',
-              secondaryMuscles: dbExercise.secondary_muscles || [],
-              instructions: dbExercise.instructions || [],
+              id: bestMatch.id, // Use database UUID as primary ID
+              dbId: bestMatch.id, // UUID for database operations
+              name: bestMatch.name,
+              gifUrl: bestMatch.gif_url || '',
+              target: bestMatch.primary_muscles?.[0] || 'unknown',
+              bodyPart: bestMatch.category || 'other',
+              equipment: bestMatch.equipment || 'bodyweight',
+              secondaryMuscles: bestMatch.secondary_muscles || [],
+              instructions: bestMatch.instructions || [],
             };
             
             logger.log('[Coach] Exercise object created:', {
               id: exercise.id,
               dbId: exercise.dbId,
-              external_id: dbExercise.external_id,
               name: exercise.name,
             });
             
