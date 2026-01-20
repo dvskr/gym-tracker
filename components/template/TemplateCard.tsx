@@ -1,17 +1,6 @@
 import React, { memo, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import {
-  MoreVertical,
-  Play,
-  Clock,
-  Dumbbell,
-  Calendar,
-} from 'lucide-react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MoreVertical, Play, Clock, Dumbbell, Calendar } from 'lucide-react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { Card } from '@/components/ui';
 import { lightHaptic, successHaptic } from '@/lib/utils/haptics';
@@ -94,8 +83,8 @@ function TemplateCardComponent({
 
   return (
     <>
-      <TouchableOpacity 
-        onPress={onPress} 
+      <TouchableOpacity
+        onPress={onPress}
         activeOpacity={0.7}
         accessible={true}
         accessibilityLabel={`${template.name} template, ${exerciseCount} exercises, ${lastUsed}`}
@@ -154,9 +143,7 @@ function TemplateCardComponent({
                 </View>
               ))}
               {template.target_muscles.length > 3 && (
-                <Text style={styles.moreText}>
-                  +{template.target_muscles.length - 3}
-                </Text>
+                <Text style={styles.moreText}>+{template.target_muscles.length - 3}</Text>
               )}
             </View>
           )}
@@ -190,6 +177,7 @@ function TemplateCardComponent({
 }
 
 export const TemplateCard = memo(TemplateCardComponent);
+TemplateCard.displayName = 'TemplateCard';
 
 const styles = StyleSheet.create({
   templateCard: {
@@ -329,6 +317,3 @@ const styles = StyleSheet.create({
 });
 
 export default TemplateCard;
-
-
-

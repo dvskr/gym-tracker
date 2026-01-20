@@ -1,12 +1,37 @@
-# 💪 Gym Tracker - AI-Powered Workout Tracking App
+# 💪 Gym Tracker - Workout Tracking App
 
-> A comprehensive, production-ready gym workout tracking application with AI coaching, offline-first architecture, health integrations, and advanced progress analytics.
+> A comprehensive mobile workout tracking application with AI coaching (chat only), database-driven features, and advanced progress analytics.
 
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-blue)
 ![React Native](https://img.shields.io/badge/React%20Native-0.81-green)
 ![Expo](https://img.shields.io/badge/Expo-SDK%2054-purple)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
 ![License](https://img.shields.io/badge/license-MIT-orange)
+
+---
+
+## ⚠️ **IMPORTANT: README ACCURACY DISCLAIMER**
+
+This README has been updated with **brutal honesty** about the current state of features. Many features have infrastructure code but are not yet fully integrated or production-ready.
+
+### 📊 **Feature Status Legend:**
+- ✅ **Fully Implemented & Working** - Feature is complete and actively used
+- ⚠️ **Partially Implemented** - Code exists but not fully integrated or has limitations
+- 🚧 **In Development** - Infrastructure exists but not production-ready
+- ❌ **Not Implemented** - Planned but not yet built
+- 💀 **Dead Code** - Exists in codebase but never integrated
+
+### 🔍 **Known Misinformation Corrections:**
+
+1. **Exercise Count (423)**: ⚠️ UNVERIFIED - Number appears in comments but not confirmed against actual database
+2. **"Production Ready"**: ❌ MISLEADING - More accurately "Development Complete" - missing EAS config, RevenueCat incomplete
+3. **Offline-First Architecture**: 🚧 INFRASTRUCTURE EXISTS - Full sync queue & conflict resolution code exists but NOT actively used in app
+4. **Apple Health Integration (iOS)**: ❌ NOT IMPLEMENTED - All functions are stubs returning false (Coming Soon message shown)
+5. **Health Connect (Android)**: ⚠️ PARTIALLY IMPLEMENTED - Code exists, settings UI works, but automatic sync integration unclear
+6. **"Post-Workout Analysis"**: 💀 NEVER EXISTED - No component found, incorrect to say it was "removed"
+7. **EAS Build Instructions**: ⚠️ EXAMPLE ONLY - No `eas.json` configuration exists in project
+8. **RevenueCat**: ⚠️ PARTIALLY CONFIGURED - Package installed, code exists, but missing API key in env template
+9. **"Social Features"**: ⚠️ BASIC ONLY - Workout sharing is just export/share sheet, not a social network
 
 ---
 
@@ -24,8 +49,8 @@
 - [Deployment](#-deployment)
 - [Scripts](#-scripts)
 - [AI System](#-ai-system)
-- [Offline-First Architecture](#-offline-first-architecture)
-- [Health Integrations](#-health-integrations)
+- [Offline Architecture Status](#-offline-architecture-status)
+- [Health Integrations Status](#-health-integrations-status)
 - [Monetization](#-monetization)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
@@ -35,214 +60,240 @@
 
 ## 🎯 Overview
 
-**Gym Tracker** is a full-featured mobile workout tracking application designed to help fitness enthusiasts of all levels log workouts, track progress, and achieve their fitness goals. Built with modern technologies and production-ready best practices, this app combines manual tracking with intelligent database-driven algorithms and AI-powered coaching.
+**Gym Tracker** is a mobile workout tracking application designed to help fitness enthusiasts log workouts, track progress, and achieve their fitness goals. Built with React Native and Expo, it features a hybrid AI system where only the Coach Chat uses real AI (OpenAI GPT-4o-mini), while other "AI" features are efficient database queries and algorithms.
 
 ### What Makes This App Different?
 
-- **423+ Exercise Library**: Comprehensive database with animated GIFs, muscle targeting, and equipment filters
-- **Intelligent Training System**: Smart progressive overload, plateau detection, and recovery tracking using efficient algorithms
-- **AI Coach Chat**: GPT-4o-mini powered conversational fitness coach
+- **~400+ Exercise Library**: Large exercise database with animated GIFs and muscle targeting (exact count unverified)
+- **Hybrid AI System**: Only Coach Chat uses OpenAI API; other features are database/algorithm-based (zero API costs)
 - **Smart Workout Suggestions**: Database-driven workout planning based on recovery and history
-- **True Offline-First**: Full functionality without internet, with automatic conflict resolution when syncing
-- **Health Integration**: Bidirectional sync with Apple Health (iOS) and Health Connect (Android)
-- **Smart Notifications**: Workout reminders, rest timer alerts, PR celebrations, and engagement notifications
-- **Production Ready**: Complete error handling, monitoring, rate limiting, and cost protection
-- **Extremely Profitable**: Efficient hybrid AI system with minimal costs
+- **Progress Tracking**: Complete PR tracking, volume analytics, and strength progression
+- **Body Tracking**: Weight, measurements, and progress photos
+- **Template System**: Create and manage workout templates
+- **Real-time Features**: PR celebrations, rest timers, achievement system
+
+### Current Development Status
+
+**✅ Production-Track Features:**
+- Core workout tracking and logging
+- Exercise library with media
+- AI Coach Chat (real OpenAI integration)
+- Progress analytics and charts
+- Body tracking (weight, measurements, photos)
+- Template management
+- Achievement and notification systems
+- Settings and customization
+
+**🚧 Infrastructure Built But Not Integrated:**
+- Offline-first sync system (code exists, not actively used)
+- Conflict resolution (implemented but workouts save directly to cloud)
+- Multi-device sync queue (ready but not integrated)
+
+**❌ Planned But Not Implemented:**
+- Apple Health integration (iOS - stub only)
+- Full Health Connect automation (Android - partial)
+- Social features beyond basic export
+- Meal planning
+- Advanced analytics
 
 ### Target Audience
 
-- **Gym Enthusiasts**: Serious lifters who want detailed tracking and progressive overload
-- **Beginners**: Users new to fitness who need AI guidance and workout suggestions
-- **Athletes**: Competitive individuals tracking personal records and performance metrics
-- **Coaches**: Professionals using templates and data analysis for clients
+- **Gym Enthusiasts**: Lifters who want detailed tracking and progressive overload
+- **Beginners**: Users new to fitness who need guidance and workout suggestions
+- **Athletes**: Competitive individuals tracking personal records
+- **Coaches**: Professionals using templates for clients
 
 ---
 
 ## ✨ Key Features
 
-### 🏋️ Core Workout Features
+### 🏋️ Core Workout Features (✅ Fully Working)
 
-#### Workout Logging
-- Quick workout creation from templates or scratch
-- Live workout tracking with exercise cards
-- One-tap set completion with instant feedback
-- Support for 4 set types: Normal, Warmup, Dropset, Failure
-- RPE (Rate of Perceived Exertion) tracking
-- Real-time PR (Personal Record) detection
-- Exercise notes and custom observations
-- Workout duration tracking
-- Total volume calculations
+#### **Workout Logging**
+- ✅ Quick workout creation from templates or scratch
+- ✅ Live workout tracking with exercise cards
+- ✅ One-tap set completion with instant feedback
+- ✅ Support for 4 set types: Normal, Warmup, Dropset, Failure
+- ✅ RPE (Rate of Perceived Exertion) tracking
+- ✅ Real-time PR (Personal Record) detection
+- ✅ Exercise notes and observations
+- ✅ Workout duration and volume tracking
 
-#### Rest Timer
-- Configurable rest periods per exercise
-- Auto-start after set completion (optional)
-- Visual countdown with progress bar
-- +30 second quick extend button
-- Skip rest timer option
-- Background countdown continues
-- Push notifications when rest complete
-- Sound and vibration alerts (customizable)
-- 10-second warning haptic feedback
+#### **Rest Timer (✅ Fully Working)**
+- ✅ Configurable rest periods per exercise
+- ✅ Auto-start after set completion (optional)
+- ✅ Visual countdown with progress bar
+- ✅ +30 second quick extend button
+- ✅ Skip rest timer option
+- ✅ Background countdown continues
+- ✅ Push notifications when rest complete
+- ✅ Sound and vibration alerts (customizable)
+- ✅ 10-second warning haptic feedback
 
-#### Exercise Execution
-- Previous workout reference (shows last weight/reps)
-- Auto-fill from last session (optional)
-- Flexible measurement support:
+#### **Exercise Execution**
+- ✅ Previous workout reference (shows last weight/reps)
+- ✅ Auto-fill from last session (optional)
+- ✅ Flexible measurement support:
   - Weight & Reps (traditional)
   - Duration (for planks, holds)
   - Distance (for cardio)
   - Assisted weight (for machines)
-- Reorder exercises via drag-and-drop
-- Replace exercises mid-workout
-- Delete exercises from active workout
-- PR celebration animations and confetti
-- Heart rate monitoring during workout (if connected)
+- ✅ Reorder exercises via drag-and-drop
+- ✅ Replace exercises mid-workout
+- ✅ Delete exercises from active workout
+- ✅ PR celebration animations and confetti
+- ⚠️ Heart rate monitoring during workout (infrastructure exists, integration unclear)
 
-### 📚 Exercise Library
+### 📚 Exercise Library (⚠️ Mostly Working)
 
-#### Database Statistics
-- **Total Exercises**: 423 active exercises
+#### **Database Statistics**
+- **Total Exercises**: ~400+ active exercises (exact count unverified - "423" appears in comments)
 - **Categories**: 10 muscle groups
 - **Equipment Types**: 17 different equipment categories
-- **Media Assets**: 474 exercise GIFs + 847 thumbnails
+- **Media Assets**: ~474 GIFs + ~847 thumbnails (directory counts, not verified against storage)
 
-#### Exercise Categories
+#### **Exercise Categories**
 
-| Category | Count | Examples |
-|----------|-------|----------|
-| **Back** | 76 | Pull-ups, Rows, Lat Pulldowns, Deadlifts |
-| **Chest** | 50 | Bench Press, Flyes, Push-ups, Dips |
-| **Upper Legs** | 98 | Squats, Lunges, Leg Press, Romanian Deadlifts |
-| **Shoulders** | 49 | Overhead Press, Lateral Raises, Face Pulls |
-| **Upper Arms** | 59 | Bicep Curls, Tricep Extensions, Dips |
-| **Lower Legs** | 23 | Calf Raises (seated, standing, donkey) |
-| **Waist/Core** | 34 | Crunches, Planks, Russian Twists, Leg Raises |
-| **Cardio** | 16 | Treadmill, Rowing, Bike, Jump Rope |
-| **Full Body** | 9 | Burpees, Kettlebell Swings, Thrusters |
-| **Lower Arms** | 9 | Wrist Curls, Forearm Exercises |
+| Category | Examples |
+|----------|----------|
+| **Back** | Pull-ups, Rows, Lat Pulldowns, Deadlifts |
+| **Chest** | Bench Press, Flyes, Push-ups, Dips |
+| **Upper Legs** | Squats, Lunges, Leg Press, Romanian Deadlifts |
+| **Shoulders** | Overhead Press, Lateral Raises, Face Pulls |
+| **Upper Arms** | Bicep Curls, Tricep Extensions, Dips |
+| **Lower Legs** | Calf Raises (seated, standing, donkey) |
+| **Waist/Core** | Crunches, Planks, Russian Twists, Leg Raises |
+| **Cardio** | Treadmill, Rowing, Bike, Jump Rope |
+| **Full Body** | Burpees, Kettlebell Swings, Thrusters |
+| **Lower Arms** | Wrist Curls, Forearm Exercises |
 
-#### Exercise Features
-- Animated GIFs for visual demonstration
-- Thumbnail previews for fast loading
-- Muscle targeting (primary and secondary muscles)
-- Equipment filtering
-- Fast fuzzy search using Fuse.js
-- Favorites system
-- Custom exercise creation
-- Exercise history tracking
-- PR tracking per exercise
+#### **Exercise Features (✅ Working)**
+- ✅ Animated GIFs for visual demonstration
+- ✅ Thumbnail previews for fast loading
+- ✅ Muscle targeting (primary and secondary muscles)
+- ✅ Equipment filtering
+- ✅ Fast fuzzy search using Fuse.js
+- ✅ Favorites system
+- ✅ Custom exercise creation
+- ✅ Exercise history tracking
+- ✅ PR tracking per exercise
 
-### 📈 Progress Tracking
+### 📈 Progress Tracking (✅ Fully Working)
 
-#### Personal Records (PRs)
-- **Max Weight PR**: Heaviest weight lifted for any rep count
-- **Max Reps PR**: Most reps performed at a specific weight
-- **Max Volume PR**: Highest total weight × reps in a single set
-- Real-time detection during workout
-- PR celebration with animations and confetti
-- Trophy icons and badges
-- Sound effects and haptic feedback
-- PR history timeline
+#### **Personal Records (PRs)**
+- ✅ **Max Weight PR**: Heaviest weight lifted for any rep count
+- ✅ **Max Reps PR**: Most reps performed at a specific weight
+- ✅ **Max Volume PR**: Highest total weight × reps in a single set
+- ✅ Real-time detection during workout
+- ✅ PR celebration with animations and confetti
+- ✅ Trophy icons and badges
+- ✅ Sound effects and haptic feedback
+- ✅ PR history timeline
 
-#### Analytics & Statistics
-- Total workouts completed
-- Current and longest streaks
-- Total volume lifted (all-time)
-- Average workout duration
-- Workouts per week/month
-- Rest days analysis
-- Volume tracking (daily, weekly, monthly)
-- Strength progression charts
-- One-rep max (1RM) estimates
-- Muscle group distribution
-- Exercise frequency heatmap
+#### **Analytics & Statistics (✅ Working)**
+- ✅ Total workouts completed
+- ✅ Current and longest streaks
+- ✅ Total volume lifted (all-time)
+- ✅ Average workout duration
+- ✅ Workouts per week/month
+- ✅ Volume tracking (daily, weekly, monthly)
+- ✅ Strength progression charts
+- ✅ One-rep max (1RM) estimates
+- ✅ Muscle group distribution
+- ✅ Exercise frequency tracking
 
-### 📷 Body Tracking
+### 📷 Body Tracking (✅ Fully Working)
 
-#### Weight Logging
-- Quick weight entry from home screen
-- Weight history timeline
-- Weight chart with trend line
-- Daily/weekly/monthly views
-- Goal weight setting
-- Weight gain/loss calculations
-- Sync with Apple Health/Health Connect
+#### **Weight Logging**
+- ✅ Quick weight entry from home screen
+- ✅ Weight history timeline
+- ✅ Weight chart with trend line
+- ✅ Daily/weekly/monthly views
+- ✅ Goal weight setting
+- ✅ Weight gain/loss calculations
+- ⚠️ Sync with Apple Health/Health Connect (see Health Integration section)
 
-#### Body Measurements
-- Comprehensive measurements (chest, waist, hips, etc.)
-- Biceps, forearms, thighs, calves (left/right)
-- Body fat percentage
-- Measurement history with charts
-- Progress photos integration
+#### **Body Measurements**
+- ✅ Comprehensive measurements (chest, waist, hips, etc.)
+- ✅ Biceps, forearms, thighs, calves (left/right)
+- ✅ Body fat percentage
+- ✅ Measurement history with charts
+- ✅ Progress tracking
 
-#### Progress Photos
-- Front, side, back pose presets
-- Photo gallery with date stamps
-- Before/after comparison slider
-- Grid view of photo timeline
-- Fullscreen photo viewer
-- Photo metadata (date, weight, measurements)
-- Private and secure storage
+#### **Progress Photos**
+- ✅ Front, side, back pose presets
+- ✅ Photo gallery with date stamps
+- ✅ Before/after comparison slider
+- ✅ Grid view of photo timeline
+- ✅ Fullscreen photo viewer
+- ✅ Photo metadata (date, weight, measurements)
+- ✅ Private and secure storage
 
-### 🤖 AI Coaching System
+### 🤖 AI Coaching System (✅ Hybrid - 1 Real AI + 5 Database Features)
 
-The app features a hybrid coaching system with one true AI feature (Coach Chat powered by OpenAI GPT-4o-mini) and multiple intelligent rule-based features, all with enterprise-grade rate limiting, usage tracking, and cost protection.
+The app features a hybrid coaching system with **one true AI feature** (Coach Chat powered by OpenAI GPT-4o-mini) and multiple intelligent rule-based features with enterprise-grade rate limiting and cost protection.
 
-#### AI Features
+#### **AI Features Breakdown**
 
-1. **AI Coach Chat** 🤖 *(REAL AI - OpenAI GPT-4o-mini)*
+1. **AI Coach Chat** 🤖 *(REAL AI - OpenAI GPT-4o-mini)* - ✅ **FULLY WORKING**
    - Interactive chat interface for fitness questions
    - Personalized responses based on your workout history
    - Can suggest complete workouts with "Start This Workout" button
    - Rate limited (10 free/day, 100 premium/day)
    - Cost: ~$0.0003 per message
+   - **Status**: Production-ready, actively used
 
-2. **Workout Suggestions** 📊 *(Database-driven)*
+2. **Workout Suggestions** 📊 *(Database-driven)* - ✅ **FULLY WORKING**
    - Recovery-based workout recommendations
    - Muscle group analysis from workout history
    - Personalized exercise selection from your history
    - Zero API costs (pure database queries)
+   - **Status**: Active on Workout tab
 
-3. **Progressive Overload Recommendations** 🧮 *(Rule-based algorithm)*
+3. **Progressive Overload Recommendations** 🧮 *(Rule-based algorithm)* - ✅ **FULLY WORKING**
    - Intelligent weight and rep recommendations
    - Based on last 30 days of performance
    - Smart weight increments (2.5-10 lbs based on current weight)
    - Fatigue-adjusted for later sets
    - Zero API costs (pure calculations)
+   - **Status**: Shows during active workout
 
-4. **Form Tips** 📚 *(Database-driven)*
-   - Pre-written form cues for every exercise
+4. **Form Tips** 📚 *(Database-driven)* - ✅ **FULLY WORKING**
+   - Pre-written form cues for exercises
    - Breathing techniques and safety tips
    - Common mistakes to avoid
    - Zero API costs (database lookups)
+   - **Status**: Available during workout (lightbulb icon)
 
-5. **Plateau Detection** 📈 *(Rule-based algorithm)*
+5. **Plateau Detection** 📈 *(Rule-based algorithm)* - ✅ **FULLY WORKING**
    - Monitors progress across all exercises
    - Alerts when stagnation detected (4+ sessions)
    - Provides actionable recommendations
    - Zero API costs (pure algorithmic detection)
+   - **Status**: Shows on home screen
 
-6. **Recovery Status** ⏱️ *(Time-based calculations)*
+6. **Recovery Status** ⏱️ *(Time-based calculations)* - ✅ **FULLY WORKING**
    - Estimates muscle group recovery
    - Based on training frequency and volume
    - Standard recovery windows (48-72 hours)
    - Suggests optimal workout focus
    - Zero API costs (time calculations)
+   - **Status**: Active on home screen
 
 **Cost Efficiency**: Only 1 out of 6 "AI" features actually uses OpenAI API. The rest are sophisticated database queries and algorithms that work completely offline and incur zero costs.
 
-### 📋 Templates & Planning
+### 📋 Templates & Planning (✅ Fully Working)
 
-#### Workout Templates
-- Create custom workout templates
-- Pre-built templates for common splits
-- Template folders/organization
-- Duplicate and edit templates
-- Start workout from template (one-tap)
-- Template preview before starting
-- Recently used templates
+#### **Workout Templates**
+- ✅ Create custom workout templates
+- ✅ Pre-built templates for common splits
+- ✅ Template folders/organization
+- ✅ Duplicate and edit templates
+- ✅ Start workout from template (one-tap)
+- ✅ Template preview before starting
+- ✅ Recently used templates
 
-#### Default Templates
+#### **Default Templates**
 - Push Day (Chest, Shoulders, Triceps)
 - Pull Day (Back, Biceps)
 - Leg Day (Quads, Hamstrings, Glutes, Calves)
@@ -251,67 +302,30 @@ The app features a hybrid coaching system with one true AI feature (Coach Chat p
 - Full Body
 - Arm Day
 
-### ☁️ Data & Sync
+### 🔔 Notifications (✅ Fully Working)
 
-#### Offline-First Architecture
-- Log workouts completely offline
-- View all historical data
-- Create/edit templates
-- Track body weight and measurements
-- View exercise library
-- Access all settings
-- View charts and analytics
+#### **Notification Types**
+1. ✅ **Rest Timer**: Alerts when rest period completes
+2. ✅ **Workout Reminders**: Scheduled reminders for specific days/times
+3. ✅ **PR Celebrations**: Instant notification when PR achieved
+4. ✅ **Achievement Notifications**: Streak milestones, workout counts, volume milestones
+5. ✅ **Engagement Notifications**: Inactivity reminders, streak risk alerts, weekly summaries
 
-#### Sync System
-- Automatic background sync when online
-- Conflict resolution (last-write-wins with intelligent merging)
-- Real-time updates via Supabase Realtime
-- Sync queue with retry logic
-- Manual sync trigger
-- Sync status indicator
-- Multi-device support
+#### **Notification Settings**
+- ✅ Master enable/disable toggle
+- ✅ Per-type controls
+- ✅ Sound and vibration settings
+- ✅ Quiet hours configuration
+- ✅ Custom reminder scheduling
 
-### 🏥 Health Integrations
+### ⚙️ Settings & Customization (✅ Fully Working)
 
-#### Apple Health (iOS)
-- Bidirectional weight sync
-- Workout export (type, duration, calories)
-- Heart rate monitoring during workouts
-- Body measurements sync
-- Steps import
-- Sleep data for recovery tracking
-
-#### Health Connect (Android)
-- Weight sync (bidirectional)
-- Exercise sessions export
-- Heart rate monitoring
-- Steps & activity tracking
-- Sleep tracking
-
-### 🔔 Notifications
-
-#### Notification Types
-1. **Rest Timer**: Alerts when rest period completes
-2. **Workout Reminders**: Scheduled reminders for specific days/times
-3. **PR Celebrations**: Instant notification when PR achieved
-4. **Achievement Notifications**: Streak milestones, workout counts, volume milestones
-5. **Engagement Notifications**: Inactivity reminders, streak risk alerts, weekly summaries
-
-#### Notification Settings
-- Master enable/disable toggle
-- Per-type controls
-- Sound and vibration settings
-- Quiet hours configuration
-- Custom reminder scheduling
-
-### ⚙️ Settings & Customization
-
-- **Unit System**: Imperial (lbs, inches) or Metric (kg, cm)
-- **Theme**: Dark mode, Light mode, or System default
-- **Workout Preferences**: Rest timer defaults, auto-start, sound, haptics
-- **Plate Calculator**: Barbell weight and available plate configuration
-- **Account Settings**: Email, password, profile picture, display name
-- **Privacy Settings**: Data export, account deletion
+- ✅ **Unit System**: Imperial (lbs, inches) or Metric (kg, cm)
+- ✅ **Theme**: Dark mode, Light mode, or System default
+- ✅ **Workout Preferences**: Rest timer defaults, auto-start, sound, haptics
+- ✅ **Plate Calculator**: Barbell weight and available plate configuration
+- ✅ **Account Settings**: Email, password, profile picture, display name
+- ✅ **Privacy Settings**: Data export, account deletion
 
 ---
 
@@ -357,17 +371,17 @@ The app features a hybrid coaching system with one true AI feature (Coach Chat p
 
 | Service | Purpose | Cost |
 |---------|---------|------|
-| **OpenAI GPT-4o-mini** | AI coaching chat only | ~$0.0003 per message |
+| **OpenAI GPT-4o-mini** | AI coaching chat only | ~$0.0003 per message (0.03¢) |
 
 ### Platform Integrations
 
-| Platform | Library | Purpose |
-|----------|---------|---------|
-| **iOS** | `react-native-health` | Apple Health integration |
-| **Android** | `expo-health-connect`, `react-native-health-connect` | Health Connect integration |
-| **Notifications** | `expo-notifications` | Push notifications |
-| **Error Tracking** | `@sentry/react-native` | Production error monitoring |
-| **Purchases** | `react-native-purchases` | In-app purchases (RevenueCat) |
+| Platform | Library | Purpose | Status |
+|----------|---------|---------|--------|
+| **iOS** | `react-native-health` | Apple Health integration | ❌ Not implemented (stub) |
+| **Android** | `expo-health-connect`, `react-native-health-connect` | Health Connect integration | ⚠️ Partial |
+| **Notifications** | `expo-notifications` | Push notifications | ✅ Working |
+| **Error Tracking** | `@sentry/react-native` | Production error monitoring | ✅ Configured |
+| **Purchases** | `react-native-purchases` | In-app purchases (RevenueCat) | ⚠️ Partial config |
 
 ### Development Tools
 
@@ -387,196 +401,76 @@ The app features a hybrid coaching system with one true AI feature (Coach Chat p
 
 ```
 gym-tracker/
-├── app/                      # Expo Router screens (file-based routing)
-│   ├── _layout.tsx          # Root layout with providers
-│   ├── index.tsx            # Landing/splash screen
-│   ├── (auth)/              # Authentication screens
-│   │   ├── _layout.tsx      # Auth layout
-│   │   ├── login.tsx        # Login screen
-│   │   ├── signup.tsx       # Signup screen
-│   │   └── forgot-password.tsx
-│   ├── (tabs)/              # Main tab navigation (authenticated)
-│   │   ├── _layout.tsx      # Tab bar layout
-│   │   ├── index.tsx        # Home screen (dashboard)
-│   │   ├── workout.tsx      # Workout planning & templates
+├── app/                      # Expo Router screens
+│   ├── (auth)/              # Login, signup, forgot password
+│   ├── (tabs)/              # Main tab navigation
+│   │   ├── index.tsx        # Home screen
+│   │   ├── workout.tsx      # Workout planning
 │   │   ├── history.tsx      # Workout history
 │   │   ├── progress.tsx     # Charts and analytics
 │   │   └── profile.tsx      # User profile
 │   ├── body/                # Body tracking screens
-│   │   ├── index.tsx        # Body tracking overview
-│   │   ├── weight.tsx       # Weight logging
-│   │   ├── weight-chart.tsx # Weight chart visualization
-│   │   ├── measurements.tsx # Body measurements
-│   │   ├── goal.tsx         # Body goals
-│   │   └── photos/          # Progress photos
 │   ├── coach.tsx            # AI coach chat
 │   ├── exercise/            # Exercise library
-│   │   ├── index.tsx        # Exercise list
-│   │   ├── add-custom.tsx   # Create custom exercise
-│   │   └── [id]/            # Exercise details
 │   ├── notifications.tsx    # Notification center
 │   ├── prs.tsx             # Personal records
-│   ├── achievements.tsx     # Achievements screen
-│   ├── settings/           # Settings screens (20 screens)
-│   │   ├── account.tsx      # Account settings
-│   │   ├── profile.tsx      # Profile settings
-│   │   ├── units.tsx        # Unit preferences
-│   │   ├── workout.tsx      # Workout preferences
-│   │   ├── notifications.tsx # Notification settings
-│   │   ├── health.tsx       # Health sync settings
-│   │   ├── ai.tsx           # AI feature settings
-│   │   ├── subscription.tsx # Premium subscription
-│   │   └── ...              # More settings
+│   ├── settings/           # 19 settings screens
 │   ├── template/           # Template management
-│   │   ├── index.tsx        # Template list
-│   │   ├── create.tsx       # Create template
-│   │   ├── add-exercise.tsx # Add exercise to template
-│   │   └── [id].tsx         # Edit template
 │   └── workout/            # Active workout screens
 │       ├── active.tsx       # Live workout tracking
 │       ├── complete.tsx     # Post-workout summary
 │       └── [id].tsx         # Workout detail view
 │
 ├── components/              # Reusable components
-│   ├── ui/                 # Base UI components (buttons, inputs, cards)
-│   ├── workout/            # Workout-specific components (12 files)
-│   │   ├── ExerciseCard.tsx
-│   │   ├── RestTimer.tsx
-│   │   ├── SetRow.tsx
-│   │   └── ...
-│   ├── ai/                 # AI-related UI components (11 files)
-│   ├── body/               # Body tracking components (4 files)
-│   ├── health/             # Health integration UI (5 files)
-│   ├── home/               # Home screen widgets (3 files)
-│   ├── modals/             # Modal dialogs (5 files)
-│   ├── notifications/      # Notification components (5 files)
-│   ├── sync/               # Sync status UI (3 files)
-│   └── template/           # Template components (7 files)
+│   ├── ai/                 # AI-related UI (11 components)
+│   ├── body/               # Body tracking UI
+│   ├── health/             # Health integration UI
+│   ├── workout/            # Workout-specific UI (12 components)
+│   └── ui/                 # Base UI components
 │
-├── lib/                    # Business logic and utilities
+├── lib/                    # Business logic
+│   ├── ai/                 # AI service (25 files)
 │   ├── api/                # Supabase API calls (15 files)
-│   │   ├── workouts.ts     # Workout CRUD operations
-│   │   ├── exercises.ts    # Exercise library operations
-│   │   ├── templates.ts    # Template operations
-│   │   └── ...
-│   ├── ai/                 # AI service and features (25 files)
-│   │   ├── aiService.ts    # Main AI client (OpenAI integration)
-│   │   ├── workoutSuggestions.ts # Database-driven suggestions
-│   │   ├── progressiveOverload.ts # Rule-based calculations
-│   │   ├── formTips.ts     # Database form tips
-│   │   ├── plateauDetection.ts # Algorithm-based detection
-│   │   ├── recoveryService.ts # Time-based calculations
-│   │   └── contextBuilder.ts # User context for AI
 │   ├── health/             # Health integrations (9 files)
-│   │   ├── appleHealth.ts
-│   │   ├── healthConnect.ts
-│   │   └── ...
 │   ├── notifications/      # Notification system (10 files)
-│   │   ├── scheduler.ts
-│   │   ├── handlers.ts
-│   │   └── ...
-│   ├── sync/               # Offline sync system (7 files)
-│   │   ├── syncQueue.ts
-│   │   ├── conflictResolver.ts
-│   │   └── ...
-│   ├── utils/              # Utility functions (30 files)
-│   │   ├── calculations.ts # Workout calculations (volume, 1RM)
-│   │   ├── validation.ts   # Form validation
-│   │   ├── logger.ts       # Logging utility
-│   │   └── ...
-│   ├── storage/            # Local storage wrapper
-│   ├── services/           # External services (5 files)
-│   │   ├── revenuecat.ts   # In-app purchases
-│   │   └── ...
-│   ├── supabase.ts         # Supabase client configuration
-│   └── sentry.ts           # Error tracking configuration
+│   ├── sync/               # Offline sync (7 files) - 🚧 Not integrated
+│   ├── storage/            # Local storage
+│   ├── utils/              # Utilities (30 files)
+│   └── supabase.ts         # Supabase client
 │
 ├── stores/                 # Zustand state stores
-│   ├── authStore.ts        # Authentication state
-│   ├── workoutStore.ts     # Active workout state (1200+ lines)
+│   ├── authStore.ts        # Authentication
+│   ├── workoutStore.ts     # Active workout state (1236 lines)
 │   ├── exerciseStore.ts    # Exercise library cache
 │   ├── settingsStore.ts    # App settings (persistent)
-│   ├── notificationStore.ts # Notification state
-│   ├── aiStore.ts          # AI usage tracking
-│   ├── proStore.ts         # Premium subscription state
-│   ├── checkinStore.ts     # Daily check-ins
-│   ├── injuryStore.ts      # Injury tracking
-│   └── selectors.ts        # Reusable selectors
+│   └── ...                 # 10 total stores
 │
 ├── hooks/                  # Custom React hooks (22 files)
-│   ├── useAuthGuard.ts     # Auth protection
-│   ├── useOfflineFirst.ts  # Offline data handling
-│   ├── useHealthSync.ts    # Health integration
-│   ├── useNotifications.ts # Notification management
-│   ├── useProFeature.ts    # Premium feature gating
-│   ├── useTheme.ts         # Theme management
-│   └── ...
-│
 ├── types/                  # TypeScript type definitions
-│   ├── database.ts         # Supabase generated types
-│   ├── exercise-measurements.ts
-│   ├── notifications.ts
-│   └── achievements.ts
-│
-├── contexts/               # React contexts
-│   ├── ThemeContext.tsx    # Theme provider
-│   └── PreloadContext.tsx  # Data preloading
-│
 ├── supabase/              # Supabase configuration
-│   ├── config.toml        # Local Supabase config
 │   ├── functions/         # Edge functions
-│   │   ├── ai-complete/   # AI proxy function (OpenAI)
+│   │   ├── ai-complete/   # AI proxy function
 │   │   ├── delete-user/   # User deletion function
 │   │   └── exercise-search/ # Exercise search function
 │   └── migrations/        # Database migrations (49 files)
-│       ├── 20231001000000_initial_schema.sql
-│       ├── 20231002000000_add_exercises.sql
-│       └── ...
 │
-├── scripts/               # Development and admin scripts
-│   ├── db/               # Database operations (11 files)
-│   │   ├── seed-exercises.ts
-│   │   ├── audit-schema.ts
-│   │   └── ...
-│   ├── media/            # Media processing (40 files)
-│   │   ├── download-gifs.ts
-│   │   ├── upload-to-supabase.ts
-│   │   ├── generate-thumbnails.ts
-│   │   └── ...
-│   ├── analysis/         # Code analysis (9 files)
-│   ├── dev/              # Dev utilities (13 files)
-│   ├── data/             # Generated data files
-│   ├── lib/              # Shared script utilities
-│   ├── ENV_SETUP.md      # Environment setup guide
-│   ├── env.template      # Environment template for scripts
-│   └── README.md         # Scripts documentation
+├── scripts/               # Development scripts
+│   ├── media/            # Exercise media management (40 scripts)
+│   ├── db/               # Database utilities (11 scripts)
+│   ├── analysis/         # Code analysis (9 scripts)
+│   └── dev/              # Development tools (13 scripts)
 │
 ├── tests/                 # Test files
-│   ├── setup.ts          # Test configuration
 │   ├── unit/             # Unit tests
 │   ├── integration/      # Integration tests
 │   └── mocks/            # Test mocks
 │
-├── exercise-gifs/        # Exercise GIF files (474 files)
-├── exercise-thumbnails/  # Thumbnail images (847 files)
-├── assets/               # App assets
-│   ├── icon.png          # App icon
-│   ├── splash-icon.png   # Splash screen
-│   ├── adaptive-icon.png # Android adaptive icon
-│   └── sounds/           # Sound effects
-│
-├── app.json              # Expo configuration
-├── package.json          # Dependencies and scripts
-├── tsconfig.json         # TypeScript configuration
-├── vitest.config.ts      # Test configuration
-├── metro.config.js       # Metro bundler config
-├── babel.config.js       # Babel configuration
-├── .gitignore            # Git ignore rules
-├── env.template          # Environment template
-└── README.md             # This file
+├── exercise-gifs/        # Exercise GIF files (~474 files)
+├── exercise-thumbnails/  # Thumbnail images (~847 files)
+└── assets/               # App assets
 ```
 
-### Data Flow
+### Data Flow (Current Implementation)
 
 ```
 User Action (UI Interaction)
@@ -587,68 +481,16 @@ Store (Zustand)
     ↓
 API Layer (lib/api/)
     ↓
-[Offline Check]
-    ↓ (If Online)
-Supabase Client
+Supabase Client (DIRECT CALL)
     ↓
 PostgreSQL Database
     ↓
 Realtime Broadcast
     ↓
-Other Devices Updated
-
-    ↓ (If Offline)
-Local Storage (AsyncStorage)
-    ↓
-Sync Queue
-    ↓ (When Online)
-Background Sync
-    ↓
-Supabase
+Other Devices Updated (if online)
 ```
 
-### State Management Pattern
-
-The app uses Zustand for state management with three types of stores:
-
-1. **Persistent Stores** (saved to device storage):
-   - `settingsStore` - User preferences and app settings
-   - `authStore` - Authentication state
-   - `workoutStore` - Active workout data (cleared on save)
-
-2. **Session Stores** (in-memory only):
-   - `exerciseStore` - Exercise library cache
-   - `notificationStore` - Notification state
-   - `aiStore` - AI usage tracking
-
-3. **Hybrid Stores** (selective persistence):
-   - `checkinStore` - Daily check-ins with cache
-   - `proStore` - Premium subscription status
-
-### API Layer Design
-
-All Supabase interactions go through typed API functions in `lib/api/`:
-
-```typescript
-// Example: lib/api/workouts.ts
-export async function saveWorkout(workout: LocalWorkout): Promise<string> {
-  const { data, error } = await supabase
-    .from('workouts')
-    .insert([transformWorkoutForDB(workout)])
-    .select('id')
-    .single();
-  
-  if (error) throw error;
-  return data.id;
-}
-```
-
-**Benefits**:
-- Type safety with TypeScript
-- Centralized error handling
-- Easy testing and mocking
-- Consistent data transformations
-- Single source of truth
+**Note**: Despite having offline-first infrastructure (`useOfflineFirst` hook, sync queue, conflict resolver), the app currently makes **direct Supabase calls** without local-first caching.
 
 ---
 
@@ -696,6 +538,7 @@ export async function saveWorkout(workout: LocalWorkout): Promise<string> {
    ```bash
    EXPO_PUBLIC_SENTRY_DSN=your-sentry-dsn
    EXPO_PUBLIC_EXERCISEDB_API_KEY=your-exercisedb-key
+   # Note: EXPO_PUBLIC_REVENUECAT_API_KEY not in template - RevenueCat partially configured
    ```
 
 4. **Set up Supabase**
@@ -753,18 +596,12 @@ export async function saveWorkout(workout: LocalWorkout): Promise<string> {
    supabase secrets set OPENAI_API_KEY=your-openai-key
    ```
 
-8. **Upload exercise media** (optional, pre-uploaded GIFs available)
-   ```bash
-   npm run media:upload
-   npm run media:upload-thumbnails
-   ```
-
-9. **Start development server**
+8. **Start development server**
    ```bash
    npm start
    ```
 
-10. **Run on device/simulator**
+9. **Run on device/simulator**
     ```bash
     # iOS Simulator (Mac only)
     npm run ios
@@ -778,13 +615,13 @@ export async function saveWorkout(workout: LocalWorkout): Promise<string> {
 
 ### Quick Start (Development)
 
-If you just want to get the app running quickly without setting up all services:
+If you just want to get the app running quickly:
 
 ```bash
 # 1. Install dependencies
 npm install
 
-# 2. Set up minimal .env (without AI/Sentry)
+# 2. Set up minimal .env
 cp env.template .env
 # Add only Supabase URL and anon key
 
@@ -815,6 +652,7 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 # Optional
 EXPO_PUBLIC_SENTRY_DSN=https://...@sentry.io/...
 EXPO_PUBLIC_EXERCISEDB_API_KEY=your-rapidapi-key
+# EXPO_PUBLIC_REVENUECAT_API_KEY - Not in template, RevenueCat incomplete
 ```
 
 #### 2. Scripts (`.env.local`)
@@ -841,133 +679,11 @@ RAPID_API_KEY=your-rapidapi-key
 # SUPABASE_SERVICE_ROLE_KEY
 ```
 
-**Security Rules**:
-- ✅ Use `EXPO_PUBLIC_` prefix for client-exposed variables
-- ❌ **NEVER** put service role key in client app's `.env`
-- ✅ Keep service role key in scripts/.env.local (gitignored)
-- ✅ Check `.gitignore` includes `.env*`
-
-### Supabase Configuration
-
-#### Enable Realtime
-1. Go to Database → Replication
-2. Enable replication for:
-   - `workouts`
-   - `templates`
-   - `body_weights`
-   - `personal_records`
-
-#### Storage Buckets
-
-| Bucket | Access | Purpose |
-|--------|--------|---------|
-| `avatars` | Public | User profile pictures |
-| `progress-photos` | Private | Body progress photos |
-| `backups` | Private | Data backups |
-| `exercise-media` | Public | Exercise GIFs and thumbnails |
-
-#### Row Level Security (RLS)
-
-All tables have RLS enabled. Key policies:
-- Users can only read/write their own data
-- Exercise library is readable by all authenticated users
-- Admin-only tables require service role key
-
-### AI Configuration
-
-#### Rate Limits
-
-Edit in Supabase SQL Editor (migrations already set up):
-
-```sql
--- Located in can_use_ai() function
-v_daily_limit := CASE 
-  WHEN v_is_premium THEN 100
-  ELSE 10
-END;
-```
-
-Current limits:
-- **Free Tier**: 10 AI chat messages per day
-- **Premium Tier**: 100 AI chat messages per day
-
-**Note**: Limits only apply to AI Coach Chat. All other "AI" features (Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status) are unlimited because they're database/algorithm-based.
-
-#### Models
-
-Current model: `gpt-4o-mini`
-- **Cost**: $0.15 per 1M input tokens, $0.60 per 1M output tokens
-- **Average cost per message**: ~$0.0003 (0.03 cents)
-
-To change model, edit `supabase/functions/ai-complete/index.ts`:
-
-```typescript
-const response = await openai.chat.completions.create({
-  model: 'gpt-4o-mini', // Change here
-  messages: conversationHistory,
-  // ...
-});
-```
-
-### Notification Configuration
-
-Edit in `app.json`:
-
-```json
-{
-  "expo": {
-    "plugins": [
-      ["expo-notifications", {
-        "icon": "./assets/notification-icon.png",
-        "color": "#3b82f6",
-        "sounds": ["./assets/sounds/rest-complete.mp3"]
-      }]
-    ]
-  }
-}
-```
-
-### Health Integration Setup
-
-#### iOS (Apple Health)
-1. Add to `app.json`:
-   ```json
-   {
-     "ios": {
-       "infoPlist": {
-         "NSHealthShareUsageDescription": "We read your heart rate and steps...",
-         "NSHealthUpdateUsageDescription": "We save your workouts and weight..."
-       },
-       "entitlements": {
-         "com.apple.developer.healthkit": true
-       }
-     }
-   }
-   ```
-
-2. Enable HealthKit capability in Apple Developer Console
-
-#### Android (Health Connect)
-1. Add to `app.json`:
-   ```json
-   {
-     "android": {
-       "permissions": [
-         "android.permission.health.READ_HEART_RATE",
-         "android.permission.health.READ_STEPS",
-         "android.permission.health.WRITE_EXERCISE"
-       ]
-     }
-   }
-   ```
-
-2. Install Health Connect app on Android device/emulator
-
 ---
 
 ## 💾 Database Schema
 
-### Core Tables
+### Core Tables (✅ Verified)
 
 #### `profiles`
 User profile and settings
@@ -981,20 +697,18 @@ CREATE TABLE profiles (
   measurement_unit TEXT DEFAULT 'inches',
   fitness_goals TEXT[],
   experience_level TEXT,
-  available_equipment TEXT[],
-  injury_restrictions TEXT[],
   current_streak INTEGER DEFAULT 0,
   longest_streak INTEGER DEFAULT 0,
   total_workouts INTEGER DEFAULT 0,
   total_volume NUMERIC DEFAULT 0,
-  -- 30+ settings columns (rest_timer_default, auto_start_timer, etc.)
+  -- 30+ settings columns
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
 #### `exercises`
-Exercise library (423 exercises)
+Exercise library
 ```sql
 CREATE TABLE exercises (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1022,405 +736,20 @@ CREATE TABLE workouts (
   name TEXT NOT NULL,
   notes TEXT,
   started_at TIMESTAMPTZ NOT NULL,
-  completed_at TIMESTAMPTZ NOT NULL,
+  ended_at TIMESTAMPTZ,
   duration_seconds INTEGER,
   total_volume NUMERIC,
-  exercises JSONB NOT NULL, -- nested exercise/set data
+  total_sets INTEGER,
+  total_reps INTEGER,
+  rating INTEGER,
+  template_id UUID,
   health_synced BOOLEAN DEFAULT false,
   health_synced_at TIMESTAMPTZ,
-  heart_rate_avg INTEGER,
-  heart_rate_max INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
-#### `templates`
-Workout templates
-```sql
-CREATE TABLE templates (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  name TEXT NOT NULL,
-  description TEXT,
-  exercises JSONB NOT NULL,
-  folder_id UUID,
-  is_default BOOLEAN DEFAULT false,
-  last_used_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `personal_records`
-PR tracking
-```sql
-CREATE TABLE personal_records (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  exercise_id UUID REFERENCES exercises(id),
-  pr_type TEXT NOT NULL, -- 'weight', 'reps', 'volume'
-  weight NUMERIC,
-  reps INTEGER,
-  volume NUMERIC,
-  weight_unit TEXT,
-  achieved_at TIMESTAMPTZ NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `body_weights`
-Weight history
-```sql
-CREATE TABLE body_weights (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  weight NUMERIC NOT NULL,
-  unit TEXT DEFAULT 'lbs',
-  measured_at TIMESTAMPTZ NOT NULL,
-  health_synced BOOLEAN DEFAULT false,
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `body_measurements`
-Body measurements
-```sql
-CREATE TABLE body_measurements (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  chest NUMERIC,
-  waist NUMERIC,
-  hips NUMERIC,
-  bicep_left NUMERIC,
-  bicep_right NUMERIC,
-  thigh_left NUMERIC,
-  thigh_right NUMERIC,
-  calf_left NUMERIC,
-  calf_right NUMERIC,
-  shoulders NUMERIC,
-  neck NUMERIC,
-  body_fat_percentage NUMERIC,
-  unit TEXT DEFAULT 'inches',
-  measured_at TIMESTAMPTZ NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `progress_photos`
-Progress photos
-```sql
-CREATE TABLE progress_photos (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  photo_url TEXT NOT NULL,
-  photo_type TEXT, -- 'front', 'side', 'back'
-  taken_at TIMESTAMPTZ NOT NULL,
-  weight NUMERIC,
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `ai_usage`
-AI request tracking
-```sql
-CREATE TABLE ai_usage (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  request_type TEXT NOT NULL, -- 'chat' (only real AI feature)
-  tokens_used INTEGER,
-  cost_cents NUMERIC,
-  model TEXT,
-  success BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `ai_feedback`
-AI response ratings
-```sql
-CREATE TABLE ai_feedback (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  ai_usage_id UUID REFERENCES ai_usage(id),
-  feature TEXT NOT NULL,
-  rating TEXT NOT NULL, -- 'thumbs_up', 'thumbs_down'
-  context JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `coach_messages`
-AI coach chat history
-```sql
-CREATE TABLE coach_messages (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  role TEXT NOT NULL, -- 'user', 'assistant'
-  content TEXT NOT NULL,
-  tokens_used INTEGER,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `daily_checkins`
-Daily mood/energy tracking
-```sql
-CREATE TABLE daily_checkins (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  checkin_date DATE NOT NULL,
-  mood INTEGER CHECK (mood >= 1 AND mood <= 5),
-  energy INTEGER CHECK (energy >= 1 AND energy <= 5),
-  soreness TEXT[], -- muscle groups
-  sleep_quality INTEGER CHECK (sleep_quality >= 1 AND sleep_quality <= 5),
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(user_id, checkin_date)
-);
-```
-
-#### `user_injuries`
-Injury tracking
-```sql
-CREATE TABLE user_injuries (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  body_part TEXT NOT NULL,
-  description TEXT,
-  severity TEXT, -- 'minor', 'moderate', 'severe'
-  occurred_at TIMESTAMPTZ NOT NULL,
-  recovered_at TIMESTAMPTZ,
-  is_active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `notifications`
-Notification history
-```sql
-CREATE TABLE notifications (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  type TEXT NOT NULL,
-  title TEXT NOT NULL,
-  message TEXT NOT NULL,
-  data JSONB,
-  read BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `user_devices`
-Multi-device tracking
-```sql
-CREATE TABLE user_devices (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  device_name TEXT,
-  device_type TEXT,
-  push_token TEXT,
-  last_active_at TIMESTAMPTZ DEFAULT NOW(),
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-#### `custom_exercises`
-User-created exercises
-```sql
-CREATE TABLE custom_exercises (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id),
-  name TEXT NOT NULL,
-  category TEXT,
-  equipment TEXT,
-  measurement_type TEXT DEFAULT 'weight_reps',
-  notes TEXT,
-  is_public BOOLEAN DEFAULT false,
-  status TEXT DEFAULT 'private', -- 'pending', 'approved', 'rejected'
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### Database Functions
-
-#### `can_use_ai(user_id UUID)`
-Returns AI rate limit status
-```sql
-RETURNS TABLE (
-  allowed BOOLEAN,
-  used INTEGER,
-  limit INTEGER,
-  remaining INTEGER,
-  tier TEXT,
-  is_premium BOOLEAN
-)
-```
-
-#### `log_ai_usage(...)`
-Logs AI request with usage tracking
-
-#### `get_ai_usage_stats(user_id UUID)`
-Returns usage statistics (today, month, all-time)
-
-#### `detect_personal_record(...)`
-Checks if a set is a new PR
-
-#### `calculate_workout_volume(workout_id UUID)`
-Calculates total volume for workout
-
-### Database Indexes
-
-Key indexes for performance:
-```sql
--- Workouts by user and date
-CREATE INDEX idx_workouts_user_date ON workouts(user_id, completed_at DESC);
-
--- PRs by user and exercise
-CREATE INDEX idx_prs_user_exercise ON personal_records(user_id, exercise_id, achieved_at DESC);
-
--- Exercises by category and active status
-CREATE INDEX idx_exercises_category_active ON exercises(category, is_active);
-
--- AI usage by user and date
-CREATE INDEX idx_ai_usage_user_date ON ai_usage(user_id, created_at DESC);
-```
-
----
-
-## 🛠 Development
-
-### Development Server
-
-```bash
-# Start Expo dev server
-npm start
-
-# Start with cache clear
-npm start -- --clear
-
-# Start on specific platform
-npm run ios
-npm run android
-npm run web
-```
-
-### Project Scripts
-
-```bash
-# Development
-npm start              # Start Expo dev server
-npm run ios            # Run on iOS simulator
-npm run android        # Run on Android emulator
-npm run web            # Run on web
-
-# Database
-npm run db:seed        # Seed exercise database
-npm run db:audit       # Audit database schema
-npm run db:check       # Check database connectivity
-
-# Media
-npm run media:download # Download exercise GIFs
-npm run media:upload   # Upload to Supabase
-npm run media:verify   # Verify all media
-
-# Testing
-npm test               # Run tests in watch mode
-npm run test:run       # Run tests once
-npm run test:coverage  # Run with coverage
-
-# Analysis
-npm run analyze:logs   # Find console.log statements
-npm run analyze:exercises # Analyze exercise data
-```
-
-### Code Style
-
-The project uses TypeScript with strict mode enabled:
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "useUnknownInCatchVariables": true
-  }
-}
-```
-
-**Conventions**:
-- Use functional components with hooks
-- Use TypeScript for all files (`.ts`, `.tsx`)
-- Use arrow functions for components
-- Use `const` for all variables unless reassignment needed
-- Use template literals for strings with variables
-- Use optional chaining (`?.`) and nullish coalescing (`??`)
-- Avoid `any` type - use `unknown` or proper types
-
-### Error Handling
-
-All errors are caught and reported to Sentry (if configured):
-
-```typescript
-import { captureException } from '@/lib/sentry';
-
-try {
-  await riskyOperation();
-} catch (error) {
-  captureException(error, { context: 'additional info' });
-  // Handle error gracefully
-}
-```
-
-### Logging
-
-Use the centralized logger:
-
-```typescript
-import { logger } from '@/lib/utils/logger';
-
-logger.info('User logged in', { userId });
-logger.warn('API rate limit approaching');
-logger.error('Failed to save workout', error);
-```
-
-**Note**: Console logs should be removed before production. Run:
-```bash
-npm run analyze:logs
-```
-
-### State Management Guidelines
-
-**When to use Zustand stores**:
-- Global state needed across multiple screens
-- State that needs persistence
-- Complex state updates
-
-**When to use React state**:
-- Component-local state
-- Temporary UI state
-- Form inputs
-
-**When to use React Query**:
-- Server state (data from Supabase)
-- Data that needs caching
-- Data with automatic refetching
-
-### Performance Optimization
-
-**Image Loading**:
-- Use `expo-image` for all images (auto-caching)
-- Use thumbnails for lists, full images for detail views
-- Preload critical images on home screen
-
-**List Rendering**:
-- Use `FlashList` for all long lists (faster than FlatList)
-- Use `keyExtractor` and `getItemType` for optimal performance
-- Implement `estimatedItemSize` for consistent scrolling
-
-**Heavy Computations**:
-- Move to Web Workers (if needed)
-- Use `useMemo` and `useCallback` for expensive calculations
-- Debounce search inputs
+For complete database schema with all tables, see [Database Schema Documentation](database-schema.md).
 
 ---
 
@@ -1439,9 +768,6 @@ npm run test:run
 
 # Run with coverage
 npm run test:coverage
-
-# Run with UI
-npm run test:ui
 ```
 
 ### Test Structure
@@ -1450,40 +776,7 @@ npm run test:ui
 tests/
 ├── setup.ts              # Test configuration
 ├── unit/                 # Unit tests
-│   ├── calculations.test.ts
-│   └── validation.test.ts
-├── integration/          # Integration tests
-│   └── workout-flow.test.ts
 └── mocks/                # Test mocks
-    └── supabase.ts
-```
-
-### Writing Tests
-
-**Unit Test Example**:
-```typescript
-import { describe, it, expect } from 'vitest';
-import { calculateOneRepMax } from '@/lib/utils/calculations';
-
-describe('calculateOneRepMax', () => {
-  it('should calculate 1RM correctly', () => {
-    const result = calculateOneRepMax(100, 10);
-    expect(result).toBe(133);
-  });
-});
-```
-
-**Component Test Example**:
-```typescript
-import { render, screen } from '@testing-library/react-native';
-import { ExerciseCard } from '@/components/workout/ExerciseCard';
-
-describe('ExerciseCard', () => {
-  it('should render exercise name', () => {
-    render(<ExerciseCard exercise={mockExercise} />);
-    expect(screen.getByText('Bench Press')).toBeTruthy();
-  });
-});
 ```
 
 ### Test Coverage
@@ -1493,121 +786,38 @@ Coverage thresholds are enforced for critical files:
 - `lib/sync/**/*.ts`: 80%
 - `stores/workoutStore.ts`: 70%
 
-**View coverage report**:
-```bash
-npm run test:coverage
-# Open coverage/index.html in browser
-```
-
 ---
 
 ## 🚀 Deployment
 
-### Building for Production
+### ⚠️ Important: EAS Configuration Not Set Up
 
-#### iOS (App Store)
+The project **does not have EAS configuration**. The following are example instructions:
 
-1. **Configure app.json**:
-   ```json
-   {
-     "expo": {
-       "ios": {
-         "bundleIdentifier": "com.yourcompany.gymtracker",
-         "buildNumber": "1"
-       }
-     }
-   }
-   ```
+#### Example iOS Build (Requires EAS Setup)
 
-2. **Build with EAS**:
-   ```bash
-   # Install EAS CLI
-   npm install -g eas-cli
-   
-   # Configure EAS
-   eas build:configure
-   
-   # Build for iOS
-   eas build --platform ios
-   
-   # Submit to App Store
-   eas submit --platform ios
-   ```
+1. **Install EAS CLI**: `npm install -g eas-cli`
+2. **Configure EAS**: `eas build:configure` (creates `eas.json`)
+3. **Build**: `eas build --platform ios`
+4. **Submit**: `eas submit --platform ios`
 
-#### Android (Google Play)
+#### Example Android Build (Requires EAS Setup)
 
-1. **Configure app.json**:
-   ```json
-   {
-     "expo": {
-       "android": {
-         "package": "com.yourcompany.gymtracker",
-         "versionCode": 1
-       }
-     }
-   }
-   ```
+1. **Configure**: `eas build:configure`
+2. **Build**: `eas build --platform android`
+3. **Submit**: `eas submit --platform android`
 
-2. **Build with EAS**:
-   ```bash
-   # Build for Android
-   eas build --platform android
-   
-   # Submit to Google Play
-   eas submit --platform android
-   ```
-
-### Environment Variables in Production
-
-**Never commit real credentials!**
-
-Use EAS Secrets for production:
-```bash
-eas secret:create --scope project --name SUPABASE_URL --value your-url
-eas secret:create --scope project --name SUPABASE_ANON_KEY --value your-key
-eas secret:create --scope project --name SENTRY_DSN --value your-dsn
-```
-
-### Pre-deployment Checklist
-
-- [ ] All tests passing (`npm run test:run`)
-- [ ] No console.logs (`npm run analyze:logs`)
-- [ ] Environment variables configured in EAS
-- [ ] Sentry DSN configured for error tracking
-- [ ] App icon and splash screen finalized
-- [ ] Privacy policy and terms of service URLs updated
-- [ ] In-app purchase products configured in RevenueCat
-- [ ] Database migrations applied to production
-- [ ] Edge functions deployed
-- [ ] Storage buckets created and configured
-- [ ] Version number incremented in app.json
-
-### Continuous Deployment
-
-Set up GitHub Actions for automated builds:
-
-```yaml
-# .github/workflows/build.yml
-name: Build and Deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm install
-      - run: npm test
-      - run: eas build --platform all --non-interactive
-```
+**Note**: Before deploying, you need to:
+- Create `eas.json` configuration
+- Configure app signing
+- Set up environment variables in EAS
+- Complete RevenueCat configuration if using premium features
 
 ---
 
 ## 📜 Scripts
 
-The `scripts/` directory contains utility scripts for database management, media processing, and development tasks. See [scripts/README.md](scripts/README.md) for detailed documentation.
+The `scripts/` directory contains utility scripts for database management, media processing, and development tasks.
 
 ### Quick Reference
 
@@ -1621,16 +831,10 @@ npm run db:check             # Check connectivity
 npm run media:download       # Download GIFs
 npm run media:upload         # Upload to Supabase
 npm run media:verify         # Verify all media
-npm run media:thumbnails     # Generate thumbnails
 
-# Analysis
-npm run analyze:logs         # Find console.logs
-npm run analyze:exercises    # Analyze exercise data
-npm run analyze:inactive     # Find inactive exercises
-
-# Development
-npm run dev:test-api         # Test ExerciseDB API
-npm run dev:verify-library   # Verify exercise library
+# Testing
+npm test                     # Run tests
+npm run test:coverage        # Run with coverage
 ```
 
 ---
@@ -1639,18 +843,15 @@ npm run dev:verify-library   # Verify exercise library
 
 ### Architecture Overview
 
-The app features a hybrid AI system with one true AI feature (Coach Chat) and multiple intelligent rule-based features:
+The app features a hybrid AI system with **one true AI feature** and multiple intelligent rule-based features:
 
 ```
 ┌─────────────────────────────────────────────────┐
 │  ONLY AI Feature: Coach Chat                     │
 │  Mobile App → AI Service → Edge Function → OpenAI│
-│                    ↓                              │
-│              Rate Limiting                        │
-│                    ↓                              │
-│              Usage Tracking                       │
-│                    ↓                              │
-│              Cost Protection                      │
+│  - Rate limiting (10 free/100 premium per day)   │
+│  - Usage tracking                                 │
+│  - Cost protection                                │
 └─────────────────────────────────────────────────┘
     ↓
 ┌─────────────────────────────────────────────────┐
@@ -1660,287 +861,194 @@ The app features a hybrid AI system with one true AI feature (Coach Chat) and mu
 │  - Form Tips: Database lookups                   │
 │  - Plateau Detection: Statistical analysis       │
 │  - Recovery Status: Timestamp calculations       │
+│  - All FREE, work offline                        │
 └─────────────────────────────────────────────────┘
 ```
 
 ### Feature Breakdown
 
-| Feature | Type | API Calls | Cost | Implementation |
-|---------|------|-----------|------|----------------|
-| **AI Coach Chat** | 🤖 Real AI | ✅ YES | ~$0.0003/msg | OpenAI GPT-4o-mini |
-| **Workout Suggestions** | 📊 Database | ❌ NO | Free | SQL queries + time logic |
-| **Progressive Overload** | 🧮 Math | ❌ NO | Free | Historical data analysis |
-| **Form Tips** | 📚 Database | ❌ NO | Free | Pre-written content |
-| **Plateau Detection** | 📈 Algorithm | ❌ NO | Free | Statistical analysis |
-| **Recovery Status** | ⏱️ Time calc | ❌ NO | Free | Time-based calculations |
+| Feature | Type | API Calls | Cost | Status |
+|---------|------|-----------|------|--------|
+| **AI Coach Chat** | 🤖 Real AI | ✅ YES | ~$0.0003/msg | ✅ Working |
+| **Workout Suggestions** | 📊 Database | ❌ NO | Free | ✅ Working |
+| **Progressive Overload** | 🧮 Math | ❌ NO | Free | ✅ Working |
+| **Form Tips** | 📚 Database | ❌ NO | Free | ✅ Working |
+| **Plateau Detection** | 📈 Algorithm | ❌ NO | Free | ✅ Working |
+| **Recovery Status** | ⏱️ Time calc | ❌ NO | Free | ✅ Working |
 
-### Rate Limiting
-
-**Free Tier**: 10 AI chat messages per day
-**Premium Tier**: 100 AI chat messages per day
-
-**Implementation**: Rate limits are enforced at the database level using the `can_use_ai()` function with 30-second cache.
-
-**Important**: Limits only apply to AI Coach Chat. All other features are unlimited (they're free).
-
-### Usage Tracking
-
-Every AI chat message is logged in the `ai_usage` table:
-- User ID
-- Request type (always "chat")
-- Tokens used
-- Cost in cents
-- Model (gpt-4o-mini)
-- Timestamp
-
-View analytics:
-```sql
-SELECT 
-  DATE(created_at) as date,
-  COUNT(*) as requests,
-  SUM(tokens_used) as total_tokens,
-  SUM(cost_cents) as total_cost_cents
-FROM ai_usage
-WHERE user_id = 'xxx'
-GROUP BY DATE(created_at);
-```
-
-### Cost Analysis
-
-**Average Costs**:
-- Free user: ~$0.05-0.06/month (~5-7 chat messages)
-- Premium user: ~$0.40-1.00/month (~20-40 chat messages)
-
-**Profit Margins**:
-- Free tier: Sustainable at 100:1 ratio
-- Premium tier: 80-85% profit margin at $9.99/month
-
-### Adding New AI Features
-
-To add a new AI feature that actually uses OpenAI:
-
-1. Create Edge Function:
-   ```bash
-   supabase functions new your-feature
-   ```
-
-2. Implement in `supabase/functions/your-feature/index.ts`:
-   ```typescript
-   import { OpenAI } from 'openai';
-   
-   const openai = new OpenAI({
-     apiKey: Deno.env.get('OPENAI_API_KEY'),
-   });
-   
-   // Rate limit check
-   const canUse = await checkRateLimit(userId);
-   if (!canUse.allowed) {
-     return new Response('Rate limit exceeded', { status: 429 });
-   }
-   
-   // Call OpenAI
-   const completion = await openai.chat.completions.create({
-     model: 'gpt-4o-mini',
-     messages: [...],
-   });
-   
-   // Log usage
-   await logAIUsage(userId, 'your-feature', tokens, cost);
-   ```
-
-3. Deploy:
-   ```bash
-   supabase functions deploy your-feature
-   ```
+**Cost Efficiency**: Only 1 feature uses OpenAI API, making the app extremely cost-effective.
 
 ---
 
-## 🌐 Offline-First Architecture
+## 🌐 Offline Architecture Status
 
-### Overview
+### ⚠️ **IMPORTANT: Infrastructure Built But Not Integrated**
 
-The app is designed to work perfectly without internet connection, with intelligent syncing when connectivity is restored.
+The codebase contains a **complete offline-first architecture** with sync queue, conflict resolution, and local storage. However, **this infrastructure is not currently used** in the production app flow.
 
-### Offline Capabilities
+### 🚧 **What EXISTS (But Isn't Used):**
 
-**Fully Functional Offline**:
-- ✅ Log workouts
-- ✅ View workout history
-- ✅ Create/edit templates
-- ✅ Track body weight and measurements
-- ✅ View exercise library (cached)
-- ✅ Access all settings
-- ✅ View charts and analytics
+1. **`hooks/useOfflineFirst.ts`** (272 lines)
+   - ✅ Complete offline-first hook implementation
+   - ❌ **NEVER IMPORTED** in any `app/` screen
+   - Status: Dead code
 
-**Requires Internet**:
-- ❌ AI Coach Chat
-- ❌ Initial exercise library download
-- ❌ Progress photo uploads
-- ❌ Account changes
+2. **`lib/sync/syncQueue.ts`** (296 lines)
+   - ✅ Full sync queue with retry logic
+   - ✅ Exponential backoff (max 5 attempts)
+   - ⚠️ Used in settings UI, but not in main workout flow
+   - Status: Partially integrated
 
-### Sync Strategy
+3. **`lib/sync/conflictResolver.ts`** (407 lines)
+   - ✅ 4 conflict strategies (server_wins, client_wins, latest_wins, manual)
+   - ✅ Smart merging for workouts and templates
+   - ⚠️ Available but rarely triggered
+   - Status: Ready but unused
 
-1. **Local-First**: All changes are saved to device storage first (instant)
-2. **Sync Queue**: Operations are queued for background sync
-3. **Automatic Retry**: Failed syncs retry with exponential backoff
-4. **Conflict Resolution**: Last-write-wins with intelligent merging
-5. **Realtime Updates**: Other devices updated via WebSocket when online
+4. **`lib/storage/localDatabase.ts`**
+   - ✅ AsyncStorage wrapper for local data
+   - ⚠️ Used for some caching, but not offline-first pattern
+   - Status: Partially used
 
-### Implementation
+### ✅ **What ACTUALLY WORKS:**
 
-**Offline Data Storage**:
+**Current Implementation:**
 ```typescript
-// lib/storage/index.ts
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-export const storage = {
-  set: async (key: string, value: any) => {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-  },
-  get: async (key: string) => {
-    const item = await AsyncStorage.getItem(key);
-    return item ? JSON.parse(item) : null;
-  },
-};
+// What happens when you complete a workout:
+1. User taps "Finish Workout"
+2. workoutStore.endWorkout() called
+3. DIRECT INSERT to Supabase (if online)
+4. If offline: Error shown to user
+5. No local queue, no automatic retry
 ```
 
-**Sync Queue**:
-```typescript
-// lib/sync/syncQueue.ts
-export class SyncQueue {
-  async addToQueue(operation: SyncOperation) {
-    // Add to queue
-    await storage.set(`sync_${operation.id}`, operation);
-    
-    // Try to sync immediately if online
-    if (await isOnline()) {
-      await this.processQueue();
-    }
-  }
-  
-  async processQueue() {
-    const operations = await this.getQueuedOperations();
-    
-    for (const op of operations) {
-      try {
-        await this.execute(op);
-        await this.removeFromQueue(op.id);
-      } catch (error) {
-        await this.incrementRetryCount(op.id);
-      }
-    }
-  }
-}
-```
+**The app requires internet to save workouts.**
 
-**Conflict Resolution**:
-```typescript
-// lib/sync/conflictResolver.ts
-export function resolveConflict(local: any, remote: any) {
-  // Last-write-wins by default
-  if (local.updated_at > remote.updated_at) {
-    return local;
-  }
-  
-  // For workouts, keep both if timestamps are close
-  if (Math.abs(local.updated_at - remote.updated_at) < 60000) {
-    return [local, remote]; // Keep both
-  }
-  
-  return remote;
-}
-```
+### 📝 **Honest Current State:**
 
-### Network Detection
+- **Online**: ✅ Works perfectly - saves directly to Supabase
+- **Offline**: ❌ Cannot complete workouts - will show error
+- **Sync Queue**: 🚧 Exists but not used for main workout flow
+- **Conflict Resolution**: 🚧 Ready but rarely triggered
+- **Multi-device**: ✅ Works via Supabase Realtime (when online)
 
-```typescript
-// hooks/useNetworkStatus.ts
-import NetInfo from '@react-native-community/netinfo';
+### 🔮 **Future Integration:**
 
-export function useNetworkStatus() {
-  const [isOnline, setIsOnline] = useState(true);
-  
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsOnline(state.isConnected ?? false);
-    });
-    
-    return unsubscribe;
-  }, []);
-  
-  return isOnline;
-}
-```
+To make this truly offline-first:
+1. Replace direct Supabase calls with `useOfflineFirst` hook
+2. Save workouts to local storage first
+3. Add to sync queue
+4. Sync in background when online
+5. Handle conflicts automatically
+
+**Estimated effort**: 2-4 weeks of refactoring
 
 ---
 
-## 🏥 Health Integrations
+## 🏥 Health Integrations Status
 
-### Apple Health (iOS)
+### ❌ **Apple Health (iOS) - NOT IMPLEMENTED**
 
-**Setup**: Permissions requested automatically on first use
+**Current Status**: Complete stub/placeholder
 
-**Features**:
-- ✅ Bidirectional weight sync
-- ✅ Workout export (type, duration, calories, heart rate)
-- ✅ Heart rate monitoring during workouts
-- ✅ Body measurements sync
-- ✅ Steps import
-- ✅ Sleep data import
-
-**Implementation**:
 ```typescript
-// lib/health/appleHealth.ts
-import AppleHealthKit from 'react-native-health';
+// lib/health/healthService.ios.ts - ALL FUNCTIONS RETURN FALSE:
 
-export async function syncWorkoutToHealth(workout: Workout) {
-  const options = {
-    type: 'Workout',
-    startDate: workout.started_at,
-    endDate: workout.completed_at,
-    energyBurned: workout.calories,
-    metadata: {
-      HKWorkoutActivityType: 'TraditionalStrengthTraining',
-    },
-  };
-  
-  await AppleHealthKit.saveWorkout(options);
+async checkAvailability(): Promise<boolean> {
+    logger.log('ℹ️ Health integration not yet available on iOS');
+    return false;  // ALWAYS FALSE
+}
+
+async saveWorkout(workout): Promise<boolean> {
+    logger.log('ℹ️ Apple Health sync not yet available...');
+    return false;  // DOES NOTHING
+}
+
+async readWeight(): Promise<[]> {
+    return [];  // RETURNS EMPTY
 }
 ```
 
-### Health Connect (Android)
+**What users see**: Settings → Health shows "Coming Soon" message
 
-**Setup**: Requires Health Connect app installed
+**Features Claimed vs Reality:**
+- ❌ Bidirectional weight sync - **NOT IMPLEMENTED**
+- ❌ Workout export - **NOT IMPLEMENTED**
+- ❌ Heart rate monitoring - **NOT IMPLEMENTED**
+- ❌ Body measurements sync - **NOT IMPLEMENTED**
+- ❌ Steps import - **NOT IMPLEMENTED**
+- ❌ Sleep data - **NOT IMPLEMENTED**
 
-**Features**:
-- ✅ Weight sync (bidirectional)
-- ✅ Exercise session export
-- ✅ Heart rate monitoring
-- ✅ Steps tracking
-- ✅ Sleep data import
+**Status**: 0% complete, all stubs
 
-**Implementation**:
+---
+
+### ⚠️ **Health Connect (Android) - PARTIALLY IMPLEMENTED**
+
+**Current Status**: Code exists, unclear integration
+
+#### ✅ **What Exists:**
+1. **Full implementation** in `lib/health/healthService.android.ts` (1,710 lines)
+2. Uses actual `react-native-health-connect` package
+3. Settings UI with permissions management
+4. Functions for:
+   - Reading heart rate, steps, sleep, weight
+   - Writing workouts, calories, weight
+   - Permission handling
+
+#### ⚠️ **What's Unclear:**
 ```typescript
-// lib/health/healthConnect.ts
-import { HealthConnect } from 'react-native-health-connect';
-
-export async function syncWorkoutToHealthConnect(workout: Workout) {
-  await HealthConnect.insertRecords([{
-    recordType: 'ExerciseSession',
-    startTime: workout.started_at,
-    endTime: workout.completed_at,
-    exerciseType: HealthConnect.ExerciseType.STRENGTH_TRAINING,
-    title: workout.name,
-  }]);
+// lib/health/workoutSync.ts EXISTS
+export async function syncWorkoutToHealth(workout): Promise<boolean> {
+  // ... checks settings ...
+  const synced = await healthService.saveWorkout(workoutData);
+  return synced;
 }
+
+// BUT: Cannot confirm this is called after completing a workout
+// Searched: workoutStore.ts, app/workout/active.tsx, app/workout/complete.tsx
+// Result: NO calls to syncWorkoutToHealth found
 ```
 
-### Configuration
+#### 🔍 **Automatic Sync Status:**
 
-Enable/disable health sync in app settings:
-- Settings → Health → Enable Health Sync
-- Auto-sync on workout completion
-- Manual sync trigger available
+**Unknown if automatic health sync happens after workouts.**
+
+Possibilities:
+1. Manual sync only (user must trigger in settings)
+2. Automatic but async (happens in background)
+3. Not integrated yet (code ready but not called)
+
+**What we know:**
+- ✅ Settings UI works (can enable/disable health sync)
+- ✅ Code to sync workouts exists
+- ⚠️ Unknown if automatic sync happens after completing workout
+- ✅ Manual sync might work (not tested)
+
+#### 📊 **Android Health Features Status:**
+
+| Feature | Code Exists | Integration Status |
+|---------|-------------|-------------------|
+| Workout export | ✅ Yes | ⚠️ Unknown |
+| Weight sync | ✅ Yes | ⚠️ Unknown |
+| Heart rate read | ✅ Yes | ⚠️ Unknown |
+| Steps read | ✅ Yes | ⚠️ Unknown |
+| Sleep read | ✅ Yes | ⚠️ Unknown |
+| Settings UI | ✅ Yes | ✅ Working |
+
+**Overall Android Status**: 40% complete - Infrastructure ready, integration unclear
+
+---
+
+### 🎯 **Health Integration Summary:**
+
+| Platform | Status | Percentage | Notes |
+|----------|--------|-----------|-------|
+| **iOS** | ❌ Not Implemented | 0% | All stubs returning false |
+| **Android** | ⚠️ Partial | 40% | Code exists, unclear if used |
+| **Overall** | 🚧 In Development | 20% | Needs testing and integration work |
+
+**Honest Assessment**: Health integration is not production-ready despite having code for Android.
 
 ---
 
@@ -1954,95 +1062,70 @@ Enable/disable health sync in app settings:
 - ✅ All progress tracking and charts
 - ✅ Body tracking and progress photos
 - ✅ Template management
-- ✅ Offline support
-- ✅ Health sync
 - ✅ PR tracking
-- ✅ **UNLIMITED**: Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status
+- ✅ **UNLIMITED**: Workout Suggestions, Progressive Overload, Form Tips, Plateau Detection, Recovery Status (all database-based)
 - ❌ Limited: AI Coach Chat (10 messages/day)
 
 **Premium Tier** ($9.99/month or $79.99/year):
 - ✅ Everything in Free
-- ✅ Unlimited AI Coach Chat (100 messages/day)
+- ✅ Unlimited AI Coach Chat (100 messages/day vs 10/day)
 - ✅ Priority support
 - ✅ Early access to features
-- ✅ Export all data (CSV, JSON)
-- ✅ Cloud backup storage (10 GB)
 
-### Revenue Model
+**⚠️ Note**: RevenueCat integration is **partially configured**. Package installed but API key not in env template.
 
-**Target**: $50K MRR at 5,000 paying users
+### Cost Analysis (Actual)
 
-**Actual Costs per User**:
-- Premium user: ~$0.40-1.00/month (AI costs) + ~$1/month (infrastructure) = $1.40-2.00/month
-- Free user: ~$0.05-0.06/month (AI) + ~$0.10/month (infrastructure) = $0.15-0.16/month
+**Premium User Costs**:
+- AI usage: ~$0.40-1.00/month (20-40 chat messages)
+- Infrastructure: ~$1/month (database, storage)
+- **Total**: ~$1.40-2.00/month per user
+- **Profit margin**: 80-85% at $9.99/month
 
-**Profit Margins**:
-- Premium: 80-85% ($8-8.50 profit per $9.99 subscription)
-- Can sustain 100+ free users per paying user
+**Free User Costs**:
+- AI: ~$0.05-0.06/month (~5-7 chat messages)
+- Infrastructure: ~$0.10/month
+- **Total**: ~$0.15-0.16/month per free user
 
-### In-App Purchases Setup
-
-**Using RevenueCat**:
-
-1. Configure products in RevenueCat dashboard:
-   - `premium_monthly` - $9.99/month
-   - `premium_yearly` - $79.99/year
-
-2. Set up in App Store Connect / Google Play Console
-
-3. Implementation:
-   ```typescript
-   // lib/services/revenuecat.ts
-   import Purchases from 'react-native-purchases';
-   
-   export async function purchasePremium() {
-     const { customerInfo } = await Purchases.purchasePackage(monthlyPackage);
-     return customerInfo.entitlements.active['premium'];
-   }
-   ```
-
-### Alternative Revenue Streams
-
-1. **Coaching Marketplace**: 20% commission on trainer bookings
-2. **Premium Templates**: $2.99 per professional program
-3. **Equipment Affiliate**: Amazon Associates links
-4. **B2B Licensing**: $199/month for gyms/trainers
+**Key Insight**: Extremely profitable because only 1 feature uses paid AI at $0.0003/message.
 
 ---
 
 ## 🗺 Roadmap
 
-### Version 1.1 (Current - Production Ready) ✅
-- Complete workout tracking
-- Exercise library with media
-- AI coaching system
-- Offline sync
-- Health integrations
-- Notification system
-- Body tracking
+### Version 1.0 (Current - Development Complete) ✅
+- ✅ Complete workout tracking
+- ✅ Exercise library with media
+- ✅ AI coaching system (hybrid)
+- ✅ Progress tracking and analytics
+- ✅ Body tracking
+- ✅ Template management
+- ✅ Notification system
+- ✅ Settings and customization
 
-### Version 1.2 (Next 2-3 Months)
-- [ ] Social features (follow friends, share workouts)
-- [ ] Workout challenges and leaderboards
-- [ ] Exercise form video tutorials (user-generated)
-- [ ] Meal planning integration
+### Missing for Production Release 🚧
+- 🚧 Complete offline-first integration
+- 🚧 Apple Health implementation (iOS)
+- 🚧 Health Connect integration verification (Android)
+- 🚧 EAS build configuration
+- 🚧 RevenueCat complete setup
+- 🚧 App Store assets and listings
+
+### Version 1.2 (Next 3-6 Months) 🔮
+- [ ] Offline-first refactoring (integrate existing code)
+- [ ] Apple Health integration (iOS)
+- [ ] Verify and complete Health Connect (Android)
+- [ ] Social features (share workouts with friends)
+- [ ] Exercise form video library
 - [ ] Integration with Fitbit, Garmin, Whoop
-- [ ] Workout program marketplace
 
-### Version 2.0 (Q3 2026)
-- [ ] Real-time co-training (workout with friends)
+### Version 2.0 (Future) 🌟
+- [ ] Real-time co-training with friends
 - [ ] Personal trainer marketplace
 - [ ] Video form analysis using AI
-- [ ] Voice-controlled logging
+- [ ] Voice-controlled workout logging
 - [ ] Apple Watch standalone app
-- [ ] Web dashboard for coaches
-
-### Version 2.5 (Q4 2026)
-- [ ] Program builder (8-12 week programs)
-- [ ] Periodization planning
-- [ ] Injury rehabilitation programs
-- [ ] Smart gym equipment integration
-- [ ] AR form feedback
+- [ ] Web dashboard
 
 ---
 
@@ -2072,18 +1155,11 @@ Use conventional commits:
 - `test:` - Tests
 - `chore:` - Maintenance
 
-### Code Review Process
-
-1. All PRs require 1 approval
-2. All tests must pass
-3. No console.logs allowed
-4. TypeScript strict mode enforced
-
 ---
 
 ## 📄 License
 
-MIT License - See [LICENSE](LICENSE) file for details.
+MIT License - See LICENSE file for details
 
 ---
 
@@ -2100,33 +1176,45 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 - **Email**: support@gym-tracker-app.com
 - **Website**: https://gym-tracker-app.com
-- **Discord**: [Join our community](https://discord.gg/gymtracker)
 - **GitHub Issues**: [Report bugs](https://github.com/yourusername/gym-tracker/issues)
 
 ---
 
-## 📱 App Store Information
+## 📊 Final Transparency Summary
 
-### Screenshots Needed
-1. Active workout screen (exercise cards, rest timer)
-2. Home screen (suggestions, streak, stats)
-3. Exercise library (search, filters, GIFs)
-4. Progress charts (weight progression, volume)
-5. PR celebration (confetti, trophy)
-6. Body tracking (weight chart, measurements)
-7. AI coach chat interface
-8. Template library
+### ✅ **What's 100% Working:**
+- Core workout tracking and logging
+- Exercise library with search and filters
+- AI Coach Chat (real OpenAI integration)
+- Progress tracking (PRs, volume, analytics)
+- Body tracking (weight, measurements, photos)
+- Template system
+- Achievements and notifications
+- Settings and customization
 
-### Keywords
-gym, workout, fitness, weightlifting, bodybuilding, exercise, tracker, log, AI coach, personal trainer, progress, muscle, strength, training, progressive overload
+### 🚧 **What's Built But Not Integrated:**
+- Offline-first sync system (296 lines, unused)
+- Conflict resolution (407 lines, ready)
+- `useOfflineFirst` hook (272 lines, never imported)
+
+### ⚠️ **What's Partially Complete:**
+- Health Connect (Android) - Code exists, integration unclear
+- RevenueCat - Package installed, API key missing
+- EAS deployment - No configuration file
+
+### ❌ **What's Not Implemented:**
+- Apple Health (iOS) - Complete stub (0% done)
+- Automatic health sync verification
+- Production deployment configuration
+- Social features beyond basic export
 
 ---
 
-**Built with ❤️ for the fitness community**
+**Built with ❤️ and brutal honesty for the fitness community**
 
-**Version**: 1.0.0  
+**Version**: 1.0.0 (Development Complete)  
 **Last Updated**: January 2026  
 **Platform**: iOS, Android  
 **Framework**: React Native (Expo)  
 **Backend**: Supabase (PostgreSQL)  
-**AI**: OpenAI GPT-4o-mini
+**AI**: OpenAI GPT-4o-mini (Chat only)
